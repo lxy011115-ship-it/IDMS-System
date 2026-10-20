@@ -1,6 +1,6 @@
 {
   "scope": "Repository export and new internal-pilot deployment files",
-  "frozenSourceFilesVerified": 959,
+  "frozenSourceFilesVerified": 958,
   "buildArtifactsChecked": 268,
   "typescript": "PASS",
   "unitTests": {
@@ -14,6 +14,11 @@
     "privateCredentialBlocksFound": 0,
     "literalPemHeadersReviewed": "validation regex and generated isolated QA fixture; no embedded private key"
   },
-  "serverDeployment": "Pending independent server verification",
-  "productionAcceptance": false
+  "serverDeployment": "INTERNAL_PILOT_VERIFIED",
+  "productionAcceptance": false,
+  "productionOnlyInstall": "PASS: fresh directory outside canonical workspace; npm ci --omit=dev and full entrypoint import exited 0",
+  "liveInternalChecks": 8,
+  "publicExposure": false,
+  "interactiveLoginTested": false,
+  "historicalPreservationCheckers": 14
 }

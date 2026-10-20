@@ -1,0 +1,98 @@
+{
+  "format": "IDMS_CLOUD_TRACKED_CODE_V1",
+  "targetBranch": "main",
+  "baseManifest": "deploy/source-export.json",
+  "baseManifestSha256": "76c2c1a3d3b79f87d4f4ee46ac8ba3275697f341e062e4e5e20f73245ed47cc1",
+  "baseFileCount": 958,
+  "extraFiles": [
+    {
+      "path": ".dockerignore",
+      "sha256": "8f1a229410dbc53826d8edfa8bba957ea9eb231803fc5e8ee86dc455b9fb13fb"
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "d4542acdcfd8b09b4c4421118ac99168f5659d91a804023c64d8232c2e242016"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "4922b63b550a5af9ed957bb333c81725b86393251eea3640e57623fe6c43fea7"
+    },
+    {
+      "path": "README.md",
+      "sha256": "2b626183552b5f0029bc8388d9c03dfc4dac699bc7b1ff1938bed4d66de1908e"
+    },
+    {
+      "path": "deploy/README.md",
+      "sha256": "0775dacbaba310fecf136bec501ae7376f60347d843ab58c7a4852a5cf4de79e"
+    },
+    {
+      "path": "deploy/activation.md",
+      "sha256": "09d77e288ea1f52b12c086a547dfb292b0ff372e9bb662c76d5f7790d7f0f3db"
+    },
+    {
+      "path": "deploy/bootstrap.mjs",
+      "sha256": "b4d35d0a35f252e8529e38dd94b1f25be486deb9a140ab3197a1867990bf1e49"
+    },
+    {
+      "path": "deploy/configure-identity.mjs",
+      "sha256": "abf8153dba8d89d058b1517a58ee300814fa19ab10dd09133f2a7eb3032cdc64"
+    },
+    {
+      "path": "deploy/dns.pending.json",
+      "sha256": "1a5785d70c9e8fd0f68268d90f529cc5272bb77f3eb73e6781c42af4043b24a7"
+    },
+    {
+      "path": "deploy/download-runtime.py",
+      "sha256": "af6cc913499eb72b253fc959cfe4e435c24a1dce63c9e4fbf2c314979f5b2b89"
+    },
+    {
+      "path": "deploy/finish-host.sh",
+      "sha256": "e72588a4049565a4db07e274f0f1ceaa9652bc06edb5d315c67b93718eb15518"
+    },
+    {
+      "path": "deploy/idms-pilot.service",
+      "sha256": "5fa4928b78dd6089bee2464cccd9f17a18e6aa57bd33416d40964d4b9a640276"
+    },
+    {
+      "path": "deploy/idms.xin.nginx.pending.conf",
+      "sha256": "d94b3089025287fc64018a73f61a908905eb750975e410f45a5facd73daf93cc"
+    },
+    {
+      "path": "deploy/internal-status.json",
+      "sha256": "9adb01a20125c9afc4b50949f1ec413f13b749d50a090d09156185942c89704e"
+    },
+    {
+      "path": "deploy/prepare-host.sh",
+      "sha256": "c45fe20ba5f19ad08905d1c32f9e557fa169ca8362ec0d79c8f2550171903610"
+    },
+    {
+      "path": "deploy/resume-internal.sh",
+      "sha256": "5f333a64223142241737d5584c4d7943d23c5106b441df4d3db9e245a870fe96"
+    },
+    {
+      "path": "deploy/runtime-images.json",
+      "sha256": "dab176a9c65efb8657f839869268271896128f1fed31ab5ff0858e58a3a3f2ba"
+    },
+    {
+      "path": "deploy/source-export.json",
+      "sha256": "76c2c1a3d3b79f87d4f4ee46ac8ba3275697f341e062e4e5e20f73245ed47cc1"
+    },
+    {
+      "path": "deploy/validation.json",
+      "sha256": "dbc93c1b20bf303c933d46ddb3a1d0566a89b7e4b83a56ddffbb2c8e66a10cf7"
+    },
+    {
+      "path": "deploy/verify-internal.mjs",
+      "sha256": "3574fb30934638523209f22e71a0f900af343643c9e737c2eb298dc5dad76f02"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "f13878b138d235e8a0a481a1ee18a503aefb1c2709ec67f1cf2830c06382512b"
+    },
+    {
+      "path": "package.json",
+      "sha256": "03f72e0ec9aea8d1ab48db71d0f09cfe65a5a462a3a920bfc54e8d7c56aa45ff"
+    }
+  ],
+  "scope": "All tracked main-branch files except this generated digest; runtime data and node_modules are excluded"
+}

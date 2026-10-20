@@ -18,6 +18,6 @@ npm test
 
 ## 服务器部署
 
-目标域名：idms.xin。当前等待 ICP 备案，仅在服务器回环地址部署准备。见 [部署说明](deploy/README.md)。
+目标域名：idms.xin。网站、PostgreSQL 和 OIDC 已部署到服务器回环地址并通过内部检查。公网开放等待 ICP 备案。见 [部署说明](deploy/README.md)。
 
 仓库包含已发布源码与技术文档，不包含运行数据库、客户文件、密钥、登录账户、历史工作目录或未验证的工单控制台代码。源码导出摘要见 [source-export.json](deploy/source-export.json)。

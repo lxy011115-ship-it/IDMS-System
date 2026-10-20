@@ -1,0 +1,19 @@
+{
+  "status": "INTERNAL_PILOT_VERIFIED",
+  "verifiedAt": "2026-10-20T09:15:07.276Z",
+  "checks": [
+    "Tenant acme: runtime role, schema and immutable audit permissions verified",
+    "Tenant sandbox: runtime role, schema and immutable audit permissions verified",
+    "Independent encrypted shared-session database and key witness verified",
+    "Live health: PostgreSQL, OIDC and shared sessions enabled",
+    "Anonymous session remains unauthenticated and protected API rejects access",
+    "Website HTML and stylesheet served",
+    "Login redirects to the isolated identity service with PKCE S256 and a strict callback",
+    "Live identity discovery matches the configured issuer"
+  ],
+  "publicExposure": false,
+  "icpStatus": "PENDING",
+  "usersProvisioned": 0,
+  "interactiveLoginTested": false,
+  "productionAcceptance": false
+}
