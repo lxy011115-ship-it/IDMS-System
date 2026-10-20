@@ -1,0 +1,15 @@
+{
+  "keycloak": {
+    "source": "quay.io/keycloak/keycloak:26.8.1",
+    "platform": "linux/amd64",
+    "imageConfigSha256": "817e41712252d6d3a2a61ac5d2a011be561d7942cee8227ee418ababa5f52b9a",
+    "offlineArchive": "https://github.com/lxy011115-ship-it/IDMS-System/releases/download/deployment-dependency-keycloak-26.8.1/keycloak-26.8.1-verified.tar.gz",
+    "archiveSha256": "b92c40470a40dbf57c2826545916d97a1004c33d4f162c8f692ae3c696849ea5",
+    "archiveBytes": 303344814,
+    "verification": "All official compressed-layer hashes and config rootfs diff_ids verified before repackaging; image contents unchanged"
+  },
+  "postgres": {
+    "source": "public.ecr.aws/docker/library/postgres:16",
+    "publisher": "Docker Official Images on Amazon ECR Public"
+  }
+}

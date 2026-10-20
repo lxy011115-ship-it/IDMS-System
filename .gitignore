@@ -19,3 +19,6 @@ target/
 downloads/
 .npm-cache/
 
+
+__pycache__/
+*.pyc
