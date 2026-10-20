@@ -1,0 +1,3 @@
+import {loadAuthAuditRuntimeV4} from '../../server/auth-audit-runtime-v4.ts';
+import {AuthAuditWorkerV4} from '../../server/auth-audit-worker-v4.ts';
+const runtime=await loadAuthAuditRuntimeV4(process.argv[2]),worker=new AuthAuditWorkerV4({source:runtime.source,sourceAccount:runtime.config.source.account,writers:runtime.writers,onPhase:async(phase,claim)=>{if(phase==='BUSINESS_COMMITTED'){await new Promise((ok,no)=>process.send({type:'BUSINESS_COMMITTED_BEFORE_SOURCE_ACK',claim},e=>e?no(e):ok()));process.exit(0);}}});await worker.runOne(runtime.config.targets[0].binding.tenantId);throw Error('QA_CHILD_DID_NOT_EXIT_AT_BUSINESS_COMMIT');

@@ -1,0 +1,42 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {EventEmitter} from 'node:events';
+import {createHash} from 'node:crypto';
+import {streamCsvExport,csvFetchRows} from './data-export-stream.ts';
+import {assetRowsSql,measurementRowsSql,validateExportRow} from './data-management-sql.ts';
+import {withRequestCapacity,reserveResponse,reserveStreamResponse,httpCapacitySnapshot} from './request-capacity.ts';
+import {resident} from './capacity.ts';
+const ctx={tenantId:'acme',actorId:'qa',actorType:'USER',authMode:'oidc' as const,roles:['auditor'],permissions:['read'],correlationId:'unit'};
+const raw=(n:number)=>Array.from({length:n},(_,i)=>({tenant_id:'acme',batch_id:'batch',source_row:i+2,source_system:'unit',snapshot_digest:'a'.repeat(64),record_version:1,previous_batch_id:null,data_type:'MEASUREMENT',device_code:'P-001',asset_device_code:'P-001',asset_site_code:'F1',asset_line_code:'L1',definition:null,body:{source_record_id:'reading-'+i,device_code:'P-001',tag_code:'pressure',measured_at:'2026-10-16T00:00:00Z',value:i,unit:'MPa',quality:'GOOD',unused:'x'.repeat(300)}}));
+class Response extends EventEmitter {headersSent=false;destroyed=false;writableEnded=false;writableFinished=false;status=0;headers:any={};parts:Buffer[]=[];hold=false;pending?:()=>void;entered?:()=>void;
+ writeHead(status:number,headers:any){this.status=status;this.headers=headers;this.headersSent=true;return this;}
+ write(bytes:Buffer,callback:(error?:Error)=>void){this.parts.push(Buffer.from(bytes));if(this.hold){this.hold=false;this.pending=()=>callback();this.entered?.();}else queueMicrotask(()=>callback());return false;}
+ end(value?:any,callback?:()=>void){if(typeof value==='function')callback=value;else if(value!==undefined)this.parts.push(Buffer.from(value));this.writableEnded=true;this.writableFinished=true;this.emit('finish');callback?.();return this;}
+ destroy(){if(this.destroyed)return this;this.destroyed=true;this.emit('close');return this;}}
+function poolFor(data:any[],options:{mutate?:(row:any,index:number)=>void;connectError?:boolean;commitError?:boolean;fetchTimeout?:boolean}={}){const calls:string[]=[],positions={PREFLIGHT:0,DELIVERY:0};let released=0;const client:any={async query(sql:string){calls.push(sql);if(sql==='COMMIT'&&options.commitError)throw Error('COMMIT_FAILED');if(options.fetchTimeout&&sql.includes('FETCH'))throw Object.assign(Error('statement timeout'),{code:'57014'});if(options.fetchTimeout&&sql.includes('_CLOSE'))throw Object.assign(Error('transaction aborted'),{code:'25P02'});if(sql.includes('FETCH')){const phase=sql.includes('PREFLIGHT')?'PREFLIGHT':'DELIVERY',start=positions[phase];const rows=structuredClone(data.slice(start,start+csvFetchRows));positions[phase]+=rows.length;if(phase==='DELIVERY')rows.forEach((r:any,i:number)=>options.mutate?.(r,start+i));return {rows};}return {rows:[]};},release(){released++;}};return {pool:{connect:async()=>{if(options.connectError)throw Error('CONNECT_FAILED');return client;}} as any,calls,positions,released:()=>released};}
+async function run(pool:any,res=new Response(),verify=async()=>{}){const req:any=new EventEmitter();req.method='GET';req.url='/api/v1/data-management/measurements/export';req.aborted=false;let error:any;try{await withRequestCapacity(req,res as any,()=>streamCsvExport(pool,ctx,new URLSearchParams(),false,res as any,verify));}catch(e){error=e;res.writeHead((e as any).status||500,{'content-type':'application/json'});res.end(JSON.stringify({error:(e as any).message,code:(e as any).code}));}return {res,error};}
+test('export selection shares stable paged ordering and row authorization binds SQL assets to bodies',async()=>{
+ assert.match(assetRowsSql(ctx,new URLSearchParams()).text,/ORDER BY a.source_ordinal$/);assert.match(measurementRowsSql(ctx,new URLSearchParams()).text,/m.source_row,m.source_ordinal$/);validateExportRow(raw(1)[0],ctx,false);const restricted={...ctx,roles:['production-supervisor'],scope:{provided:true,sites:['F2'],lines:['*'],devices:['*']}};assert.throws(()=>validateExportRow(raw(1)[0],restricted,false));assert.throws(()=>validateExportRow({...raw(1)[0],body:{device_code:'HIDDEN'}},ctx,false));
+ for(const q of ['page=1','pageSize=1','quality=INVALID','deviceCode=A&deviceCode=B','tenant=other']){const mock=poolFor([]);await assert.rejects(()=>runInvalid(mock.pool,q));assert.equal(mock.calls.length,0);}
+});
+async function runInvalid(pool:any,q:string){return streamCsvExport(pool,ctx,new URLSearchParams(q),false,new Response() as any,async()=>{});}
+test('two passes verify before output and commit before a small final block, with exact length and digest',async()=>{
+ const mock=poolFor(raw(20)),before=resident.snapshot().total;let verified=false;const {res,error}=await run(mock.pool,new Response(),async()=>{verified=true;});assert.equal(error,undefined);assert.equal(verified,true);assert.equal(res.status,200);const bytes=Buffer.concat(res.parts);assert.equal(bytes.length,res.headers['content-length']);assert.equal(createHash('sha256').update(bytes).digest('hex'),res.headers['x-export-sha256']);assert.equal(res.headers['x-export-rows'],'20');assert.ok(mock.calls[0].includes('REPEATABLE READ READ ONLY'));assert.equal(mock.calls.at(-1),'COMMIT');assert.equal(mock.released(),1);assert.equal(resident.snapshot().total,before);assert.equal(httpCapacitySnapshot().active,0);
+});
+test('changed delivery rows never produce a normally completed CSV and the sent prefix stays verified',async()=>{
+ const mock=poolFor(raw(2000),{mutate:(row,i)=>{if(i===1500)row.body.value=-999;}}),{res}=await run(mock.pool);assert.equal(res.destroyed,true);assert.equal(res.writableFinished,false);const good=await run(poolFor(raw(2000)).pool);assert.deepEqual(Buffer.concat(res.parts),Buffer.concat(good.res.parts).subarray(0,Buffer.concat(res.parts).length));assert.ok(Buffer.concat(res.parts).length<res.headers['content-length']);assert.ok(mock.calls.includes('ROLLBACK'));assert.equal(mock.released(),1);
+ const small=await run(poolFor(raw(1),{mutate:row=>row.body.value=999}).pool);assert.equal(small.res.status,503);assert.equal(small.error.code,'CSV_EXPORT_INTEGRITY');assert.equal(small.res.headers['content-type'],'application/json');
+});
+test('backpressure stops fetching and disconnect closes cursors and returns response, task and HTTP budgets',async()=>{
+ const mock=poolFor(raw(4000)),res=new Response();res.hold=true;let entered!:()=>void;const gate=new Promise<void>(ok=>entered=ok);res.entered=entered;const before=resident.snapshot().total,pending=run(mock.pool,res);await gate;const position=mock.positions.DELIVERY;assert.ok(position<4000);await new Promise(ok=>setTimeout(ok,20));assert.equal(mock.positions.DELIVERY,position);assert.equal(resident.snapshot().categories.response,65536);res.destroy();res.pending?.();await pending;assert.ok(mock.calls.includes('ROLLBACK'));assert.equal(mock.released(),1);assert.equal(resident.snapshot().total,before);assert.equal(httpCapacitySnapshot().active,0);
+});
+test('connect and commit failures release their resources and return JSON when no prefix was sent',async()=>{
+ const before=resident.snapshot().total;const first=await run(poolFor(raw(1),{connectError:true}).pool);assert.equal(first.res.status,503);const mock=poolFor(raw(1),{commitError:true}),second=await run(mock.pool);assert.equal(second.res.status,503);assert.equal(second.res.headers['content-type'],'application/json');assert.equal(mock.released(),1);assert.equal(resident.snapshot().total,before);
+});
+test('stream response windows reserve bounded resident bytes and cannot mix with aggregate JSON mode',async()=>{
+ const req:any=new EventEmitter(),res=new Response(),before=resident.snapshot().total;req.method='GET';await withRequestCapacity(req,res as any,async()=>{reserveStreamResponse(200000000,65536);assert.equal(resident.snapshot().categories.response,65536);assert.throws(()=>reserveResponse(10),(e:any)=>e.code==='RESPONSE_MODE');res.end();});assert.equal(resident.snapshot().total,before);
+});
+
+test('database statement timeout survives failed cursor cleanup and releases the transaction',async()=>{
+ const mock=poolFor(raw(1),{fetchTimeout:true}),before=resident.snapshot().total,{res,error}=await run(mock.pool);assert.equal(res.status,504);assert.equal(error.code,'CSV_EXPORT_PREPARE_TIMEOUT');assert.ok(mock.calls.some(sql=>sql.includes("set_config('statement_timeout'")));assert.ok(mock.calls.includes('ROLLBACK'));assert.equal(mock.released(),1);assert.equal(resident.snapshot().total,before);
+});

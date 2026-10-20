@@ -1,0 +1,30 @@
+import {object,keys} from './schema-primitives.ts';
+import {calendarTime} from './calendar-schema.ts';
+import {canonical} from './imports.ts';
+import type {HistoricalImportRecord} from './asof-imports.ts';
+import type {OperationalPolicyContext} from './operational-policy-history.ts';
+import {operationalIntegrity} from './operational-policy-history.ts';
+import {operationalPolicySchema} from './operational-policy-schema.ts';
+import {validateFrozenCoverageInput,type FrozenCoverageInput} from './frozen-coverage-v1.ts';
+
+export interface OperationalInput {format:'idms-operational-input-v1';tenantId:string;deviceCode:string;source:'UPLOADS';query:{from:string;to:string;knownAt:string;tagCode:null;edgeId:null};imports:HistoricalImportRecord[];metricPolicy:OperationalPolicyContext;calendarContext:FrozenCoverageInput['calendarContext']}
+const code=(v:unknown,max=100):v is string=>typeof v==='string'&&v.length>0&&v.length<=max&&!/[\u0000-\u001f]/.test(v),sha=(v:unknown)=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
+function number(v:Record<string,unknown>,key:string,min?:number,integer=false){const raw=v[key];if(typeof raw!=='number'&&typeof raw!=='string'||typeof raw==='string'&&!raw.trim())throw operationalIntegrity();const n=Number(raw);if(!Number.isFinite(n)||min!==undefined&&n<min||integer&&!Number.isInteger(n))throw operationalIntegrity();return n;}
+export function maintenanceRelevant(v:Record<string,unknown>,from:number,to:number){const failure=calendarTime(v.failure_time),end=calendarTime(v.repair_end);return failure>=from&&failure<to||failure<to&&end>from||end>=from&&end<to;}
+export function validateOperationalInput(raw:unknown):OperationalInput{
+ try{const v=object(raw);keys(v,['format','tenantId','deviceCode','source','query','imports','metricPolicy','calendarContext']);if(v.format!=='idms-operational-input-v1'||v.source!=='UPLOADS'||typeof v.tenantId!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(v.tenantId)||typeof v.deviceCode!=='string'||!/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(v.deviceCode))throw Error();const q=object(v.query);keys(q,['from','to','knownAt','tagCode','edgeId']);const from=calendarTime(q.from),to=calendarTime(q.to),knownAt=calendarTime(q.knownAt);if(from>=to||to-from>31*86400000||to>knownAt||q.tagCode!==null||q.edgeId!==null)throw Error();
+  if(!Array.isArray(v.imports)||v.imports.length>25000)throw Error();const seen=new Set<string>(),maintenance=new Map<number,Record<string,unknown>[]>();let assets=0;
+  for(const item of v.imports){const h=object(item);keys(h,['record','revision','source']);const r=object(h.record),s=object(h.source),value=object(r.value);keys(r,['tenantId','sourceSystem','dataType','batchId','row','value']);keys(s,['batchId','sourceRow','snapshotDigest','fileSha256','recordVersion','approvalEventId','committedEventId','recordedAt']);
+   if(r.tenantId!==v.tenantId||value.device_code!==v.deviceCode||!['DEVICE','PRODUCTION','STATE_INTERVAL','MAINTENANCE','QUALITY'].includes(String(r.dataType))||!code(r.sourceSystem,100)||!code(r.batchId)||!Number.isSafeInteger(r.row)||Number(r.row)<2||!Number.isSafeInteger(h.revision)||Number(h.revision)<1||s.batchId!==r.batchId||s.sourceRow!==r.row||s.recordVersion!==h.revision||!sha(s.snapshotDigest)||!sha(s.fileSha256)||!code(s.approvalEventId)||!code(s.committedEventId)||calendarTime(s.recordedAt)>knownAt||!(typeof value.source_record_id==='string'&&value.source_record_id.length>0||typeof value.source_record_id==='number'&&Number.isFinite(value.source_record_id)))throw Error();
+   const id=canonical([r.sourceSystem,r.dataType,String(value.source_record_id)]);if(seen.has(id))throw Error();seen.add(id);
+   if(r.dataType==='DEVICE'){assets++;continue;}
+   if(r.dataType==='PRODUCTION'){const a=calendarTime(value.period_start),b=calendarTime(value.period_end),planned=number(value,'planned_minutes',0),total=number(value,'total_count',0,true),good=number(value,'good_count',0,true),cycle=number(value,'ideal_cycle_seconds',0);if(b<=a||a>=to||b<=from||planned<=0||planned>(b-a)/60000||good>total||cycle<=0)throw Error();}
+   if(r.dataType==='STATE_INTERVAL'){const a=calendarTime(value.start_time),b=calendarTime(value.end_time);if(b<=a||a>=to||b<=from||!['RUNNING','IDLE','DOWN'].includes(String(value.state))||value.state==='DOWN'&&!code(value.reason_code,200))throw Error();}
+   if(r.dataType==='MAINTENANCE'){const failure=calendarTime(value.failure_time),start=calendarTime(value.repair_start),end=calendarTime(value.repair_end);if(failure>start||end<=start)throw Error();const rows=maintenance.get(failure)||[];rows.push(value);maintenance.set(failure,rows);}
+   if(r.dataType==='QUALITY'){const at=calendarTime(value.measured_at);number(value,'sample_no',1,true);number(value,'measured_value');if(at<from||at>=to||number(value,'lsl')>=number(value,'usl')||!code(value.batch_code,200)||!code(value.characteristic_code,200)||!code(value.unit,64))throw Error();}
+  }
+  if(assets>1||[...maintenance.values()].some(rows=>!rows.some(r=>maintenanceRelevant(r,from,to))))throw Error();
+  if(v.metricPolicy!==null){const c=object(v.metricPolicy);keys(c,['policy','source']);const policy=operationalPolicySchema(c.policy),s=object(c.source);keys(s,['templateId','templateKey','version','contentDigest','recordedAt','governanceEventId','changeIntent','changeReason']);if(canonical(policy)!==canonical(c.policy)||policy.deviceCode!==v.deviceCode||!code(s.templateId)||typeof s.templateKey!=='string'||!/^[a-z][a-z0-9-]{0,79}$/.test(s.templateKey)||typeof s.version!=='string'||!/^(0|[1-9]\d{0,5})\.(0|[1-9]\d{0,5})\.(0|[1-9]\d{0,5})$/.test(s.version)||!sha(s.contentDigest)||calendarTime(s.recordedAt)>knownAt||!code(s.governanceEventId)||s.changeIntent!==policy.changeIntent||s.changeReason!==policy.changeReason)throw Error();}
+  validateFrozenCoverageInput({format:'idms-coverage-input-v1',tenantId:v.tenantId,deviceCode:v.deviceCode,source:'UPLOADS',query:q,imports:[],telemetry:[],registry:null,calendarContext:v.calendarContext});return raw as OperationalInput;
+ }catch{throw operationalIntegrity();}
+}

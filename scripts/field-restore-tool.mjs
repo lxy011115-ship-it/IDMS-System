@@ -1,0 +1,34 @@
+import {spawn,execFile,execFileSync} from 'node:child_process';
+import {promisify} from 'node:util';
+import {join,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {realpath,open,lstat,unlink} from 'node:fs/promises';
+import {fieldRestoreTool} from './field-restore-flow-record.mjs';
+import {sourceFreezeSha} from './field-source-freeze-policy.mjs';
+import {recoveryHostId} from './field-recovery-lock.mjs';
+import {hashFieldBackupFile} from './field-backup-archive.mjs';
+import {backupRegular,eachChunk,writeExactly,backupUnchanged} from './field-backup-io.mjs';
+const exec=promisify(execFile),script=fileURLToPath(new URL('./field-archive-process.ps1',import.meta.url)),ps=process.platform==='win32'?join(process.env.SystemRoot,'System32/WindowsPowerShell/v1.0/powershell.exe'):'powershell.exe',limit=8*1024**3+1048576;
+const fail=code=>{throw Object.assign(Error(code),{code});};
+function restoreEnvironment(t,runtime,account){const env={...process.env};for(const key of Object.keys(env))if(/^PG/i.test(key))delete env[key];return {...env,PGHOST:runtime.host,PGPORT:String(runtime.port),PGDATABASE:account.database,PGUSER:account.user,PGPASSWORD:account.password,PGAPPNAME:t.applicationName,PGCONNECT_TIMEOUT:'5',PGOPTIONS:'-c statement_timeout=120000 -c lock_timeout=5000'+(t.kind==='GENERATE'?' -c default_transaction_read_only=on':'')};}
+export async function fieldRestoreProgram(kind){if(!['pg_restore','psql'].includes(kind))fail('FIELD_RESTORE_PROGRAM_INVALID');const file=await realpath(resolve(process.env.LOCALAPPDATA,'IDMS/runtime/pgsql/bin/'+kind+'.exe')),version=execFileSync(file,['--version'],{windowsHide:true,encoding:'utf8',timeout:10000});if(!version.startsWith(kind+' (PostgreSQL) 16.'))fail('FIELD_RESTORE_PROGRAM_VERSION_INVALID');return {file,sha256:(await hashFieldBackupFile(file)).sha256};}
+async function boundProgram(tool){const p=await fieldRestoreProgram(tool.kind==='GENERATE'?'pg_restore':'psql');if(p.file!==tool.program||p.sha256!==tool.programSha256)fail('FIELD_RESTORE_PROGRAM_CHANGED');return p;}
+async function inspect(t,toolFile,guard,mode,p){await guard.assertHeld();if(t.ownerHostId!==recoveryHostId())fail('FIELD_RESTORE_TOOL_HOST_CHANGED');const owner=guard.ownerIdentity,r=await exec(ps,['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',script,'-Mode',mode,'-ToolIntentFile',toolFile,'-ExpectedSha256',sourceFreezeSha(t),'-OwnerPid',String(owner.ownerPid),'-OwnerStartTicks',owner.ownerStartTicks,...(p?['-TargetPid',String(p.pid),'-TargetStartTicks',p.startTicks]:[])],{windowsHide:true,maxBuffer:65536});return r.stdout.trim();}
+export async function retireFieldRestoreTool(raw,toolFile,guard){const t=fieldRestoreTool(raw);await boundProgram(t);for(;;){const list=JSON.parse(await inspect(t,toolFile,guard,'Inspect'));if(!Array.isArray(list))fail('FIELD_RESTORE_TOOL_INSPECTION_FAILED');if(!list.length)return;for(const p of list.sort((a,b)=>(a.kind==='dump'?0:1)-(b.kind==='dump'?0:1))){if(!Number.isSafeInteger(p.pid)||p.pid<1||typeof p.startTicks!=='string'||!/^\d{17,20}$/.test(p.startTicks)||!['dump','helper'].includes(p.kind))fail('FIELD_RESTORE_TOOL_INSPECTION_FAILED');if(await inspect(t,toolFile,guard,p.kind==='dump'?'Stop':'Wait',p)!=='TERMINAL')fail('FIELD_RESTORE_TOOL_TERMINAL_UNCONFIRMED');}}}
+export async function checkRestoreInputs(tool){for(const f of tool.inputs){const actual=await hashFieldBackupFile(f.path);if(actual.bytes!==f.bytes||actual.sha256!==f.sha256)fail('FIELD_RESTORE_INPUT_CHANGED');}}
+export async function runFieldRestoreTool(raw,{runtime,account,guard,check,signal}){
+ const t=fieldRestoreTool(raw);await boundProgram(t);await check();if(t.ownerPid!==process.pid||t.ownerStartTicks!==guard.ownerIdentity.ownerStartTicks||t.ownerHostId!==recoveryHostId())fail('FIELD_RESTORE_TOOL_OWNER_CHANGED');await checkRestoreInputs(t);
+ if(t.output){const f=await open(t.output,'wx',0o600);await f.close();}
+ let child,closed,problem,checking=false,stopped=false;const stop=()=>{stopped=true;child?.kill();},abort=()=>{problem=Object.assign(Error('FIELD_RESTORE_CANCELLED'),{code:'FIELD_RESTORE_CANCELLED'});stop();};
+ try{
+  if(signal?.aborted)abort();if(problem)throw problem;let exitCode,termination;
+  closed=new Promise(ok=>{child=spawn(t.program,t.args,{windowsHide:true,env:restoreEnvironment(t,runtime,account),stdio:['ignore','pipe','pipe']});child.stdout.resume();child.stderr.resume();child.once('error',()=>{problem=Object.assign(Error('FIELD_RESTORE_TOOL_LAUNCH_FAILED'),{code:'FIELD_RESTORE_TOOL_LAUNCH_FAILED'});});child.once('close',(code,sig)=>{exitCode=code;termination=sig;ok();});});
+  signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();const timer=setTimeout(()=>{problem=Object.assign(Error('FIELD_RESTORE_TOOL_TIMEOUT'),{code:'FIELD_RESTORE_TOOL_TIMEOUT'});stop();},300000);
+  const monitor=setInterval(async()=>{if(checking)return;checking=true;try{await check();if(t.output&&(await lstat(t.output)).size>limit)fail('FIELD_RESTORE_SQL_LIMIT');}catch(e){problem=e;stop();}finally{checking=false;}},500);
+  try{await closed;}finally{clearTimeout(timer);clearInterval(monitor);while(checking)await new Promise(ok=>setTimeout(ok,10));}
+  if(problem)throw problem;await check();await checkRestoreInputs(t);return {exitCode,termination,failed:exitCode!==0||!!termination||stopped};
+ }finally{signal?.removeEventListener('abort',abort);if(closed){if(problem)stop();await closed;}}
+}
+export async function copyRestoreDump(source,destination,expected,check){const input=await backupRegular(source,8*1024**3);let output;try{if(Number(input.stat.size)!==expected.bytes)fail('FIELD_RESTORE_INPUT_CHANGED');output=await open(destination,'wx',0o600);let at=0,checkAt=0;await eachChunk(input.file,0,expected.bytes,async bytes=>{await writeExactly(output,bytes,at);at+=bytes.length;if(at>=checkAt){await check();checkAt=at+4194304;}});await output.sync();await output.close();output=null;await backupUnchanged(input);const actual=await hashFieldBackupFile(destination);if(actual.bytes!==expected.bytes||actual.sha256!==expected.sha256)fail('FIELD_RESTORE_INPUT_CHANGED');}finally{await output?.close();await input.file.close();}}
+export async function writeRestoreWorkFile(file,bytes){const f=await open(file,'wx',0o600);try{await writeExactly(f,bytes,0);await f.sync();}finally{await f.close();}return {bytes:bytes.length,sha256:sourceFreezeSha(bytes)};}
+export async function cleanupRestoreWork(files,flow){for(const run of flow.runs)for(const part of ['dump',...['pre-data','data','post-data'].flatMap(s=>[s+'.sql',s+'.prefix',s+'.marker'])]){const path=files.restoreWorkFile(run.runId,part);try{const s=await lstat(path);if(!s.isFile()||s.isSymbolicLink()||s.nlink!==1)fail('FIELD_RESTORE_WORK_FILE_CHANGED');await unlink(path);}catch(e){if(e.code!=='ENOENT')throw e;}}}

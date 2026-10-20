@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {readFile,readdir,access} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import pg from 'pg';
+const read=async p=>JSON.parse(await readFile(p,'utf8'));
+const exists=async p=>{try{await access(p);return true;}catch(e){if(e.code!=='ENOENT')throw e;return false;}};
+export async function verifyMaintenanceMapCleanupV4(){
+ const runtime=await read('.local/postgres-runtime.json'),c=new pg.Client({host:runtime.host,port:runtime.port,user:'idms_bootstrap',password:runtime.bootstrapPassword,database:'postgres'}),root=resolve('work/maintenance-map-v4-qa-20261020'),runs=[];let databasesRemoved=0,rolesRemoved=0;await c.connect();
+ const gone=async(kind,name,oid)=>{assert.match(name,/^idms_govqa_[a-f0-9]{12}_[a-z_]+$/);assert.match(oid,/^[1-9][0-9]*$/);const table=kind==='database'?'pg_database':'pg_roles',column=kind==='database'?'datname':'rolname';assert.equal((await c.query('SELECT oid FROM '+table+' WHERE '+column+'=$1 OR oid=$2::oid',[name,oid])).rowCount,0);if(kind==='database')databasesRemoved++;else rolesRemoved++;};
+ try{for(const item of await readdir(root,{withFileTypes:true})){if(!item.isDirectory()||!/^[a-f0-9]{12}$/.test(item.name))continue;const directory=join(root,item.name),resources=await read(join(directory,'resources.private.json')),cleanup=await read(join(directory,'cleanup.json')),evidence=resolve('work/maintenance-map-v4-20261020',item.name),p=await read(join(evidence,'verification.json'));assert.equal(resources.nonce,item.name);assert.equal(cleanup.allOwnedDatabasesRemoved,resources.databases.length);assert.equal(cleanup.allOwnedRolesRemoved,resources.roles.length);assert.ok(cleanup.noForceOrBackendTermination);for(const [name,pin]of resources.databases){assert.ok(name.startsWith('idms_govqa_'+item.name+'_'));await gone('database',name,pin.oid);}for(const [name,oid]of resources.roles){assert.ok(name.startsWith('idms_govqa_'+item.name+'_'));await gone('role',name,oid);}let dbCount=resources.databases.length,roleCount=resources.roles.length;
+  if(await exists(join(evidence,'flow-database.private.json'))){const pin=await read(join(evidence,'flow-database.private.json'));assert.equal(pin.name,'idms_govqa_'+item.name+'_flow');assert.equal(p.cleanup.flowDatabaseRemoved,1);assert.equal(p.cleanup.flowRoleRemoved,1);assert.ok(p.cleanup.exactFlowOidOwnerAndZeroBackends&&p.cleanup.ownedEngineTerminated&&p.cleanup.privateEngineConfigAbsent);await gone('database',pin.name,pin.oid);await gone('role',pin.name,pin.roleOid);dbCount++;roleCount++;}assert.equal(await exists(join(evidence,'engine.private.json')),false);runs.push({nonce:item.name,databasesRemoved:dbCount,rolesRemoved:roleCount,privateEngineConfigAbsent:true});
+ }return {checkedAt:new Date().toISOString(),runs,databasesRemoved,rolesRemoved,ownedDatabaseLeftovers:0,ownedRoleLeftovers:0,onlyReadOnlyInventoryQueries:true};}finally{await c.end();}
+}
+if(import.meta.url===pathToFileURL(process.argv[1]??'').href)console.log(JSON.stringify(await verifyMaintenanceMapCleanupV4()));

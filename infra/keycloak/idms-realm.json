@@ -1,0 +1,11 @@
+{
+  "realm": "idms",
+  "enabled": true,
+  "registrationAllowed": false,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "accessTokenLifespan": 120,
+  "clients": [{"clientId":"idms-web","enabled":true,"publicClient":true,"protocol":"openid-connect","standardFlowEnabled":true,"directAccessGrantsEnabled":false,"implicitFlowEnabled":false,"fullScopeAllowed":false,"redirectUris":["http://127.0.0.1:4010/api/v1/auth/callback"],"webOrigins":[],"attributes":{"pkce.code.challenge.method":"S256"},"protocolMappers":[{"name":"idms-tenant","protocol":"openid-connect","protocolMapper":"oidc-usermodel-attribute-mapper","config":{"user.attribute":"tenant_id","claim.name":"tenant_id","jsonType.label":"String","access.token.claim":"true","id.token.claim":"false","userinfo.token.claim":"false","multivalued":"false"}},{"name":"idms-audience","protocol":"openid-connect","protocolMapper":"oidc-audience-mapper","config":{"included.custom.audience":"idms-api","access.token.claim":"true","id.token.claim":"false"}}]}],
+  "roles": {"realm": [{"name":"tenant-admin"},{"name":"equipment-admin"},{"name":"data-uploader"},{"name":"maintenance-engineer"},{"name":"quality-engineer"},{"name":"final-approver"},{"name":"auditor"}]},
+  "scopeMappings": [{"client":"idms-web","roles":["tenant-admin","equipment-admin","data-uploader","maintenance-engineer","quality-engineer","final-approver","auditor"]}]
+}

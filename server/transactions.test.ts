@@ -1,0 +1,30 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
+import { seedStore } from "./store.ts";
+import { approvePredictiveAlert } from "./predictive.ts";
+import { verifyAuditChain } from "./audit.ts";
+import {commandAccess} from './command-access.ts';
+import {emptyImports} from './imports.ts';
+process.env.IDMS_DEMO_NAMESPACE = 'transaction-test-' + randomUUID();
+const { mutate, loadImports, transactionalRequest } = await import('./import-api.ts');
+const ctx = { tenantId: 'acme', actorId: 'demo.approver', actorType: 'USER', correlationId: randomUUID() };
+test('unified snapshot rolls back all domain/audit changes and restores an idempotent result on restart', async () => {
+  const store = seedStore(), before = structuredClone(store);
+  await assert.rejects(mutate(store, () => { approvePredictiveAlert(store, 'palert-001', 'APPROVED', '核查证据', ctx); throw Error('fault before commit'); }), /fault/);
+  assert.deepEqual(store, before);
+  const result = await transactionalRequest(store, 'acme:one', 'hash-A', () => approvePredictiveAlert(store, 'palert-001', 'APPROVED', '核查证据', ctx));
+  const restored = seedStore(); await loadImports(restored);
+  assert.equal(restored.workOrders.length, 1); assert.equal(restored.predictiveAlerts[0].workOrderId, result.workOrderId); assert.equal(verifyAuditChain(restored.audits, 'acme'), true);
+  const retry = await transactionalRequest(restored, 'acme:one', 'hash-A', () => { throw Error('must not rerun'); });
+  assert.deepEqual(retry, result);
+  await assert.rejects(transactionalRequest(restored, 'acme:one', 'hash-B', () => null), /相同幂等键/);
+  assert.equal(restored.workOrders.length, 1);
+});
+test('receipt permission rechecks inside the write queue after an earlier device-scope change',async()=>{
+ const store=seedStore(),data=emptyImports(),who={...ctx,authMode:'oidc' as const,roles:['data-uploader'],scope:{provided:true,sites:[],lines:[store.devices[0].line],devices:[]}},path='/api/v1/predictive/analyze',input={deviceCode:'D-001'},guard=()=>commandAccess(path,'POST',input,who,data,store);
+ await transactionalRequest(store,'acme:scope-receipt','hash',()=>({evidence:'original authorized result'}),undefined,guard);
+ guard();const relocate=mutate(store,()=>{store.devices[0].line='OTHER-LINE';});
+ const replay=transactionalRequest(store,'acme:scope-receipt','hash',()=>{throw Error('cached task must not execute');},undefined,guard);
+ await relocate;await assert.rejects(replay,/授权范围/);assert.equal(store.devices[0].line,'OTHER-LINE');
+});

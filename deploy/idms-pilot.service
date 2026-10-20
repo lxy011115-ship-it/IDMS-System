@@ -1,0 +1,39 @@
+[Unit]
+Description=IDMS controlled pilot (loopback only, ICP pending)
+After=network-online.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=idms
+Group=idms
+WorkingDirectory=/srv/idms/app
+Environment=PATH=/srv/idms/node-v24.20.0-linux-x64/bin:/usr/bin:/bin
+Environment=NODE_ENV=development
+Environment=NODE_OPTIONS=--max-old-space-size=160
+Environment=PORT=4011
+Environment=IDMS_STORAGE=postgres
+Environment=IDMS_AUTH_MODE=oidc
+Environment=IDMS_PUBLIC_ORIGIN=http://127.0.0.1:4011
+Environment=IDMS_OIDC_ISSUER=http://127.0.0.1:8084/realms/idms
+Environment=IDMS_OIDC_CLIENT_ID=idms-web
+Environment=IDMS_OIDC_AUDIENCE=idms-api
+Environment=IDMS_POSTGRES_CONFIG=/srv/idms/app/.local/postgres-business.json
+ExecStart=/srv/idms/node-v24.20.0-linux-x64/bin/node server/index.ts
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=45
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/idms/app/.demo-data
+MemoryMax=256M
+CPUQuota=60%
+TasksMax=64
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
+

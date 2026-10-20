@@ -1,0 +1,3 @@
+source_record_id,device_code,device_name,site_code,line_code,equipment_type,brand,model,serial_number,criticality
+asset-pump-01,PUMP-01,循环水泵,FACTORY-01,LINE-01,泵组,示例品牌,P-100,DEMO-PUMP-001,HIGH
+asset-comp-01,COMP-01,空压机,FACTORY-01,LINE-01,空压机,示例品牌,C-200,DEMO-COMP-001,MEDIUM

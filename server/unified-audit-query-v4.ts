@@ -1,0 +1,25 @@
+import type {AccessContext} from './access.ts';
+import {permissionsFor,scopeFilter} from './access.ts';
+import {canonicalDigest} from './canonical-state.ts';
+import {domainReadAccessV4} from './domain-read-api-v4.ts';
+import type {AuditCursorCodec} from './audit-cursor.ts';
+import type {StateHead} from './state-map-sql-v1.ts';
+import {DomainError} from './service.ts';
+export class UnifiedAuditErrorV4 extends DomainError {readonly code:string;constructor(status:number,code:string){super(status,code);this.code=code;}}
+export function auditFailV4(status:number,code:string):never{throw new UnifiedAuditErrorV4(status,code);}
+export function auditNeedV4(value:unknown,code='AUDIT_INTEGRITY'):asserts value {if(!value)auditFailV4(503,code);}
+export const unifiedAuditLifetimeV4=30*60*1000;
+export const auditHashV4=(v:unknown):v is string=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
+export const auditOrdinalV4=(v:unknown):v is string=>typeof v==='string'&&/^(0|[1-9][0-9]{0,18})$/.test(v)&&BigInt(v)<=9223372036854775807n;
+export function unifiedAuditActorV4(ctx:AccessContext){const sorted=(v:string[]|undefined)=>[...new Set(v||[])].sort();return canonicalDigest({tenantId:ctx.tenantId,actorId:ctx.actorId,actorType:ctx.actorType,authMode:ctx.authMode,roles:sorted(ctx.roles),permissions:sorted(permissionsFor(ctx.roles||[])),provided:!!ctx.scope?.provided,scope:Object.fromEntries(Object.entries(scopeFilter(ctx)).map(([k,v])=>[k,v===null?null:sorted(v)]))});}
+export type UnifiedAuditFiltersV4=Partial<Record<'objectType'|'action'|'actorType'|'actorId'|'objectId'|'correlationId'|'from'|'to',string>>;
+export interface UnifiedAuditTokenV4 {v:1;purpose:'IDMS_UNIFIED_AUDIT_V4_1';kind:'PAGE'|'EVENT';actor:string;deployment:string;readGeneration:string;consoleGeneration:string;root:StateHead;position:string;capturedAt:number;expiresAt:number;filtersHash:string;pageSize:number;eventId?:string}
+const filterNames=['objectType','action','actorType','actorId','objectId','correlationId','from','to'] as const;
+export function parseUnifiedAuditFiltersV4(params:URLSearchParams){const seen=new Set<string>(),filters:UnifiedAuditFiltersV4={};let pageSize=20;for(const [k,v]of params){if(![...filterNames,'cursor','pageSize'].includes(k as any)||seen.has(k))auditFailV4(400,'AUDIT_QUERY');seen.add(k);if(k==='cursor'){if(!v||v.length>6144)auditFailV4(400,'AUDIT_CURSOR');continue;}if(k==='pageSize'){if(!/^[1-9][0-9]?$/.test(v)||Number(v)>20)auditFailV4(400,'AUDIT_QUERY');pageSize=Number(v);continue;}
+  if(!v||Buffer.byteLength(v)>512||/[\u0000-\u001f\u007f]/.test(v))auditFailV4(400,'AUDIT_FILTER');if(k==='objectType'&&!/^[A-Z][A-Z0-9_]{0,63}$/.test(v)||k==='action'&&!/^[A-Z][A-Z0-9_]{0,99}$/.test(v)||k==='actorType'&&!['USER','AI','RULE','SYSTEM','INTERFACE'].includes(v))auditFailV4(400,'AUDIT_FILTER');if(['from','to'].includes(k)&&(!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(v)||!Number.isFinite(Date.parse(v))||new Date(v).toISOString()!==v))auditFailV4(400,'AUDIT_TIME');filters[k as keyof UnifiedAuditFiltersV4]=v;
+ }if(filters.from&&filters.to&&filters.from>filters.to)auditFailV4(400,'AUDIT_TIME_RANGE');return {filters,pageSize,filtersHash:canonicalDigest(filters)};}
+export function openUnifiedAuditTokenV4(codec:AuditCursorCodec,token:string,kind:'PAGE'|'EVENT',ctx:AccessContext,now=Date.now()):UnifiedAuditTokenV4 {
+ domainReadAccessV4(ctx);let c:any;try{c=codec.open(token);}catch{auditFailV4(400,'AUDIT_CURSOR');}const keys=['v','purpose','kind','actor','deployment','readGeneration','consoleGeneration','root','position','capturedAt','expiresAt','filtersHash','pageSize',...(kind==='EVENT'?['eventId']:[])];if(!c||Object.keys(c).sort().join(',')!==keys.sort().join(',')||c.v!==1||c.purpose!=='IDMS_UNIFIED_AUDIT_V4_1'||c.kind!==kind||![c.actor,c.deployment,c.readGeneration,c.consoleGeneration,c.filtersHash].every(auditHashV4)||!auditOrdinalV4(c.position)||!c.root||Object.keys(c.root).sort().join(',')!==['revision','rootId','rootHash','count','receiptHash'].sort().join(',')||!auditOrdinalV4(c.root.revision)||!auditOrdinalV4(c.root.count)||!(c.root.rootId===null||auditHashV4(c.root.rootId))||!auditHashV4(c.root.rootHash)||!auditHashV4(c.root.receiptHash)||!Number.isSafeInteger(c.capturedAt)||c.capturedAt<0||c.capturedAt>now+30000||!Number.isSafeInteger(c.expiresAt)||c.expiresAt-c.capturedAt!==unifiedAuditLifetimeV4||!Number.isInteger(c.pageSize)||c.pageSize<1||c.pageSize>20||kind==='EVENT'&&(typeof c.eventId!=='string'||!/^[-\w]{1,128}$/.test(c.eventId)||c.position==='0'))auditFailV4(400,'AUDIT_CURSOR');
+ if(c.actor!==unifiedAuditActorV4(ctx))auditFailV4(409,'AUDIT_SCOPE_CHANGED');if(c.expiresAt<=now)auditFailV4(410,'AUDIT_CURSOR_EXPIRED');return c;
+}
+export function matchesUnifiedAuditV4(event:{objectType:string;action:string;actorType:string;actorId:string;objectId:string;correlationId:string;businessTime:string},filters:UnifiedAuditFiltersV4){return Object.entries(filters).every(([k,v])=>k==='from'?Date.parse(event.businessTime)>=Date.parse(v):k==='to'?Date.parse(event.businessTime)<=Date.parse(v):(event as any)[k]===v);}

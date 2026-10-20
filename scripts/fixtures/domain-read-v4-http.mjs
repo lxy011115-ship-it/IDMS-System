@@ -1,0 +1,11 @@
+import {readFile} from 'node:fs/promises';
+import {createServer} from 'node:http';
+import {DomainReadApiV4} from '../../server/domain-read-api-v4.ts';
+import {createDomainReadHttpV4} from '../../server/domain-read-http-v4.ts';
+import {createAuditCursorCodec} from '../../server/audit-cursor.ts';
+import {createAuth} from '../../server/auth.ts';
+const cfg=JSON.parse(await readFile(process.argv[2],'utf8'));
+if(!process.connected||!/^idms_v4qa_[a-f0-9]{12}_sandbox_map$/.test(cfg.account.database)||!cfg.account.user.endsWith('_mr')||!cfg.operationId||!cfg.controlToken)throw Error('READ_QA_IDENTITY');
+const auth=createAuth(cfg.auth),codec=createAuditCursorCodec(cfg.ring,cfg.deployment,'DOMAIN_READ_V4'),api=new DomainReadApiV4(cfg.account,cfg.binding,codec),server=createServer(createDomainReadHttpV4(req=>auth.context(req),new Map([['sandbox',api]])));
+server.headersTimeout=10000;server.requestTimeout=15000;server.maxConnections=32;await new Promise(ok=>server.listen(0,'127.0.0.1',ok));process.send({type:'READ_READY',pid:process.pid,origin:'http://127.0.0.1:'+server.address().port});let stopping=false;
+process.on('message',message=>{if(!stopping&&message?.type==='READ_STOP'&&message.operationId===cfg.operationId&&message.controlToken===cfg.controlToken){stopping=true;server.closeIdleConnections();server.close(async()=>{await auth.close();process.disconnect();});}});

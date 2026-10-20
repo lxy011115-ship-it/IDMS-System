@@ -1,0 +1,2 @@
+source_record_id,device_code,failure_time,repair_start,repair_end,failure_code,cause,action
+repair-001,D-001,2026-10-13T14:00:00+08:00,2026-10-13T14:10:00+08:00,2026-10-13T15:00:00+08:00,SPINDLE_FAULT,主轴振动超限,更换轴承并记录复测结果

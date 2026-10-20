@@ -1,0 +1,49 @@
+import {inspectFieldRecoveryRegistration} from '../server/field-config.ts';
+import {fieldAdmissionDecision} from '../server/field-admission.ts';
+import {randomUUID} from 'node:crypto';
+import {memoryTask} from '../server/capacity.ts';
+import {sourceFreezeSha} from './field-source-freeze-policy.mjs';
+import {recoveryExternalConfig,externalUuid} from './field-recovery-external-config.mjs';
+import {captureRecoveryExternalState} from './field-recovery-external-state.mjs';
+import {readReviewPhase,reviewPlan,reviewBaseline,reviewAttempt,reviewResult,reviewEqual as same,reviewFail as fail} from './field-recovery-review-record.mjs';
+import {openReviewContext} from './field-recovery-review-context.mjs';
+import {commitReview,verifyReviewCommitted} from './field-recovery-review-audit.mjs';
+export async function readCurrentRecoveryReview(c){await c.journal.plans();if(!await readReviewPhase(c.root,c.account.database))await c.verifyInitial();await c.begin();const image=await c.read();if(image.phase.format==='idms-field-restore-phase-v1'){if(sourceFreezeSha(image.phase)!==c.flow.result.phaseSha256||image.facts.factsSha256!==c.flow.result.finalFactsSha256)fail('FIELD_REVIEW_INITIAL_TARGET_CHANGED');}else image.review=await verifyReviewCommitted(c,image);return image;}
+const current=readCurrentRecoveryReview;
+const view=(image,recorded=false)=>({format:'idms-field-recovery-review-status-v1',state:'RESTORING',stage:image.phase.stage,planId:image.phase.planId??null,attemptId:image.phase.attemptId??null,factsSha256:image.facts.factsSha256,phaseSha256:sourceFreezeSha(image.phase),revision:image.loaded.revision,auditEvents:image.facts.auditEvents,auditEventId:image.phase.auditEventId,alreadyRecorded:recorded,recoveryPlan:image.review?{planId:image.review.plan.planId,planSha256:sourceFreezeSha(image.review.plan),authorId:image.review.plan.author.actorId,contributors:image.review.plan.contributors,createdAt:image.review.plan.createdAt,expiresAt:new Date(Date.parse(image.review.plan.createdAt)+1800000).toISOString(),backupId:image.review.plan.backupId,targetDatabase:image.phase.databaseName,identity:image.review.plan.identity,policyReferences:image.review.plan.policies,workflowSha256:image.review.plan.workflowSha256,...(image.review.plan.registration?{registration:image.review.plan.registration}:{})}:null,fieldEnabled:false,businessWritesEnabled:false,activationEnabled:false,productionAcceptance:false});
+async function finish(c,image,recorded){const result=reviewResult({format:'idms-field-recovery-review-result-v1',operationId:c.intent.operationId,planId:image.phase.planId,attemptId:image.phase.attemptId,phaseSha256:sourceFreezeSha(image.phase),factsSha256:image.facts.factsSha256,auditEventId:image.phase.auditEventId,revision:image.loaded.revision});await c.check();await c.journal.write('result',image.phase.attemptId,result);return view(image,recorded);}
+export async function recoveryReviewStatus(options){return memoryTask(async()=>{const c=await openReviewContext(options);try{const image=await current(c);await c.rollback();return view(image);}finally{await c.close();}},true);}
+export async function executeRecoveryReview(options){return memoryTask(async()=>{
+ const {action,planId,expectedFactsSha256,supersedesPlanId=null,externalConfig,accessToken}=options;if(!['SUBMIT','APPROVE'].includes(action)||!externalUuid(planId)||!/^[a-f0-9]{64}$/.test(expectedFactsSha256||'')||supersedesPlanId!==null&&!externalUuid(supersedesPlanId))fail('FIELD_REVIEW_REQUEST_INVALID');const config=recoveryExternalConfig(externalConfig),c=await openReviewContext(options);
+ try{
+  let image=await current(c),plan=await c.journal.read('plan',planId),prior=null;const plans=await c.journal.plans();if(config.tenantId!==c.tenantId||plans.some(p=>p.externalConfigSha256!==sourceFreezeSha(config)))fail('FIELD_REVIEW_EXTERNAL_BINDING_CHANGED');
+  if(image.phase.format==='idms-field-recovery-review-phase-v1')prior=await c.journal.read('plan',image.phase.planId);
+  if(action==='APPROVE'&&!plan)fail('FIELD_REVIEW_PLAN_MISSING');
+  const observe=()=>captureRecoveryExternalState(config,accessToken,image.orders,{purpose:action==='SUBMIT'?'AUTHOR':'REVIEWER',...(action==='APPROVE'?{otherActorId:plan.author.actorId,recordedAuthor:plan.author}:{})});
+  const observation=await observe();
+  let registration=null;const registeredPlan=plan?.format==='idms-field-recovery-plan-v2';if((registeredPlan||action==='SUBMIT'&&plans.some(p=>p.format==='idms-field-recovery-plan-v2'))&&!options.registrationConfig)fail('FIELD_REVIEW_REGISTRATION_CONFIG_REQUIRED');if(plan&&!registeredPlan&&options.registrationConfig)fail('FIELD_REVIEW_REGISTRATION_NOT_IN_PLAN');
+  const inspectRegistration=async()=>{const candidate=await inspectFieldRecoveryRegistration(options.registrationConfig,c.files.controlFile,c.main.after);for(const channel of candidate.registry.channels){const decision=fieldAdmissionDecision({...image.loaded.payload.business,audits:image.loaded.payload.audits},image.loaded.payload.imports,channel.profile,Date.now());if(!decision.allowed)fail('FIELD_REVIEW_REGISTRATION_POLICY_DENIED');}return candidate;};
+  if(options.registrationConfig){registration=await inspectRegistration();if(plan&&!same(registration,plan.registration))fail('FIELD_REVIEW_REGISTRATION_CHANGED');}
+  if(plan&&(plan.externalConfigSha256!==sourceFreezeSha(config)||plan.controlSha256!==sourceFreezeSha(c.main.after)||plan.targetBindingSha256!==sourceFreezeSha(c.intent.targetBinding)||plan.restoreResultSha256!==sourceFreezeSha(c.flow.result)||plan.backupId!==c.manifest.backupId||!same(plan.identity,c.main.after.identity)))fail('FIELD_REVIEW_PLAN_BINDING_CHANGED');
+  if(action==='SUBMIT'&&plan&&plan.author.actorId!==observation.actor.actorId||action==='APPROVE'&&plan.contributors.includes(observation.actor.actorId))fail('FIELD_REVIEW_INDEPENDENT_ACTOR_REQUIRED');
+  if(plan&&observation.workflowSha256!==plan.workflowSha256)fail('FIELD_REVIEW_WORKFLOW_CHANGED');
+  if(image.phase.planId===planId&&(action==='SUBMIT'||image.phase.stage==='APPROVED')){
+   const committed=await verifyReviewCommitted(c,image);if(action==='APPROVE'&&committed.attempt.observation.actor.actorId!==observation.actor.actorId)fail('FIELD_REVIEW_RECEIPT_ACTOR_MISMATCH');if(expectedFactsSha256!==image.facts.factsSha256&&expectedFactsSha256!==committed.attempt.parentPhase.contentSha256&&expectedFactsSha256!==plan.parentPhase.contentSha256)fail('FIELD_REVIEW_EXPECTED_FACTS_CHANGED');await c.rollback();return await finish(c,image,true);
+  }
+  if(image.facts.factsSha256!==expectedFactsSha256)fail('FIELD_REVIEW_EXPECTED_FACTS_CHANGED');
+  if(action==='APPROVE'&&(image.phase.stage!=='SUBMITTED'||image.phase.planId!==planId))fail('FIELD_REVIEW_PLAN_NOT_CURRENT');
+  if(action==='SUBMIT'){
+   if(plan){if(sourceFreezeSha(plan.parentPhase)!==sourceFreezeSha(image.phase)||plan.author.sha256!==observation.actor.sha256)fail('FIELD_REVIEW_PENDING_PLAN_CHANGED');}
+   else{
+    if(plans.length>=64)fail('FIELD_REVIEW_PLAN_LIMIT');if(image.phase.planId&&(supersedesPlanId!==image.phase.planId||supersedesPlanId===planId)||!image.phase.planId&&supersedesPlanId!==null)fail('FIELD_REVIEW_EXPLICIT_SUPERSEDE_REQUIRED');
+    const baseline=reviewBaseline({format:'idms-field-recovery-review-baseline-v1',operationId:c.intent.operationId,planId,facts:image.facts,rootRecord:image.rootRecord});
+    plan=reviewPlan({format:registration?'idms-field-recovery-plan-v2':'idms-field-recovery-plan-v1',...(registration?{registration}:{}),operationId:c.intent.operationId,planId,backupId:c.manifest.backupId,createdAt:new Date().toISOString(),parentPhase:image.phase,baselineSha256:sourceFreezeSha(baseline),restoreResultSha256:sourceFreezeSha(c.flow.result),targetBindingSha256:sourceFreezeSha(c.intent.targetBinding),controlSha256:sourceFreezeSha(c.main.after),identity:c.main.after.identity,policies:image.policies,externalConfigSha256:sourceFreezeSha(config),workflowSha256:observation.workflowSha256,author:observation.actor,contributors:[...new Set([...(prior?.contributors??[]),observation.actor.actorId])].sort(),supersedesPlanId});await c.journal.write('baseline',planId,baseline);await c.journal.write('plan',planId,plan);
+   }
+  }
+  if(!same(image.policies,plan.policies))fail('FIELD_REVIEW_POLICY_REFERENCES_CHANGED');if(Date.now()-Date.parse(plan.createdAt)>1800000||Date.parse(plan.createdAt)>Date.now())fail('FIELD_REVIEW_PLAN_EXPIRED');
+  const attemptId=randomUUID(),baseline=action==='SUBMIT'?await c.journal.read('baseline',planId):reviewBaseline({format:'idms-field-recovery-review-baseline-v1',operationId:c.intent.operationId,planId,facts:image.facts,rootRecord:image.rootRecord});if(baseline.facts.factsSha256!==image.facts.factsSha256)fail('FIELD_REVIEW_BASELINE_CHANGED');if(action==='APPROVE')await c.journal.write('baseline',attemptId,baseline);
+  const attempt=reviewAttempt({format:'idms-field-recovery-review-attempt-v1',operationId:c.intent.operationId,planId,attemptId,action,createdAt:new Date().toISOString(),planSha256:sourceFreezeSha(plan),baselineSha256:sourceFreezeSha(baseline),parentPhase:image.phase,observation});await c.journal.write(action==='SUBMIT'?'submit':'approve',attemptId,attempt);
+  await commitReview(c,image,plan,attempt,baseline,async()=>{const final=await observe();if(final.actor.sha256!==observation.actor.sha256||final.authorCurrentSha256!==observation.authorCurrentSha256||final.workflowSha256!==observation.workflowSha256||Date.now()>=Date.parse(observation.expiresAt))fail('FIELD_REVIEW_EXTERNAL_CHANGED_BEFORE_COMMIT');if(registration&&!same(await inspectRegistration(),registration))fail('FIELD_REVIEW_REGISTRATION_CHANGED');await options.assertConfiguration?.();await c.check();});
+  image=await current(c);await c.rollback();return await finish(c,image,false);
+ }finally{await c.close();}
+ },true);}

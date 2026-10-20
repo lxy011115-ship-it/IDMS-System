@@ -1,0 +1,7 @@
+import {loadFieldEdgeConfiguration,clearFieldEdgeConfiguration,type FieldEdgeConfiguration} from './edge-config.ts';
+import {FieldEdgeRunner} from './edge-runner.ts';
+import {FieldChannelError} from './error.ts';
+let runner:FieldEdgeRunner|undefined,configuration:FieldEdgeConfiguration|undefined,stopping=false;
+const emit=(event:Readonly<Record<string,unknown>>)=>{process.stdout.write(JSON.stringify(event)+'\n');if(process.connected)process.send?.({type:'FIELD_EDGE_EVENT',event});};
+const stop=()=>{stopping=true;runner?.stop();};process.on('SIGINT',stop);process.on('SIGTERM',stop);process.on('disconnect',stop);process.on('message',m=>{if(m&&typeof m==='object'&&(m as any).type==='STOP')stop();});
+try{const args=process.argv.slice(2);if(args.length<2||args.length>3||args[0]!=='--config'||!args[1]||args.length===3&&args[2]!=='--once')throw new FieldChannelError('FIELD_EDGE_ARGUMENTS_INVALID');configuration=await loadFieldEdgeConfiguration(args[1]);runner=new FieldEdgeRunner(configuration,emit);if(stopping)runner.stop();await runner.run({once:args[2]==='--once'});}catch(e){emit({type:'FIELD_EDGE_FAILED',code:e instanceof FieldChannelError?e.code:'FIELD_EDGE_START_FAILED'});process.exitCode=1;}finally{await runner?.close();if(configuration&&!runner)clearFieldEdgeConfiguration(configuration);process.off('SIGINT',stop);process.off('SIGTERM',stop);if(process.connected)process.disconnect?.();}

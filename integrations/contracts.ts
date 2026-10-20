@@ -1,0 +1,5 @@
+export interface TelemetryMessage { tenantId:string; deviceId:string; tagCode:string; eventTime:string; value:number|string|null; unit?:string; quality:"GOOD"|"BAD"|"UNCERTAIN"; source:string; sequenceNo?:number }
+export interface MqttAdapter { connect():Promise<void>; subscribe(topic:string):Promise<void>; onMessage(handler:(message:TelemetryMessage)=>Promise<void>):void; close():Promise<void> }
+export interface OpcUaAdapter { connect(endpoint:string):Promise<void>; read(nodeIds:string[]):Promise<Record<string,unknown>>; subscribe(nodeIds:string[], onChange:(nodeId:string,value:unknown,time:string)=>void):Promise<void>; close():Promise<void> }
+export interface WorkflowGateway { start(processKey:string, variables:Record<string,unknown>):Promise<{processInstanceId:string}>; complete(taskId:string, variables:Record<string,unknown>):Promise<void>; }
+export interface AiModelGateway { review(input:{prompt:string;context:unknown;tenantId:string}):Promise<{conclusion:string;confidence:number;evidence:string[];recommendedAction:string;risk:string;requiresHumanReview:boolean;modelVersion:string}> }

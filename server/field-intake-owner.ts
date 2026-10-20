@@ -1,0 +1,17 @@
+import type pg from 'pg';
+import {createHash} from 'node:crypto';
+import {readEntities} from './entity-repository.ts';
+import type {TenantTransaction} from './postgres-repository.ts';
+import {DomainError} from './service.ts';
+const family=0x49444d46;
+export class FieldIntakeOwner {
+ readonly #pool:pg.Pool;readonly #tenant:string;readonly #key:number;#client:pg.PoolClient|null=null;#held=false;#closing=false;#acquiring:Promise<boolean>|null=null;#work:Promise<unknown>|null=null;#closeJob:Promise<void>|null=null;
+ constructor(pool:pg.Pool,tenant:string){this.#pool=pool;this.#tenant=tenant;this.#key=createHash('sha256').update(tenant).digest().readInt32BE(0);}
+ get held(){return this.#held&&!this.#closing;}
+ async #discard(){const c=this.#client;if(!c)return;this.#held=false;this.#client=null;const socket=(c as any).connection?.stream;if(!socket||typeof socket.once!=='function'){c.release(true);throw new DomainError(503,'现场所有权连接无法确认终态');}const closed=socket.closed?Promise.resolve():new Promise<void>(ok=>socket.once('close',()=>ok()));c.release(true);await closed;}
+ async acquire(){if(this.#closing)return false;if(this.#held)return true;if(this.#acquiring)return this.#acquiring;const work=Promise.resolve().then(async()=>{await this.#work?.catch(()=>{});await this.#discard();if(this.#closing)return false;const c=await this.#pool.connect();if(this.#closing){c.release();return false;}this.#client=c;const lost=()=>{if(this.#client===c)this.#held=false;};c.on('error',lost);c.once('end',lost);try{const rows=(await c.query('SELECT pg_try_advisory_lock($1::int,$2::int) AS held',[family,this.#key])).rows;if(rows.length!==1||typeof rows[0].held!=='boolean')throw Error();this.#held=rows[0].held;if(!this.#held){this.#client=null;c.off('error',lost);c.off('end',lost);c.release();return false;}if(this.#closing){await this.#discard();return false;}return true;}catch{await this.#discard();throw new DomainError(503,'现场接收所有权不可用');}});this.#acquiring=work;try{return await work;}finally{if(this.#acquiring===work)this.#acquiring=null;}}
+ async transaction<T>(tenant:string,task:(tx:TenantTransaction)=>Promise<T>):Promise<T>{
+  if(tenant!==this.#tenant||!this.held||!this.#client)throw new DomainError(503,'当前实例不是现场接收所有者');if(this.#work)throw new DomainError(409,'现场所有权连接不可并行使用');const c=this.#client,work=Promise.resolve().then(async()=>{try{if(!this.held)throw new DomainError(503,'现场接收所有权已丢失');await c.query('BEGIN');await c.query('SET LOCAL search_path TO pg_catalog,public');const rows=(await c.query("/* IDMS_FIELD_OWNER_FENCE */ SELECT EXISTS(SELECT 1 FROM pg_locks WHERE pid=pg_backend_pid() AND locktype='advisory' AND classid=$1::oid AND objid=$2::oid AND objsubid=2 AND mode='ExclusiveLock' AND granted) AS held",[String(family),String(this.#key>>>0)])).rows;if(rows.length!==1||rows[0].held!==true){this.#held=false;throw new DomainError(503,'现场接收所有权围栏失效');}await c.query('SELECT revision FROM public.business_state WHERE tenant_id=$1 FOR UPDATE',[tenant]);const loaded=await readEntities(c,tenant);const result=await task({tenantId:tenant,client:c,...loaded});await c.query('COMMIT');return result;}catch(e){await c.query('ROLLBACK').catch(()=>{});throw e;}});this.#work=work;try{return await work;}finally{if(this.#work===work)this.#work=null;}
+ }
+ async close(){if(this.#closeJob)return this.#closeJob;this.#closing=true;this.#held=false;const work=Promise.resolve().then(async()=>{await this.#acquiring?.catch(()=>{});await this.#work?.catch(()=>{});await this.#discard();});this.#closeJob=work;return work;}
+}

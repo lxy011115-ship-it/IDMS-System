@@ -1,0 +1,698 @@
+// Reviewed catalog of the explicit DDL on an owned fresh QA schema. Runtime never learns its expected contract from tenant data.
+export const fieldSchemaContract={
+  "columns": [
+    {
+      "relname": "migrations",
+      "attnum": 1,
+      "attname": "version",
+      "type": "integer",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "migrations",
+      "attnum": 2,
+      "attname": "tenant_id",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "migrations",
+      "attnum": 3,
+      "attname": "checksum",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "migrations",
+      "attnum": 4,
+      "attname": "base_checksum",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "migrations",
+      "attnum": 5,
+      "attname": "owner_role",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "migrations",
+      "attnum": 6,
+      "attname": "app_role",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "migrations",
+      "attnum": 7,
+      "attname": "backup_role",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "migrations",
+      "attnum": 8,
+      "attname": "applied_at",
+      "type": "timestamp with time zone",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": "now()",
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "points",
+      "attnum": 1,
+      "attname": "tenant_id",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "points",
+      "attnum": 2,
+      "attname": "id",
+      "type": "uuid",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "points",
+      "attnum": 3,
+      "attname": "edge_id",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "points",
+      "attnum": 4,
+      "attname": "stream_id",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "points",
+      "attnum": 5,
+      "attname": "sequence_no",
+      "type": "bigint",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "points",
+      "attnum": 6,
+      "attname": "read_id",
+      "type": "uuid",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "points",
+      "attnum": 7,
+      "attname": "tag_code",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "points",
+      "attnum": 8,
+      "attname": "audit_event_id",
+      "type": "uuid",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "points",
+      "attnum": 9,
+      "attname": "body",
+      "type": "jsonb",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "points",
+      "attnum": 10,
+      "attname": "device_code",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "s",
+      "attidentity": "",
+      "expression": "((body -> 'source'::text) ->> 'deviceCode'::text)",
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "points",
+      "attnum": 11,
+      "attname": "event_time",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "s",
+      "attidentity": "",
+      "expression": "((body -> 'sample'::text) ->> 'eventTime'::text)",
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "points",
+      "attnum": 12,
+      "attname": "received_at",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "s",
+      "attidentity": "",
+      "expression": "(body ->> 'receivedAt'::text)",
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "receipts",
+      "attnum": 1,
+      "attname": "tenant_id",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "receipts",
+      "attnum": 2,
+      "attname": "edge_id",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "receipts",
+      "attnum": 3,
+      "attname": "event_id",
+      "type": "uuid",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "receipts",
+      "attnum": 4,
+      "attname": "digest",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "receipts",
+      "attnum": 5,
+      "attname": "stream_id",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "receipts",
+      "attnum": 6,
+      "attname": "sequence_no",
+      "type": "bigint",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "receipts",
+      "attnum": 7,
+      "attname": "read_id",
+      "type": "uuid",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "receipts",
+      "attnum": 8,
+      "attname": "tag_code",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "receipts",
+      "attnum": 9,
+      "attname": "status",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "receipts",
+      "attnum": 10,
+      "attname": "reason",
+      "type": "text",
+      "attnotnull": false,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "receipts",
+      "attnum": 11,
+      "attname": "point_id",
+      "type": "uuid",
+      "attnotnull": false,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "receipts",
+      "attnum": 12,
+      "attname": "audit_event_id",
+      "type": "uuid",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    },
+    {
+      "relname": "receipts",
+      "attnum": 13,
+      "attname": "received_at",
+      "type": "text",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": "pg_catalog",
+      "collation_name": "default"
+    },
+    {
+      "relname": "receipts",
+      "attnum": 14,
+      "attname": "body",
+      "type": "jsonb",
+      "attnotnull": true,
+      "attgenerated": "",
+      "attidentity": "",
+      "expression": null,
+      "collation_schema": null,
+      "collation_name": null
+    }
+  ],
+  "constraints": [
+    {
+      "relname": "migrations",
+      "conname": "field_migrations_hash",
+      "contype": "c",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "CHECK (((checksum ~ '^[a-f0-9]{64}$'::text) AND (base_checksum ~ '^[a-f0-9]{64}$'::text)))"
+    },
+    {
+      "relname": "migrations",
+      "conname": "field_migrations_pk",
+      "contype": "p",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "PRIMARY KEY (version)"
+    },
+    {
+      "relname": "migrations",
+      "conname": "field_migrations_version",
+      "contype": "c",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "CHECK ((version = 1))"
+    },
+    {
+      "relname": "points",
+      "conname": "field_points_audit",
+      "contype": "u",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "UNIQUE (tenant_id, audit_event_id)"
+    },
+    {
+      "relname": "points",
+      "conname": "field_points_audit_fk",
+      "contype": "f",
+      "condeferrable": true,
+      "condeferred": true,
+      "convalidated": true,
+      "definition": "FOREIGN KEY (audit_event_id) REFERENCES audit_ledger(event_id) DEFERRABLE INITIALLY DEFERRED"
+    },
+    {
+      "relname": "points",
+      "conname": "field_points_body",
+      "contype": "c",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "CHECK ((((jsonb_typeof(body) = 'object'::text) AND (octet_length((body)::text) <= 65536) AND ((body ->> 'format'::text) = 'idms-field-point-v1'::text) AND ((body ->> 'id'::text) = (id)::text) AND (((body -> 'source'::text) ->> 'tenantId'::text) = tenant_id) AND (((body -> 'source'::text) ->> 'edgeId'::text) = edge_id) AND ((body ->> 'streamId'::text) = stream_id) AND ((body ->> 'sequenceNo'::text) = (sequence_no)::text) AND ((body ->> 'readId'::text) = (read_id)::text) AND (((body -> 'sample'::text) ->> 'tagCode'::text) = tag_code) AND ((body ->> 'auditEventId'::text) = (audit_event_id)::text)) IS TRUE))"
+    },
+    {
+      "relname": "points",
+      "conname": "field_points_pk",
+      "contype": "p",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "PRIMARY KEY (tenant_id, id)"
+    },
+    {
+      "relname": "points",
+      "conname": "field_points_read",
+      "contype": "u",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "UNIQUE (tenant_id, edge_id, stream_id, read_id, tag_code)"
+    },
+    {
+      "relname": "points",
+      "conname": "field_points_sequence",
+      "contype": "u",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "UNIQUE (tenant_id, edge_id, stream_id, sequence_no)"
+    },
+    {
+      "relname": "points",
+      "conname": "field_points_sequence_range",
+      "contype": "c",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "CHECK (((sequence_no >= 1) AND (sequence_no <= '9007199254740991'::bigint)))"
+    },
+    {
+      "relname": "points",
+      "conname": "field_points_stream",
+      "contype": "c",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "CHECK ((stream_id ~ '^[a-f0-9]{64}$'::text))"
+    },
+    {
+      "relname": "receipts",
+      "conname": "field_receipts_audit",
+      "contype": "u",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "UNIQUE (tenant_id, audit_event_id)"
+    },
+    {
+      "relname": "receipts",
+      "conname": "field_receipts_audit_fk",
+      "contype": "f",
+      "condeferrable": true,
+      "condeferred": true,
+      "convalidated": true,
+      "definition": "FOREIGN KEY (audit_event_id) REFERENCES audit_ledger(event_id) DEFERRABLE INITIALLY DEFERRED"
+    },
+    {
+      "relname": "receipts",
+      "conname": "field_receipts_body",
+      "contype": "c",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "CHECK ((((body ? 'reason'::text) AND (body ? 'pointId'::text) AND (jsonb_typeof(body) = 'object'::text) AND (octet_length((body)::text) <= 65536) AND ((body ->> 'format'::text) = 'idms-field-receipt-v1'::text) AND ((body ->> 'tenantId'::text) = tenant_id) AND ((body ->> 'edgeId'::text) = edge_id) AND ((body ->> 'eventId'::text) = (event_id)::text) AND ((body ->> 'eventDigest'::text) = digest) AND ((body ->> 'streamId'::text) = stream_id) AND ((body ->> 'sequenceNo'::text) = (sequence_no)::text) AND ((body ->> 'readId'::text) = (read_id)::text) AND ((body ->> 'status'::text) = status) AND (NOT ((body ->> 'reason'::text) IS DISTINCT FROM reason)) AND (NOT ((body ->> 'pointId'::text) IS DISTINCT FROM (point_id)::text)) AND ((body ->> 'auditEventId'::text) = (audit_event_id)::text) AND ((body ->> 'receivedAt'::text) = received_at)) IS TRUE))"
+    },
+    {
+      "relname": "receipts",
+      "conname": "field_receipts_hash",
+      "contype": "c",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "CHECK (((digest ~ '^[a-f0-9]{64}$'::text) AND (stream_id ~ '^[a-f0-9]{64}$'::text)))"
+    },
+    {
+      "relname": "receipts",
+      "conname": "field_receipts_pk",
+      "contype": "p",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "PRIMARY KEY (tenant_id, edge_id, event_id, digest)"
+    },
+    {
+      "relname": "receipts",
+      "conname": "field_receipts_point_fk",
+      "contype": "f",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "FOREIGN KEY (tenant_id, point_id) REFERENCES idms_field.points(tenant_id, id)"
+    },
+    {
+      "relname": "receipts",
+      "conname": "field_receipts_sequence_range",
+      "contype": "c",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "CHECK (((sequence_no >= 1) AND (sequence_no <= '9007199254740991'::bigint)))"
+    },
+    {
+      "relname": "receipts",
+      "conname": "field_receipts_status",
+      "contype": "c",
+      "condeferrable": false,
+      "condeferred": false,
+      "convalidated": true,
+      "definition": "CHECK (((((status = 'STORED'::text) AND (reason IS NULL) AND (point_id = event_id)) OR ((status = 'REJECTED'::text) AND (reason IS NOT NULL) AND (point_id IS NULL))) IS TRUE))"
+    }
+  ],
+  "indexes": [
+    {
+      "relname": "migrations",
+      "name": "field_migrations_pk",
+      "indisunique": true,
+      "indisprimary": true,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE UNIQUE INDEX field_migrations_pk ON idms_field.migrations USING btree (version)"
+    },
+    {
+      "relname": "points",
+      "name": "field_points_audit",
+      "indisunique": true,
+      "indisprimary": false,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE UNIQUE INDEX field_points_audit ON idms_field.points USING btree (tenant_id, audit_event_id)"
+    },
+    {
+      "relname": "points",
+      "name": "field_points_device_time",
+      "indisunique": false,
+      "indisprimary": false,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE INDEX field_points_device_time ON idms_field.points USING btree (tenant_id, device_code, event_time, id)"
+    },
+    {
+      "relname": "points",
+      "name": "field_points_pk",
+      "indisunique": true,
+      "indisprimary": true,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE UNIQUE INDEX field_points_pk ON idms_field.points USING btree (tenant_id, id)"
+    },
+    {
+      "relname": "points",
+      "name": "field_points_read",
+      "indisunique": true,
+      "indisprimary": false,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE UNIQUE INDEX field_points_read ON idms_field.points USING btree (tenant_id, edge_id, stream_id, read_id, tag_code)"
+    },
+    {
+      "relname": "points",
+      "name": "field_points_sequence",
+      "indisunique": true,
+      "indisprimary": false,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE UNIQUE INDEX field_points_sequence ON idms_field.points USING btree (tenant_id, edge_id, stream_id, sequence_no)"
+    },
+    {
+      "relname": "receipts",
+      "name": "field_receipts_audit",
+      "indisunique": true,
+      "indisprimary": false,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE UNIQUE INDEX field_receipts_audit ON idms_field.receipts USING btree (tenant_id, audit_event_id)"
+    },
+    {
+      "relname": "receipts",
+      "name": "field_receipts_event",
+      "indisunique": false,
+      "indisprimary": false,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE INDEX field_receipts_event ON idms_field.receipts USING btree (tenant_id, event_id)"
+    },
+    {
+      "relname": "receipts",
+      "name": "field_receipts_pk",
+      "indisunique": true,
+      "indisprimary": true,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE UNIQUE INDEX field_receipts_pk ON idms_field.receipts USING btree (tenant_id, edge_id, event_id, digest)"
+    },
+    {
+      "relname": "receipts",
+      "name": "field_receipts_stored_read",
+      "indisunique": true,
+      "indisprimary": false,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE UNIQUE INDEX field_receipts_stored_read ON idms_field.receipts USING btree (tenant_id, edge_id, stream_id, read_id, tag_code) WHERE (status = 'STORED'::text)"
+    },
+    {
+      "relname": "receipts",
+      "name": "field_receipts_stored_sequence",
+      "indisunique": true,
+      "indisprimary": false,
+      "indisvalid": true,
+      "indisready": true,
+      "indislive": true,
+      "definition": "CREATE UNIQUE INDEX field_receipts_stored_sequence ON idms_field.receipts USING btree (tenant_id, edge_id, stream_id, sequence_no) WHERE (status = 'STORED'::text)"
+    }
+  ]
+} as const;

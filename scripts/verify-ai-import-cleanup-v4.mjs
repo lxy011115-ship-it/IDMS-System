@@ -1,0 +1,19 @@
+import assert from 'node:assert/strict';
+import {readFile,readdir,access} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import pg from 'pg';
+const read=async path=>JSON.parse(await readFile(path,'utf8'));
+const exists=async path=>{try{await access(path);return true;}catch(error){if(error.code!=='ENOENT')throw error;return false;}};
+export async function verifyAiImportCleanupV4(){
+ const authority=await read('.local/postgres-runtime.json'),c=new pg.Client({host:authority.host,port:authority.port,user:'idms_bootstrap',password:authority.bootstrapPassword,database:'postgres'}),root=resolve('work/ai-import-application-v4-qa-20261020'),runs=[];await c.connect();let totalDb=0,totalRoles=0;
+ const goneDb=async(name,oid)=>{assert.match(name,/^idms_(govqa|authqa)_[a-z0-9_]+$/);assert.match(oid,/^[1-9][0-9]*$/);assert.equal((await c.query('SELECT oid FROM pg_database WHERE datname=$1 OR oid=$2::oid',[name,oid])).rowCount,0);totalDb++;};
+ const goneRole=async(name,oid)=>{assert.match(name,/^idms_(govqa|authqa|audqa)_[a-z0-9_]+$/);assert.match(oid,/^[1-9][0-9]*$/);assert.equal((await c.query('SELECT oid FROM pg_roles WHERE rolname=$1 OR oid=$2::oid',[name,oid])).rowCount,0);totalRoles++;};
+ try{for(const item of await readdir(root,{withFileTypes:true})){if(!item.isDirectory()||!/^[a-f0-9]{12}$/.test(item.name))continue;const directory=join(root,item.name),r=await read(join(directory,'resources.private.json')),cleanup=await read(join(directory,'cleanup.json'));assert.equal(r.nonce,item.name);assert.equal(cleanup.allOwnedDatabasesRemoved,r.databases.length);assert.equal(cleanup.allOwnedRolesRemoved,r.roles.length);assert.equal(cleanup.noForceOrBackendTermination,true);for(const [name,pin]of r.databases){assert.ok(name.startsWith('idms_govqa_'+item.name+'_'));await goneDb(name,pin.oid);}for(const [name,oid]of r.roles){assert.ok(name.startsWith('idms_govqa_'+item.name+'_'));await goneRole(name,oid);}let dbCount=r.databases.length,roleCount=r.roles.length;
+  if(await exists(join(directory,'auth-resources.private.json'))){const a=await read(join(directory,'auth-resources.private.json')),ac=await read(join(directory,'auth-cleanup.json'));assert.ok(ac.exactOidAndOwnerChecked&&ac.backendCountZero&&!ac.force);await goneDb(a.database.name,a.database.oid);for(const pin of a.roles)await goneRole(pin.rolname,pin.oid);const delivery=await read(join(directory,'auth-audit-delivery-role.private.json'));await goneRole(delivery.name,delivery.oid);dbCount++;roleCount+=a.roles.length+1;const extra=await read(join(directory,'auth-audit-cleanup.json'));assert.equal(extra.databasesRemoved,dbCount);assert.equal(extra.rolesRemoved,roleCount);assert.ok(extra.exactOidOwnerAndZeroBackends&&!extra.force&&!extra.backendTermination);}
+  for(const prefix of ['ai-import-application-pg-v4-20261020','ai-import-guards-v4-20261020','ai-import-keycloak-v4-20261020']){const evidence=resolve('work',prefix,item.name);if(!await exists(evidence))continue;for(const file of await readdir(evidence)){if(file.endsWith('.private.json')&&(file==='gateway.private.json'||file==='application-child.private.json'||file==='http.private.json'||file==='worker.private.json'||file==='ai-runtime.private.json'||file==='ai-key.private.json'||file==='job-key.private.json'||file==='audit-derived.private.json'||file==='audit-runtime.private.json'||file.startsWith('negative-')))throw Error('AI_IMPORT_PRIVATE_CONFIG_REMAINS');}}
+  runs.push({nonce:item.name,databasesRemoved:dbCount,rolesRemoved:roleCount,privateRuntimeConfigsAbsent:true});
+ }return {checkedAt:new Date().toISOString(),runs,databasesRemoved:totalDb,rolesRemoved:totalRoles,ownedDatabaseLeftovers:0,ownedRoleLeftovers:0,onlyReadOnlyInventoryQueries:true};
+ }finally{await c.end();}
+}
+if(import.meta.url===pathToFileURL(process.argv[1]??'').href)console.log(JSON.stringify(await verifyAiImportCleanupV4()));

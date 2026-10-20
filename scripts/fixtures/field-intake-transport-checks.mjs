@@ -1,0 +1,29 @@
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {resolve} from 'node:path';
+import {publicFieldProfileDigest} from '../../integrations/field-profile.ts';
+import {decodeFieldMessage,verifyFieldAck} from '../../integrations/field-event.ts';
+import {FieldSpool} from '../../services/field/spool.ts';
+import {FieldMqttTransport} from '../../services/field/mqtt-transport.ts';
+
+// This edge has the platform PUBLIC key only. Every business ACK comes from the
+// actual main HTTP/MQTT runtime after its PostgreSQL COMMIT.
+export async function exerciseFieldTransactionalIntake({observed,profile,eventKey,publicKey,sdk,url,materials,directory,core,db,base}){
+ const digest=publicFieldProfileDigest(profile),permit=p=>sdk.authorize(p),file=resolve(directory,'transactional-field-spool.sqlite'),received=[],owned=[];
+ const until=async(check,label,ms=12000)=>{const end=Date.now()+ms;while(Date.now()<end){if(await check())return;await new Promise(ok=>setTimeout(ok,20));}throw Error('Field transactional transport QA expired '+label);};
+ let spool,edge;const open=()=>{const q=new FieldSpool(file,{profile,contextLease:observed.lease,eventKey,platformPublicKey:publicKey,authorize:()=>{sdk.authorize({profileDigest:digest,phase:'TRANSACTIONAL_INTAKE_QA'});return sdk.currentLease();}});owned.push(q);return q;};
+ const count=async table=>(await db.query('SELECT count(*)::int AS n FROM idms_field.'+table)).rows[0].n;
+ const snapshot=async()=>({points:(await db.query('SELECT * FROM idms_field.points ORDER BY id')).rows,receipts:(await db.query('SELECT * FROM idms_field.receipts ORDER BY audit_event_id')).rows,root:(await db.query('SELECT * FROM business_state ORDER BY tenant_id')).rows,audit:(await db.query('SELECT * FROM audit_ledger ORDER BY sequence_no')).rows});
+ const health=async()=>{const r=await fetch(base+'/api/v1/health');assert.equal(r.status,200);return (await r.json()).fieldTransactionalIntake;};
+ try{
+  await until(async()=>{const h=await health();return h?.configured&&h.connected===1&&h.ownedTenants===1;},'main runtime single owning MQTT connector');
+  spool=open();const readId=randomUUID(),batch=spool.append(readId,observed),rows=spool.ready();assert.equal(rows.length,2);spool.close();spool=open();assert.deepEqual(spool.ready(),rows);assert.equal(spool.append(readId,observed).alreadyAppended,true);
+  edge=new FieldMqttTransport({profile,url,role:'EDGE',materials,authorize:permit,receive:async bytes=>{const ack=decodeFieldMessage(bytes);received.push(ack);spool.acknowledge(ack);}});await edge.start();
+  await core.call('HOLD',{target:'FIELD_COMMIT'});core.entered.delete('FIELD_COMMIT');const first=rows[0];assert.equal(spool.attempted(first.eventId,first.digest),true);await edge.publish(Buffer.from(first.payload));await until(()=>core.entered.has('FIELD_COMMIT'),'held actual field commit');assert.equal(received.length,0);assert.equal(spool.stats().pending,2);assert.equal(await count('points'),0);assert.equal(await count('receipts'),0);core.release();
+  await until(()=>received.length===1,'first server committed business acknowledgement');const ack=verifyFieldAck(received[0],publicKey,first.event);assert.equal(ack.body.status,'STORED');assert.equal(spool.stats().pending,1);assert.equal(await count('points'),1);assert.equal(await count('receipts'),1);const audit=(await db.query('SELECT * FROM audit_ledger WHERE event_id=$1',[ack.body.receiptAuditId])).rows;assert.equal(audit.length,1);assert.equal(audit[0].event.action,'FIELD_EVENT_STORED');assert.equal((await db.query('SELECT body FROM idms_field.points WHERE id=$1',[first.eventId])).rows[0].body.sample.value,42);
+  const second=rows[1];await core.call('FAULT',{target:'FIELD_COMMIT:REPLY'});spool.attempted(second.eventId,second.digest);await edge.publish(Buffer.from(second.payload));await until(async()=>(await core.call('STATS')).pendingFault===null&&await count('points')===2,'actual COMMIT then lost result');await new Promise(ok=>setTimeout(ok,100));assert.equal(received.length,1);assert.equal(spool.stats().pending,1);assert.equal(await count('receipts'),2);const before=await snapshot();await until(async()=>(await health()).connected===1,'managed receiver actual close and reconnect');
+  await new Promise(ok=>setTimeout(ok,120));const retry=spool.ready(20,100).find(r=>r.eventId===second.eventId);assert.ok(retry);assert.equal(retry.payload,second.payload);spool.attempted(retry.eventId,retry.digest);await edge.publish(Buffer.from(retry.payload));await until(()=>received.length===2,'retry original event recovers actual stored receipt');assert.equal(verifyFieldAck(received[1],publicKey,second.event).body.status,'STORED');assert.deepEqual(await snapshot(),before);assert.equal(spool.stats().pending,0);assert.equal(spool.stats().acknowledged,2);
+  await edge.close();spool.close();spool=open();assert.equal(spool.stats().pending,0);assert.equal(spool.stats().acknowledged,2);
+  return {actualMainRuntimeListenerAndOidcApprovedProfile:true,actualNativeEncryptedOpcuaRead:true,actualMtlsFormalHmacEvents:true,edgeHasNoPlatformPrivateKey:true,actualSqliteReopenRetainsOriginalEvents:true,heldActualCommitLeavesPointsReceiptsAndAckInvisible:true,brokerPubackDoesNotClearSpool:true,actualPointReceiptAuditRootCommit:true,actualServerSignedStoredAckClearsExactEvent:true,lostCommitResponseLeavesPendingThenOriginalReceiptRecovered:true,retryDoesNotDuplicatePointReceiptAuditOrRoot:true,managedReceiverActuallyClosesBeforeReconnect:true,finalSequence:batch.lastSequence,finalAcknowledged:2,fieldPoints:2,businessConfirmationsAreCryptographicFixturesOnly:false,formalAutonomousEdgeProcessNotPartOfThisTest:true,fieldCommissioned:false,productionAcceptance:false};
+ }finally{core.release();if(edge)await edge.close();for(const q of owned)q.close();}
+}

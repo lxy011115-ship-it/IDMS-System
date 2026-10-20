@@ -1,0 +1,632 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "IDMS 现场机器租约与当前状态接口",
+    "version": "1.0.0",
+    "description": "只描述现有两个现场机器POST接口。HMAC在JSON正文中认证，不使用OIDC或浏览器cookie；Origin与Cookie必须完全缺省，不能传空值。完整原始正文最多4096字节，必须application/json且无查询串。HTTP错误不能解除停读。JSON Schema不替代签名、时间、精确注册、批准和恢复围栏等跨字段验证。生产接入在回环之外须配置HTTPS；本文件不证明实际生产TLS或现场投运。"
+  },
+  "paths": {
+    "/api/v1/field-channel/lease": {
+      "post": {
+        "operationId": "issueFieldLease",
+        "summary": "提交当前配置的签发请求；仅持久COMMIT后返回租约",
+        "security": [],
+        "x-idms-max-request-bytes": 4096,
+        "x-idms-forbidden-request-headers": [
+          "Origin",
+          "Cookie"
+        ],
+        "x-idms-query-parameters": "forbidden",
+        "x-idms-body-authentication": "HMAC-SHA256 with per-source 32-byte request key",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LeaseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "签名正文；按SDK独立验签及时间/上下文核对。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedLease"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "499": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/field-channel/lease/check": {
+      "post": {
+        "operationId": "checkFieldLeaseCurrent",
+        "summary": "只读核对当前治理及原租约，不续租",
+        "security": [],
+        "x-idms-max-request-bytes": 4096,
+        "x-idms-forbidden-request-headers": [
+          "Origin",
+          "Cookie"
+        ],
+        "x-idms-query-parameters": "forbidden",
+        "x-idms-body-authentication": "HMAC-SHA256 with per-source 32-byte request key",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "签名正文；按SDK独立验签及时间/上下文核对。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedCheck"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "499": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "无可用授权；错误响应不含签名，不能用旧缓存继续读取。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Hash": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{64}$"
+      },
+      "Uuid": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$"
+      },
+      "Identity": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 80,
+        "pattern": "^[A-Za-z0-9_-]+$"
+      },
+      "DeviceCode": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+      },
+      "TimeMs": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 8640000000000000
+      },
+      "Revision": {
+        "type": "string",
+        "pattern": "^[1-9][0-9]{0,18}$",
+        "description": "十进制正整数字符串，运行时还要求不大于9223372036854775807；不能转换为JSON浮点数。"
+      },
+      "Ed25519Signature": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_-]{86}$",
+        "description": "64字节签名的规范base64url，不含padding；运行时重编码核对规范尾位。"
+      },
+      "LeaseRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "requestId",
+          "tenantId",
+          "edgeId",
+          "deviceCode",
+          "mapVersion",
+          "profileDigest",
+          "requestedAtMs",
+          "signature"
+        ],
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "idms-field-lease-request-v1"
+            ]
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "tenantId": {
+            "$ref": "#/components/schemas/Identity"
+          },
+          "edgeId": {
+            "$ref": "#/components/schemas/Identity"
+          },
+          "deviceCode": {
+            "$ref": "#/components/schemas/DeviceCode"
+          },
+          "mapVersion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "profileDigest": {
+            "$ref": "#/components/schemas/Hash"
+          },
+          "requestedAtMs": {
+            "$ref": "#/components/schemas/TimeMs"
+          },
+          "signature": {
+            "$ref": "#/components/schemas/Hash"
+          }
+        },
+        "description": "signature为HMAC-SHA256十六进制小写。32字节独立request key；签名域idms:field-lease-request:1\\n后接不含signature的stable规范JSON。必须使用实际换行字节，SDK负责规范化。requestedAtMs不能在未来，服务端检查时年龄必须小于30000ms。"
+      },
+      "LeaseBody": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "keyId",
+          "leaseId",
+          "requestId",
+          "tenantId",
+          "edgeId",
+          "deviceCode",
+          "mapVersion",
+          "profileDigest",
+          "admissionDigest",
+          "registryRevision",
+          "registryDigest",
+          "issuedAtMs",
+          "expiresAtMs"
+        ],
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "idms-field-channel-lease-v1"
+            ]
+          },
+          "keyId": {
+            "$ref": "#/components/schemas/Hash"
+          },
+          "leaseId": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "tenantId": {
+            "$ref": "#/components/schemas/Identity"
+          },
+          "edgeId": {
+            "$ref": "#/components/schemas/Identity"
+          },
+          "deviceCode": {
+            "$ref": "#/components/schemas/DeviceCode"
+          },
+          "mapVersion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "profileDigest": {
+            "$ref": "#/components/schemas/Hash"
+          },
+          "admissionDigest": {
+            "$ref": "#/components/schemas/Hash"
+          },
+          "registryRevision": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "registryDigest": {
+            "$ref": "#/components/schemas/Hash"
+          },
+          "issuedAtMs": {
+            "$ref": "#/components/schemas/TimeMs"
+          },
+          "expiresAtMs": {
+            "$ref": "#/components/schemas/TimeMs"
+          }
+        },
+        "description": "expiresAtMs必须严格大于issuedAtMs，差值最多30000ms；还会按批准和生效边界裁断。keyId为Ed25519 SPKI DER的SHA256。此令牌不能独立替代新鲜current-check。"
+      },
+      "SignedLease": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "body",
+          "signature"
+        ],
+        "properties": {
+          "body": {
+            "$ref": "#/components/schemas/LeaseBody"
+          },
+          "signature": {
+            "$ref": "#/components/schemas/Ed25519Signature"
+          }
+        },
+        "description": "Ed25519签名域idms:field-channel-lease:1\\n后接stable(body)。来源配置/审批/当前注册及实际持久签发审计COMMIT完成、恢复围栏最终复查后才返回签名。"
+      },
+      "CheckRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "requestId",
+          "requestedAtMs",
+          "lease",
+          "signature"
+        ],
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "idms-field-lease-check-request-v1"
+            ]
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "requestedAtMs": {
+            "$ref": "#/components/schemas/TimeMs"
+          },
+          "lease": {
+            "$ref": "#/components/schemas/SignedLease"
+          },
+          "signature": {
+            "$ref": "#/components/schemas/Hash"
+          }
+        },
+        "description": "独立随机requestId。HMAC域idms:field-lease-check-request:1\\n后接不含signature的stable规范JSON，使用相同受控32字节request key；请求不得在未来，年龄小于30000ms。lease摘要绑定整个规范signed lease。"
+      },
+      "CheckBody": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "keyId",
+          "requestId",
+          "leaseId",
+          "leaseDigest",
+          "tenantId",
+          "edgeId",
+          "deviceCode",
+          "mapVersion",
+          "profileDigest",
+          "checkedAtMs",
+          "validUntilMs",
+          "allowed",
+          "reason",
+          "admissionDigest",
+          "registryRevision",
+          "registryDigest"
+        ],
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "idms-field-lease-check-v1"
+            ]
+          },
+          "keyId": {
+            "$ref": "#/components/schemas/Hash"
+          },
+          "requestId": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "leaseId": {
+            "$ref": "#/components/schemas/Uuid"
+          },
+          "leaseDigest": {
+            "$ref": "#/components/schemas/Hash"
+          },
+          "tenantId": {
+            "$ref": "#/components/schemas/Identity"
+          },
+          "edgeId": {
+            "$ref": "#/components/schemas/Identity"
+          },
+          "deviceCode": {
+            "$ref": "#/components/schemas/DeviceCode"
+          },
+          "mapVersion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "profileDigest": {
+            "$ref": "#/components/schemas/Hash"
+          },
+          "checkedAtMs": {
+            "$ref": "#/components/schemas/TimeMs"
+          },
+          "validUntilMs": {
+            "$ref": "#/components/schemas/TimeMs"
+          },
+          "allowed": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "admissionDigest": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "registryRevision": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "registryDigest": {
+            "$ref": "#/components/schemas/Hash"
+          }
+        },
+        "description": "validUntilMs严格大于checkedAtMs且差值最多2000ms，允许时还受lease到期/批准边界裁断。allowed=true要求reason=null及非null admissionDigest；allowed=false要求reason匹配^(FIELD|SOURCE)_[A-Z0-9_]{1,96}$。必须在本地当前时间、原请求挑战、原租约及有效期下验签；不能只读allowed。"
+      },
+      "SignedCheck": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "body",
+          "signature"
+        ],
+        "properties": {
+          "body": {
+            "$ref": "#/components/schemas/CheckBody"
+          },
+          "signature": {
+            "$ref": "#/components/schemas/Ed25519Signature"
+          }
+        },
+        "description": "Ed25519签名域idms:field-lease-check:1\\n后接stable(body)。只读当前治理核对，不续租、不追加签发审计；同一有效租约仍需持续刷新状态。拒绝的业务判断可能以HTTP200且allowed=false返回。"
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "code": {
+            "type": "string"
+          },
+          "retryAfterSeconds": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

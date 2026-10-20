@@ -1,0 +1,21 @@
+import pg from 'pg';
+import type {ClientConfig} from 'pg';
+import type {StateMapBinding} from './state-map-sql-v1.ts';
+import {inspectStateMapCatalog} from './state-map-catalog-v1.ts';
+import {stateKey,stateValueHash,verifyStateProof,validateStateNode,stateBranch,stateRoot,rebuildStateRoot,type StateNode} from './state-map-v1.ts';
+import type {StateBranchV1} from './state-map-branch-v1.ts';
+import {domainMapAssert as need} from './domain-map-v4.ts';
+/** Only trusted maintenance callers; arbitrary roots are never accepted over HTTP. */
+export async function inspectStateBranchV1<T>(account:ClientConfig,binding:StateMapBinding,id:string,consume:(get:(ns:string,key:string)=>Promise<unknown>,branch:StateBranchV1)=>Promise<T>){
+ const c=new pg.Client({...account,connectionTimeoutMillis:3000,query_timeout:35000});c.on('error',()=>{});let keys=0,bytes=0;
+ try{await c.connect();await c.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');const identity=(await c.query('SELECT (SELECT oid::text FROM pg_database WHERE datname=current_database()) AS db,session_user::regrole::oid::text AS role')).rows[0];need(identity.db===binding.databaseOid&&identity.role===binding.roleOid,'BRANCH_INSPECTION_BINDING');need(await inspectStateMapCatalog(c)===binding.catalogHash,'BRANCH_INSPECTION_CATALOG');
+  const branch=(await c.query('SELECT state_map_v1.read_branch_v1($1,$2) AS value',[binding.tenantId,id])).rows[0].value as StateBranchV1;need(branch.format==='STATE_MAP_BRANCH_V1'&&branch.tenantId===binding.tenantId&&branch.branchId===id);const root=branch.head;
+  const get=async(namespace:string,key:string)=>{need(++keys<=2000000,'BRANCH_INSPECTION_BUDGET');const h=stateKey(binding.tenantId,namespace,key),proof=(await c.query('SELECT state_map_v1.read_proof_v1($1,$2,$3) AS value',[binding.tenantId,Buffer.from(h,'hex'),root.rootId===null?null:Buffer.from(root.rootId,'hex')])).rows[0].value,r=verifyStateProof(proof,root,h);bytes+=Buffer.byteLength(proof.valueText||'');need(bytes<=1024*1024*1024&&r.present,'BRANCH_INSPECTION_VALUE');return r.value;};
+  const value=await consume(get,branch),nodes=new Map<string,StateNode>(),leaves=new Map<string,string>();let pending=root.rootId?[root.rootId]:[];
+  while(pending.length){const ids=pending.splice(0,256),rows=(await c.query("SELECT encode(id,'hex') AS id,kind,depth,encode(prefix,'hex') AS prefix,item_count::text AS count,encode(state_hash,'hex') AS hash,encode(left_id,'hex') AS left,encode(right_id,'hex') AS right,encode(value_hash,'hex') AS \"valueHash\" FROM state_map_v1.nodes WHERE id=ANY($1::bytea[])",[ids.map(id=>Buffer.from(id,'hex'))])).rows as StateNode[];need(rows.length===ids.length&&nodes.size+rows.length<=2000000,'BRANCH_INSPECTION_NODES');for(const n of rows){validateStateNode(n);need(!nodes.has(n.id));nodes.set(n.id,n);if(n.kind===1)pending.push(n.left!,n.right!);else leaves.set(n.prefix,n.valueHash!);}}
+  for(const n of nodes.values())if(n.kind===1)need(stateBranch(n.depth,nodes.get(n.left!)!,nodes.get(n.right!)!).id===n.id,'BRANCH_INSPECTION_TREE');
+  const independentlyRebuilt=rebuildStateRoot(leaves);need(independentlyRebuilt.rootId===root.rootId&&independentlyRebuilt.rootHash===root.rootHash&&independentlyRebuilt.count===root.count,'BRANCH_INSPECTION_ROOT');need(stateRoot(root.rootId===null?null:nodes.get(root.rootId)!).rootHash===root.rootHash);
+  const hashes=[...new Set(leaves.values())];for(let i=0;i<hashes.length;i+=128){const wanted=hashes.slice(i,i+128),rows=(await c.query("SELECT encode(value_hash,'hex') AS hash,value_text AS text FROM state_map_v1.kv_values WHERE value_hash=ANY($1::bytea[])",[wanted.map(h=>Buffer.from(h,'hex'))])).rows;need(rows.length===wanted.length);for(const row of rows){bytes+=Buffer.byteLength(row.text);need(bytes<=1024*1024*1024&&stateValueHash(row.text)===row.hash,'BRANCH_INSPECTION_RAW_VALUE');}}
+  need(await inspectStateMapCatalog(c)===binding.catalogHash,'BRANCH_INSPECTION_CATALOG');await c.query('COMMIT');return {value,branch,proof:{keys,verifiedReachableNodes:nodes.size,verifiedReachableValues:hashes.length,independentlyRebuilt,allReachableValueBytesHashed:true}};
+ }catch(e){await c.query('ROLLBACK').catch(()=>{});throw e;}finally{await c.end().catch(()=>{});}
+}

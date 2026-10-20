@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "../server-dist",
+    "rootDir": "..",
+    "types": ["node"]
+  },
+  "include": ["**/*.ts", "../services/predictor/*.ts", "../services/edge/*.ts", "../services/field/*.ts", "../services/ai-gateway/*.ts", "../integrations/*.ts"],
+  "exclude": ["**/*.test.ts"]
+}

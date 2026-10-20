@@ -1,0 +1,7 @@
+import type pg from 'pg';
+export async function fieldSchemaCatalog(client:pg.PoolClient){
+ const columns=(await client.query(`SELECT c.relname,a.attnum,a.attname,format_type(a.atttypid,a.atttypmod) AS type,a.attnotnull,a.attgenerated,a.attidentity,pg_get_expr(d.adbin,d.adrelid) AS expression,cn.nspname AS collation_schema,co.collname AS collation_name FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace JOIN pg_attribute a ON a.attrelid=c.oid LEFT JOIN pg_attrdef d ON d.adrelid=c.oid AND d.adnum=a.attnum LEFT JOIN pg_collation co ON co.oid=a.attcollation LEFT JOIN pg_namespace cn ON cn.oid=co.collnamespace WHERE n.nspname='idms_field' AND c.relkind='r' AND a.attnum>0 AND NOT a.attisdropped ORDER BY c.relname,a.attnum`)).rows;
+ const constraints=(await client.query(`SELECT t.relname,c.conname,c.contype,c.condeferrable,c.condeferred,c.convalidated,pg_get_constraintdef(c.oid) AS definition FROM pg_constraint c JOIN pg_class t ON t.oid=c.conrelid JOIN pg_namespace n ON n.oid=t.relnamespace WHERE n.nspname='idms_field' ORDER BY t.relname,c.conname`)).rows;
+ const indexes=(await client.query(`SELECT t.relname,i.relname AS name,x.indisunique,x.indisprimary,x.indisvalid,x.indisready,x.indislive,pg_get_indexdef(i.oid) AS definition FROM pg_index x JOIN pg_class t ON t.oid=x.indrelid JOIN pg_class i ON i.oid=x.indexrelid JOIN pg_namespace n ON n.oid=t.relnamespace WHERE n.nspname='idms_field' ORDER BY t.relname,i.relname`)).rows;
+ return {columns,constraints,indexes};
+}

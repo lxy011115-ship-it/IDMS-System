@@ -1,0 +1,2 @@
+source_record_id,device_code,batch_code,characteristic_code,measured_at,sample_no,measured_value,unit,lsl,usl
+quality-001,D-001,BATCH-001,DIAMETER,2026-10-13T10:00:00+08:00,1,10.01,mm,9.95,10.05

@@ -1,0 +1,23 @@
+import {sourceFreezeTargetBinding,sourceFreezeSha} from './field-source-freeze-policy.mjs';
+import {canonical} from '../server/imports.ts';
+const fail=()=>{throw Object.assign(Error('FIELD_RESTORE_RECORD_INVALID'),{code:'FIELD_RESTORE_RECORD_INVALID'});};
+const object=(v,keys)=>{if(!v||Object.getPrototypeOf(v)!==Object.prototype||Object.keys(v).length!==keys.length||keys.some(k=>!Object.hasOwn(v,k)))fail();return v;};
+const uuid=v=>{if(typeof v!=='string'||!/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(v)||/^0{8}-0{4}-0{4}-0{4}-0{12}$/.test(v))fail();};
+const hash=v=>{if(typeof v!=='string'||!/^[a-f0-9]{64}$/.test(v))fail();};
+const id=v=>{if(typeof v!=='string'||!/^[a-z_][a-z0-9_]{0,62}$/.test(v))fail();};
+const oid=v=>{if(typeof v!=='string'||!/^[1-9][0-9]{0,9}$/.test(v)||BigInt(v)>4294967295n)fail();};
+const copy=v=>{const out=JSON.parse(canonical(v));const freeze=x=>{if(x&&typeof x==='object'){Object.values(x).forEach(freeze);Object.freeze(x);}};freeze(out);return out;};
+export function fieldRestoreIntent(raw){
+ const r=object(raw,['format','operationId','backupId','archiveIntentSha256','archiveResultSha256','archiveSha256','manifestSha256','sourceFactsSha256','captureContextSha256','targetBinding','migratorRole','targetConfigSha256','provisionNonce','createdAt']);
+ if(r.format!=='idms-field-target-restore-intent-v1')fail();for(const k of ['operationId','backupId','provisionNonce'])uuid(r[k]);for(const k of ['archiveIntentSha256','archiveResultSha256','archiveSha256','manifestSha256','sourceFactsSha256','captureContextSha256','targetConfigSha256'])hash(r[k]);sourceFreezeTargetBinding(r.targetBinding);id(r.migratorRole);if([r.targetBinding.user,r.targetBinding.ownerRole,r.targetBinding.backupRole].includes(r.migratorRole)||typeof r.createdAt!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(r.createdAt)||!Number.isFinite(Date.parse(r.createdAt))||new Date(r.createdAt).toISOString()!==r.createdAt)fail();return copy(r);
+}
+export function fieldRestoreRoles(raw){
+ const r=object(raw,['format','operationId','restoreIntentSha256','roles']);if(r.format!=='idms-field-target-restore-roles-v1')fail();uuid(r.operationId);hash(r.restoreIntentSha256);object(r.roles,['owner','app','backup','migrator']);for(const role of Object.values(r.roles)){object(role,['name','oid']);id(role.name);oid(role.oid);}if(new Set(Object.values(r.roles).map(x=>x.name)).size!==4||new Set(Object.values(r.roles).map(x=>x.oid)).size!==4)fail();return copy(r);
+}
+export function fieldRestoreProvision(raw){const r=object(raw,['format','operationId','restoreIntentSha256','rolesSha256','database']);if(r.format!=='idms-field-target-restore-provision-v1')fail();uuid(r.operationId);hash(r.restoreIntentSha256);hash(r.rolesSha256);object(r.database,['name','oid']);id(r.database.name);oid(r.database.oid);return copy(r);}
+export function bindFieldRestoreIntent(raw,{main,freeze,archive}){
+ const r=fieldRestoreIntent(raw);if(main.kind!=='RESTORE'||!freeze||!archive.intent||!archive.ready||!archive.result||r.operationId!==main.operationId||r.operationId!==freeze.operationId||r.backupId!==archive.intent.backupId||r.archiveIntentSha256!==sourceFreezeSha(archive.intent)||r.archiveResultSha256!==sourceFreezeSha(archive.result)||r.archiveSha256!==archive.ready.archiveSha256||r.manifestSha256!==archive.ready.manifestSha256||r.sourceFactsSha256!==archive.intent.factsSha256||r.captureContextSha256!==archive.intent.captureContextSha256||canonical(r.targetBinding)!==canonical(freeze.targetBinding)||Date.parse(r.createdAt)<Date.parse(archive.intent.createdAt)||Object.values(freeze.roles).some(role=>role.name===r.migratorRole))fail();return r;
+}
+export function bindFieldRestoreRoles(raw,intent){const r=fieldRestoreRoles(raw),names={owner:intent.targetBinding.ownerRole,app:intent.targetBinding.user,backup:intent.targetBinding.backupRole,migrator:intent.migratorRole};if(r.operationId!==intent.operationId||r.restoreIntentSha256!==sourceFreezeSha(intent)||Object.entries(names).some(([kind,name])=>r.roles[kind].name!==name))fail();return r;}
+export function bindFieldRestoreProvision(raw,intent,roles){const r=fieldRestoreProvision(raw);if(r.operationId!==intent.operationId||r.restoreIntentSha256!==sourceFreezeSha(intent)||r.rolesSha256!==sourceFreezeSha(roles)||r.database.name!==intent.targetBinding.database)fail();return r;}
+export function fieldRestoreRoleTag(intent,kind){if(!['owner','app','backup','migrator'].includes(kind))fail();const r=fieldRestoreIntent(intent);return 'IDMS_FIELD_RESTORE_ROLE_V1\n'+canonical({operationId:r.operationId,restoreIntentSha256:sourceFreezeSha(r),provisionNonce:r.provisionNonce,database:r.targetBinding.database,kind});}

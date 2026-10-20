@@ -1,0 +1,4 @@
+import {readFile} from 'node:fs/promises';
+import {migrateFieldTenant} from './field-migration.mjs';
+const args=process.argv.slice(2),options={};for(let i=0;i<args.length;i+=2){if(!['--runtime-config','--migration-config','--tenant'].includes(args[i])||!args[i+1]||options[args[i]])throw Error('Use explicit --runtime-config, --migration-config and --tenant');options[args[i]]=args[i+1];}if(Object.keys(options).length!==3)throw Error('All field migration arguments must be explicit');
+try{const runtime=JSON.parse(await readFile(options['--runtime-config'],'utf8')),migration=JSON.parse(await readFile(options['--migration-config'],'utf8'));const result=await migrateFieldTenant(runtime,migration,options['--tenant']);console.log(JSON.stringify({...result,credentialsLogged:false,productionAcceptance:false},null,2));}catch{console.error('Field module migration was not verified; keep the service stopped and inspect the owned deployment environment.');process.exitCode=1;}

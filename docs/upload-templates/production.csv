@@ -1,0 +1,2 @@
+source_record_id,device_code,shift_code,period_start,period_end,planned_minutes,total_count,good_count,ideal_cycle_seconds
+prod-001,D-001,DAY,2026-10-13T08:00:00+08:00,2026-10-13T16:00:00+08:00,480,1000,980,20

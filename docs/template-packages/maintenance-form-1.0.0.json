@@ -1,0 +1,44 @@
+{
+  "format": "idms-template-v1",
+  "content": {
+    "templateKey": "maintenance-form",
+    "version": "1.0.0",
+    "industry": "离散制造",
+    "manifest": {
+      "schemaVersion": 1,
+      "minPlatformVersion": "0.1.0",
+      "modules": [
+        "equipment",
+        "maintenance"
+      ],
+      "policy": {
+        "finalApproval": "INDEPENDENT_HUMAN",
+        "deviceAccess": "READ_ONLY"
+      },
+      "maintenance": {
+        "fields": [
+          {
+            "key": "post_vibration",
+            "label": "复测振动",
+            "type": "NUMBER",
+            "required": true,
+            "unit": "mm/s",
+            "min": 0,
+            "max": 20
+          },
+          {
+            "key": "inspection_result",
+            "label": "复测结论",
+            "type": "SELECT",
+            "required": true,
+            "options": [
+              "满足维修验收条件",
+              "需再次维修"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "contentDigest": "8e0d011139a17131ff127e785a0d24723cef573c5e33b4a2adf8ebc4c4e7d74d"
+}

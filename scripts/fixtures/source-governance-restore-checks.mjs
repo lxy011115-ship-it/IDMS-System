@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {mkdir,readFile,unlink} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import pg from 'pg';
+import {generateKey,createTenantBackup,restoreTenantBackup} from '../backup-support.mjs';
+import {sourceGovernanceSqlRead} from '../../server/source-governance-sql.ts';
+import {verifySqlRead} from '../../server/read-integrity.ts';
+import {verifySourceEvidenceV1} from '../../server/source-governance-evidence-v1.ts';
+export async function sourceGovernanceRestoreChecks({source,sources,author,large}){
+ const {backupConfig:config,admin:adminAccount}=JSON.parse(await readFile(process.env.IDMS_SOURCE_QA_PRIVATE));assert.match(config.tenants.acme.database,/^idms_sourceqa_acme_[a-f0-9]{10}$/);const suffix=randomUUID().replaceAll('-','').slice(0,12),target='idms_restore_acme_'+suffix,directory=resolve('.local','sourcerestoreqa-'+suffix),keyFile=join(directory,'key.json'),credentialFile=join(directory,'restore.json'),ownership={},admin=new pg.Client(adminAccount);let pool,backup,restored;
+ await admin.connect();await mkdir(directory,{recursive:true});try{await generateKey(keyFile);backup=await createTenantBackup({config,tenantId:'acme',keyFile,outputDirectory:directory});restored=await restoreTenantBackup({config:{...config,bootstrapPassword:adminAccount.password},tenantId:'acme',keyFile,backupFile:backup.file,targetDatabase:target,credentialFile,ownership});assert.equal(restored.verified,true);assert.equal(restored.tables,33);const account=JSON.parse(await readFile(credentialFile));assert.equal(account.database,target);pool=new pg.Pool({host:config.host,port:config.port,...account});const payload=await sourceGovernanceSqlRead(pool,author,new URLSearchParams(large.query),sources,true,c=>verifySqlRead(pool,c,'acme'),large.evaluatedAt);verifySourceEvidenceV1(payload);assert.equal(payload.inputDigest,large.inputDigest);assert.equal(payload.resultDigest,large.resultDigest);assert.equal(payload.result.total,10050);assert.equal(payload.result.currentConfigurationPermitsIntake,true);
+ }finally{await pool?.end();assert.match(target,new RegExp('^idms_restore_acme_'+suffix+'$'));assert.ok(!Object.values(config.tenants).some(a=>a.database===target||a.user===target));if(ownership.databaseCreated)await admin.query('DROP DATABASE "'+target+'" WITH (FORCE)');if(ownership.roleCreated)await admin.query('DROP ROLE "'+target+'"');await admin.end();for(const file of [keyFile,credentialFile,...(backup?[backup.file]:[])])await unlink(file).catch(e=>{if(e.code!=='ENOENT')throw e;});}
+ return {verifiedAt:new Date().toISOString(),actualEncryptedReadOnlyQaBackup:true,actualIsolatedRestoreVerified:true,restoredPublicTables:restored.tables,allTableFactsAndLogicalRootsVerifiedByRestore:true,all10050RestoredSourceReceiptsRecomputed:true,sourcePolicyDefinitionsRegistryAndRawReceiptPointBindingsPreserved:true,inputAndResultDigestsIdentical:true,temporaryRecoveryDatabaseRoleKeyArchiveAndCredentialsRemoved:true,scope:'TENANT_BUSINESS_DATABASE',rpoRtoAcceptance:false,productionAcceptance:false};
+}

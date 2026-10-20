@@ -1,0 +1,5 @@
+import {loadAiImportRuntimeV4} from '../../server/ai-import-runtime-v4.ts';
+import {AiImportApplicationWorkerV4} from '../../server/ai-import-application-worker-v4.ts';
+const runtime=await loadAiImportRuntimeV4(process.argv[2]);let released=false,resolveRelease;const release=new Promise(ok=>{resolveRelease=ok;});process.on('message',m=>{if(m?.type==='AUDIT_HOLD_RELEASE'||m?.type==='AUDIT_HOLD_STOP'){released=true;resolveRelease();}});let held=false;
+const worker=new AiImportApplicationWorkerV4({source:runtime.source,account:runtime.config.source.account,sources:runtime.sources,onPhase:async phase=>{if(phase==='STAGED'&&!held){held=true;process.send?.({type:'AUDIT_APPLICATION_HELD'});if(!released)await release;}},onError:async()=>{process.send?.({type:'AUDIT_APPLICATION_FAILED'});}});
+const result=await worker.runOne();if(!held||result?.status!=='APPLIED')throw Error('AUDIT_HOLD_APPLICATION_NOT_APPLIED');console.log(JSON.stringify({event:'AUDIT_HOLD_APPLICATION_APPLIED',requestId:result.requestId}));if(process.connected)process.disconnect();
