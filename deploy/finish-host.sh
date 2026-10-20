@@ -20,6 +20,8 @@ for attempt in {1..300}; do
 done
 $ready || { echo 'Keycloak startup not ready; inspect owned container.' >&2; exit 1; }
 node deploy/configure-identity.mjs
+# Public package code is readable; private runtime/deployment files keep their own modes.
+chmod -R a+rX node_modules
 # The business process receives only runtime/session keys, never deployment passwords.
 chgrp idms .local
 chmod 750 .local

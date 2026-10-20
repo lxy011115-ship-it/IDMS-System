@@ -32,6 +32,8 @@ for attempt in {1..60}; do
 done
 $ready || { echo 'PostgreSQL startup not ready; inspect owned container.' >&2; exit 1; }
 npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+# Public dependency code must be readable by the separate service user.
+chmod -R a+rX node_modules
 node deploy/bootstrap.mjs
 if [ "${IDMS_PREPARE_PHASE:-all}" = database ]; then
   echo 'IDMS_DATABASE_PREPARED; finish-host.sh remains pending'

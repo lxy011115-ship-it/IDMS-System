@@ -13,6 +13,8 @@ if [ ! -f .local/identity-ready.json ]; then
   node deploy/configure-identity.mjs
 fi
 
+# Public package code is readable; private runtime/deployment files keep their own modes.
+chmod -R a+rX node_modules
 # The business process receives only runtime/session keys, never deployment passwords.
 chgrp idms .local
 chmod 750 .local
