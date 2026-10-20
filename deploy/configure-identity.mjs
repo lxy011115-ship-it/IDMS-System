@@ -6,7 +6,7 @@ const admin=JSON.parse(await readFile('/srv/idms/private/keycloak-admin.json','u
 const reply=await fetch(base+'/realms/master/protocol/openid-connect/token',{method:'POST',body:new URLSearchParams({client_id:'admin-cli',grant_type:'password',username:admin.username,password:admin.password}),signal:AbortSignal.timeout(10000)});
 if(!reply.ok)throw Error('Identity bootstrap login failed');
 const {access_token:token}=await reply.json();
-async function api(path,method='GET',body){const r=await fetch(base+'/admin/realms/'+path,{method,headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error(`Identity configuration rejected ${method} ${path} ${r.status}`);return r.status===204||r.headers.get('content-length')==='0'?undefined:r.json();}
+async function api(path,method='GET',body){const r=await fetch(base+'/admin/realms/'+path,{method,headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(10000)});if(!r.ok)throw Error(`Identity configuration rejected ${method} ${path} ${r.status}`);const text=await r.text();return text?JSON.parse(text):undefined;}
 const realms=await api('');
 if(!realms.some(r=>r.realm===realm))await api('','POST',{realm,enabled:true,registrationAllowed:false,resetPasswordAllowed:false,editUsernameAllowed:false,bruteForceProtected:true,accessTokenLifespan:120,sslRequired:'external'});
 const profile=await api(realm+'/users/profile');profile.unmanagedAttributePolicy='ADMIN_EDIT';
