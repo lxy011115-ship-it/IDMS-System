@@ -28,3 +28,5 @@ docker ps --filter name=idms-
 
 
 下载身份镜像期间可用 `IDMS_PREPARE_PHASE=database bash deploy/prepare-host.sh` 先完成独立数据库阶段，再在镜像就绪后执行一次 `bash deploy/finish-host.sh`。任何部分失败都应先核对现有资源，不要重复运行初始化。
+
+若首次身份服务启动超过等待窗口，但原容器随后已健康，可在检查容器标记及镜像摘要后运行 `bash deploy/resume-internal.sh`；该脚本校验既有 IDMS 容器，仅继续 realm、权限及网站服务配置，不重建数据库或身份容器。

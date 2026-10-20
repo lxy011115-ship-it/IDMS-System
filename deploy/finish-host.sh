@@ -14,7 +14,7 @@ docker run -d --name idms-keycloak --restart unless-stopped \
   --label app=idms --network host --memory=512m --cpus=0.75 --pids-limit=128 \
   --env-file /srv/idms/private/keycloak.env quay.io/keycloak/keycloak:26.8.1 start
 ready=false
-for attempt in {1..120}; do
+for attempt in {1..300}; do
   if curl -fsS --max-time 3 http://127.0.0.1:8084/realms/master/.well-known/openid-configuration >/dev/null; then ready=true; break; fi
   sleep 2
 done
