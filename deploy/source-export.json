@@ -453,11 +453,6 @@
       "sha256": "b9073c97b482fc633d256a173cdca6cf35dad71480e04c7ec24cfaee7bcf8220"
     },
     {
-      "path": "package-lock.json",
-      "bytes": 221421,
-      "sha256": "612f2cf7d5ade96eb3c8417ae988f56cd36eb899d8825e30beec6fc19338b056"
-    },
-    {
       "path": "public/ai-ui.js",
       "bytes": 2744,
       "sha256": "0c14929782d5bd3675b01bc6515e4dc702080c68a1bacdf8a04c7d6af23344ec"
@@ -4835,6 +4830,7 @@
   "repositoryAdaptations": [
     "New README replaces historical operation log",
     "New ignore rules and deploy scripts",
-    "package pretest creates ignored scratch directory required by existing backup tests"
+    "package pretest creates ignored scratch directory required by existing backup tests",
+    "Declare four directly imported OPC UA packages explicitly so production-only installs cannot omit them"
   ]
 }

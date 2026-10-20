@@ -11,7 +11,7 @@ if docker container inspect idms-keycloak >/dev/null 2>&1; then
 fi
 docker image inspect quay.io/keycloak/keycloak:26.8.1 >/dev/null
 docker run -d --name idms-keycloak --restart unless-stopped \
-  --label app=idms --network host --memory=512m --cpus=0.75 --pids-limit=128 \
+  --label app=idms --network host --memory=576m --cpus=0.75 --pids-limit=128 \
   --env-file /srv/idms/private/keycloak.env quay.io/keycloak/keycloak:26.8.1 start
 ready=false
 for attempt in {1..300}; do
