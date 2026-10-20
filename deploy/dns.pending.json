@@ -1,0 +1,9 @@
+{
+  "status": "INACTIVE_ICP_PENDING",
+  "domain": "idms.xin",
+  "intendedRecords": [
+    {"name": "@", "type": "A", "value": "47.104.133.34", "ttl": 600},
+    {"name": "www", "type": "CNAME", "value": "idms.xin", "ttl": 600}
+  ],
+  "note": "Do not apply until ICP access is approved. Recheck authoritative name servers and existing records first."
+}
