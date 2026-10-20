@@ -1,7 +1,7 @@
 # 维修控制台开发状态
 
-此分支保存 2026-10-20 部署工作开始前的未完成开发，未合并 main，未部署到服务器。
+后台持久队列、真实 OIDC/加密共享会话、独立 HTTP 与 worker 命令行、真实 Flowable 调度及范围读取已接通。独立 PostgreSQL 13项、真实 Flowable 8项、真实身份/命令行6项检查通过，另有5种错误配置拒绝。
 
-仅完成 TypeScript 类型检查；尚未完成真实 PostgreSQL、HTTP、浏览器 UI 和产品 CLI 验证。已知 `flow_defer_v4` 返回 FOUND 的语义需要复核。后续按 docs/superpowers/plans/2026-10-20--maintenance-console-v4.md 继续。
+详情及当前验证范围见 [后台接线进度](maintenance-console-backend-v4-progress.md)。初稿 flow_defer_v4 的 FOUND 问题已修复并实际验证。
 
-此分支继承 main 的部署文档；其中部署提交与校验清单只描述 main，不覆盖本分支新增的未验证文件。
+工单界面、浏览器 PKCE 登录、断网重载与身份切换交互、三宽度及整站切换尚未完成。本分支未合并 main，未部署到云端。部署文档、部署提交及校验清单只描述 main，不覆盖本分支新增的控制台开发。完整商业验收继续。

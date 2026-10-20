@@ -1,0 +1,62 @@
+{
+  "status": "BACKEND_VERIFIED_UI_PENDING",
+  "productionAcceptance": false,
+  "cloudMainChanged": false,
+  "branch": "wip/maintenance-console-v4",
+  "postgresChecks": 13,
+  "realFlowableChecks": 8,
+  "realOidcAndCliChecks": 6,
+  "invalidRuntimeConfigurationsRejected": 5,
+  "branchUnitTests": {
+    "tests": 549,
+    "pass": 549,
+    "fail": 0
+  },
+  "canonicalUnitTests": {
+    "tests": 558,
+    "pass": 558,
+    "fail": 0,
+    "note": "Includes an existing unpublished legacy-edge-flow test file excluded from the managed branch"
+  },
+  "historicalPreservationChecks": 14,
+  "buildArtifacts": 268,
+  "sourceSecretReview": {
+    "files": 30,
+    "localSecretValuesCompared": 508,
+    "matches": 0,
+    "scope": "Explicit new maintenance console source and documentation; no runtime artifacts"
+  },
+  "qaCleanup": {
+    "databasesRemoved": 42,
+    "rolesRemoved": 158,
+    "ownedDatabaseLeftovers": 0,
+    "ownedRoleLeftovers": 0
+  },
+  "evidence": [
+    {
+      "kind": "pg",
+      "checks": 13,
+      "evidence": "work/maintenance-console-pg-v4-20261020/fc447c346af8/verification.json",
+      "sha256": "f65355f5bd25324e7c14e5fbdf45d09a888f146e602a002cb7bacb46d1036160"
+    },
+    {
+      "kind": "flow",
+      "checks": 8,
+      "evidence": "work/maintenance-console-flow-v4-20261020/0956b98d8134/verification.json",
+      "sha256": "5372b494b2d9638445048bc69773cce3dfc941aa1a656890274da2e0edfce77f"
+    },
+    {
+      "kind": "auth",
+      "checks": 6,
+      "evidence": "work/maintenance-console-auth-v4-20261020/a7d7d2e91539/verification.json",
+      "sha256": "43a34f3a5cfa7acc532d534a9c6744703bb17770bf45f4ad9328f73736038eb6"
+    }
+  ],
+  "interactiveBrowserLoginTested": false,
+  "pending": [
+    "Work order UI and browser recovery",
+    "Browser PKCE callback and three widths",
+    "Formal full console archive and site migration",
+    "ICP and public domain activation"
+  ]
+}
