@@ -95,6 +95,17 @@ DECLARE j predictive_jobs_v4.jobs;b jsonb;BEGIN
  IF b IS NOT NULL AND b<>'null'::jsonb THEN RAISE EXCEPTION 'PREDICTIVE_SDK_CANCEL_REQUIRED';END IF;
  INSERT INTO predictive_jobs_v4._ctx VALUES(pg_backend_pid(),txid_current());UPDATE predictive_jobs_v4.jobs SET status='CANCELLED',result=NULL,error_code='CANCELLED',worker_id=NULL,claim_token=NULL,lease_until=NULL,auth_deadline=NULL,updated_at=clock_timestamp() WHERE id=wanted RETURNING * INTO j;DELETE FROM predictive_jobs_v4._ctx WHERE pid=pg_backend_pid() AND tx=txid_current();RETURN predictive_jobs_v4._public(j);
 END $$;
+-- A rejected request without any native preparation is terminal; never label a prepared or externally-started action rejected.
+CREATE FUNCTION predictive_jobs_v4.reject_unprepared_v4(tenant text,wanted uuid,owner uuid,token uuid,fence bigint,grant_revision bigint,deadline timestamptz,rejection jsonb) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,predictive_jobs_v4,state_map_v1,pg_temp AS $$
+DECLARE j predictive_jobs_v4.jobs;b jsonb;BEGIN
+ PERFORM state_map_v1.read_head_v1(tenant);PERFORM predictive_jobs_v4.lock_v4(tenant,wanted,owner,token,fence,grant_revision,deadline);j:=predictive_jobs_v4._claim(tenant,wanted,owner,token,fence,grant_revision);
+ b:=predictive_jobs_v4._state(tenant,'predictive_job',j.business_key)->'value';
+ IF j.external_started OR j.cancel_requested OR b IS NOT NULL AND b<>'null'::jsonb THEN RAISE EXCEPTION 'PREDICTIVE_PREPARED_RECOVERY_REQUIRED';END IF;
+ IF rejection IS NULL OR jsonb_typeof(rejection)<>'object' OR (SELECT count(*) FROM jsonb_object_keys(rejection))<>2 OR coalesce(rejection->>'status','') NOT IN('400','404','409','413') OR coalesce(rejection->>'message','')!~'^[A-Z0-9_]{1,80}$' THEN RAISE EXCEPTION 'PREDICTIVE_REJECTION_INPUT';END IF;
+ INSERT INTO predictive_jobs_v4._ctx VALUES(pg_backend_pid(),txid_current());UPDATE predictive_jobs_v4.jobs SET status='FAILED',result=rejection,error_code='PREDICTIVE_REQUEST_REJECTED',worker_id=NULL,claim_token=NULL,lease_until=NULL,auth_deadline=NULL,updated_at=clock_timestamp() WHERE id=wanted RETURNING * INTO j;DELETE FROM predictive_jobs_v4._ctx WHERE pid=pg_backend_pid() AND tx=txid_current();RETURN predictive_jobs_v4._public(j);
+END $$;
+REVOKE ALL ON FUNCTION predictive_jobs_v4.reject_unprepared_v4(text,uuid,uuid,uuid,bigint,bigint,timestamptz,jsonb) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION predictive_jobs_v4.reject_unprepared_v4(text,uuid,uuid,uuid,bigint,bigint,timestamptz,jsonb) TO __WORKER__;
 REVOKE ALL ON FUNCTION predictive_jobs_v4._sdk(predictive_jobs_v4.jobs),predictive_jobs_v4.start_external_v4(text,uuid,uuid,uuid,bigint,bigint,timestamptz),predictive_jobs_v4.settle_v4(text,uuid,uuid,uuid,bigint,bigint) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION predictive_jobs_v4.start_external_v4(text,uuid,uuid,uuid,bigint,bigint,timestamptz),predictive_jobs_v4.settle_v4(text,uuid,uuid,uuid,bigint,bigint) TO __WORKER__;
 REVOKE EXECUTE ON FUNCTION predictive_jobs_v4.publish_console_v4(text,uuid,uuid,uuid,bigint,bigint,timestamptz,uuid,uuid,bigint,bytea,bigint,bytea,bytea) FROM __WORKER__;

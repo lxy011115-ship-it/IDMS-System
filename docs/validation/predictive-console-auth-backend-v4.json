@@ -1,0 +1,23 @@
+{
+  "verifiedAt": "2026-10-20T23:58:36.909730+00:00",
+  "stage": "predictive-console-auth-backend-v4",
+  "actualAuthHttpWorkerChecks": 10,
+  "currentSqlProtocolChecks": 12,
+  "canonicalUnitTests": 574,
+  "realKeycloak": true,
+  "realEncryptedSharedSessions": true,
+  "separateHttpAndWorkerCli": true,
+  "independentRuleCli": true,
+  "realFlowable": true,
+  "postActualResponseRoleRevocationAndExplicitSqlSdkRevisionRecovery": true,
+  "nativeCompletionReceiptAndAuditRecheckedByHttp": true,
+  "interactiveBrowserPkceTested": false,
+  "productUiComplete": false,
+  "preparedCancelAndIndependentHumanRetryComplete": false,
+  "oldUnresolvedOutboxMigrationComplete": false,
+  "originalRuntimeChanged": false,
+  "cloudDeploymentChanged": false,
+  "publicDomainEnabled": false,
+  "productionAcceptance": false,
+  "sourceStageFrozen": false
+}

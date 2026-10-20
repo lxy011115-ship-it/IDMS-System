@@ -26,3 +26,14 @@
 第 4 项已推进独立 predictive_jobs_v4 协议、native SDK hook 适配与实际 PG/Flowable 12 组验证（最终 ea0654987fdf），未完成真实身份/HTTP/独立产品 worker/UI。30 秒租约、32 秒主线程阻塞时独立线程续租、native 回执同事务完成及 COMMIT 丢回复恢复通过。当前 SDK 已准备后取消和异人 retry 控制仍需补，不可把受限取消当完整产品功能。详见 docs/predictive-queue-v4-{guide,progress}.md。
 
 同时发现本机 20:15:46 重启；已恢复原 PG 集群并核验原系统及数据库/owner OID，原 4010 尚未恢复。下一步先依据 work/runtime-resume-20261020-r1/NEXT.md 以新版本记录恢复原冻结整站，UI 使用 Cua，不重跑旧成功脚本；再继续本计划第 4 项。完整目标保持。
+
+## 2026-10-21 产品后台接线
+
+原冻结本机站点已完成独立重启恢复，当前 owner 的输入保持固定。继续第 4 项，新源采用独立预测 HTTP 和 worker CLI，真实 OIDC/加密共享会话引用沿用现有认证边界。
+
+- HTTP 配置只含 QI/READER 和认证材料，不含预测器/Flowable 服务材料；worker 使用 APP 和固定服务配置。
+- 每次 SQL 领取只执行其指定命令，不调用 SDK.next。每个 SDK 事务附带 predictive_host 记录，将 SQL 授权修订与其原人、作业和命令绑定；同一修订的 WAITING_AUTH 不自动复活，显式新修订才重新授权 SDK。旧宿主中没有该绑定的作业拒绝自动接管，需另做迁移。
+- 仍需在实际服务返回后和最终事务前重核当前身份。真实 Flowable 发送开始先落 SQL 外部边界，恢复坚持原不可变信封。
+- SDK 尚未准备的语义错误通过新 Worker 专用 reject_unprepared_v4 持久拒绝；SQL 独立禁止拒绝已有 SDK 事实或外部发送的命令。维护暂停属于暂态，不当作用户请求被拒绝。
+- HTTP 先提供上下文、分析/复核入队、本人命令查询、原人重授；返回 COMMITTED 要重新验证原生 SDK 回执和审计，不能只读 SQL 状态。
+- 后续仍需：已有 SDK 的安全取消、独立人工 retry 控制、真正丢接受回复与关闭竞态的产品入口、响应后真实撤权/撤销等更多独立 CLI 场景，再完成设备/告警/证据读取、统一站点预测页面、实际 PKCE 和三宽度验收。现在的后台接线不当作上述事项已完成。
