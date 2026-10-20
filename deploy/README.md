@@ -26,3 +26,5 @@ docker ps --filter name=idms-
 
 `source-export.json` 记录导出的已发布代码摘要；根 README 使用此仓库的简明说明代替历史运行记录，部署文件为新增内容。v4 模块已归档，但尚未替换完整 v2 站点入口；未验证的维护控制台工作文件未发布。
 
+
+下载身份镜像期间可用 `IDMS_PREPARE_PHASE=database bash deploy/prepare-host.sh` 先完成独立数据库阶段，再在镜像就绪后执行一次 `bash deploy/finish-host.sh`。任何部分失败都应先核对现有资源，不要重复运行初始化。
