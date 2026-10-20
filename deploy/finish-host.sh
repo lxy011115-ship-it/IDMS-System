@@ -2,7 +2,7 @@
 set -euo pipefail
 umask 077
 cd /srv/idms/app
-export PATH=/srv/idms/node-v24.20.0-linux-x64/bin:/usr/bin:/bin
+export PATH=/srv/idms/node-v24.20.0-linux-x64/bin:/usr/sbin:/sbin:/usr/bin:/bin
 test "$(id -u)" = 0
 test -f .local/cloud-bootstrap-complete.json
 test ! -e /etc/systemd/system/idms-pilot.service

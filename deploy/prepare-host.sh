@@ -2,7 +2,7 @@
 set -euo pipefail
 umask 077
 cd /srv/idms/app
-export PATH=/srv/idms/node-v24.20.0-linux-x64/bin:/usr/bin:/bin
+export PATH=/srv/idms/node-v24.20.0-linux-x64/bin:/usr/sbin:/sbin:/usr/bin:/bin
 test "$(id -u)" = 0
 test -x /srv/idms/node-v24.20.0-linux-x64/bin/node
 test ! -e /srv/idms/private/postgres.env
