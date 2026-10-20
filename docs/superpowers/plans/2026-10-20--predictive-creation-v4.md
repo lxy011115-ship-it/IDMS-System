@@ -20,3 +20,9 @@
 6. QI/READER HTTP 不持 APP、Flowable 或预测器材料；公共响应不暴露 SDK 原始计划/授权。随后独立 CLI、真实 Keycloak/共享会话撤权和退出恢复，最后统一站点页面、真实 PKCE、未知接受恢复与三宽度验收。
 
 完整输入重构与候选上限尚在。后续最近测点索引必须覆盖所有写者及迁移闸门，不能用漏掉旧写者的缓存冒充完整事实。容量与整站停写/恢复/原活会话切换另需真实证据。
+
+## SQL 协议基础检查点
+
+第 4 项已推进独立 predictive_jobs_v4 协议、native SDK hook 适配与实际 PG/Flowable 12 组验证（最终 ea0654987fdf），未完成真实身份/HTTP/独立产品 worker/UI。30 秒租约、32 秒主线程阻塞时独立线程续租、native 回执同事务完成及 COMMIT 丢回复恢复通过。当前 SDK 已准备后取消和异人 retry 控制仍需补，不可把受限取消当完整产品功能。详见 docs/predictive-queue-v4-{guide,progress}.md。
+
+同时发现本机 20:15:46 重启；已恢复原 PG 集群并核验原系统及数据库/owner OID，原 4010 尚未恢复。下一步先依据 work/runtime-resume-20261020-r1/NEXT.md 以新版本记录恢复原冻结整站，UI 使用 Cua，不重跑旧成功脚本；再继续本计划第 4 项。完整目标保持。
