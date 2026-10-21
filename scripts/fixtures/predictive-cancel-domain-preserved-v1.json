@@ -1,0 +1,105 @@
+{
+  "format": "IDMS_CANCEL_DOMAIN_PRESERVED_INPUTS_V1",
+  "sourcePins": [
+    {
+      "path": "services/workflow/pom.xml",
+      "sha256": "3f28086ff02ee7fbff3441e119ff7f53cf898cad7da48d0e59d0d43a3665b550"
+    },
+    {
+      "path": "services/workflow/src/main/java/com/idms/workflow/Application.java",
+      "sha256": "1178a377934640bcaba1969d691b479a2fccada3ff3819bdc5822882117301be"
+    },
+    {
+      "path": "services/workflow/src/main/java/com/idms/workflow/WorkflowController.java",
+      "sha256": "828b272ec1b4b52fbc593a01b59a98d160135dedfcf144ece3cd2f9294c3a694"
+    },
+    {
+      "path": "services/workflow/src/main/java/com/idms/workflow/RecoveryController.java",
+      "sha256": "50c51da9a12d732aa47f007fbd07469c9a7bf0d513852c7e98945ec0bb63b33f"
+    },
+    {
+      "path": "services/workflow/src/main/java/com/idms/workflow/CancelReconciliationControllerV1.java",
+      "sha256": "80a607176119f3de3df989c81318068a67c4990e705ab5fe7bfc8eef35f3d0d7"
+    },
+    {
+      "path": "services/workflow/src/main/resources/application.properties",
+      "sha256": "9acef2f756f471bbef7a88c3113173062f779f3e776752182c6e18990fb61609"
+    },
+    {
+      "path": "services/workflow/src/main/resources/maintenance-v1.bpmn20.xml",
+      "sha256": "847ed336a71628dd4b1ff67ad0a670935ee0bc86d0343b9f69dad3beeb93ccc3"
+    },
+    {
+      "path": "services/workflow/src/main/resources/workflow-cancel-reconcile-v1.sql",
+      "sha256": "138e768a682bac45cef350ebdb717859d49a7932d0a41810116f0511d907d53f"
+    },
+    {
+      "path": "services/workflow/src/main/resources/workflow-cancel-catalog-v1.sql",
+      "sha256": "9012b445a2f604b01836afb93e1c2d1cfdb5b56f1350b2b16af1ca9c058fffa8"
+    },
+    {
+      "path": "services/workflow/src/main/java/com/idms/workflow/CancelReservationControllerV1.java",
+      "sha256": "b21bb55fa3ad407473956c1f81a3c34a34a3a86b0346b23e122dae10417ed688"
+    },
+    {
+      "path": "services/workflow/src/main/resources/workflow-cancel-reservation-v1.sql",
+      "sha256": "edb36d3ea7168a862ecb7287124c6a56ab1bb04147283c258fd866a2e6767570"
+    },
+    {
+      "path": "services/workflow/src/main/resources/workflow-cancel-reservation-catalog-v1.sql",
+      "sha256": "311765217a5793b3d24ea8e4e646e6bc1c33d70fb9afe7c732b20e5f8e84ad55"
+    },
+    {
+      "path": "server/predictive-reconciliation-auth-v1.ts",
+      "sha256": "a14140e22c243d275384482018269f7b6825bc9e7f736ecb1e62ae1b6447acba"
+    },
+    {
+      "path": "server/workflow-cancel-reservation-transport-v1.ts",
+      "sha256": "0e3b2fd58bb6fe65ee875dcbe78ea6cdad5d8addf36b359b4f21ce03734ebb3c"
+    },
+    {
+      "path": "server/predictive-cancel-contract-v1.ts",
+      "sha256": "53e5d5262d88f648d0fe063d5fafb85f14a2b455ebeaba341002016cfc20c358"
+    },
+    {
+      "path": "server/predictive-cancel-read-v1.ts",
+      "sha256": "fb06235df4e84dc89a9613de2fdc8a75a253ea99d7571fe8d47f678c30c82a3c"
+    },
+    {
+      "path": "server/predictive-cancel-reconciliation-v1.ts",
+      "sha256": "1047ed923783de4bda443e8c8a77488ea297eb16d327cd9e3f2d71aedba31555"
+    },
+    {
+      "path": "scripts/workflow-cancel-reservation-schema-v1.mjs",
+      "sha256": "ef2a8c87b85255d0ceddaa14d93df3fae06ecfb346814f87d6cdad3b3ceed76b"
+    },
+    {
+      "path": "scripts/build-workflow-cancel-reservation-v1.mjs",
+      "sha256": "246728a40f10567e09b7630d12718836ef9a5fb58843fed5a055f865962d3563"
+    },
+    {
+      "path": "scripts/verify-predictive-cancel-v1.mjs",
+      "sha256": "d5de7b9e25e973d8c9c6e6c972e4ba03b81d83d7a30c4108e985ef1e7e45f02d"
+    },
+    {
+      "path": "scripts/fixtures/predictive-cancel-business-v1-qa.mjs",
+      "sha256": "db1f3605629df76f51bc944a4a1d565bccfd35653c6d4cd13f44f85350f62331"
+    },
+    {
+      "path": "scripts/fixtures/predictive-cancel-bootstrap-v1-qa.mjs",
+      "sha256": "a9837935570a778529ea8d3d61463f31f5a06b162c8214100cea5e4bad86512f"
+    },
+    {
+      "path": "scripts/fixtures/predictive-cancel-auth-v1-qa.mjs",
+      "sha256": "f1964f68014dcfc16a8a987c6ff053fa17c558e7b03f834a544a8bd43c992d64"
+    },
+    {
+      "path": "scripts/fixtures/predictive-cancel-flow-v1-qa.mjs",
+      "sha256": "1979f6747cf4243d9d38240160120511f7aa68853a1f89009823a2a43843f909"
+    },
+    {
+      "path": "scripts/fixtures/predictive-cancel-preserved-v1.json",
+      "sha256": "569ac410b288bd0df66ca566b76de653856861c517e9d943cc0ddcd296c933ac"
+    }
+  ]
+}
