@@ -1,0 +1,35 @@
+{
+  "format": "PREDICTIVE_LEGACY_QA_SDK_SNAPSHOT_1",
+  "originEvidenceNonce": "8667a1c750c3",
+  "originVerificationSha256": "d52e8731578ce53920f745b2b7d1e74beae5044e7d1eac2242991c78458c2561",
+  "modules": [
+    {
+      "path": "server/predictive-map-v4.ts",
+      "sha256": "9a9d7ca64914325272f18b644348bfd1e8b119e9786778850c67ad4d871806ed"
+    },
+    {
+      "path": "server/predictive-state-v4.ts",
+      "sha256": "93c36d86a2f831492bd64fd0eb5fca98ac98ccb2781daf243c75a471005f1f5d"
+    },
+    {
+      "path": "server/predictive-input-v4.ts",
+      "sha256": "446dc015cb6c31d821965e13d84d3ab4b398dbea7fdc74df48cb9031a862e60d"
+    },
+    {
+      "path": "server/predictive-transport-v4.ts",
+      "sha256": "49906cc0e6ecc4c708cec49d7726e2a0563e11cf9f4b61c960c6d36bb59065ef"
+    },
+    {
+      "path": "server/predictive-worker-v4.ts",
+      "sha256": "16c77765ede07c43a3b9043459af6fcd6604e949b63faeea99824b5325b70282"
+    }
+  ],
+  "unchangedCanonicalDependencies": [
+    {
+      "path": "services/predictor/model.ts",
+      "sha256": "ad11051152b5dda525968472165eec2d993b773010db43a59818da710aaf2139"
+    }
+  ],
+  "testFixtureOnly": true,
+  "productionRuntimeEntry": false
+}
