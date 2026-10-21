@@ -101,5 +101,14 @@
   "stageFrozen": false,
   "fullBrowserExceptionGateComplete": false,
   "productionAcceptance": false,
-  "finalUserMaterialsComplete": false
+  "finalUserMaterialsComplete": false,
+  "screenshotEvidence": {
+    "originalEncoding": "JPEG",
+    "bytesPreservedWithJpgExtension": true,
+    "predictive1440CaptureExcluded": true,
+    "predictive1440CapturedWidth": 317,
+    "home1440CapturedWidth": 1425,
+    "narrowCapturesMatchDocumentClientWidth": true,
+    "predictive1440VisualGateComplete": false
+  }
 }
