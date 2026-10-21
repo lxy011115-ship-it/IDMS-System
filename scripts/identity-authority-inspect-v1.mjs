@@ -1,0 +1,3 @@
+import {readFile} from 'node:fs/promises';
+import {authorityRuntimeV1,IdentityAuthorityGuardV1} from '../server/identity-authority-live-v1.ts';
+if(process.argv.length!==3)throw Error('AUTHORITY_INSPECT_ARGUMENTS');try{const runtime=authorityRuntimeV1(JSON.parse(await readFile(process.argv[2],'utf8'))),head=await new IdentityAuthorityGuardV1(runtime).assertCurrent();console.log(JSON.stringify({format:'IDENTITY_AUTHORITY_CURRENT_PROOF_V1',authorityId:head.event.authorityId,revision:head.event.revision,epoch:head.event.epoch,hash:head.hash,issuer:head.event.issuer,currentEndpointMatched:true}));}catch{console.error('IDENTITY_AUTHORITY_UNAVAILABLE');process.exitCode=1;}
