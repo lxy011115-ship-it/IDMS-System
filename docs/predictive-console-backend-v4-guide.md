@@ -23,3 +23,5 @@ worker 仅执行 SQL 实际领取的指定作业，不调用 SDK 队首选择。
 WAITING_AUTH 不凭恢复角色自动复活；原人必须重授。新 SQL 修订会推动 SDK 新修订并拒绝迟到旧 writer。SDK 尚未准备时的输入/状态错误通过 Worker 专用 `reject_unprepared_v4` 持久拒绝；SQL 独立禁止将已有 SDK 或外部发送事实的作业当成未准备拒绝。
 
 后续仍需 SDK 已准备后的安全取消、独立人工 retry 控制、真正丢接受回复/关闭竞态的完整产品入口、设备/告警/证据列表与详情、统一站点页面和实际浏览器 PKCE/手机验收。队列密钥启动 witness/完整轮换和商业容量/恢复待办继续。本阶段使用真实 Keycloak token 与共享会话的隔离验证夹具，不能冒充浏览器回调或现场设备预测有效性。
+
+后续任务控制已推进，准备后的取消、独立人工 retry 与持久关闭详见 [控制接口说明](predictive-controls-v4-guide.md) 和 [当前验证进度](predictive-controls-v4-progress.md)。原有本阶段局限应按此后续阶段更新读取；预测界面/浏览器验收仍待完成。

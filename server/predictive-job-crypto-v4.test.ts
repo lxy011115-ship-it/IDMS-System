@@ -19,3 +19,10 @@ test('predictive key rotation reads old ciphertext and writes with the active ke
  const keys=ring(),meta=job(),first=new PredictiveJobCryptoV4(keys,binding),old=first.seal({id:'order'},meta,'COMMAND'),next={...keys,activeKeyId:'k2',keys:[...keys.keys,{keyId:'k2',key:randomBytes(32).toString('base64url')}]},rotated=new PredictiveJobCryptoV4(next,binding);
  assert.deepEqual(rotated.open(old,meta,'COMMAND'),{id:'order'});const fresh=rotated.seal({id:'order'},meta,'COMMAND');assert.equal(fresh.keyId,'k2');assert.throws(()=>first.open(fresh,meta,'COMMAND'),/SEALED_INTEGRITY/);
 });
+test('independent retry authorization cannot be replayed as the original grant or a different retry decision',()=>{
+ const keys=ring(),meta=job(),crypto=new PredictiveJobCryptoV4(keys,binding),control=randomUUID(),ref={kind:'SESSION',value:randomBytes(32).toString('base64url')},box=crypto.seal(ref,meta,'RETRY',control);
+ assert.deepEqual(crypto.open(box,meta,'RETRY',control),ref);
+ assert.throws(()=>crypto.open(box,meta,'GRANT',control),/SEALED_INTEGRITY/);
+ assert.throws(()=>crypto.open(box,meta,'RETRY',randomUUID()),/SEALED_INTEGRITY/);
+ assert.throws(()=>crypto.open(box,{...meta,actorId:'reviewer'},'RETRY',control),/SEALED_INTEGRITY/);
+});

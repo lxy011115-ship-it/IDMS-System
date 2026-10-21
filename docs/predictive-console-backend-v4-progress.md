@@ -13,3 +13,5 @@
 canonical 574 项单元测试、类型检查、268 构件 build、16 组历史只读保值检查通过。新认证 QA 累计 30 个 DB/110 个角色，名称/OID 实际库存为零；SQL QA 累计 25 个 DB/85 个角色也核验无遗留，后者包括之前历史环境。独立 Node/Java 子进程终态、各专属 realm 删除、当前轮 10 个私密配置删除，无 FORCE 或未知 backend 终止。原恢复 owner 仍 ACTIVE、九个原服务继续运行，原物理 PG 和云端不变。
 
 接口和边界见 `predictive-console-backend-v4-guide.md`。后续继续已有 SDK 的安全取消、独立人工 retry、产品未知接受关闭与竞争验证、设备/告警/证据读取、统一站点页面、真实 PKCE 与三宽度。新旧作业宿主绑定迁移、旧未解决 workflow outbox、全局容量/密钥轮换/恢复/现场及商用待办继续。
+
+后续任务控制已推进，准备后的取消、独立人工 retry 与持久关闭详见 [控制接口说明](predictive-controls-v4-guide.md) 和 [当前验证进度](predictive-controls-v4-progress.md)。原有本阶段局限应按此后续阶段更新读取；预测界面/浏览器验收仍待完成。

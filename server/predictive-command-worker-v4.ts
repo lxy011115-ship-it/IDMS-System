@@ -31,15 +31,20 @@ export class PredictiveCommandWorkerV4 {
   try{
    lease=await this.#o.queue.claim();if(!lease)return null;const claim=lease;
    heartbeat=startPredictiveHeartbeatV4(this.#o.account,this.#o.queue.binding,claim);
-   const command=openPredictiveCommandV4(claim,this.#o.crypto),ref=this.#o.crypto.open(claim.sealedGrant,claim,'GRANT',claim.grantRevision) as PredictiveAuthReferenceV4;
-   authorize=async()=>{heartbeat!.assertLive();const live=await this.#o.auth.resolve(ref);need(live.context.actorId===claim.actorId&&live.context.tenantId===claim.tenantId,'PREDICTIVE_AUTH_IDENTITY');requireAccess(live.context,claim.action==='ANALYZE'?'analyze':'predictive:approve');await this.#o.queue.checkLease(claim,live.deadline);return live;};
+   const command=openPredictiveCommandV4(claim,this.#o.crypto),ref=this.#o.crypto.open(claim.retryPending?claim.sealedRetryGrant:claim.sealedGrant,claim,claim.retryPending?'RETRY':'GRANT',claim.retryPending?claim.retryId!:claim.grantRevision) as PredictiveAuthReferenceV4;
+   authorize=async()=>{heartbeat!.assertLive();const live=await this.#o.auth.resolve(ref);need(live.context.actorId===(claim.retryPending?claim.retryActor:claim.actorId)&&live.context.tenantId===claim.tenantId&&(!claim.retryPending||claim.retryActor!==claim.actorId),'PREDICTIVE_AUTH_IDENTITY');requireAccess(live.context,claim.retryPending?'predictive:approve':claim.action==='ANALYZE'?'analyze':'predictive:approve');if(claim.retryPending)await this.#o.queue.lockRetry(claim,live.deadline);else await this.#o.queue.checkLease(claim,live.deadline);return live;};
    let live=await authorize();
-   if(claim.cancelRequested)return await this.#o.queue.cancel(claim,live.deadline);
    map=new PredictiveMapV4(this.#o.account,this.#o.binding,{predictorBinding:this.#o.predictor.binding,workflowBinding:this.#o.workflow.binding,sources:this.#o.sources,hooks:{commit:async(head,id,ops)=>{
     const current=await authorize!(),s=await DomainMapSnapshot.open(this.#o.account,this.#o.binding);let marker;
     try{need(s.head.rootHash===head.rootHash&&s.head.revision===head.revision,'STATE_MAP_CAS_CONFLICT');marker=await s.operation('predictive_host',claim.businessKey,{format:'IDMS_PREDICTIVE_HOST_V4_1',tenantId:claim.tenantId,jobId:claim.id,actorId:claim.actorId,commandId:claim.commandId,requestHash:claim.requestHash,grantRevision:claim.grantRevision});}finally{await s.close();}
-    return this.#o.queue.prepare(claim,this.#o.binding,head,id,[...ops,marker],current.deadline);
+    return this.#o.queue.prepare(claim,this.#o.binding,head,id,[...ops,marker],current.deadline,claim.cancelRequested?'CANCEL':claim.retryPending?'RETRY':'PREPARE');
    }}});
+   if(claim.retryPending){
+    const s=await DomainMapSnapshot.open(this.#o.account,this.#o.binding);let retryJob:PredictiveJobV4,marker:any;
+    try{retryJob=await s.get<PredictiveJobV4>('predictive_job',claim.businessKey);marker=await s.get('predictive_host',claim.businessKey);}finally{await s.close();}
+    need(marker.jobId===claim.id&&marker.tenantId===claim.tenantId&&marker.actorId===claim.actorId&&marker.commandId===claim.commandId&&marker.requestHash===claim.requestHash&&retryJob.key===claim.businessKey,'PREDICTIVE_HOST_BINDING');
+    await map.retryForReauthorization(retryJob,live.context,claim.retryId!);const done=await this.#o.queue.read(claim.actorId,claim.id);need(done?.status==='WAITING_AUTH'&&!done.retryPending,'PREDICTIVE_RETRY_ATOMIC');return done;
+   }
    let prior:Awaited<ReturnType<PredictiveMapV4['inspect']>>|undefined;
    try{prior=await map.inspect(claim.commandId,live.context);}catch(e){if(!(e instanceof DomainError&&e.status===404&&e.message==='PREDICTIVE_JOB_NOT_FOUND'))throw e;}
    if(prior){
@@ -47,10 +52,11 @@ export class PredictiveCommandWorkerV4 {
     try{marker=await s.get('predictive_host',claim.businessKey);}finally{await s.close();}
     need(marker.format==='IDMS_PREDICTIVE_HOST_V4_1'&&marker.tenantId===claim.tenantId&&marker.jobId===claim.id&&marker.actorId===claim.actorId&&marker.commandId===claim.commandId&&marker.requestHash===claim.requestHash&&/^[1-9][0-9]*$/.test(marker.grantRevision)&&BigInt(marker.grantRevision)<=BigInt(claim.grantRevision),'PREDICTIVE_HOST_BINDING');
     sdk=prior.job;
+    if(claim.cancelRequested){await map.cancel(claim.commandId,live.context);const done=await this.#o.queue.read(claim.actorId,claim.id);need(done?.status==='CANCELLED','PREDICTIVE_CANCEL_ATOMIC');return done;}
     if(sdk.status==='COMMITTED')return await this.#o.queue.finish(claim,(await authorize()).deadline);
     if(sdk.status==='HUMAN_REVIEW'||sdk.status==='WAITING_AUTH'&&marker.grantRevision===claim.grantRevision)return await this.#o.queue.settle(claim);
     if(marker.grantRevision!==claim.grantRevision){await map.regrant(claim.commandId,live.context);prior=await map.inspect(claim.commandId,live.context);sdk=prior.job;}
-   }else{sdk=await map.submit(command,claim.commandId,live.context);prior=await map.inspect(claim.commandId,live.context);}
+   }else{if(claim.cancelRequested)return await this.#o.queue.cancel(claim,live.deadline);sdk=await map.submit(command,claim.commandId,live.context);prior=await map.inspect(claim.commandId,live.context);}
    need(sdk.key===claim.businessKey&&sdk.requestHash===claim.requestHash&&sdk.action===claim.action,'PREDICTIVE_SPECIFIC_CLAIM');
    const resolver=async(job:PredictiveJobV4)=>{need(job.key===claim.businessKey&&job.actorId===claim.actorId,'PREDICTIVE_SPECIFIC_CLAIM');return authorize!();};
    await map.authorize(sdk,resolver);const plan=prior.plan;let proof=null;
@@ -60,10 +66,12 @@ export class PredictiveCommandWorkerV4 {
    const done=await this.#o.queue.read(claim.actorId,claim.id);need(done?.status==='COMMITTED','PREDICTIVE_ATOMIC_COMPLETION');return done;
   }catch(error){
    await this.#o.onError?.(error);if(!lease)throw error;const current=await this.#o.queue.read(lease.actorId,lease.id);
-   if(current&&(['COMMITTED','FAILED','CANCELLED'].includes(current.status)||current.grantRevision!==lease.grantRevision))return current;
+   if(current&&(['COMMITTED','FAILED','CANCELLED'].includes(current.status)||current.grantRevision!==lease.grantRevision||current.retryId!==lease.retryId))return current;
+   if(lease.retryPending)return this.#o.queue.deferRetry(lease);
    const auth=error instanceof DomainError&&[401,403].includes(error.status),transport=error instanceof PredictiveTransportErrorV4||error instanceof MaintenanceTransportErrorV4;
    if(auth){await this.#o.queue.defer(lease,true,'PREDICTIVE_AUTH_REQUIRED');return this.#o.queue.read(lease.actorId,lease.id);}
    if(/PREDICTIVE_QUEUE_(LEASE_LOST|CANCEL_PENDING)/.test((error as Error).message))return current;
+   if(lease.cancelRequested){await this.#o.queue.defer(lease,false,'PREDICTIVE_CANCEL_RETRY');return this.#o.queue.read(lease.actorId,lease.id);}
    const terminal=transport&&error.terminal||error instanceof DomainError&&[400,404,409,413].includes(error.status)&&!['MAINTENANCE_FENCED','PREDICTIVE_FENCED'].includes(error.message);
    if(map&&sdk){
     try{await authorize!();await map.failure(sdk,transport?(error as Error).message:terminal?'PREDICTIVE_INPUT_OR_STATE_CHANGED':'PREDICTIVE_LOCAL_RETRY',terminal?'TERMINAL':transport?'NETWORK':'LOCAL');return await this.#o.queue.settle(lease);}

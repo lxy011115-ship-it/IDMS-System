@@ -37,3 +37,11 @@
 - SDK 尚未准备的语义错误通过新 Worker 专用 reject_unprepared_v4 持久拒绝；SQL 独立禁止拒绝已有 SDK 事实或外部发送的命令。维护暂停属于暂态，不当作用户请求被拒绝。
 - HTTP 先提供上下文、分析/复核入队、本人命令查询、原人重授；返回 COMMITTED 要重新验证原生 SDK 回执和审计，不能只读 SQL 状态。
 - 后续仍需：已有 SDK 的安全取消、独立人工 retry 控制、真正丢接受回复与关闭竞态的产品入口、响应后真实撤权/撤销等更多独立 CLI 场景，再完成设备/告警/证据读取、统一站点预测页面、实际 PKCE 和三宽度验收。现在的后台接线不当作上述事项已完成。
+
+## 任务控制修订
+
+第 4 项继续补准备后的取消和独立人工 retry。使用新鲜安装的 predictive-controls-v4.sql，不在线修改原运行站点。取消提交 SDK CANCELLED、原生回执与审计，并仅释放该 REVIEW 自己持有的 intent；SQL 事务独立核验 cancel_requested 和 external_started，外部发送开始后坚持原命令恢复。
+
+人工 retry 使用独立 RETRY 密文用途和 controlId，当前审核人须不同于原执行者并具备批准权限/设备范围。SQL 的不可变 retry_requests 台账保留每个决定，拒绝被替代的旧 ID 重新排队。worker 只审核重试，事务保持原 context/计划/信封并置 WAITING_AUTH；原人新 grant 后才执行原作业。补真 HTTP 接受丢回复与晚到 POST、已准备取消与迟到结果、错实际 Flowable 回执后独立重试/原人恢复、伪造取消与 retry SQL 整体回滚、两独立产品 CLI 的具体领取等验证。
+
+后台控制完成后，仍需完整预测读取和页面、实际浏览器 PKCE/三宽度/恢复体验、产品密钥见证/轮换及旧宿主与 outbox 迁移；这些未因后台阶段通过而完成。

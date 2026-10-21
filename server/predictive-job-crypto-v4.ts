@@ -2,7 +2,7 @@ import {createCipheriv,createDecipheriv,hkdfSync,randomBytes} from 'node:crypto'
 import {validateKeyRing,stable,type KeyRing} from './auth-state.ts';
 import type {PredictiveQueueJobV4,PredictiveQueueBindingV4} from './predictive-job-store-v4.ts';
 import {domainMapAssert as need} from './domain-map-v4.ts';
-type Purpose='COMMAND'|'GRANT';
+type Purpose='COMMAND'|'GRANT'|'RETRY';
 export interface PredictiveAuthReferenceV4 {kind:'BEARER'|'SESSION';value:string}
 interface Box {format:1;keyId:string;iv:string;tag:string;data:string}
 export class PredictiveJobCryptoV4 {

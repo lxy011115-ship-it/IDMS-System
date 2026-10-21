@@ -7,7 +7,7 @@ export async function predictiveJobsSchemaSqlV4(options){
   .replaceAll('GOVERNANCE_','PREDICTIVE_').replaceAll('CONSOLE_','PREDICTIVE_')
   .replaceAll('1229213011,2','1229213011,6')
   .replaceAll("'TEMPLATE_CREATE','TEMPLATE_EDIT','TEMPLATE_SUBMIT','TEMPLATE_APPROVE','IMPORT_CREATE','IMPORT_APPROVE'","'ANALYZE','REVIEW'");
- let extra=await readFile(new URL('./predictive-jobs-v4.sql',import.meta.url),'utf8');
+ let extra=await readFile(new URL('./predictive-jobs-v4.sql',import.meta.url),'utf8');extra+='\n'+await readFile(new URL('./predictive-controls-v4.sql',import.meta.url),'utf8');
  for(const key of ['owner','worker','ingress']){
   if(!/^[a-z][a-z0-9_]{0,62}$/.test(options[key]))throw Error('PREDICTIVE_INSTALL_ROLE');
   extra=extra.replaceAll('__'+key.toUpperCase()+'__','"'+options[key]+'"');

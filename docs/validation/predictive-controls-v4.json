@@ -1,0 +1,28 @@
+{
+  "verifiedAt": "2026-10-21T00:22:49.342970+00:00",
+  "stage": "predictive-controls-v4",
+  "realAuthHttpWorkerControlsChecks": 21,
+  "currentSqlProtocolChecks": 12,
+  "currentSdkKernelChecks": 13,
+  "canonicalUnitTests": 575,
+  "initialConcurrentUnitRun": {
+    "pass": 574,
+    "fail": 1,
+    "case": "Existing weighted-cache 20ms wall-clock test; source preserved"
+  },
+  "isolatedCacheRetestPassed": true,
+  "finalStandardNpmTestPassed": true,
+  "realHttpAcceptReplyLossAndCloseRace": true,
+  "preparedAnalysisAndReviewCancellation": true,
+  "afterRealExternalCommitReturnsRecoveryRequired": true,
+  "independentRetryPreservesOriginalActorContextAndEnvelope": true,
+  "immutableDecisionLedgerAndReplayVerified": true,
+  "twoIndependentProductWorkersSpecificClaims": true,
+  "interactiveBrowserPkceTested": false,
+  "productUiComplete": false,
+  "sourceStageFrozen": false,
+  "originalRuntimeChanged": false,
+  "cloudDeploymentChanged": false,
+  "publicDomainEnabled": false,
+  "productionAcceptance": false
+}
