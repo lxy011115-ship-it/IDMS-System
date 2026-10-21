@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {readFile,readdir,realpath} from 'node:fs/promises';
+import {join,resolve} from 'node:path';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+import {coldToolingV1,coldStoppedV1} from './pg-cold-image-tools-v1.mjs';
+import {localConfig,adminToken} from './keycloak-local.mjs';
+const exec=promisify(execFile),read=async p=>JSON.parse(await readFile(p,'utf8')),nonces=process.argv.slice(2);assert(nonces.length>0&&nonces.length<=20&&new Set(nonces).size===nonces.length);nonces.forEach(n=>assert.match(n,/^[a-f0-9]{12}$/));
+const tooling=await coldToolingV1(await realpath(join(process.env.LOCALAPPDATA,'IDMS/runtime/pgsql/bin'))),identity=await localConfig(),rows=[];
+for(const nonce of nonces){const root=resolve('work/r4-cold-recovery-v1-20261022',nonce),proof=await read(join(root,'r4/verification.json')),events=[];for(const name of (await readdir(root)).filter(n=>/^cluster-event-\d{4}\.json$/.test(n)).sort())events.push(await read(join(root,name)));events.forEach((e,i)=>assert.equal(e.sequence,i+1));const starts=events.filter(e=>e.type==='STARTED'),stops=events.filter(e=>e.type==='STOPPED');assert(starts.length>0&&starts.length===stops.length);for(const p of starts){assert([join(root,'source'),join(root,'restored')].includes(p.directory));assert.notEqual(p.port,45432);const ended=stops.find(s=>s.pid===p.pid&&s.started===p.started&&s.directory===p.directory);assert(ended?.stopped&&ended.pidAbsent);assert.equal(ended.systemIdentifier,p.systemIdentifier);const control=await coldStoppedV1(p.directory,tooling,p.systemIdentifier);rows.push({nonce,directory:p.directory.endsWith('source')?'source':'restored',pid:p.pid,systemIdentifier:control.systemIdentifier,state:control.state,recordedTerminalAt:ended.at,terminalObservedAtStop:true});}
+ for(const directory of new Set(events.filter(e=>e.type==='START_INTENT').map(e=>e.directory))){assert([join(root,'source'),join(root,'restored')].includes(directory));await coldStoppedV1(directory,tooling,starts[0].systemIdentifier);}
+ assert(proof.cleanup.allOwnedPostgresStopped&&proof.cleanup.realmRemoved&&proof.cleanup.ownedJavaProcessesTerminal&&proof.cleanup.privateOfflineArtifactsRetained);const realm=await read(join(root,'r4/realm-resource.json'));assert.equal(realm.realm,'r4coldqa-'+nonce);const response=await fetch(identity.origin+'/admin/realms/'+realm.realm,{headers:{Authorization:'Bearer '+await adminToken(identity)},signal:AbortSignal.timeout(10000)});assert.equal(response.status,404);
+ // Read OS metadata only; never terminate a process. Matching private config
+ // roots identifies our CLI instances without displaying command lines.
+ assert.equal(process.platform,'win32');const literal=root.replaceAll("'","''"),ps=`$m=Get-CimInstance Win32_Process | Where-Object { ($_.Name -eq 'java.exe' -or $_.Name -eq 'node.exe') -and $_.CommandLine -like '*${literal}*' }; @($m | Select-Object ProcessId,CreationDate) | ConvertTo-Json -Compress`,result=await exec('powershell.exe',['-NoProfile','-NonInteractive','-Command',ps],{windowsHide:true,maxBuffer:65536});const active=result.stdout.trim()?JSON.parse(result.stdout):[];assert.deepEqual(active,[],'Owned config-root process still active');
+}
+console.log(JSON.stringify({readOnly:true,runs:nonces.length,ownedClusters:rows.length,allCleanlyStopped:true,realmsRemoved:nonces.length,ownedConfigRootProcesses:0,privateOfflineArtifactsRetained:true,databaseFilesDeleted:false,originalClusterTouched:false,rows}));
