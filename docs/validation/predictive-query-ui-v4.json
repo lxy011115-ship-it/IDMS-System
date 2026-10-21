@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-21T04:08:52.640479+00:00",
+  "stage": "PREDICTIVE_QUERY_AND_STANDALONE_UI_WIP",
+  "evidence": {
+    "queryAndControls": {
+      "path": "work/predictive-console-query-v4-20261021/51feceade98b/verification.json",
+      "checks": 27,
+      "sha256": "1d355bf436eb957178a3c998c0882fbb439d789e29789d23e745564b39755edf"
+    },
+    "browserCore": {
+      "path": "work/predictive-console-ui-v4-20261021/3cf3afca6121/verification.json",
+      "checks": 12,
+      "sha256": "685e8d76f806c3afbefd16d4a623334caa34e416729442765a5108e51cb057fb"
+    },
+    "kernel": {
+      "path": "work/predictive-creation-v4-20261020/a57f067e5e71/verification.json",
+      "checks": 13,
+      "sha256": "874051cd317fbca74475ce7f49656e2c4269c5701901abb150b0c047f0f27263"
+    },
+    "sqlProtocol": {
+      "path": "work/predictive-console-pg-v4-20261020/83ad2eeb4090/verification.json",
+      "checks": 12,
+      "sha256": "fe4274ec2af23e06bdde11f3e60f261ebe864b56c0a12ed68ea8b8c1efd7f96a"
+    }
+  },
+  "canonicalUnitTests": 582,
+  "historicalReadOnlyChecks": 16,
+  "actualBrowserPkce": true,
+  "directGrantDisabledInBrowserRealm": true,
+  "independentNativeEngineCommandsInBrowser": 1,
+  "browserResponsiveWidths": [
+    1440,
+    390,
+    320
+  ],
+  "browserExceptionCoverageComplete": false,
+  "ownedQaResourcesRemovedThisStage": {
+    "databases": 35,
+    "roles": 127,
+    "realms": 4
+  },
+  "unifiedSiteIntegrationComplete": false,
+  "browserIndependentRetryAndOwnerRegrantComplete": false,
+  "oldRootMigrationComplete": false,
+  "productionAcceptance": false,
+  "originalRuntimeChanged": false,
+  "cloudRuntimeChanged": false,
+  "mainBranchChanged": false,
+  "gitBranchUnitTests": 573,
+  "buildRuntimeArtifacts": 268,
+  "sourceTypecheckPassed": true
+}

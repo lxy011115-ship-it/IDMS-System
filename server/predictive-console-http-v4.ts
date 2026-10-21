@@ -1,3 +1,5 @@
+import {PredictiveConsoleQueryV4} from './predictive-console-query-v4.ts';
+import {predictiveReadIdentityV4} from './predictive-read-contract-v4.ts';
 import {randomUUID} from 'node:crypto';
 import type {IncomingMessage,ServerResponse} from 'node:http';
 import type {ClientConfig} from 'pg';
@@ -53,7 +55,7 @@ export class PredictiveConsoleReadV4 {
   need(a.hash===r.auditHash&&p.tenantId===job.tenantId&&p.position===r.auditPosition&&p.eventId===a.eventId&&a.metadata.commandId===job.commandId&&a.metadata.jobKey===job.businessKey&&(a.actorId===job.actorId||a.metadata.requestedBy===job.actorId),'PREDICTIVE_COMPLETION_AUDIT');return r.result;
  }finally{await s.close();}}
 }
-export function createPredictiveConsoleHttpV4(o:{auth:ReturnType<typeof createAuth>;provider:GovernanceJobAuthV4;queue:PredictiveJobStoreV4;crypto:PredictiveJobCryptoV4;read:PredictiveConsoleReadV4;tenantId:string}){
+export function createPredictiveConsoleHttpV4(o:{auth:ReturnType<typeof createAuth>;provider:GovernanceJobAuthV4;queue:PredictiveJobStoreV4;crypto:PredictiveJobCryptoV4;read:PredictiveConsoleReadV4;query:PredictiveConsoleQueryV4;tenantId:string}){
  const present=async(j:PredictiveQueueJobV4,ctx:AccessContext)=>{if(j.actorId!==ctx.actorId||j.tenantId!==ctx.tenantId)fail(404,'PREDICTIVE_JOB_NOT_FOUND');const command=openPredictiveCommandV4(j,o.crypto),target=await o.read.access(command,ctx);return {id:j.id,commandId:j.commandId,requestHash:j.requestHash,action:j.action,...target,status:j.status,attempts:j.attempts,errorCode:j.errorCode,recovering:j.status==='RUNNING'&&!j.leaseLive,externalStarted:j.externalStarted,cancelRequested:j.cancelRequested,businessCommitted:j.status==='COMMITTED',result:await o.read.completion(j),cancellation:await o.read.cancellation(j),retry:{id:j.retryId,actorId:j.retryActor,pending:j.retryPending,reviewed:await o.read.retryProof(j)},failure:j.status==='FAILED'?j.result:null,createdAt:j.createdAt,updatedAt:j.updatedAt};};
  return async(req:IncomingMessage,res:ServerResponse)=>{
   let attempted=false,closed=false,accepted:{commandId:string;jobId:string}|undefined;
@@ -62,10 +64,12 @@ export function createPredictiveConsoleHttpV4(o:{auth:ReturnType<typeof createAu
   try{
    res.setHeader('x-content-type-options','nosniff');res.setHeader('x-frame-options','DENY');res.setHeader('content-security-policy',"default-src 'none'; frame-ancestors 'none'; base-uri 'none'");
    if((req.url?.length||0)>8192)fail(400,'PREDICTIVE_ROUTE');const url=new URL(req.url||'/','http://localhost');if(await o.auth.handle(req,res,url))return;
-   if(url.search||url.pathname.length>180||!url.pathname.startsWith('/api/v4/predictive/'))fail(404,'PREDICTIVE_NOT_FOUND');
+   if(url.pathname.length>180||!url.pathname.startsWith('/api/v4/predictive/'))fail(404,'PREDICTIVE_NOT_FOUND');
    await withRequestCapacity(req,res,async()=>{const auth=await o.provider.capture(req),ctx=auth.context;if(ctx.tenantId!==o.tenantId||req.headers['x-tenant-id']!==ctx.tenantId)fail(403,'PREDICTIVE_TENANT');if(req.headers['x-idms-actor-id']&&req.headers['x-idms-actor-id']!==ctx.actorId)fail(403,'PREDICTIVE_ACTOR_CHANGED');bindRequestTenant(ctx.tenantId);
     await sqlScheduler.run(ctx.tenantId,()=>memoryTask(async()=>{const release=holdAllocation(32*1024*1024);try{
-     if(url.pathname==='/api/v4/predictive/context'&&req.method==='GET'){send(200,await o.read.context(ctx));return;}
+     const queryRoute=url.pathname.match(/^\/api\/v4\/predictive\/(devices|health|alerts)(?:\/([^/]+)(\/jobs)?)?$/);
+     if(req.method==='GET'&&(queryRoute||url.pathname==='/api/v4/predictive/context')){let result;if(url.pathname.endsWith('/context')){if(url.search)fail(400,'PREDICTIVE_QUERY');result=await o.query.context(ctx);}else{const [,kind,encoded,jobs]=queryRoute!;let id:string|undefined;try{id=encoded?decodeURIComponent(encoded):undefined;}catch{fail(400,'PREDICTIVE_QUERY');}if(id&&(!id.length||id.length>128||/[\u0000-\u001f\u007f]/.test(id)))fail(400,'PREDICTIVE_QUERY');if(kind==='devices')result=id?(jobs?await o.query.page('JOBS',url.searchParams,ctx,id):url.search?fail(400,'PREDICTIVE_QUERY'):await o.query.device(id,ctx)):await o.query.devices(url.searchParams,ctx);else{if(jobs)fail(404,'PREDICTIVE_ROUTE');result=id?(url.search?fail(400,'PREDICTIVE_QUERY'):kind==='health'?await o.query.health(id,ctx):await o.query.alert(id,ctx)):await o.query.page(kind==='health'?'HEALTH':'ALERTS',url.searchParams,ctx);}}const current=await o.auth.context(req);if(predictiveReadIdentityV4(current)!==predictiveReadIdentityV4(ctx))fail(409,'PREDICTIVE_IDENTITY_CHANGED');send(200,result);return;}
+     if(url.search)fail(400,'PREDICTIVE_QUERY');
      const retryRoute=url.pathname.match(/^\/api\/v4\/predictive\/(retry-candidates|jobs)\/([a-f0-9-]+)(\/retry)?$/);
      if(retryRoute&&(req.method==='GET'&&retryRoute[1]==='retry-candidates'&&!retryRoute[3]||req.method==='POST'&&retryRoute[1]==='jobs'&&retryRoute[3])){
       if(!uuid(retryRoute[2]))fail(400,'PREDICTIVE_JOB_ID');requireAccess(ctx,'predictive:approve');let job=await o.queue.reviewCandidate(retryRoute[2]);if(!job)fail(404,'PREDICTIVE_RETRY_NOT_FOUND');if(job.actorId===ctx.actorId)fail(403,'PREDICTIVE_INDEPENDENT_RETRY_REQUIRED');await o.read.access(openPredictiveCommandV4(job,o.crypto),ctx,'RETRY');
