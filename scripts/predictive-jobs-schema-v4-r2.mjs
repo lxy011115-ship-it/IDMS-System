@@ -1,0 +1,4 @@
+import {readFile} from 'node:fs/promises';
+import {predictiveJobsSchemaSqlV4} from './predictive-jobs-schema-v4.mjs';
+/** Fresh deployment only. The existing schema/SQL sources stay byte-exact. */
+export async function predictiveJobsSchemaSqlV4R2(options){let extra=await readFile(new URL('./predictive-jobs-adoption-v4.sql',import.meta.url),'utf8');for(const key of ['owner','worker','ingress']){if(!/^[a-z][a-z0-9_]{0,62}$/.test(options[key]))throw Error('PREDICTIVE_ADOPTION_ROLE');extra=extra.replaceAll('__'+key.toUpperCase()+'__','"'+options[key]+'"');}const marker='CREATE EVENT TRIGGER predictive_queue_ddl_start_v4',parts=(await predictiveJobsSchemaSqlV4(options)).split(marker);if(parts.length!==2)throw Error('PREDICTIVE_ADOPTION_SCHEMA_BOUNDARY');return parts[0]+extra+'\n'+marker+parts[1];}
