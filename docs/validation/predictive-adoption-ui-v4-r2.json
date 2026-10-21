@@ -1,0 +1,76 @@
+{
+  "stage": "PREDICTIVE_LEGACY_ADOPTION_UI_R2",
+  "passed": true,
+  "primaryChecks": [
+    "SHA-pinned old SDK uses actual current OIDC actors: completed, real corrupt rule HUMAN, real revoked-role WAITING, and a real Flowable creation whose successful response was dropped",
+    "actual browser done COMMITTED preserves original identity/plan and native host/result proofs",
+    "actual browser pending COMMITTED preserves original identity/plan and native host/result proofs",
+    "actual browser waiting COMMITTED preserves original identity/plan and native host/result proofs",
+    "actual browser human HUMAN_REVIEW preserves original identity/plan and native host/result proofs",
+    "actual browser human COMMITTED preserves original identity/plan and native host/result proofs",
+    "actual browser closed COMMITTED preserves original identity/plan and native host/result proofs",
+    "actual browser cancel CANCELLED preserves original identity/plan and native host/result proofs",
+    "actual browser stale COMMITTED preserves original identity/plan and native host/result proofs",
+    "actual browser creation COMMITTED preserves original identity/plan and native host/result proofs"
+  ],
+  "currentSourcePins": 32,
+  "verificationSha256": "edfd580088e28599965256cb0770780119d3ccc4bf8d3945afdd0f924934a64b",
+  "actualPkce": true,
+  "browserDirectGrantDisabled": true,
+  "oldSdkFixtureUsesActualDirectGrantBeforeBrowserStage": true,
+  "separateProductHttpAndWorker": true,
+  "actualExternalUnknownCreation": true,
+  "additionalObservedConditions": {
+    "scopeRejection": {
+      "friendlyMessage": true,
+      "loadingRemains": false,
+      "confirmButtons": 0
+    },
+    "otherActorRejection": {
+      "friendlyMessage": true,
+      "loadingRemains": false,
+      "confirmationButtons": 0
+    },
+    "lateIdentity": {
+      "newActorVisible": true,
+      "oldCandidateVisible": false,
+      "confirmationButtons": 0
+    },
+    "supersededOriginalJobVerified": true,
+    "layouts": [
+      {
+        "width": 1440,
+        "height": 900,
+        "client": 1425,
+        "scroll": 1425
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "client": 375,
+        "scroll": 375
+      },
+      {
+        "width": 320,
+        "height": 900,
+        "client": 305,
+        "scroll": 305
+      }
+    ],
+    "errorProbes": 2,
+    "additionalProductErrorsObserved": 0,
+    "secondaryTabErrors": 0,
+    "storageNamespaces": 3,
+    "metadataRecords": 12,
+    "unexpectedStorageKeys": 0
+  },
+  "canonicalUnitTests": 599,
+  "historicalReadOnlyChecks": 16,
+  "newStageDatabasesRemoved": 24,
+  "newStageRolesRemoved": 88,
+  "originalRuntimeChanged": false,
+  "unifiedSiteCutoverComplete": false,
+  "workflowOutboxMigrationComplete": false,
+  "stageFrozen": false,
+  "productionAcceptance": false
+}
