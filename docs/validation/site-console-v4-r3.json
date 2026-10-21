@@ -1,0 +1,105 @@
+{
+  "stage": "SITE_CONSOLE_R3_INTEGRATION_WIP",
+  "passedForObservedScenarios": true,
+  "backendChecks": 12,
+  "browserChecks": 12,
+  "legacySqlNegativeChecks": 2,
+  "sourcePins": 62,
+  "verificationSha256": "8d3782de1f748962f1f534ce165daf1be48efdd3716f96852ff820b6f2ef6767",
+  "actualTwoTenantOidc": true,
+  "actualBrowserPkce": true,
+  "browserDirectGrantDisabled": true,
+  "separateTwoTenantFlowableEngines": true,
+  "nativeOriginalAdoptionAndIndependentRetryVerified": true,
+  "sameControlBeforeAcceptanceReloadVerified": true,
+  "actualTruncated202RecoveredWithoutNewPost": true,
+  "scopeTestUsedExplicitQaAdminRoleRemoval": true,
+  "lateIdentityRejected": true,
+  "preparedCancelNativeProofVerified": true,
+  "sameOriginalFlowableEnvelopeAndOrderRecovered": true,
+  "layouts": [
+    {
+      "page": "predictive",
+      "width": 1440,
+      "client": 1425,
+      "scroll": 1425
+    },
+    {
+      "page": "predictive",
+      "width": 390,
+      "client": 375,
+      "scroll": 375
+    },
+    {
+      "page": "predictive",
+      "width": 320,
+      "client": 305,
+      "scroll": 305
+    },
+    {
+      "page": "governance",
+      "width": 320,
+      "client": 305,
+      "scroll": 305
+    },
+    {
+      "page": "governance",
+      "width": 390,
+      "client": 375,
+      "scroll": 375
+    },
+    {
+      "page": "maintenance",
+      "width": 390,
+      "client": 375,
+      "scroll": 375
+    },
+    {
+      "page": "maintenance",
+      "width": 320,
+      "client": 305,
+      "scroll": 305
+    },
+    {
+      "page": "home",
+      "width": 320,
+      "client": 305,
+      "scroll": 305
+    },
+    {
+      "page": "home",
+      "width": 390,
+      "client": 375,
+      "scroll": 375
+    },
+    {
+      "page": "home",
+      "width": 1440,
+      "client": 1425,
+      "scroll": 1425
+    }
+  ],
+  "storageNamespaces": 2,
+  "metadataRecords": 9,
+  "unexpectedStorageKeys": 0,
+  "browserExceptionObservation": {
+    "initialTwoProbesObserved": true,
+    "earlierHistoryTruncated": true,
+    "completeMutationWindowCovered": false,
+    "monitoredReadOnlyPhases": 8,
+    "newProbeExceptions": 2,
+    "unexpectedExceptionsInMonitoredReadOnlyPhases": 0
+  },
+  "canonicalUnitTests": 602,
+  "historicalReadOnlyChecks": 16,
+  "databasesRemoved": 33,
+  "rolesRemoved": 113,
+  "qaRealmsGone": 4,
+  "originalRuntimeChanged": false,
+  "unifiedSiteCutoverComplete": false,
+  "workflowOutboxMigrationComplete": false,
+  "stageFrozen": false,
+  "fullBrowserExceptionGateComplete": false,
+  "productionAcceptance": false,
+  "finalUserMaterialsComplete": false
+}
