@@ -30,7 +30,9 @@ export async function buildWorkflowReservationPortableV1({tools,mavenHome,workDi
  const repository=localRepository?await backupDirectory(await realpath(localRepository)):join(work,'repository');if(!localRepository)await mkdir(repository,{mode:0o700});
  const env=lifecycleJavaEnvV1();for(const k of Object.keys(env))if(/^(?:MAVEN_|M2_HOME$|MAVEN_ARGS$|MAVEN_OPTS$)/i.test(k))delete env[k];env.JAVA_HOME=java.javaHome;
  const launcher=['-Xms64m','-Xmx512m','-Dfile.encoding=UTF-8','-Dstyle.color=never','-Dmaven.home='+home,'-Dmaven.multiModuleProjectDirectory='+project,'-Dclassworlds.conf='+conf,'-cp',join(boot,boots[0]),'org.codehaus.plexus.classworlds.launcher.Launcher'];
- const version=await exec(java.java,[...launcher,'-B','-ntp','--version'],{cwd:project,env,windowsHide:true,maxBuffer:65536,timeout:30000});need(/^Apache Maven 3\.9\.\d+(?:\s|$)/m.test(version.stdout),'WORKFLOW_PORTABLE_MAVEN_VERSION');
+ const version=await exec(java.java,[...launcher,'-B','-ntp','--version'],{cwd:project,env,windowsHide:true,maxBuffer:65536,timeout:30000}),versionLine=version.stdout.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g,'').trim().split(/\r?\n/)[0];
+ if(process.env.GITHUB_ACTIONS==='true')console.log('::notice::Maven startup version: '+JSON.stringify(versionLine).replaceAll('%','%25').slice(0,240));
+ need(/^Apache Maven 3\.9\.\d+(?:\s|$)/.test(versionLine),'WORKFLOW_PORTABLE_MAVEN_VERSION');
  await privateNewFile(join(work,'version.log'),version.stdout+version.stderr);
  try{const result=await exec(java.java,[...launcher,'-B','-ntp','--settings',settings,'--global-settings',settings,'-Dmaven.repo.local='+repository,...(offline?['--offline']:[]),'-DskipTests','package'],{cwd:project,env,windowsHide:true,maxBuffer:8*1024**2,timeout:900000});await privateNewFile(join(work,'build.log'),result.stdout+'\n'+result.stderr);}
  catch(e){await privateNewFile(join(work,'failure.private.log'),String(e.stdout||'')+'\n'+String(e.stderr||''));throw Error('WORKFLOW_PORTABLE_BUILD_FAILED: '+work);}
