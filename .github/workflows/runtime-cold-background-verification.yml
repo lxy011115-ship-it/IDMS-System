@@ -20,8 +20,6 @@ jobs:
   recovered-background:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
-    env:
-      IDMS_COLD_QA_TRACE_ID: ${{ github.run_id }}-${{ github.run_attempt }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -31,6 +29,8 @@ jobs:
           node-version: 24.20.0
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify concurrent read-only control access under WAL
+        run: node scripts/verify-runtime-cold-sqlite-readers-v1.mjs
       - name: Fetch and authenticate Apache Maven 3.9.11
         id: maven
         run: python3 scripts/fetch-maven-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
@@ -47,7 +47,7 @@ jobs:
           IDMS_KEYCLOAK_SOURCE: ${{ steps.identity.outputs.directory }}
           IDMS_SOURCE_BUNDLE: ${{ steps.source.outputs.file }}
           IDMS_SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
-        run: node --import ./scripts/observe-cold-background-qa-v1.mjs scripts/verify-runtime-cold-background-v1.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
+        run: node scripts/verify-runtime-cold-background-v1.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
       - name: Report bounded diagnostics and independently inspect owned cleanup
         if: always() && (steps.background.outcome == 'success' || steps.background.outcome == 'failure')
         run: |
