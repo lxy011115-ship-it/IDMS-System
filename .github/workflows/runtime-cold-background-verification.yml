@@ -45,7 +45,7 @@ jobs:
           IDMS_KEYCLOAK_SOURCE: ${{ steps.identity.outputs.directory }}
           IDMS_SOURCE_BUNDLE: ${{ steps.source.outputs.file }}
           IDMS_SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
-        run: node scripts/verify-runtime-cold-background-v1.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
+        run: node --import ./scripts/observe-cold-background-qa-v1.mjs scripts/verify-runtime-cold-background-v1.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
       - name: Report bounded diagnostics and independently inspect owned cleanup
         if: always() && (steps.background.outcome == 'success' || steps.background.outcome == 'failure')
         run: |
