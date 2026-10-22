@@ -16,10 +16,11 @@ function record(error,tag=null){
  try{
   const raw=error.code,message=typeof error.message==='string'?error.message:'',protocol=/^(?:GOVERNANCE_|MAINTENANCE_|PREDICTIVE_|STATE_MAP_|AUTH_AUDIT_|DOMAIN_|BRANCH_|COLD_|AUTHORITY_)[A-Z0-9_]{1,90}$/;
   const sqlState=typeof raw==='string'&&/^[A-Z0-9]{5}$/.test(raw)?raw:null,ioCode=['ECONNRESET','ECONNREFUSED','ETIMEDOUT','EPIPE','ENETUNREACH'].includes(raw)?raw:null,type=['TypeError','ReferenceError','RangeError','SyntaxError','AssertionError'].includes(error.name)?error.name:null;
-  const nativeCode=typeof raw==='string'&&/^ERR_[A-Z0-9_]{1,64}$/.test(raw)?'DOMAIN_NATIVE_'+raw:null;
+  const sqliteCode=raw==='ERR_SQLITE_ERROR'&&Number.isSafeInteger(error.errcode)&&error.errcode>=0&&error.errcode<=65535?'DOMAIN_SQLITE_RESULT_'+error.errcode:null;
+  const nativeCode=sqliteCode??(typeof raw==='string'&&/^ERR_[A-Z0-9_]{1,64}$/.test(raw)?'DOMAIN_NATIVE_'+raw:null);
   const code=protocol.test(message)?message:message==='Query read timeout'?'PG_CLIENT_QUERY_TIMEOUT':message==='Connection terminated unexpectedly'?'PG_CLIENT_CONNECTION_ENDED':message==='Unsupported state or unable to authenticate data'?'DOMAIN_CRYPTO_AUTHENTICATION_FAILED':nativeCode??(tag==='DOMAIN_NON_DOMAIN_ERROR'?'DOMAIN_NON_DOMAIN_ERROR_SHA256_'+createHash('sha256').update(message.slice(0,4096)).digest('hex').toUpperCase():tag);
   if(!code&&!sqlState&&!ioCode&&!type)return;count++;
-  const stack=String(new NativeError().stack??''),locations=[...stack.matchAll(/([A-Za-z0-9_.-]+\.(?:mjs|js|ts)):(\d+):\d+/g)],location=locations.find(m=>m[1]!=='observe-cold-background-qa-v1.mjs');
+  const stack=String(tag==='DOMAIN_NON_DOMAIN_ERROR'?error.stack??'':new NativeError().stack??'').split('\n').slice(1).join('\n'),locations=[...stack.matchAll(/([A-Za-z0-9_.-]+\.(?:mjs|js|ts)):(\d+):\d+/g)],location=locations.find(m=>m[1]!=='observe-cold-background-qa-v1.mjs');
   const text=JSON.stringify({event:'IDMS_COLD_QA_EXCEPTION_V1',at:Date.now(),pid:process.pid,code,sqlState,ioCode,type,file:location?.[1]??null,line:location?Number(location[2]):null,rawErrorPrinted:false});
   if(fd!==undefined)writeSync(fd,text+'\n');else console.error(text);
  }catch{console.error('IDMS_QA_TRACE_WRITE_FAILED');}finally{emitting=false;}
