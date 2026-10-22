@@ -1,0 +1,20 @@
+import {DatabaseSync} from 'node:sqlite';
+import {readFile} from 'node:fs/promises';
+import {resolve,dirname} from 'node:path';
+import {canonical} from '../server/imports.ts';
+import {DomainError} from '../server/service.ts';
+import {loadAuthoritySiteRuntimeV1,createAuthoritySiteHttpV1,loadAuthorityReconciliationRuntimeV1} from '../server/identity-authority-entry-v1.ts';
+import {readRuntimeColdControlV1} from './runtime-cold-control-v1.mjs';
+import {coldRuntimeNeedV1 as need,coldRuntimeHashV1 as hash} from './runtime-cold-facts-v1.mjs';
+import {runtimeColdCookiePolicyV1} from './runtime-cold-cookie-policy-v1.mjs';
+export class RuntimeColdGuardV1{
+ #trust;#identity;
+ constructor(trust,identity){this.#trust=structuredClone(trust);this.#identity=identity;}
+ async assertCurrent(){const state=await readRuntimeColdControlV1(this.#trust);need(state.phase==='ADMITTED','COLD_RUNTIME_NOT_ADMITTED');const m=state.source.maintenanceTrust,db=new DatabaseSync(m.storeFile,{readOnly:true,allowExtension:false});try{const meta=db.prepare('SELECT * FROM maintenance_meta WHERE id=1').get(),row=db.prepare('SELECT * FROM maintenance_operations WHERE operation_id=?').get(state.source.maintenanceOperationId);need(meta?.deployment_id===m.deploymentId&&meta.manifest_hash===m.manifestSha256&&meta.active_operation===state.source.maintenanceOperationId&&row?.phase==='CLOSED'&&hash(row.body)===row.body_hash&&row.receipt_hash===hash(row.receipt)&&row.receipt===canonical(state.source.closedReceipt),'COLD_RUNTIME_MAINTENANCE_CHANGED');}finally{db.close();}const head=await this.#identity.assertCurrent();need(head.hash===state.details.admission.authorityHash,'COLD_RUNTIME_AUTHORITY_CHANGED');return state;}
+ async requireSession(id){const state=await this.assertCurrent();if(state.source.deadlines.capturedSessionHashes.includes(hash(id)))throw new DomainError(401,'恢复前的会话已关闭，请重新登录');}
+}
+async function config(file,purpose){const path=resolve(file),v=JSON.parse(await readFile(path,'utf8'));need(Object.keys(v).sort().join(',')==='baseRuntimeFile,format,purpose,trustFile'&&v.format===1&&v.purpose===purpose,'COLD_ENTRY_CONFIG');return{baseFile:resolve(dirname(path),v.baseRuntimeFile),trust:JSON.parse(await readFile(resolve(dirname(path),v.trustFile),'utf8'))};}
+function protect(base,guard){const prior=base.provider.resolve.bind(base.provider);base.provider.resolve=async(...args)=>{await guard.assertCurrent();if(args[0]?.kind==='SESSION')await guard.requireSession(args[0].value);return prior(...args);};}
+export async function loadRuntimeColdSiteV1(file){const c=await config(file,'RUNTIME_COLD_SITE_V1'),base=await loadAuthoritySiteRuntimeV1(c.baseFile),coldGuard=new RuntimeColdGuardV1(c.trust,base.guard);try{await coldGuard.assertCurrent();protect(base.base,coldGuard);return{...base,coldGuard};}catch(e){await base.close();throw e;}}
+export async function createRuntimeColdSiteHttpV1(runtime){const handle=await createAuthoritySiteHttpV1(runtime);return async(req,res)=>{try{const state=await runtime.coldGuard.assertCurrent(),decision=runtimeColdCookiePolicyV1(req.method,req.url,req.headers.cookie,state.source.deadlines);if(decision.clearSession){res.setHeader('set-cookie','idms_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0');req.headers.cookie=decision.cookie;}if(decision.deny)throw new DomainError(401,'恢复前的会话或登录请求已关闭');}catch(e){const status=e instanceof DomainError?e.status:503;res.writeHead(status,{'content-type':'application/json; charset=utf-8','cache-control':'no-store'});res.end(JSON.stringify({error:status===401?'会话已失效，请重新登录':'系统维护中，请稍后重试'}));return;}return handle(req,res);};}
+export async function loadRuntimeColdReconciliationV1(file){const c=await config(file,'RUNTIME_COLD_RECONCILIATION_V1'),base=await loadAuthorityReconciliationRuntimeV1(c.baseFile),coldGuard=new RuntimeColdGuardV1(c.trust,base.guard);try{await coldGuard.assertCurrent();protect(base,coldGuard);return{...base,coldGuard,worker:{async runOne(){await coldGuard.assertCurrent();return base.worker.runOne();}}};}catch(e){await base.close();throw e;}}
