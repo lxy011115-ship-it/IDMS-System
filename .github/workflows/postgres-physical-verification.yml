@@ -27,5 +27,7 @@ jobs:
           node-version: 24.20.0
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Check complete PostgreSQL version labels
+        run: node --test scripts/pg-tool-version-v1.test.mjs
       - name: Verify fresh owned PostgreSQL 16 cluster and encrypted physical recovery
         run: node scripts/verify-pg-physical-platform-v1.mjs /usr/lib/postgresql/16/bin

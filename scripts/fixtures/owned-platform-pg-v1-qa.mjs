@@ -7,7 +7,7 @@ import {promisify} from 'node:util';
 import {randomBytes} from 'node:crypto';
 import pg from 'pg';
 import {privateDirectory,privateNewFile} from '../backup-support.mjs';
-import {coldToolingV1,coldStoppedV1,coldToolEnvV1} from '../pg-cold-image-tools-v1.mjs';
+import {coldToolingV1,coldStoppedV1,coldToolEnvV1} from '../pg-cold-image-portable-tools-v1.mjs';
 import {canonical} from '../../server/imports.ts';
 const exec=promisify(execFile),samePath=(a,b)=>(process.platform==='win32'?resolve(a).toLowerCase():resolve(a))===(process.platform==='win32'?resolve(b).toLowerCase():resolve(b));
 /** Generated QA clusters only. No arbitrary existing PGDATA, port or authority input. */

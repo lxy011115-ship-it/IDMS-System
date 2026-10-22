@@ -10,6 +10,8 @@
 
 测试完成后核真实 system ID、数据库 OID/owner、角色 OID 和零其他连接，再删除活动目标测试资源并正常关闭自有 PG。冻结源、加密镜像和私密证据离线保留；失败发生在源关闭后时也保留源，不为清理而重启。测试报告区分镜像是否已产生，不能宣称所有副本已经删除。
 
+Ubuntu 实测工具版本为 `postgres (PostgreSQL) 16.15 (Ubuntu 16.15-1.pgdg24.04+2)`，原严格工具拒绝发行版标签。新的 `pg-cold-image-portable-*-v1` 显式版本保留原镜像算法、目录安全规则和实际二进制 SHA，只允许完整 PostgreSQL 16 版本及对应 Ubuntu/Debian 包版本；主版本或包版本不一致、未知标签、路径及控制字符均拒绝。完整标签原样进入镜像工具绑定，没有截断、伪造版本或替换二进制。旧工具和既有恢复准入入口保持原版，尚未自动切到这些新模块。
+
 `.github/workflows/postgres-physical-verification.yml` 在 Ubuntu 24.04 托管 runner 上执行该脚本，明确使用 `/usr/lib/postgresql/16/bin`，不启动 runner 的系统 PostgreSQL 服务，不使用阿里云或企业数据。工作流使用只读仓库权限、固定 Node 版本和官方 Action SHA；不上传密钥、PGDATA 或测试镜像。运行的实际工具版本与结果写入日志和 job 摘要；失败保留并继续修正，不能用构建通过替代实机检查。
 
 此检查证明整簇物理工具与冻结状态在对应平台的行为；它没有启动 Keycloak、Flowable、整站或当前身份权威，没有执行恢复后业务准入或生产切换。完整受控恢复、跨服务一致性、真实浏览器及阿里云容量仍需各自验收。Windows 与 Linux 的物理镜像不互换。
