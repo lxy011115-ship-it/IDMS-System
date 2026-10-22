@@ -1,0 +1,55 @@
+name: Portable controlled R4 cold recovery verification
+
+on:
+  push:
+    branches: [main, wip/predictive-creation-v4]
+    paths: ['scripts/**', 'server/**', 'services/**', 'package*.json', '.github/workflows/runtime-cold-portable-verification.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'server/**', 'services/**', 'package*.json', '.github/workflows/runtime-cold-portable-verification.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portable-controlled-cold-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  controlled-cold-recovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Fetch and authenticate Apache Maven 3.9.11
+        id: maven
+        run: python3 scripts/fetch-maven-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Fetch and authenticate Keycloak 26.8.1
+        id: identity
+        run: python3 scripts/fetch-keycloak-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Verify actual controlled R4 physical recovery and current authority admission
+        env:
+          IDMS_MAVEN_HOME: ${{ steps.maven.outputs.directory }}
+          IDMS_KEYCLOAK_SOURCE: ${{ steps.identity.outputs.directory }}
+        run: node scripts/verify-runtime-controlled-cold-portable-r4-v1.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE"
+      - name: Independently inspect owned cleanup evidence
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const entries=(await readdir('work/runtime-controlled-cold-portable-r4-v1-20261022',{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
+          assert.equal(entries.length,1);
+          execFileSync(process.execPath,['scripts/verify-runtime-controlled-cold-portable-cleanup-v1.mjs',entries[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source files were not changed
+        if: always()
+        run: git diff --exit-code --no-ext-diff
