@@ -14,4 +14,6 @@ node scripts/verify-workflow-normal-stop-portable-v1.mjs <PG16-bin> <JDK21-home>
 
 检查使用独立 PG 和两租户合成数据库，覆盖真实 Flowable 引擎、请求与 HELD 预留的重启保持、外部绑定与内部 owner 错配、已有回执不覆盖、SQL 锁阻塞请求在正常关闭时排空、同一停止操作不重复 Attach。四次新 JVM 生命周期须全部正常退出，每次 Spring 上下文回执、Web 排空日志、预期连接池关闭日志和实际 JDBC 连接归零均通过；最后按精确 OID/数据库 owner 清理测试库和角色，并正常关闭独立 PG。
 
-GitHub 的 `workflow-portable-verification.yml` 在 Ubuntu 24.04 执行同一检查，只读仓库权限，官方 action 固定 SHA，无云部署凭据、依赖缓存或私密材料上传。此检查尚不代表持久 R4 控制器、冻结后的运行 schema、身份外置迁移、原站接管、浏览器和完整网站部署已通过；后续仍须将这些实际流程接入验证。
+GitHub 的 `workflow-portable-verification.yml` 在 Ubuntu 24.04 执行同一检查，使用 Apache 官方 Maven 3.9.11 发行包。下载器按固定 9160848 字节和官方 SHA-512 核验后只解压到全新目录，拒绝链接、特殊文件和越界路径，不依赖运行器预装的 Maven 版本。工作流仅具有只读仓库权限，官方 action 固定 SHA，无云部署凭据、依赖缓存或私密材料上传。此检查尚不代表持久 R4 控制器、冻结后的运行 schema、身份外置迁移、原站接管、浏览器和完整网站部署已通过；后续仍须将这些实际流程接入验证。
+
+官方来源：[Apache Maven 3.9.11 发布校验值](https://archive.apache.org/dist/maven/maven-3/3.9.11/binaries/apache-maven-3.9.11-bin.tar.gz.sha512)。构建记录仍保留 Maven 的原始版本输出；终端 ANSI 样式仅在版本比较时去除，版本要求保持 3.9 系列。

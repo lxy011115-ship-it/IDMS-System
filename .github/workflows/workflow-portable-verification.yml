@@ -29,23 +29,12 @@ jobs:
           node-version: 24.20.0
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Locate the runner Maven installation explicitly
+      - name: Fetch and authenticate Apache Maven 3.9.11
         id: maven
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import os, shutil
-          executable = shutil.which('mvn')
-          assert executable, 'Maven must already be installed on the runner'
-          home = Path(executable).resolve(strict=True).parent.parent
-          assert (home / 'bin/m2.conf').is_file() and (home / 'boot').is_dir()
-          assert not any(ord(c) < 32 for c in str(home))
-          with Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8') as output:
-              output.write('home=' + str(home) + '\n')
-          PY
+        run: python3 scripts/fetch-maven-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
       - name: Build a private source copy and verify actual Flowable normal stop
         env:
-          IDMS_MAVEN_HOME: ${{ steps.maven.outputs.home }}
+          IDMS_MAVEN_HOME: ${{ steps.maven.outputs.directory }}
         run: node scripts/verify-workflow-normal-stop-portable-v1.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME"
       - name: Confirm tracked source files were not changed
         if: always()
