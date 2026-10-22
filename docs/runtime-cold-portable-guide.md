@@ -9,9 +9,15 @@
 执行：
 
 ```text
-node scripts/verify-runtime-controlled-cold-portable-r4-v1.mjs <PG16-bin> <JDK21-home> <Maven39-home> <Keycloak-source> [offline-local-repository]
+node scripts/verify-runtime-controlled-cold-portable-r4-v1.mjs <PG16-bin> <JDK21-home> <Maven39-home> <Keycloak-source> <source-bundle> <source-sha256> [offline-local-repository]
 node scripts/verify-runtime-controlled-cold-portable-cleanup-v1.mjs <QA-nonce>
 ```
+
+数据快照与预期 SHA-256 必须显式传入，不读取本机默认数据库配置，也不回退到演示数据。读取器核租户边界、审计链、载荷摘要、逐份原始文件摘要和字节数；摘要不匹配时在创建测试集群前拒绝。私有原件与公开样例使用不同的明确 profile，报告记录 profile 和实际文件数，不能相互冒充。
+
+`export-controlled-cold-source-private-v1.mjs <business-config> <new-private-bundle>` 仅在原业务库的可重复读只读事务中捕获 acme 资料，核既有数据库安全绑定，再将六份、14513 字节的原件连同业务状态和证据写到新的私有文件。文件不含数据库密码，仍包含业务资料，应保留在私有位置。这一 profile 的原件保持验收必须继续在用户授权的环境进行。
+
+公开 CI 通过 `create-controlled-cold-public-source-v1-qa.mjs` 从仓库中八份公开 CSV 模板产生独立测试快照，经过实际导入和合成的独立审核，覆盖七类数据。CI 不读取或上传本机原始业务资料。公开样例的 Linux 验证用于检查整套协议和平台行为，不能代替真实原件在 Linux 目标主机上的迁移验收。
 
 整套检查保留实际四模块 HTTP、原生预测审批、撤销任务与对账任务、共享鉴权、独立身份权威和真实工作流引擎。测试先封存完整业务集群，关闭写入和登录，正常停止工作流及 PG，再捕获、认证和恢复整个加密 PGDATA。恢复的新集群必须保持原结构、角色 OID 和封存状态，等待实际 JWT、验证容差和租约窗口届满，并核当前签名身份权威及实时 realm 标记，之后才能轮换登记的 SQL 凭据、生成新配置并开放写入。
 

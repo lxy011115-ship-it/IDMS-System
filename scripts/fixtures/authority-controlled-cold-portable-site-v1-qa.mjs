@@ -4,7 +4,7 @@ import {randomBytes,createHash} from 'node:crypto';
 import {join} from 'node:path';
 import {createServer} from 'node:net';
 import pg from 'pg';
-import {createSiteConsoleColdQaV4} from './site-console-fenced-v1-qa.mjs';
+import {createSiteConsoleColdQaV4} from './site-console-fenced-portable-v1-qa.mjs';
 import {bootstrapPredictiveCancelV1Qa} from './predictive-cancel-fenced-bootstrap-v1-qa.mjs';
 import {createPredictiveCancelGracefulFlowQaV1} from './predictive-cancel-controlled-cold-portable-flow-v1-qa.mjs';
 import {activateDomainReadCatalogV4} from '../domain-read-activation-v4.mjs';
@@ -23,8 +23,8 @@ import {PredictiveCancelReconciliationV1} from '../../server/predictive-cancel-r
 import {DomainMapV4} from '../../server/domain-map-v4.ts';
 import {inspectPredictiveCancelJobCatalogV1} from '../../server/predictive-cancel-job-catalog-v1.ts';
 import {inspectStateMapCatalog} from '../../server/state-map-catalog-v1.ts';
-export async function createControlledColdAuthoritySiteQaV1({cluster,work,issuer,authorityRuntimeFile,spawn,stop,fences,workflowBuild,workflowTools}){
- const qa=await createSiteConsoleColdQaV4(cluster,{fences}),save=async(n,v)=>{const p=join(work,n);await privateNewFile(p,JSON.stringify(v));return p;},boots={},members=[],predictiveRuntimeFiles=[],reconciliationRuntimeFiles=[],workers={},children=[];let flow,closed=false;
+export async function createControlledColdAuthoritySiteQaV1({cluster,work,issuer,authorityRuntimeFile,spawn,stop,fences,workflowBuild,workflowTools,sourceBundle}){
+ const qa=await createSiteConsoleColdQaV4(cluster,{fences,sourceBundle}),save=async(n,v)=>{const p=join(work,n);await privateNewFile(p,JSON.stringify(v));return p;},boots={},members=[],predictiveRuntimeFiles=[],reconciliationRuntimeFiles=[],workers={},children=[];let flow,closed=false;
  const close=async()=>{if(closed)return;for(const c of children.toReversed())await stop(c);await flow?.close();await qa.close();closed=true;};
  try{for(const tenant of ['acme','sandbox']){const source={tenantId:tenant,edgeId:'authority-'+qa.nonce+'-'+tenant,deviceCode:'SITE-'+tenant.toUpperCase(),origin:'SIMULATOR',mapVersion:'site-1',signingKey:randomBytes(32).toString('base64url'),acknowledgementKey:randomBytes(32).toString('base64url'),statusKey:randomBytes(32).toString('base64url'),statusUrl:'http://127.0.0.1:1/status',points:Object.entries(measurementSchema).map(([tag,d])=>({tagCode:tag,nodeId:'ns=1;s='+tag,unit:d.unit}))},clock={at:Date.now()-60000},RealDate=Date;globalThis.Date=class extends RealDate{constructor(...args){super(...(args.length?args:[clock.at]));}static now(){return clock.at;}};try{boots[tenant]=await bootstrapPredictiveCancelV1Qa(qa,source,clock);}finally{globalThis.Date=RealDate;}const legacyRoot=new pg.Client({...qa.adminAccount,database:qa.business.tenants[tenant].database});await legacyRoot.connect();try{await fences.registerLegacy(legacyRoot,boots[tenant].legacyManifest);}finally{await legacyRoot.end();}const t=qa.targets[tenant];await activateDomainReadCatalogV4(t.account,t.binding);await activateGovernanceConsoleV4(t.account,t.binding);await activateMaintenanceMapV4(t.account,t.binding);}
   const build=workflowBuild;assert(build.runtimeModeNoCreateOrDeployment);assert.equal(createHash('sha256').update(await(await import('node:fs/promises')).readFile(build.jar)).digest('hex'),build.jarSha256);flow=await createPredictiveCancelGracefulFlowQaV1(qa,work,build,workflowTools,{fences});

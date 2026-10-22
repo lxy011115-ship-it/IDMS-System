@@ -35,11 +35,16 @@ jobs:
       - name: Fetch and authenticate Keycloak 26.8.1
         id: identity
         run: python3 scripts/fetch-keycloak-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Build an explicit source snapshot from public approved templates
+        id: source
+        run: node scripts/fixtures/create-controlled-cold-public-source-v1-qa.mjs "$RUNNER_TEMP/idms-controlled-source.json" "$GITHUB_OUTPUT"
       - name: Verify actual controlled R4 physical recovery and current authority admission
         env:
           IDMS_MAVEN_HOME: ${{ steps.maven.outputs.directory }}
           IDMS_KEYCLOAK_SOURCE: ${{ steps.identity.outputs.directory }}
-        run: node scripts/verify-runtime-controlled-cold-portable-r4-v1.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE"
+          IDMS_SOURCE_BUNDLE: ${{ steps.source.outputs.file }}
+          IDMS_SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
+        run: node scripts/verify-runtime-controlled-cold-portable-r4-v1.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
       - name: Independently inspect owned cleanup evidence
         run: |
           node --input-type=module <<'JS'
