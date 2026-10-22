@@ -1,0 +1,66 @@
+name: Linux source verification
+
+on:
+  push:
+    branches: [main, wip/predictive-creation-v4]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-source-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out the tested commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Use the deployment Node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+
+      - name: Install the locked dependency graph
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Run the server unit suite
+        run: npm test
+
+      - name: Check source syntax and TypeScript
+        run: npm run build
+
+      - name: Check restored-session cookie policy
+        run: node --test scripts/runtime-cold-cookie-policy-v1.test.mjs
+
+      - name: Load controlled recovery modules without starting services
+        run: |
+          node --input-type=module <<'JS'
+          await import('./scripts/runtime-cold-control-v1.mjs');
+          await import('./scripts/runtime-cold-entry-v1.mjs');
+          await import('./scripts/runtime-cold-config-v1.mjs');
+          console.log('Controlled recovery modules loaded on Linux');
+          JS
+
+      - name: Record the scope of this verification
+        if: always()
+        env:
+          CHECKED_COMMIT: ${{ github.sha }}
+          CHECK_STATUS: ${{ job.status }}
+        run: |
+          node --input-type=module <<'JS'
+          import {appendFileSync} from 'node:fs';
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+            `Commit: ${process.env.CHECKED_COMMIT}\n\nJob result: ${process.env.CHECK_STATUS}\n\n` +
+            'Scope: Ubuntu 24.04, Node 24.20.0, locked dependencies, server unit tests, syntax/TypeScript, cookie tests and module loading.\n\n' +
+            'This job does not deploy, migrate data, start PostgreSQL/Keycloak/Flowable, validate Aliyun capacity, or approve public/production activation.\n');
+          JS
