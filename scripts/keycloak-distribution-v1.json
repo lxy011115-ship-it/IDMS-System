@@ -1,0 +1,8 @@
+{
+  "version": "26.8.1",
+  "source": "https://github.com/keycloak/keycloak/releases/tag/26.8.1",
+  "archiveUrl": "https://github.com/keycloak/keycloak/releases/download/26.8.1/keycloak-26.8.1.tar.gz",
+  "archiveBytes": 173928500,
+  "archiveSha256": "4e2740b181faa2ea623a1c2ecf00855935311e546046e2f857615a47ed24cbe8",
+  "digestSource": "GitHub official keycloak/keycloak release asset SHA-256"
+}

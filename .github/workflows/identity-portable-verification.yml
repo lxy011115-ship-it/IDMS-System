@@ -1,0 +1,41 @@
+name: Portable identity lifecycle verification
+
+on:
+  push:
+    branches: [main, wip/predictive-creation-v4]
+    paths: ['scripts/**', 'server/**', 'services/**', 'package*.json', '.github/workflows/identity-portable-verification.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'server/**', 'services/**', 'package*.json', '.github/workflows/identity-portable-verification.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portable-identity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  owned-identity-lifecycle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Fetch and authenticate the official Keycloak distribution
+        id: distribution
+        run: python3 scripts/fetch-keycloak-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Verify actual PostgreSQL identity service and normal JVM stop
+        env:
+          IDMS_KEYCLOAK_SOURCE: ${{ steps.distribution.outputs.directory }}
+        run: node scripts/verify-identity-normal-stop-portable-v1.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_KEYCLOAK_SOURCE"
+      - name: Confirm tracked source files were not changed
+        if: always()
+        run: git diff --exit-code --no-ext-diff
