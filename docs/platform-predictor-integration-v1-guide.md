@@ -2,7 +2,7 @@
 
 ## 当前验证状态
 
-配置 V2 与控制器 V6 的新增 7 项单元检查已实际通过。六组件 Windows 原生组合的 41 项检查及独立清理均已实际通过；985 个执行源码输入和父版本707个受管文件保持。当前新组合的 Linux 工作流已经准备，尚未发布触发，不能将 Windows 成功视为 Linux 证明。
+`bbe3a8f` 的配置 V2 与控制器 V6 已取得 Windows 新增7项单位/41项原生/独立清理，以及 Linux 46项单位/41项原生/独立清理的实际成功记录。Windows985个执行源码输入和该次父707个受管文件保持；对应记录按版本保留。该版本整批12条CI为10成功2失败，旧核心并发测试与旧应用适配层失败仍在处理，不能据此称整批验收通过。
 
 本指南描述开发接口与验证范围，不代表原站点已经恢复、云端已经更新或全部生产依赖已经完成登记。规则预测服务仍使用既有规则模型；本次生命周期集成不提供 RUL 预测能力。
 
@@ -58,11 +58,15 @@
 
 新增单元检查位于 `tests/platform-dependency-config-v2.test.mjs`、`tests/platform-dependency-controller-v6.test.mjs`，覆盖必需依赖、端口与目录边界、每个租户的真实客户端绑定、无效文件、配置脱敏和零进程取消。
 
-当前 Windows 原生入口为 `scripts/verify-platform-core-windows-v10.ps1`，固定调用 `scripts/verify-runtime-application-suite-v15.mjs`；独立检查为 `scripts/verify-runtime-application-suite-cleanup-v16.mjs`。这些入口只用于新的隔离案例，不会接管原站点或原数据库。
+该次 Windows 原生入口为 `scripts/verify-platform-core-windows-v10.ps1`，固定调用 `scripts/verify-runtime-application-suite-v15.mjs`；独立检查为 `scripts/verify-runtime-application-suite-cleanup-v16.mjs`。这些入口只用于新的隔离案例，不会接管原站点或原数据库。
 
-预期原生组合保留原有业务、冷恢复、在途排空、取消和故障检查，并实际创建两 PG、Keycloak、Flowable、规则预测和九成员应用组；新增核对两租户预测作业、预测监听前取消、配置漂移阻止关闭及同请求重试、预测意外退出撤销入口。单服务预测验证与旧五组件核心验证不能相加作为六组件组合证明。
+该次原生组合保留原有业务、冷恢复、在途排空、取消和故障检查，并实际创建两 PG、Keycloak、Flowable、规则预测和九成员应用组；新增核对两租户预测作业、预测监听前取消、配置漂移阻止关闭及同请求重试、预测意外退出撤销入口。单服务预测验证与旧五组件核心验证不能相加作为六组件组合证明。
 
 历史 V8/V13 入口的源收集失败、V9/V14 入口的预测世代交接失败均保留。后者在 27 项基础检查后、六组件创建前失败；独立检查确认 3 个 PG 目录干净离线、工作流正常关闭及 40 个应用成员实际退役。新入口通过本案例保留的实际句柄筛选当前预测世代，先核历史世代终态再正常交接，没有按 PID 接管。
+
+## CI修订范围
+
+当前修订只增加测试和失败诊断，更新四个CI入口；固定核对父707源中的704份不变文件及三份CI的精确旧新摘要，另外绑定本次新增工作流的旧新摘要。生产模块不变。新单位组合在Windows实际53项通过；新CI原生入口与独立检查仍待该次提交的Linux结论。详见 [检查点等待修订](application-registry-checkpoint-wait-v2.md) 与 [启动诊断说明](application-startup-diagnostic-v1-guide.md)。
 
 ## 后续范围
 

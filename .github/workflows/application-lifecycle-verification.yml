@@ -30,7 +30,7 @@ jobs:
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Verify strict application manifests, registry lifecycle and early cancellation
-        run: node --test --test-concurrency=1 scripts/runtime-application-v1.test.mjs scripts/runtime-application-start-v2.test.mjs scripts/owned-fork-terminal-v1.test.mjs tests/platform-dependency-config-v1.test.mjs tests/application-lifecycle-v1.test.mjs tests/platform-dependency-controller-v1.test.mjs
+        run: node --test --test-concurrency=1 scripts/runtime-application-v1.test.mjs scripts/runtime-application-start-v2.test.mjs scripts/owned-fork-terminal-v1.test.mjs tests/platform-dependency-config-v1.test.mjs tests/application-lifecycle-v1.test.mjs tests/platform-dependency-controller-v1.test.mjs tests/application-startup-diagnostic-v1.test.mjs tests/platform-ci-source-v1.test.mjs
       - name: Verify concurrent read-only control access under WAL
         run: node scripts/verify-runtime-cold-sqlite-readers-v1.mjs
       - name: Fetch and authenticate Apache Maven 3.9.11
@@ -49,19 +49,20 @@ jobs:
           IDMS_KEYCLOAK_SOURCE: ${{ steps.identity.outputs.directory }}
           IDMS_SOURCE_BUNDLE: ${{ steps.source.outputs.file }}
           IDMS_SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
-        run: node scripts/verify-runtime-application-suite-v5.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
+        run: node scripts/verify-runtime-application-suite-v17.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
       - name: Report bounded diagnostics and independently inspect owned cleanup
         if: always() && (steps.application.outcome == 'success' || steps.application.outcome == 'failure')
         run: |
           node --input-type=module <<'JS'
+          import {summarizeApplicationStartupDiagnosticQaV1} from './scripts/fixtures/application-startup-diagnostic-v1-qa.mjs';
           import assert from 'node:assert/strict';
           import {readdir,readFile,lstat} from 'node:fs/promises';
           import {summarizeRuntimeColdBackgroundV1} from './scripts/report-runtime-cold-background-v1.mjs';
           import {execFileSync} from 'node:child_process';
-          const entries=(await readdir('work/runtime-application-suite-v5-20261023',{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
+          const entries=(await readdir('work/runtime-application-suite-v17-20261024',{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
           assert.equal(entries.length,1);
-          const file='work/runtime-application-suite-v5-20261023/'+entries[0].name+'/verification.json',stat=await lstat(file);assert(stat.isFile()&&!stat.isSymbolicLink()&&stat.size<=2*1024*1024);console.log(JSON.stringify(summarizeRuntimeColdBackgroundV1(JSON.parse(await readFile(file,'utf8')))));
-          execFileSync(process.execPath,['scripts/verify-runtime-application-suite-cleanup-v5.mjs',entries[0].name],{stdio:'inherit'});
+          const file='work/runtime-application-suite-v17-20261024/'+entries[0].name+'/verification.json',stat=await lstat(file);assert(stat.isFile()&&!stat.isSymbolicLink()&&stat.size<=2*1024*1024);const r=JSON.parse(await readFile(file,'utf8'));console.log(JSON.stringify({...summarizeRuntimeColdBackgroundV1(r),...summarizeApplicationStartupDiagnosticQaV1(r)}));
+          execFileSync(process.execPath,['scripts/verify-runtime-application-suite-cleanup-v18.mjs',entries[0].name],{stdio:'inherit'});
           JS
       - name: Confirm tracked source files were not changed
         if: always()

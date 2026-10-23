@@ -3,10 +3,10 @@ name: Application registry checkpoint verification
 on:
   push:
     branches: [main, wip/predictive-creation-v4]
-    paths: ['scripts/runtime-application-registry-v1.mjs', 'scripts/runtime-application-config-v1.mjs', 'scripts/fixtures/application-registry-checkpoint-writer-v1-qa.mjs', 'tests/application-registry-live-v1.test.mjs', 'package*.json', '.github/workflows/application-registry-checkpoint-verification.yml']
+    paths: ['scripts/runtime-application-registry-v1.mjs', 'scripts/runtime-application-config-v1.mjs', 'scripts/fixtures/application-registry-checkpoint-writer-v1-qa.mjs', 'scripts/fixtures/application-registry-checkpoint-writer-v2-qa.mjs', 'scripts/fixtures/application-registry-checkpoint-lock-v1-qa.mjs', 'tests/application-registry-live-v1.test.mjs', 'tests/application-registry-live-v2.test.mjs', 'tests/application-registry-checkpoint-lock-v1.test.mjs', 'package*.json', '.github/workflows/application-registry-checkpoint-verification.yml']
   pull_request:
     branches: [main]
-    paths: ['scripts/runtime-application-registry-v1.mjs', 'scripts/runtime-application-config-v1.mjs', 'scripts/fixtures/application-registry-checkpoint-writer-v1-qa.mjs', 'tests/application-registry-live-v1.test.mjs', 'package*.json', '.github/workflows/application-registry-checkpoint-verification.yml']
+    paths: ['scripts/runtime-application-registry-v1.mjs', 'scripts/runtime-application-config-v1.mjs', 'scripts/fixtures/application-registry-checkpoint-writer-v1-qa.mjs', 'scripts/fixtures/application-registry-checkpoint-writer-v2-qa.mjs', 'scripts/fixtures/application-registry-checkpoint-lock-v1-qa.mjs', 'tests/application-registry-live-v1.test.mjs', 'tests/application-registry-live-v2.test.mjs', 'tests/application-registry-checkpoint-lock-v1.test.mjs', 'package*.json', '.github/workflows/application-registry-checkpoint-verification.yml']
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,7 @@ jobs:
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Verify real concurrent WAL checkpoints, lifecycle contracts and tamper rejection
-        run: node --test --test-concurrency=1 tests/application-registry-live-v1.test.mjs scripts/runtime-application-v1.test.mjs scripts/runtime-application-start-v2.test.mjs tests/application-lifecycle-v1.test.mjs
+        run: node --test --test-concurrency=1 tests/application-registry-live-v2.test.mjs tests/application-registry-checkpoint-lock-v1.test.mjs scripts/runtime-application-v1.test.mjs scripts/runtime-application-start-v2.test.mjs tests/application-lifecycle-v1.test.mjs
       - name: Confirm tracked source files were not changed
         if: always()
         run: git diff --exit-code --no-ext-diff

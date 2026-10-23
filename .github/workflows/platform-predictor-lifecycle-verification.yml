@@ -30,7 +30,7 @@ jobs:
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Verify core and predictor lifecycle contracts and exact consumer bindings
-        run: node --test --test-concurrency=1 scripts/runtime-application-v1.test.mjs scripts/runtime-application-start-v2.test.mjs scripts/owned-fork-terminal-v1.test.mjs tests/platform-dependency-config-v1.test.mjs tests/application-lifecycle-v1.test.mjs tests/platform-dependency-controller-v1.test.mjs tests/platform-dependency-controller-v3.test.mjs tests/platform-core-endpoint-v1.test.mjs tests/application-registry-live-v1.test.mjs tests/application-lifecycle-v2.test.mjs tests/platform-dependency-controller-v5.test.mjs tests/platform-dependency-config-v2.test.mjs tests/platform-dependency-controller-v6.test.mjs tests/predictor-lifecycle-v1.test.mjs
+        run: node --test --test-concurrency=1 scripts/runtime-application-v1.test.mjs scripts/runtime-application-start-v2.test.mjs scripts/owned-fork-terminal-v1.test.mjs tests/platform-dependency-config-v1.test.mjs tests/application-lifecycle-v1.test.mjs tests/platform-dependency-controller-v1.test.mjs tests/platform-dependency-controller-v3.test.mjs tests/platform-core-endpoint-v1.test.mjs tests/application-registry-live-v2.test.mjs tests/application-registry-checkpoint-lock-v1.test.mjs tests/application-lifecycle-v2.test.mjs tests/platform-dependency-controller-v5.test.mjs tests/platform-dependency-config-v2.test.mjs tests/platform-dependency-controller-v6.test.mjs tests/predictor-lifecycle-v1.test.mjs tests/application-startup-diagnostic-v1.test.mjs tests/platform-ci-source-v1.test.mjs
       - name: Verify concurrent read-only control access under WAL
         run: node scripts/verify-runtime-cold-sqlite-readers-v1.mjs
       - name: Fetch and authenticate Apache Maven 3.9.11
@@ -49,22 +49,23 @@ jobs:
           IDMS_KEYCLOAK_SOURCE: ${{ steps.identity.outputs.directory }}
           IDMS_SOURCE_BUNDLE: ${{ steps.source.outputs.file }}
           IDMS_SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
-        run: node scripts/verify-runtime-application-suite-v15.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
+        run: node scripts/verify-runtime-application-suite-v16.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
       - name: Report bounded diagnostics and independently verify owned cleanup
         if: always() && (steps.core.outcome == 'success' || steps.core.outcome == 'failure')
         run: |
           node --input-type=module <<'JS'
+          import {summarizeApplicationStartupDiagnosticQaV1} from './scripts/fixtures/application-startup-diagnostic-v1-qa.mjs';
           import assert from 'node:assert/strict';
           import {readdir,readFile,lstat} from 'node:fs/promises';
           import {execFileSync} from 'node:child_process';
           import {summarizeRuntimeColdBackgroundV1} from './scripts/report-runtime-cold-background-v1.mjs';
-          const root='work/runtime-application-suite-v15-20261024';
+          const root='work/runtime-application-suite-v16-20261024';
           const cases=(await readdir(root,{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
           assert.equal(cases.length,1);
           const file=root+'/'+cases[0].name+'/verification.json',s=await lstat(file);assert(s.isFile()&&!s.isSymbolicLink()&&s.size<=2*1024*1024);
           const r=JSON.parse(await readFile(file,'utf8')),core=r.platformCore,cancellation=r.platformCoreCancellation,faults=r.platformCoreFaults,predictorFaults=r.platformPredictorFaults;
-          console.log(JSON.stringify({...summarizeRuntimeColdBackgroundV1(r),coreControllerNativeVerified:core?.coreNativeVerified===true,coreComponents:core?.result?.componentsCreated??null,coreStartupCancellationNativeVerified:cancellation?.completed===true,coreStartupCancellationCases:cancellation?.cases.length??0,coreStartupCancellationStages:cancellation?.cases.map(c=>c.stage)??[],coreFaultCasesVerified:faults?.completed===true,coreFaultCases:faults?.cases.length??0,coreFaultStages:faults?.cases.map(c=>c.stage)??[],predictorIncluded:core?.predictorIncluded===true,predictiveTenantJobs:core?.predictions?.length??0,predictorFaultCasesVerified:predictorFaults?.completed===true,predictorFaultCases:predictorFaults?.cases.length??0,predictorFaultStages:predictorFaults?.cases.map(c=>c.stage)??[],corePhase:core?.result?.phase??null,coreNormal:core?.result?.normal===true,allProductionDependenciesRegistered:false,fullGoalComplete:false}));
-          execFileSync(process.execPath,['scripts/verify-runtime-application-suite-cleanup-v16.mjs',cases[0].name],{stdio:'inherit'});
+          console.log(JSON.stringify({...summarizeRuntimeColdBackgroundV1(r),...summarizeApplicationStartupDiagnosticQaV1(r),coreControllerNativeVerified:core?.coreNativeVerified===true,coreComponents:core?.result?.componentsCreated??null,coreStartupCancellationNativeVerified:cancellation?.completed===true,coreStartupCancellationCases:cancellation?.cases.length??0,coreStartupCancellationStages:cancellation?.cases.map(c=>c.stage)??[],coreFaultCasesVerified:faults?.completed===true,coreFaultCases:faults?.cases.length??0,coreFaultStages:faults?.cases.map(c=>c.stage)??[],predictorIncluded:core?.predictorIncluded===true,predictiveTenantJobs:core?.predictions?.length??0,predictorFaultCasesVerified:predictorFaults?.completed===true,predictorFaultCases:predictorFaults?.cases.length??0,predictorFaultStages:predictorFaults?.cases.map(c=>c.stage)??[],corePhase:core?.result?.phase??null,coreNormal:core?.result?.normal===true,allProductionDependenciesRegistered:false,fullGoalComplete:false}));
+          execFileSync(process.execPath,['scripts/verify-runtime-application-suite-cleanup-v17.mjs',cases[0].name],{stdio:'inherit'});
           JS
       - name: Confirm tracked source files were not changed
         if: always()
