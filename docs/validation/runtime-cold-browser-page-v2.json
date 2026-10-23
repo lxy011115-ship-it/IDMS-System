@@ -1,0 +1,179 @@
+{
+  "format": "IDMS_WINDOWS_PUBLIC_COLD_BROWSER_PAGE_VALIDATION_V2",
+  "platform": "win32",
+  "sourceProfile": "PUBLIC_APPROVED_TEMPLATES_V1",
+  "nonce": "d0449579fde1",
+  "passed": true,
+  "nativeChecks": 23,
+  "nativeExitCode": 0,
+  "nativeSourcePins": 444,
+  "originalManagedSourcePinsPreserved": 556,
+  "originalNativeSourcePinsPreserved": 429,
+  "originalJarPreserved": true,
+  "sourceProfileSha256": "02664eb55e17d44a381e6a94f12cd4c2eabdd81993ab41423652e09e06278c50",
+  "nativeVerificationSha256": "c8f3fd08a548133e3e48509d56d1fc79a75db2f2f89772b47fd7c3b9f8e5dcce",
+  "browserVerificationSha256": "f45f97d2ce5bab8e07f9a027bc7e2ad3b610acfcf8f0e59cd608a6ffabea331f",
+  "browserLedgerSha256": "d57621a67cdc742462e58aad21fa6925c0e0249fd58374c7e84c60e1fa1e3b0e",
+  "browserCheckRecords": 18,
+  "requiredBrowserCheckGroups": 14,
+  "fileCommands": 16,
+  "successfulFileCommands": 15,
+  "initialPrematureContextCheckRetained": true,
+  "initialFailure": "BROWSER_FOUR_MODULE_CONTEXT before the unified home page was read; later check passed",
+  "unitTestsPassed": 28,
+  "pageCollectorInstrumented": true,
+  "originalProductRuntimeAssetsUnchanged": true,
+  "realBrowserPkce": true,
+  "positiveGuiWrites": 7,
+  "backendCommandsSubstitutedForGui": false,
+  "finalOrderState": "CLOSED",
+  "finalOrderVersion": 5,
+  "finalWorkflowState": "SYNCED",
+  "independentRepairApproval": true,
+  "scopeCases": [
+    {
+      "name": "site",
+      "role": "quality-engineer",
+      "scope": {
+        "devices": [
+          "*"
+        ],
+        "lines": [
+          "*"
+        ],
+        "sites": [
+          "V4-SITE"
+        ]
+      },
+      "pages": 2,
+      "devices": 19,
+      "realPkce": true,
+      "backendOracleExplicit": true,
+      "backendOracleSubstitutedForGui": false
+    },
+    {
+      "name": "line",
+      "role": "maintenance-engineer",
+      "scope": {
+        "devices": [
+          "*"
+        ],
+        "lines": [
+          "HIDDEN-LINE"
+        ],
+        "sites": [
+          "*"
+        ]
+      },
+      "pages": 2,
+      "devices": 18,
+      "realPkce": true,
+      "backendOracleExplicit": true,
+      "backendOracleSubstitutedForGui": false
+    },
+    {
+      "name": "device",
+      "role": "quality-engineer",
+      "scope": {
+        "devices": [
+          "READ-008"
+        ],
+        "lines": [
+          "*"
+        ],
+        "sites": [
+          "*"
+        ]
+      },
+      "pages": 1,
+      "devices": 1,
+      "realPkce": true,
+      "backendOracleExplicit": true,
+      "backendOracleSubstitutedForGui": false
+    },
+    {
+      "name": "empty",
+      "role": "quality-engineer",
+      "scope": {
+        "devices": [
+          "*"
+        ],
+        "lines": [
+          "HIDDEN-LINE"
+        ],
+        "sites": [
+          "V4-SITE"
+        ]
+      },
+      "pages": 1,
+      "devices": 0,
+      "realPkce": true,
+      "backendOracleExplicit": true,
+      "backendOracleSubstitutedForGui": false
+    }
+  ],
+  "storageStages": [
+    {
+      "stage": "active",
+      "entries": 5,
+      "recoveryReferences": 7,
+      "sessionCookiePresent": true,
+      "visibleRecoveryReferences": 2,
+      "knownCredentialMatches": 0,
+      "pageCaptureSha256": "3dba8e8edb9afc94f24ff614f103b0e1dbd885be1c1756b68e18462ba65fde27",
+      "snapshotSha256": "7f5d959d730ff214fdddd4b497a4d1cb017f002f3ad7eb410a6ee1da40580430",
+      "cookieCapturedAt": 1792727347680
+    },
+    {
+      "stage": "switched",
+      "entries": 5,
+      "recoveryReferences": 7,
+      "sessionCookiePresent": true,
+      "visibleRecoveryReferences": 0,
+      "knownCredentialMatches": 0,
+      "pageCaptureSha256": "9472eff6fdd8c155fcc34ee76e4a99637cbe2e53e8092afdc5cef2f55f901625",
+      "snapshotSha256": "def210d2142319c23b0a4ee5548b6583666a0ebc9cbde5660a90aeda4381d0e0",
+      "cookieCapturedAt": 1792727705545
+    },
+    {
+      "stage": "logout",
+      "entries": 5,
+      "recoveryReferences": 7,
+      "sessionCookiePresent": false,
+      "visibleRecoveryReferences": 0,
+      "knownCredentialMatches": 0,
+      "pageCaptureSha256": "de6b7d7fa196fd0b233baf6f8a9e03f55cc74c0e991c9644a689e0a88cbdd7c3",
+      "snapshotSha256": "9c3de3463fd2368ef6397b75a29bfadc0db7907d24bf64825c7802ae4cecd844",
+      "cookieCapturedAt": 1792728162646
+    }
+  ],
+  "refreshElapsedMs": 30034,
+  "apiNegativeCases": 5,
+  "apiNegativesExplicitBackendSession": true,
+  "sharedLogoutPages": 4,
+  "independentCleanup": {
+    "cleanOfflinePgDirectories": 3,
+    "removedTargetBusinessDatabaseDirectories": 7,
+    "identityNormalStop": true,
+    "workflowsNormalStop": 4,
+    "poolClosureCallbacks": 20,
+    "jdbcClientsAfter": 0,
+    "nodeChildrenRetired": 17,
+    "pageStorageCapturesVerified": 3,
+    "cleanupErrorCount": 0,
+    "sourceFrozenDataAndArchiveRetained": true
+  },
+  "testTabClosureConfirmed": true,
+  "canonicalPackageDeclarationDifferencesRetained": [
+    "package.json",
+    "package-lock.json"
+  ],
+  "windowsPublicBrowserGatePassed": true,
+  "rawStorageGatePassedForThisProfile": true,
+  "privateOriginalSourceLinuxVerified": false,
+  "fullBrowserGateCleared": false,
+  "cloudRuntimeSwitched": false,
+  "productionAcceptance": false,
+  "finalUserMaterialsCreated": false,
+  "fullGoalComplete": false
+}
