@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-23T19:09:13.101233+00:00",
+  "nonce": "7d24b00d7959",
+  "nativePid": 57608,
+  "wrapperRunId": "c5718113-b0b1-45d3-a691-d2066a084d1c",
+  "creationFileTime": "134372546972860696",
+  "actualNativeWaitExitCode": 0,
+  "actualIndependentExitCode": 0,
+  "nativeChecks": 41,
+  "unitTestsPassed": 7,
+  "parentManagedBlobsUnchanged": 707,
+  "frozenSourcePinsVerified": 985,
+  "coreComponents": 6,
+  "applicationMembers": 9,
+  "predictiveTenantJobsCommitted": 2,
+  "startupCancellationStages": [
+    "pg",
+    "id",
+    "pred",
+    "app"
+  ],
+  "existingFaultStages": [
+    "workflow-config",
+    "application-config",
+    "unexpected-workflow"
+  ],
+  "predictorFaultStages": [
+    "predictor-config",
+    "unexpected-predictor"
+  ],
+  "allActualOwnedResourcesRetired": true,
+  "applicationExitBeforePredictorStopIntentVerified": true,
+  "normalOwnedPredictorStops": 8,
+  "sourceProfile": "PUBLIC_APPROVED_TEMPLATES_V1",
+  "backendSessionsExplicit": true,
+  "browserCasesVerified": false,
+  "wholeProductionStackIntegrated": false,
+  "linuxNewControllerNotYetVerified": true,
+  "originalSiteRestored": false,
+  "fullGoalComplete": false
+}
