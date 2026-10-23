@@ -1,0 +1,53 @@
+{
+  "format": "IDMS_COLD_BROWSER_POSITIVE_VALIDATION_V1",
+  "platform": "win32",
+  "nonce": "bb2e7b60dfd0",
+  "checks": 21,
+  "passed": true,
+  "sourcePins": 429,
+  "browserAssets": 70,
+  "realBrowserPkce": "S256",
+  "positiveStates": [
+    {
+      "state": "ASSIGNED",
+      "version": 2
+    },
+    {
+      "state": "IN_PROGRESS",
+      "version": 3
+    },
+    {
+      "state": "AWAITING_APPROVAL",
+      "version": 4
+    },
+    {
+      "state": "CLOSED",
+      "version": 5
+    }
+  ],
+  "finalWorkflowStatus": "SYNCED",
+  "independentApproval": true,
+  "backendSessionSubstitutedForGui": false,
+  "apiNegativeCases": 5,
+  "apiNegativesExplicitBackendSession": true,
+  "sharedLogoutPages": 4,
+  "refreshObserved": true,
+  "failedVerificationCommandsRetained": 1,
+  "failureReason": "Homepage context had not yet been visited; checked again after normal page navigation",
+  "cleanupErrors": 0,
+  "independentCleanupPassed": true,
+  "nodeChildrenRetired": 17,
+  "normalWorkflowStops": 4,
+  "closedPools": 20,
+  "jdbcClientsAfter": 0,
+  "normalBackgroundStops": 11,
+  "cleanOfflinePgDirectories": 3,
+  "removedTargetBusinessDatabaseDirectories": 7,
+  "identityDatabaseDirectoryRemoved": true,
+  "restrictedSiteLineGuiGatePassed": false,
+  "rawBrowserStorageGatePassed": false,
+  "fullBrowserGateCleared": false,
+  "productionAcceptance": false,
+  "finalUserMaterialsCreated": false,
+  "fullGoalComplete": false
+}
