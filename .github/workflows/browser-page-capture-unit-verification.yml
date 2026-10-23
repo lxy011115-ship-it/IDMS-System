@@ -30,6 +30,8 @@ jobs:
         with:
           node-version: 24.20.0
           package-manager-cache: false
+      - name: Install the locked dependency graph
+        run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Verify page capture transport and strict boundary cases
         run: node --test --test-concurrency=1 scripts/fixtures/cold-browser-page-capture-v2.test.mjs scripts/fixtures/cold-browser-storage-v1.test.mjs scripts/fixtures/cold-browser-scope-v1.test.mjs
       - name: Record verification scope
