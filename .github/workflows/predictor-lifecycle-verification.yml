@@ -1,0 +1,51 @@
+name: Owned predictor lifecycle verification
+
+on:
+  push:
+    branches: [main, wip/predictive-creation-v4]
+    paths: ['scripts/**', 'services/**', 'server/**', 'tests/**', 'package*.json', 'docs/validation/predictor-lifecycle-source-baseline-v1.json', '.github/workflows/predictor-lifecycle-verification.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'services/**', 'server/**', 'tests/**', 'package*.json', 'docs/validation/predictor-lifecycle-source-baseline-v1.json', '.github/workflows/predictor-lifecycle-verification.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: predictor-lifecycle-v1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  predictor-lifecycle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify fixed predictor configuration and handle boundaries
+        run: node --test --test-concurrency=1 tests/predictor-lifecycle-v1.test.mjs
+      - name: Verify actual predictor ownership, HTTP drain, drift and startup cancellation
+        id: predictor
+        run: node scripts/verify-predictor-lifecycle-v1.mjs
+      - name: Independently verify actual root retirement and fixed inputs
+        if: always() && (steps.predictor.outcome == 'success' || steps.predictor.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const root='work/predictor-owned-lifecycle-v1-20261024';
+          const cases=(await readdir(root,{withFileTypes:true})).filter(item=>item.isDirectory()&&/^[a-f0-9]{12}$/.test(item.name));
+          assert.equal(cases.length,1);
+          execFileSync(process.execPath,['scripts/verify-predictor-lifecycle-cleanup-v1.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source files were not changed
+        if: always()
+        run: git diff --exit-code --no-ext-diff
