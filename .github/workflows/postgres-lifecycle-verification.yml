@@ -3,10 +3,10 @@ name: Owned PostgreSQL lifecycle verification
 on:
   push:
     branches: [main, wip/predictive-creation-v4]
-    paths: ['scripts/**', 'server/**', 'package*.json', 'docs/validation/postgres-lifecycle-baseline-v3.json', '.github/workflows/postgres-lifecycle-verification.yml']
+    paths: ['scripts/**', 'server/**', 'package*.json', 'docs/validation/postgres-lifecycle-baseline-v4.json', '.github/workflows/postgres-lifecycle-verification.yml']
   pull_request:
     branches: [main]
-    paths: ['scripts/**', 'server/**', 'package*.json', 'docs/validation/postgres-lifecycle-baseline-v3.json', '.github/workflows/postgres-lifecycle-verification.yml']
+    paths: ['scripts/**', 'server/**', 'package*.json', 'docs/validation/postgres-lifecycle-baseline-v4.json', '.github/workflows/postgres-lifecycle-verification.yml']
   workflow_dispatch:
 
 permissions:
@@ -29,13 +29,13 @@ jobs:
           node-version: 24.20.0
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
-      - name: Authenticate 638 unchanged parent blobs and two explicit CI updates
-        run: node scripts/prepare-postgres-lifecycle-baseline-v3.mjs
+      - name: Authenticate 654 unchanged parent blobs and two explicit CI updates
+        run: node scripts/prepare-postgres-lifecycle-baseline-v4.mjs
       - name: Verify actual owned startup, rejected takeover and smart shutdown
         id: lifecycle
         env:
           IDMS_QA_POSTGRES_BIN: /usr/lib/postgresql/16/bin
-        run: node scripts/verify-postgres-lifecycle-v3.mjs
+        run: node scripts/verify-postgres-lifecycle-v4.mjs
       - name: Independently inspect terminal processes and clean offline state
         if: always() && (steps.lifecycle.outcome == 'success' || steps.lifecycle.outcome == 'failure')
         run: |
@@ -43,9 +43,9 @@ jobs:
           import assert from 'node:assert/strict';
           import {readdir} from 'node:fs/promises';
           import {execFileSync} from 'node:child_process';
-          const cases=(await readdir('work/postgres-lifecycle-v3-20261023',{withFileTypes:true})).filter(x=>x.isDirectory()&&/^[a-f0-9]{12}$/.test(x.name));
+          const cases=(await readdir('work/postgres-lifecycle-v4-20261024',{withFileTypes:true})).filter(x=>x.isDirectory()&&/^[a-f0-9]{12}$/.test(x.name));
           assert.equal(cases.length,1);
-          execFileSync(process.execPath,['scripts/verify-postgres-lifecycle-cleanup-v3.mjs',cases[0].name],{stdio:'inherit'});
+          execFileSync(process.execPath,['scripts/verify-postgres-lifecycle-cleanup-v4.mjs',cases[0].name],{stdio:'inherit'});
           JS
       - name: Confirm tracked source files were not changed
         if: always()
