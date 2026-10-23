@@ -1,0 +1,71 @@
+name: Core dependency lifecycle verification
+
+on:
+  push:
+    branches: [main, wip/predictive-creation-v4]
+    paths: ['scripts/**', 'tests/**', 'server/**', 'services/**', 'package*.json', '.github/workflows/platform-core-lifecycle-verification.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'tests/**', 'server/**', 'services/**', 'package*.json', '.github/workflows/platform-core-lifecycle-verification.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: platform-core-lifecycle-v3-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  platform-core:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify lifecycle contracts and sealed endpoint preservation
+        run: node --test --test-concurrency=1 scripts/runtime-application-v1.test.mjs scripts/runtime-application-start-v2.test.mjs scripts/owned-fork-terminal-v1.test.mjs tests/platform-dependency-config-v1.test.mjs tests/application-lifecycle-v1.test.mjs tests/platform-dependency-controller-v1.test.mjs tests/platform-dependency-controller-v3.test.mjs tests/platform-core-endpoint-v1.test.mjs
+      - name: Verify concurrent read-only control access under WAL
+        run: node scripts/verify-runtime-cold-sqlite-readers-v1.mjs
+      - name: Fetch and authenticate Apache Maven 3.9.11
+        id: maven
+        run: python3 scripts/fetch-maven-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Fetch and authenticate Keycloak 26.8.1
+        id: identity
+        run: python3 scripts/fetch-keycloak-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Prepare public approved source data
+        id: source
+        run: node scripts/fixtures/create-controlled-cold-public-source-v1-qa.mjs "$RUNNER_TEMP/idms-controlled-source.json" "$GITHUB_OUTPUT"
+      - name: Verify actual core startup, preserved service bindings and retryable shutdown
+        id: core
+        env:
+          IDMS_MAVEN_HOME: ${{ steps.maven.outputs.directory }}
+          IDMS_KEYCLOAK_SOURCE: ${{ steps.identity.outputs.directory }}
+          IDMS_SOURCE_BUNDLE: ${{ steps.source.outputs.file }}
+          IDMS_SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
+        run: node scripts/verify-runtime-application-suite-v8.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
+      - name: Report bounded diagnostics and independently verify owned cleanup
+        if: always() && (steps.core.outcome == 'success' || steps.core.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir,readFile,lstat} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          import {summarizeRuntimeColdBackgroundV1} from './scripts/report-runtime-cold-background-v1.mjs';
+          const root='work/runtime-application-suite-v8-20261023';
+          const cases=(await readdir(root,{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
+          assert.equal(cases.length,1);
+          const file=root+'/'+cases[0].name+'/verification.json',s=await lstat(file);assert(s.isFile()&&!s.isSymbolicLink()&&s.size<=2*1024*1024);
+          const r=JSON.parse(await readFile(file,'utf8')),core=r.platformCore;
+          console.log(JSON.stringify({...summarizeRuntimeColdBackgroundV1(r),coreControllerNativeVerified:core?.coreNativeVerified===true,coreComponents:core?.result?.componentsCreated??null,corePhase:core?.result?.phase??null,coreNormal:core?.result?.normal===true,allProductionDependenciesRegistered:false,fullGoalComplete:false}));
+          execFileSync(process.execPath,['scripts/verify-runtime-application-suite-cleanup-v8.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source files were not changed
+        if: always()
+        run: git diff --exit-code --no-ext-diff
