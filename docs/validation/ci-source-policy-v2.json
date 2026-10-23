@@ -1,0 +1,39 @@
+{
+  "format": "IDMS_CI_SOURCE_POLICY_V2",
+  "parentCommit": "2772e939e8cecfcccb773c818402d898e5716c9c",
+  "parentManifestFile": "docs/validation/ci-source-parent-v2.json",
+  "parentManifestSha256": "961e4f3a5c30fe07795d724fe20aff44d1635b2e20f95817c3fe5d5ac28f0190",
+  "ciBindings": [
+    {
+      "path": ".github/workflows/application-lifecycle-verification.yml",
+      "beforeSha256": "a6c395344b58b00dcd840fc21b18d4321dcd7a8b844444b2e5b2da62217e3291",
+      "afterSha256": "518627457ef13bbb2cea30a05db799a6169cca126037901d10ae3660b867b96b"
+    },
+    {
+      "path": ".github/workflows/application-registry-checkpoint-verification.yml",
+      "beforeSha256": "f82cbd7abc8f670d25f78b4dd188768a91d0b24ad558590390692d63eb0c6e97",
+      "afterSha256": "8b915d7f825d5b0b5f6fd61e1a100ba59be8aea52a325a0f773a274d3387fe92"
+    },
+    {
+      "path": ".github/workflows/platform-core-lifecycle-verification.yml",
+      "beforeSha256": "3652ef9e3058c3bbb73c6abf751a345d83e2a649cbefdfb0499e65dfe6490ff2",
+      "afterSha256": "8cdbfb3555906fa02793313ca5c45255959356ea27ce9448388d2b1f16878c00"
+    },
+    {
+      "path": ".github/workflows/platform-predictor-lifecycle-verification.yml",
+      "beforeSha256": "6f2f53971478d641ee09265f99caf2c99c145a9722f0e41cbe299a3abdfc7ee7",
+      "afterSha256": "416f4929f49b5f2e2fe2d6cdca68ae9833068dcdbc4458ecd49a51b9730007cb"
+    },
+    {
+      "path": ".github/workflows/postgres-lifecycle-verification.yml",
+      "beforeSha256": "a86c35fa37327c382ab478c4f7f5285267dfcd3af2f1aedd53cb9d7aa1a92520",
+      "afterSha256": "3860fc76c834c3aee7d5132019802ebff11f1c0ff880aa8c61963035f84bcfa3"
+    },
+    {
+      "path": ".github/workflows/predictor-lifecycle-verification.yml",
+      "beforeSha256": "50292f9e9d8017880d5a347757077bf2139337b9774036734cd663c075d4d9fd",
+      "afterSha256": "bcff7b0a6dc3a403d7f50f0b58c40f22363928c43ee5fada53bc932b7ad0d651"
+    }
+  ],
+  "runtimeChanges": []
+}

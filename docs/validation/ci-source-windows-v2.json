@@ -1,0 +1,95 @@
+{
+  "format": "IDMS_CI_SOURCE_WINDOWS_VALIDATION_V2",
+  "platform": "win32",
+  "parentCommit": "2772e939e8cecfcccb773c818402d898e5716c9c",
+  "policySha256": "36d63806dd1f7f374631545fba9431e1342d48aeb307ff40c88fb727ae6eeb94",
+  "unitSummary": {
+    "tests": 62,
+    "pass": 62,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "allSixCandidateUnitCommandsCovered": true,
+  "parentFiles": 762,
+  "nonCiParentFilesUnchanged": 756,
+  "explicitCiBindings": 6,
+  "historicalProfiles": [
+    {
+      "name": "platform",
+      "snapshotFile": "docs/validation/platform-predictor-parent-v1.json",
+      "snapshotSha256": "94dfa54903cb12dfae4fa983935ed7406448d78927fb2c4a23cd8c0612f2fe90",
+      "sourceBlobs": 707,
+      "nonCiFilesUnchanged": 702,
+      "ciFilesBound": 5,
+      "ciFilesChangedSinceSnapshot": 5
+    },
+    {
+      "name": "predictor",
+      "snapshotFile": "docs/validation/predictor-lifecycle-source-baseline-v1.json",
+      "snapshotSha256": "cd9ae7d2a3451c6415259402a7e24ac5473a99562c4023be916e879f39befaa3",
+      "sourceBlobs": 695,
+      "nonCiFilesUnchanged": 691,
+      "ciFilesBound": 4,
+      "ciFilesChangedSinceSnapshot": 4
+    },
+    {
+      "name": "postgres",
+      "snapshotFile": "docs/validation/postgres-lifecycle-baseline-v4.json",
+      "snapshotSha256": "6a4792428343ee5b379ea01e7c6d8be8edf023b7a3bd70ea62ac8771d48d1eef",
+      "sourceBlobs": 656,
+      "nonCiFilesUnchanged": 652,
+      "ciFilesBound": 4,
+      "ciFilesChangedSinceSnapshot": 4
+    }
+  ],
+  "standaloneNativeProfiles": [
+    {
+      "name": "predictor",
+      "nonce": "d8bfb3861a61",
+      "nativeChecks": 7,
+      "actualExitCode": 0,
+      "actualCreationHandleRetained": true,
+      "actualNativeWaitCompleted": true,
+      "adminEnabled": false,
+      "powerUsersEnabled": false,
+      "sourcePinsVerified": 869,
+      "nativeVerificationSha256": "b2ecf7a38ac54b22ec9cf299d62e11b898052349624ab63c288eef77cbfbad98",
+      "independentCleanupSha256": "a769e69d465cea8b783a6753438140ae18c4da9c5850fc99157827ffc233fff1",
+      "wrapperLaunchSha256": "80969a13c3f0ea16a798b043c0d4b8602caf6a6168781412ef5ac3dcb710e911",
+      "wrapperExitSha256": "a37ac96952d64a5c3d963fa1630115b84f2591da1b04e3418fb5a460815ca826",
+      "independentCleanupPassed": true
+    },
+    {
+      "name": "postgres",
+      "nonce": "f10744151286",
+      "nativeChecks": 13,
+      "actualExitCode": 0,
+      "actualCreationHandleRetained": true,
+      "actualNativeWaitCompleted": true,
+      "adminEnabled": false,
+      "powerUsersEnabled": false,
+      "sourcePinsVerified": 772,
+      "nativeVerificationSha256": "a0e08bd891942274ca7464e80236e13532a77a30e2c564494db29591cb4b8021",
+      "independentCleanupSha256": "233e7ed80a2ce4f3c630798093fab68a68b72a812e876958bc52e4d730e258ae",
+      "wrapperLaunchSha256": "bb5cbf833cb0d77997190627b4c1f5dee3a9280d545576aa786829e799bb8ddd",
+      "wrapperExitSha256": "2a3b645917aa6ff02ad76d2db205e2d9021f48d3f0a863ad521634e007a6e16c",
+      "independentCleanupPassed": true
+    }
+  ],
+  "predictorOwnedRootsRetired": 5,
+  "predictorNormalStops": 4,
+  "predictorExpectedStartupFailures": 1,
+  "postgresOwnedPostmastersNormallyStopped": 2,
+  "originalDatabaseContacted": false,
+  "runtimeChanges": [],
+  "historicalSnapshotsRewritten": false,
+  "currentSixComponentNativeReexecutedOnWindows": false,
+  "previous2772LinuxUnits": 53,
+  "previous2772LinuxSixComponentChecks": 41,
+  "newLinuxResultsVerified": false,
+  "wholeProductionStackIntegrated": false,
+  "finalUserMaterialsCreated": false,
+  "fullGoalComplete": false
+}

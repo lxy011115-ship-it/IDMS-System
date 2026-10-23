@@ -3,10 +3,10 @@ name: Owned predictor lifecycle verification
 on:
   push:
     branches: [main, wip/predictive-creation-v4]
-    paths: ['scripts/**', 'services/**', 'server/**', 'tests/**', 'package*.json', 'docs/validation/predictor-lifecycle-source-baseline-v1.json', '.github/workflows/predictor-lifecycle-verification.yml']
+    paths: ['scripts/**', 'services/**', 'server/**', 'tests/**', 'package*.json', 'docs/validation/ci-source-*.json', 'docs/validation/predictor-lifecycle-source-baseline-v1.json', '.github/workflows/predictor-lifecycle-verification.yml']
   pull_request:
     branches: [main]
-    paths: ['scripts/**', 'services/**', 'server/**', 'tests/**', 'package*.json', 'docs/validation/predictor-lifecycle-source-baseline-v1.json', '.github/workflows/predictor-lifecycle-verification.yml']
+    paths: ['scripts/**', 'services/**', 'server/**', 'tests/**', 'package*.json', 'docs/validation/ci-source-*.json', 'docs/validation/predictor-lifecycle-source-baseline-v1.json', '.github/workflows/predictor-lifecycle-verification.yml']
   workflow_dispatch:
 
 permissions:
@@ -29,11 +29,13 @@ jobs:
           node-version: 24.20.0
           package-manager-cache: false
       - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Authenticate all source profiles with six exact CI bindings
+        run: node scripts/verify-ci-source-policy-v2.mjs
       - name: Verify fixed predictor configuration and handle boundaries
-        run: node --test --test-concurrency=1 tests/predictor-lifecycle-v1.test.mjs
+        run: node --test --test-concurrency=1 tests/predictor-lifecycle-v1.test.mjs tests/ci-source-policy-v2.test.mjs tests/ci-source-policy-preflight-v2.test.mjs
       - name: Verify actual predictor ownership, HTTP drain, drift and startup cancellation
         id: predictor
-        run: node scripts/verify-predictor-lifecycle-v1.mjs
+        run: node scripts/verify-predictor-lifecycle-v2.mjs
       - name: Independently verify actual root retirement and fixed inputs
         if: always() && (steps.predictor.outcome == 'success' || steps.predictor.outcome == 'failure')
         run: |
@@ -41,10 +43,10 @@ jobs:
           import assert from 'node:assert/strict';
           import {readdir} from 'node:fs/promises';
           import {execFileSync} from 'node:child_process';
-          const root='work/predictor-owned-lifecycle-v1-20261024';
+          const root='work/predictor-owned-lifecycle-v2-20261024';
           const cases=(await readdir(root,{withFileTypes:true})).filter(item=>item.isDirectory()&&/^[a-f0-9]{12}$/.test(item.name));
           assert.equal(cases.length,1);
-          execFileSync(process.execPath,['scripts/verify-predictor-lifecycle-cleanup-v1.mjs',cases[0].name],{stdio:'inherit'});
+          execFileSync(process.execPath,['scripts/verify-predictor-lifecycle-cleanup-v2.mjs',cases[0].name],{stdio:'inherit'});
           JS
       - name: Confirm tracked source files were not changed
         if: always()
