@@ -1,10 +1,11 @@
 import {DatabaseSync} from 'node:sqlite';
+import {lstatSync,realpathSync} from 'node:fs';
 import {mkdir,realpath} from 'node:fs/promises';
 import {resolve,join,dirname} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {canonical} from '../server/imports.ts';
 import {privateDirectory,privateNewFile} from './backup-support.mjs';
-import {applicationHashV1 as hash,applicationNeedV1 as need,readApplicationFileV1,applicationManifestV1} from './runtime-application-config-v1.mjs';
+import {applicationHashV1 as hash,applicationNeedV1 as need,applicationManifestV1} from './runtime-application-config-v1.mjs';
 
 const events=new Set(['LAUNCH_INTENT','READY','STOP_INTENT','DRAINING','CLOSED','EXIT','GROUP_READY','GROUP_STOPPING','GROUP_CLOSED','FAILED']);
 /** Lifecycle facts are checked in addition to hashes; a valid hash cannot invent a normal stop. */
@@ -35,8 +36,13 @@ export async function createApplicationRegistryV1(directory,manifest,pins){
  const trust={format:'RUNTIME_APPLICATION_REGISTRY_TRUST_V1',storeFile,ownerId,headerHash};await privateNewFile(join(root,'trust.json'),canonical(trust));return trust;
 }
 async function open(trust,write){
- need(trust?.format==='RUNTIME_APPLICATION_REGISTRY_TRUST_V1','APPLICATION_REGISTRY_TRUST');await readApplicationFileV1(trust.storeFile);
- const db=new DatabaseSync(trust.storeFile,{readOnly:!write,allowExtension:false,timeout:3000});try{if(write)db.exec('PRAGMA synchronous=FULL;');return db;}catch(e){db.close();throw e;}
+ need(trust?.format==='RUNTIME_APPLICATION_REGISTRY_TRUST_V1','APPLICATION_REGISTRY_TRUST');
+ const path=resolve(trust.storeFile),normalize=p=>process.platform==='win32'?p.toLowerCase():p;
+ // WAL checkpoints legitimately change the database bytes and mtime. Bind its
+ // regular file identity; validate content under the SQLite snapshot and hash chain.
+ function identity(){const s=lstatSync(path,{bigint:true});need(s.isFile()&&!s.isSymbolicLink()&&s.nlink===1n&&s.size>0n&&s.size<=2n*1024n**2n&&normalize(realpathSync(path))===normalize(path),'APPLICATION_REGISTRY_FILE');return s;}
+ const before=identity(),assertIdentity=()=>{const current=identity();need(current.dev===before.dev&&current.ino===before.ino,'APPLICATION_REGISTRY_FILE_REPLACED');};
+ let db;try{db=new DatabaseSync(path,{readOnly:!write,allowExtension:false,timeout:3000});assertIdentity();if(write)db.exec('PRAGMA synchronous=FULL;');return{db,assertIdentity};}catch(e){db?.close();throw e;}
 }
 function inspect(db,trust){
  const meta=db.prepare('SELECT * FROM application_meta WHERE id=1').get();need(meta&&meta.body_hash===trust.headerHash&&hash(meta.body)===trust.headerHash,'APPLICATION_REGISTRY_HEADER');const header=JSON.parse(meta.body);need(canonical(header)===meta.body&&header.ownerId===trust.ownerId,'APPLICATION_REGISTRY_OWNER');
@@ -44,10 +50,10 @@ function inspect(db,trust){
  for(const[rowIndex,row]of rows.entries()){need(row.sequence===rowIndex+1&&row.previous_hash===previous&&hash(row.previous_hash+'\n'+row.body)===row.body_hash,'APPLICATION_REGISTRY_CHAIN');const value=JSON.parse(row.body);need(canonical(value)===row.body&&value.sequence===row.sequence&&value.ownerId===trust.ownerId&&events.has(value.event),'APPLICATION_REGISTRY_EVENT');previous=row.body_hash;values.push(value);}
  need(rows.length===meta.sequence&&previous===meta.tip,'APPLICATION_REGISTRY_TIP');const lifecycle=applicationRegistryLifecycleV1(header,values);return{header,events:values,sequence:rows.length,tip:previous,lifecycle};
 }
-export async function readApplicationRegistryV1(trust){const db=await open(trust,false);try{db.exec('BEGIN;');const value=inspect(db,trust);db.exec('COMMIT;');return value;}finally{db.close();}}
+export async function readApplicationRegistryV1(trust){const{db,assertIdentity}=await open(trust,false);try{db.exec('BEGIN;');const value=inspect(db,trust);assertIdentity();db.exec('COMMIT;');assertIdentity();return value;}finally{db.close();}}
 export async function appendApplicationRegistryV1(trust,event,details={}){
  const fields={LAUNCH_INTENT:['componentId','kind','configSha256'],READY:['componentId','pid','configSha256','kind','tenantIds','binding'],STOP_INTENT:['componentId','pid','requestId'],DRAINING:['componentId','pid','requestId'],CLOSED:['componentId','pid','requestId'],EXIT:['componentId','pid','code','signal'],GROUP_READY:[],GROUP_STOPPING:['requestId'],GROUP_CLOSED:[],FAILED:['errorCode']};
  need(events.has(event)&&details&&typeof details==='object'&&!Array.isArray(details),'APPLICATION_REGISTRY_EVENT');need(Object.keys(details).sort().join(',')===[...fields[event]].sort().join(','),'APPLICATION_REGISTRY_DETAILS');
  if('errorCode'in details)need(typeof details.errorCode==='string'&&/^[A-Z][A-Z0-9_]{3,120}$/.test(details.errorCode),'APPLICATION_REGISTRY_ERROR_CODE');
- const db=await open(trust,true);try{db.exec('BEGIN IMMEDIATE;');const current=inspect(db,trust),value={ownerId:trust.ownerId,sequence:current.sequence+1,event,at:Date.now(),...details},body=canonical(value);need(Buffer.byteLength(body)<=16384,'APPLICATION_REGISTRY_EVENT_SIZE');applicationRegistryLifecycleV1(current.header,[...current.events,value]);const digest=hash(current.tip+'\n'+body);db.prepare('INSERT INTO application_events VALUES(?,?,?,?)').run(value.sequence,body,digest,current.tip);db.prepare('UPDATE application_meta SET sequence=?,tip=? WHERE id=1').run(value.sequence,digest);db.exec('COMMIT;');return value;}catch(e){try{db.exec('ROLLBACK;');}catch{}throw e;}finally{db.close();}
+ const{db,assertIdentity}=await open(trust,true);try{db.exec('BEGIN IMMEDIATE;');const current=inspect(db,trust),value={ownerId:trust.ownerId,sequence:current.sequence+1,event,at:Date.now(),...details},body=canonical(value);need(Buffer.byteLength(body)<=16384,'APPLICATION_REGISTRY_EVENT_SIZE');applicationRegistryLifecycleV1(current.header,[...current.events,value]);const digest=hash(current.tip+'\n'+body);db.prepare('INSERT INTO application_events VALUES(?,?,?,?)').run(value.sequence,body,digest,current.tip);db.prepare('UPDATE application_meta SET sequence=?,tip=? WHERE id=1').run(value.sequence,digest);assertIdentity();db.exec('COMMIT;');assertIdentity();return value;}catch(e){try{db.exec('ROLLBACK;');}catch{}throw e;}finally{db.close();}
 }
