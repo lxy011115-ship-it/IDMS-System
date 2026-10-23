@@ -1,0 +1,68 @@
+name: Owned application lifecycle verification
+
+on:
+  push:
+    branches: [main, wip/predictive-creation-v4]
+    paths: ['scripts/**', 'tests/**', 'server/**', 'services/**', 'package*.json', '.github/workflows/application-lifecycle-verification.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'tests/**', 'server/**', 'services/**', 'package*.json', '.github/workflows/application-lifecycle-verification.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: application-lifecycle-v1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  application-suite:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify strict application manifests, registry lifecycle and early cancellation
+        run: node --test --test-concurrency=1 scripts/runtime-application-v1.test.mjs scripts/runtime-application-start-v2.test.mjs scripts/owned-fork-terminal-v1.test.mjs tests/platform-dependency-config-v1.test.mjs tests/application-lifecycle-v1.test.mjs tests/platform-dependency-controller-v1.test.mjs
+      - name: Verify concurrent read-only control access under WAL
+        run: node scripts/verify-runtime-cold-sqlite-readers-v1.mjs
+      - name: Fetch and authenticate Apache Maven 3.9.11
+        id: maven
+        run: python3 scripts/fetch-maven-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Fetch and authenticate Keycloak 26.8.1
+        id: identity
+        run: python3 scripts/fetch-keycloak-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Build an explicit source snapshot from public approved templates
+        id: source
+        run: node scripts/fixtures/create-controlled-cold-public-source-v1-qa.mjs "$RUNNER_TEMP/idms-controlled-source.json" "$GITHUB_OUTPUT"
+      - name: Verify actual early handles, full group stop and partial startup cancellation
+        id: application
+        env:
+          IDMS_MAVEN_HOME: ${{ steps.maven.outputs.directory }}
+          IDMS_KEYCLOAK_SOURCE: ${{ steps.identity.outputs.directory }}
+          IDMS_SOURCE_BUNDLE: ${{ steps.source.outputs.file }}
+          IDMS_SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
+        run: node scripts/verify-runtime-application-suite-v5.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256"
+      - name: Report bounded diagnostics and independently inspect owned cleanup
+        if: always() && (steps.application.outcome == 'success' || steps.application.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir,readFile,lstat} from 'node:fs/promises';
+          import {summarizeRuntimeColdBackgroundV1} from './scripts/report-runtime-cold-background-v1.mjs';
+          import {execFileSync} from 'node:child_process';
+          const entries=(await readdir('work/runtime-application-lifecycle-v1-20261023',{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
+          assert.equal(entries.length,1);
+          const file='work/runtime-application-lifecycle-v1-20261023/'+entries[0].name+'/verification.json',stat=await lstat(file);assert(stat.isFile()&&!stat.isSymbolicLink()&&stat.size<=2*1024*1024);console.log(JSON.stringify(summarizeRuntimeColdBackgroundV1(JSON.parse(await readFile(file,'utf8')))));
+          execFileSync(process.execPath,['scripts/verify-runtime-application-suite-cleanup-v5.mjs',entries[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source files were not changed
+        if: always()
+        run: git diff --exit-code --no-ext-diff
