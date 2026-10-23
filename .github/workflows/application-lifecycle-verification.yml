@@ -58,9 +58,9 @@ jobs:
           import {readdir,readFile,lstat} from 'node:fs/promises';
           import {summarizeRuntimeColdBackgroundV1} from './scripts/report-runtime-cold-background-v1.mjs';
           import {execFileSync} from 'node:child_process';
-          const entries=(await readdir('work/runtime-application-lifecycle-v1-20261023',{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
+          const entries=(await readdir('work/runtime-application-suite-v5-20261023',{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
           assert.equal(entries.length,1);
-          const file='work/runtime-application-lifecycle-v1-20261023/'+entries[0].name+'/verification.json',stat=await lstat(file);assert(stat.isFile()&&!stat.isSymbolicLink()&&stat.size<=2*1024*1024);console.log(JSON.stringify(summarizeRuntimeColdBackgroundV1(JSON.parse(await readFile(file,'utf8')))));
+          const file='work/runtime-application-suite-v5-20261023/'+entries[0].name+'/verification.json',stat=await lstat(file);assert(stat.isFile()&&!stat.isSymbolicLink()&&stat.size<=2*1024*1024);console.log(JSON.stringify(summarizeRuntimeColdBackgroundV1(JSON.parse(await readFile(file,'utf8')))));
           execFileSync(process.execPath,['scripts/verify-runtime-application-suite-cleanup-v5.mjs',entries[0].name],{stdio:'inherit'});
           JS
       - name: Confirm tracked source files were not changed
