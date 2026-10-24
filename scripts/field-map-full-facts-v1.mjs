@@ -1,0 +1,46 @@
+import {createHash,randomUUID} from 'node:crypto';
+import {open} from 'node:fs/promises';
+import {resolve,relative,isAbsolute} from 'node:path';
+import {privateNewFile} from './backup-support.mjs';
+import {fieldMapFrozenProfileV2,assertFieldMapFrozenProfileV2,frozenMapHashV1 as hash,frozenMapNeedV1 as need} from './field-map-frozen-profile-v2.mjs';
+import {stateRoot,stateBranch,stateEmptyHashes,validateStateNode,stateValueHash,parseStateValueText,stateReceiptHash,stateKey,verifyStateProof} from '../server/state-map-v1.ts';
+import {reconstructDomainPayload} from '../server/domain-entities-v4.ts';
+import {canonical} from '../server/imports.ts';
+const limits=Object.freeze({nodes:2000000,valuesBytes:1024**3,rows:4000000,rowBytes:64*1024**2,sqlBytes:32*1024**3,lookups:2000000,evidenceBytes:2*1024**3}),q=v=>'"'+v.replaceAll('"','""')+'"';
+const hx=v=>v===null?null:Buffer.from(v).toString('hex');
+const node=r=>({id:hx(r.id),kind:r.kind,depth:r.depth,prefix:hx(r.prefix),count:String(r.item_count),hash:hx(r.state_hash),left:hx(r.left_id),right:hx(r.right_id),valueHash:hx(r.value_hash)});
+const same=(a,b)=>canonical(a)===canonical(b);
+
+/** Complete current graph and SQL receipt chain, streamed evidence, then full domain/audit reconstruction. */
+export async function captureFieldMapFullFactsV1(client,raw,head,evidenceFile){
+ const p=fieldMapFrozenProfileV2(raw);need(client.getTransactionStatus?.()==='T','FIELD_FULL_FACTS_TRANSACTION');need(typeof evidenceFile==='string'&&isAbsolute(evidenceFile),'FIELD_FULL_FACTS_EVIDENCE_PATH');
+ for(const dir of [p.targetDirectory,p.inventory.identity.directory]){const rel=relative(resolve(dir),resolve(evidenceFile));need(rel!==''&&(rel==='..'||rel.startsWith('..\\')||rel.startsWith('../')||isAbsolute(rel)),'FIELD_FULL_FACTS_EVIDENCE_IN_PGDATA');}
+ await assertFieldMapFrozenProfileV2(client,p,true);const who=(await client.query('SELECT session_user::regrole::oid::text AS role,current_user::regrole::oid::text AS current')).rows[0];need(who.role===p.inventory.identity.control_oid&&who.current===who.role,'FIELD_FULL_FACTS_CONTROL');
+ await privateNewFile(evidenceFile,'');const out=await open(evidenceFile,'r+'),digest=createHash('sha256');let evidenceBytes=0,nodes=0,leaves=0,valueBytes=0,lookups=0,rowsTotal=0,sqlBytes=0,closed=false,problem;
+ async function emit(v,include=true){const line=canonical(v)+'\n',bytes=Buffer.from(line);evidenceBytes+=bytes.length;need(evidenceBytes<=limits.evidenceBytes,'FIELD_FULL_FACTS_LIMIT');if(include)digest.update(bytes);let offset=0;while(offset<bytes.length){const r=await out.write(bytes,offset,bytes.length-offset);need(r.bytesWritten>0,'FIELD_FULL_FACTS_WRITE');offset+=r.bytesWritten;}}
+ const headNow=async()=>{const r=(await client.query("SELECT revision::text,encode(root_id,'hex') AS \"rootId\",encode(root_hash,'hex') AS \"rootHash\",item_count::text AS count,encode(receipt_hash,'hex') AS \"receiptHash\" FROM state_map_v1.head")).rows;need(r.length===1&&same(r[0],head),'FIELD_FULL_FACTS_ROOT_CHANGED');};
+ async function load(id){const r=(await client.query('SELECT * FROM state_map_v1.nodes WHERE id=$1',[Buffer.from(id,'hex')])).rows;need(r.length===1,'FIELD_FULL_FACTS_NODE_MISSING');return validateStateNode(node(r[0]));}
+ async function walk(n,depth=0){
+  need(++nodes<=limits.nodes&&depth<=256,'FIELD_FULL_FACTS_LIMIT');validateStateNode(n);
+  if(n.kind===0){const values=(await client.query('SELECT value_text FROM state_map_v1.kv_values WHERE value_hash=$1',[Buffer.from(n.valueHash,'hex')])).rows;need(values.length===1&&stateValueHash(values[0].value_text)===n.valueHash,'FIELD_FULL_FACTS_VALUE_CHANGED');parseStateValueText(values[0].value_text);leaves++;valueBytes+=Buffer.byteLength(values[0].value_text);need(valueBytes<=limits.valuesBytes,'FIELD_FULL_FACTS_LIMIT');await emit({type:'NODE',node:n,valueText:values[0].value_text});}
+  else{const left=await load(n.left),right=await load(n.right);need(same(stateBranch(n.depth,left,right),n),'FIELD_FULL_FACTS_BRANCH_CHANGED');await walk(left,depth+1);await walk(right,depth+1);await emit({type:'NODE',node:n,valueText:null});}
+ }
+ async function cursor(sql,visit){const name='field_facts_'+randomUUID().replaceAll('-','');await client.query('DECLARE '+name+' NO SCROLL CURSOR FOR '+sql);let problem;try{for(;;){const batch=(await client.query('FETCH FORWARD 32 FROM '+name)).rows;if(!batch.length)break;for(const r of batch)await visit(r);}}catch(e){problem=e;throw e;}finally{if(!problem)await client.query('CLOSE '+name);}}
+ try{
+  await headNow();need((await client.query('SELECT count(*)::int AS n FROM state_map_v1._ctx')).rows[0].n===0,'FIELD_FULL_FACTS_PENDING_WRITE_CONTEXT');await emit({type:'HEADER',format:'FIELD_MAP_FULL_FACTS_EVIDENCE_V1',tenantId:p.tenantId,profileSha256:hash(p),head,limits});
+  if(head.rootId===null)need(head.count==='0'&&head.rootHash===stateEmptyHashes[0],'FIELD_FULL_FACTS_EMPTY_ROOT');else{const root=await load(head.rootId);need(same(stateRoot(root),{rootId:head.rootId,rootHash:head.rootHash,count:head.count}),'FIELD_FULL_FACTS_ROOT_CHANGED');await walk(root);}
+  need(BigInt(leaves)===BigInt(head.count),'FIELD_FULL_FACTS_LEAF_COVERAGE');
+  let receiptRows=0,previous={revision:'0',rootHash:stateEmptyHashes[0],receiptHash:'0'.repeat(64)};
+  await cursor('SELECT * FROM state_map_v1.receipts ORDER BY revision',async r=>{
+   need(++receiptRows<=limits.rows,'FIELD_FULL_FACTS_LIMIT');const value={tenantId:p.tenantId,commandId:r.command_id,requestHash:hx(r.request_hash),beforeRevision:String(r.before_revision),beforeRoot:hx(r.before_root),beforeReceiptHash:hx(r.before_receipt_hash),revision:String(r.revision),rootId:hx(r.root_id),rootHash:hx(r.root_hash),count:String(r.item_count),receiptHash:hx(r.receipt_hash),replayed:false};
+   need(value.beforeRevision===previous.revision&&value.beforeRoot===previous.rootHash&&value.beforeReceiptHash===previous.receiptHash&&BigInt(value.revision)===BigInt(previous.revision)+1n&&value.receiptHash===stateReceiptHash(value),'FIELD_FULL_FACTS_RECEIPT_CHAIN');previous=value;await emit({type:'RECEIPT',value});
+  });need(previous.revision===head.revision&&previous.rootHash===head.rootHash&&previous.receiptHash===head.receiptHash,'FIELD_FULL_FACTS_RECEIPT_TIP');
+  const relations=[];const tables=(await client.query("SELECT n.nspname AS schema,c.relname AS name FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname!~'^pg_' AND n.nspname<>'information_schema' AND c.relkind='r' ORDER BY n.nspname COLLATE \"C\",c.relname COLLATE \"C\"")).rows;
+  need(tables.length>0&&tables.length<=1024,'FIELD_FULL_FACTS_RELATIONS');
+  for(const table of tables){const h=createHash('sha256');let rows=0,bytes=0;await cursor('SELECT to_jsonb(t)::text AS record FROM '+q(table.schema)+'.'+q(table.name)+' t ORDER BY to_jsonb(t)::text COLLATE "C"',async r=>{need(typeof r.record==='string'&&Buffer.byteLength(r.record)<=limits.rowBytes&&++rowsTotal<=limits.rows,'FIELD_FULL_FACTS_LIMIT');rows++;const b=Buffer.from(r.record+'\n');bytes+=b.length;sqlBytes+=b.length;need(sqlBytes<=limits.sqlBytes,'FIELD_FULL_FACTS_LIMIT');h.update(b);});const fact={schema:table.schema,table:table.name,rows,bytes,sha256:h.digest('hex')};relations.push(fact);await emit({type:'RELATION',fact});}
+  const writer=p.inventory.roles.find(r=>r.oid===p.binding.roleOid)?.rolname;need(writer,'FIELD_FULL_FACTS_WRITER');
+  const get=async(namespace,key)=>{need(++lookups<=limits.lookups,'FIELD_FULL_FACTS_LIMIT');const keyHash=stateKey(p.tenantId,namespace,key);await client.query('SET LOCAL SESSION AUTHORIZATION '+q(writer));const result=await client.query('SELECT state_map_v1.read_proof_v1($1,$2,$3) AS value',[p.tenantId,Buffer.from(keyHash,'hex'),head.rootId===null?null:Buffer.from(head.rootId,'hex')]);await client.query('SET LOCAL SESSION AUTHORIZATION DEFAULT');const value=verifyStateProof(result.rows[0].value,head,keyHash);need(value.present,'FIELD_FULL_FACTS_DOMAIN_MISSING');return value.value;};
+  const payload=await reconstructDomainPayload(p.tenantId,get),payloadSha256=hash(payload),auditSha256=hash(payload.audits);await headNow();await assertFieldMapFrozenProfileV2(client,p,true);
+  const body={format:'FIELD_MAP_FULL_FACTS_V1',tenantId:p.tenantId,profileSha256:hash(p),head,nodes,leaves,valueBytes,lookups,receiptRows,relations,sqlBytes,payloadSha256,auditSha256,auditEvents:payload.audits.length,evidencePrefixSha256:digest.digest('hex'),entireCurrentRootVerified:true,allSqlReceiptsVerified:true,fullDomainPayloadReconstructed:true,currentOidcApprovalVerified:false,formalFieldActivationGranted:false};const facts={...body,factsSha256:hash(body)};await emit({type:'COMPLETE',facts},false);await out.sync();await out.close();closed=true;return {facts,payload,evidenceBytes};
+ }catch(e){problem=e;throw e;}finally{if(!closed)try{await out.close();}catch(e){if(problem)problem.evidenceCloseUnproven=true;else throw e;}}
+}
