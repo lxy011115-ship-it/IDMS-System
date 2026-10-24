@@ -1,0 +1,23 @@
+# 恢复协调器、原维护锁与原只读引擎组合
+
+完整目标保留。C34全原源事实和C35实际连接持有组件已经分别验证；本阶段使REVIEW_READY_V3下的当前根验证可在原只读引擎运行时执行。真实人审、正式登记、最终启用和整站交付不因本阶段通过而视为完成。
+
+## 选定方案
+
+新增有品牌的ColdOwnedReviewSession，直接读取原SOURCE_V3/TRUST_V3及READY durable intent，验证原credentials文件SHA、完整readerContract、恢复ID、原result和targetDirectory；由原credentials派生普通reader配置并与原生命周期复制配置匹配。不能仅信任调用方给出的配置或PID/角色集合。
+
+会话持有C35原reader capability及每个原map租户的FieldRecoveryAuthorityLock。两次原reader SQL探测与两次原锁assertHeld之间，bootstrap核实际systemIdentifier/目录/control OID、原完整数据库和角色及backend start、原独占advisory锁，再枚举全部其他SQL后台。只允许会话真正持有的原连接，拒绝任何外来SQL且不终止它。
+
+新prepare版本保留原无其他连接的prepare/status；新增inspectOwnedReader只允许原READY意图且不进行密码轮换或REVIEW激活。其每次完整source evidence、归档、七库SQL与完整根、原当前身份权威核验均保持；逐库ORIGINAL profile仍只在原bootstrap事务暂存并ROLLBACK，reader实际看到committed REVIEW。不能将目标新造状态当原source baseline。
+
+## 传输端口与实际服务器身份
+
+真实未知COMMIT夹具通过本地代理端口连接同一PG。JDBC传输端口与PG实际inet_server_port可不同。只允许会话从真实bootstrap连接核得原source systemIdentifier/targetDirectory/control OID后，将实际服务器端口绑定到原reader能力；配置仍逐字匹配原intent派生的传输端口。不得使用通配地址、忽略服务器身份或任意允许PID。
+
+## 生命周期
+
+工厂在SQL探测前返回原session handle，ACQUIRE/检查/关闭状态保留。任何半途失败只能清理自身原lease与原guard，不能取消外来连接。关闭以原事务实际ROLLBACK、原池归零、fresh bootstrap核原后台退役及原guard连接正常结束为证；原reader JVM仍由原生命周期正常停止。SQLite/独立authority锁与SQL原client也必须按原handle结束。
+
+## 验收
+
+以原完整R4真实源、加密全库备份、异目录真实还原、两租户完整Flowable、七数据库/所有原根/全部回执审计为主演练。保留此前26真实检查和18单元，不减少数据范围。新增原intent错配/伪造session/跨恢复编号拒绝、实际原guard+4 reader并存、完整原源/当前根验证、外来SQL拒绝存活、原证据或LO字节漂移拒绝、当前外部权威漂移拒绝、正常释放与原JVM关闭、各数据库业务摘要不变。固定控制面未知helper回复矩阵仍独立保留，不将普通重复请求冒称未知回复恢复。

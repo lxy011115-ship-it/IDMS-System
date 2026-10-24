@@ -1,0 +1,361 @@
+{
+  "format": "COLD_SOURCE_FULL_FACTS_LINUX_CANCELLED_TERMINAL_V1",
+  "at": "2026-10-24T17:46:36.397706+00:00",
+  "head": "e3d2d7dbf0860c06cc209300a1a6419d78a2bad6",
+  "run": 40110281903,
+  "job": 120920381804,
+  "runConclusion": "cancelled",
+  "jobConclusion": "cancelled",
+  "jobStartedAt": "2026-10-24T16:10:00Z",
+  "jobCompletedAt": "2026-10-24T17:40:16Z",
+  "unitSummary": {
+    "tests": 18,
+    "pass": 18,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "nativeStarts": [
+    {
+      "nonce": "60af50ca11d0",
+      "sourcePins": 1377,
+      "expectedChecks": 26
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "60af50ca11d0",
+      "check": 1,
+      "name": "independent own business/identity PG clusters and real current signed Keycloak authority"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 2,
+      "name": "full R4 factory with all real tenant/auth/queue/workflow schemas bootstrapped under provisional SQL guards"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 3,
+      "name": "original full R4 provisional installation registers fresh SELECT-only readers and authenticates actual own-database HBA restrictions before sealing"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 4,
+      "name": "actual complete business-cluster DB inventory matches sealed manifest; catalogs/ordinary-table coverage and minimal runtime roles verified, workflow restarted"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 5,
+      "name": "300 additional owned QA namespace entries extend the real map; the recovery graph must cover them without filtering"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 6,
+      "name": "actual authority site HTTP READY and shared auth session four-module context200; real reconciliation empty claim under sealed guards"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 7,
+      "name": "ordinary current predictive worker analysis and independent approval commit through sealed queues/StateMap and actual Flowable APP without table ownership or CREATE"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 8,
+      "name": "actual R4 HTTP ingress OPEN and reconciliation worker commit over real canceled native task after sealing"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 9,
+      "name": "persistent multi-DB DRAINING intent survives actual controller process exit77 after first SQL close; other DBs remain OPEN and conflicting operations refused"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 10,
+      "name": "fresh controller process resumes same per-DB operation IDs, closes all registered DBs, and repeated close returns identical receipt without revision advance"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 11,
+      "name": "both tenant unchanged SDK writes, shared-auth APP and both transferred Flowable APPs denied by CLOSED; retired legacy APP DML/LO denied by permanent privileges; SDK reads available"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 12,
+      "name": "actual original installer captures both readers within the full R4 source; all business and reader roles registered, real lease/JWT deadlines retained and legacy admission rejects V2"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 13,
+      "name": "full registered inventory freezes every role and database including readers; source normally stops and complete encrypted PGDATA archive authenticates on repeat"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 14,
+      "name": "actual distinct physical target starts with all old reader passwords and ordinary business logins still disabled while the full source remains offline"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 15,
+      "name": "a real unrelated SQL session refuses initial preparation without creating an intent or terminating the foreign session"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 16,
+      "name": "target HBA bytes and current independent Keycloak realm drift both reject before a durable intent or SQL grants"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 17,
+      "name": "original source evidence tampering and actual restored large-object byte changes reject before reader activation; restoring original evidence and bytes retains the same durable intent"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 18,
+      "name": "actual SQL connection loss before COMMIT leaves the complete strict profile and original durable preparation intent for the same recovery ID"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 19,
+      "name": "actual PostgreSQL COMMIT succeeds while its reply is withheld; fresh SQL proves original backend retirement and exact rotated verifiers before completing the same intent"
+    },
+    {
+      "nonce": "60af50ca11d0",
+      "check": 20,
+      "name": "both original source passwords now fail actual authentication; new reader passwords remain SELECT-only even after disabling default read-only, and business logins stay disabled"
+    }
+  ],
+  "nativeFinals": [],
+  "stageEvents": [
+    {
+      "stage": "BUSINESS_CLUSTER_CREATE",
+      "phase": "STARTED",
+      "elapsedMs": 0
+    },
+    {
+      "stage": "BUSINESS_CLUSTER_CREATE",
+      "phase": "SUCCEEDED",
+      "elapsedMs": 1341
+    },
+    {
+      "stage": "IDENTITY_CLUSTER_CREATE",
+      "phase": "STARTED",
+      "elapsedMs": 0
+    },
+    {
+      "stage": "IDENTITY_CLUSTER_CREATE",
+      "phase": "SUCCEEDED",
+      "elapsedMs": 703
+    },
+    {
+      "stage": "WORKFLOW_BUILD",
+      "phase": "STARTED",
+      "elapsedMs": 0
+    },
+    {
+      "stage": "WORKFLOW_BUILD",
+      "phase": "WAITING",
+      "elapsedMs": 10001
+    },
+    {
+      "stage": "WORKFLOW_BUILD",
+      "phase": "WAITING",
+      "elapsedMs": 20002
+    },
+    {
+      "stage": "WORKFLOW_BUILD",
+      "phase": "SUCCEEDED",
+      "elapsedMs": 22740
+    },
+    {
+      "stage": "IDENTITY_CREATE",
+      "phase": "STARTED",
+      "elapsedMs": 0
+    },
+    {
+      "stage": "IDENTITY_CREATE",
+      "phase": "WAITING",
+      "elapsedMs": 10000
+    },
+    {
+      "stage": "IDENTITY_CREATE",
+      "phase": "WAITING",
+      "elapsedMs": 20001
+    },
+    {
+      "stage": "IDENTITY_CREATE",
+      "phase": "WAITING",
+      "elapsedMs": 30001
+    },
+    {
+      "stage": "IDENTITY_CREATE",
+      "phase": "WAITING",
+      "elapsedMs": 40000
+    },
+    {
+      "stage": "IDENTITY_CREATE",
+      "phase": "SUCCEEDED",
+      "elapsedMs": 42770
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "STARTED",
+      "elapsedMs": 0
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 10204
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 20865
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 31341
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 42385
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 52386
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 63582
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 74548
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 84741
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 95844
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 107998
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 117998
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 127998
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 138002
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 148003
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 158030
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 168030
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 178030
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 188031
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 198385
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 208385
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 219831
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 229835
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 239836
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 249836
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 259836
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "WAITING",
+      "elapsedMs": 269836
+    },
+    {
+      "stage": "SITE_FACTORY",
+      "phase": "SUCCEEDED",
+      "elapsedMs": 273889
+    },
+    {
+      "stage": "SITE_SEAL",
+      "phase": "STARTED",
+      "elapsedMs": 0
+    },
+    {
+      "stage": "SITE_SEAL",
+      "phase": "SUCCEEDED",
+      "elapsedMs": 6304
+    }
+  ],
+  "safeFailures": [],
+  "publicFailureMarkers": [],
+  "maximumExecutionTimeMessageObserved": false,
+  "operationCancelledMessageObserved": true,
+  "logsSha256": "104bff66cd4ed26c8bb81e5f546b7c56cd50d706e0531600b427fafb6ac68db5",
+  "rawLogsOrCredentialsSaved": false,
+  "nativeActualZeroExitProven": false,
+  "independentCleanupProven": false,
+  "normalAllResourceRetirementProven": false,
+  "c34LinuxSuccessProven": false,
+  "fullGoalComplete": false
+}
