@@ -1,0 +1,57 @@
+{
+  "format": "WORKFLOW_RECOVERY_READER_WINDOWS_V1",
+  "at": "2026-10-24T12:38:52.552Z",
+  "nonce": "1896e45414e4",
+  "actualExitCode": 0,
+  "nativeChecks": 6,
+  "sourcePins": 1196,
+  "oldManagedSourcesUnchanged": 1076,
+  "originalNativeHandleExitObserved": true,
+  "originalSupervisorHandleExitCode": 0,
+  "outputsClosed": true,
+  "cleanupErrorCount": 0,
+  "windowsRestrictedLaunchVerified": true,
+  "independentActualExitCode": 0,
+  "independentTerminalChunk": "2d31e2",
+  "independentVerifierSha256": "00da3c463ef09f4b94be39ac762423e8f0398d7506774e0d8488e991c612412e",
+  "independentSummary": {
+    "format": "WORKFLOW_RECOVERY_READER_PORTABLE_INDEPENDENT_V1",
+    "nonce": "1896e45414e4",
+    "sourcePinsVerified": 1196,
+    "nativeChecks": 6,
+    "originalManagedSourcesVerified": 1076,
+    "readerInputsVerified": 5,
+    "originalDriverAndLifecycleSourceVerified": true,
+    "completeUserTableAndSequenceFingerprintEqualityRechecked": true,
+    "rawSqlRowsIndependentlyRecomputedOffline": false,
+    "tenants": [
+      {
+        "tenant": "acme",
+        "tables": 41,
+        "sequences": 2
+      },
+      {
+        "tenant": "sandbox",
+        "tables": 41,
+        "sequences": 2
+      }
+    ],
+    "ownedJvmNormalStops": 3,
+    "expectedPoolClosures": 10,
+    "originalNormalStopReceiptsVerified": true,
+    "actualPostgresDirectoryCleanOffline": true,
+    "sourceReaderCaptureContractImplemented": false,
+    "recoveryReviewIntegrationComplete": false,
+    "currentOidcReviewerVerified": false,
+    "formalFieldActivationGranted": false,
+    "fullGoalComplete": false
+  },
+  "sourceReaderCaptureContractImplemented": false,
+  "ownedReaderPeerCapabilityIntegrated": false,
+  "recoveryReviewIntegrationComplete": false,
+  "currentOidcReviewerVerified": false,
+  "reviewApproved": false,
+  "formalFieldActivationGranted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false
+}
