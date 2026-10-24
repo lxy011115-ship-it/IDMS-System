@@ -1,0 +1,15 @@
+# 现场宿主的当前身份与恢复准入
+
+延续现场当前映射和平台依赖计划。真实现场网关已通过双平台测试；当前QA guard必须换成实际IdentityAuthorityGuardV1/RuntimeColdGuardV1，之后再进入统一配置、descriptor、controller和同数据集页面/预测消费。此规格不缩小完整接入范围。
+
+新宿主加载器固定配置、身份runtime、cold trust与恢复口令文件，直接实例化现有真实检查类，不允许传入默认许可或任意替代guard。首次加载及每次READ/WRITE/PRECOMMIT/POSTCOMMIT均验证ADMITTED、当前维护回执/外部身份头和相同准入指纹。口令必须来自该次准入的credentialHash/controlId和已登记role，账户/数据库/OID必须在恢复清单的active与inventory内。
+
+宿主管理配置显式提供已有登记控制账户，仅用于只读物理身份、目录及围栏检查，不新增SQL权限，不向边缘配置发送。实际连接必须匹配当前恢复目标目录、系统标识、control OID、数据库OID；围栏必须OPEN、finalized且部署/catalog/DDL epoch/authority/恢复operation吻合。另使用企业真实账户连接并验证session角色OID与state_map目录摘要。只读探测不得更新口令、目录或重新基线。
+
+检查采用实际受管连接，有限并发和超时，关闭拒绝新调用并等待已有调用/连接退役后清理配置内秘密。取消在每个远程检查之间及返回前再检查。公开状态仅给资源计数，不泄露凭据。加载失败也正常排空。
+
+原生验证在新隔离集群中执行实际Keycloak、维护封闭、物理冷备/恢复、口令轮换和ADMITTED；在该恢复目标上调用宿主及FieldMapTransactionsV2。检查当前身份/维护控制/准入或口令漂移拒绝、实际围栏关闭拒绝READ与提交、取消和关闭排空。源输入使用公开批准模板，旧PG45432不接触。保留原coreV20 SQLSTATE未知，不把本次绿色当作旧根因修复。
+
+统一SITE机器HTTP挂载、严格enabled配置/现场槽位及broker/edge实际句柄登记、逆序停止与同request重试、历史点消费和旧现场数据迁移仍是完整目标的必要步骤；宿主内核成功不代替这些验收。最终图文/视频与未备案部署准备保持。
+
+实际组合发现站点HTTP账户刻意只读，不能直接作为现场写入身份。宿主须验证apply_delta_v1的实际EXECUTE权限；QA应明确拒绝该只读账户，并使用同一恢复清单中已有、已轮换口令的写入账户。与站点比较同企业/数据库OID/catalog，不把HTTP与写入角色误当同一角色；不新增授权。

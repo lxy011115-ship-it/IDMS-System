@@ -1,0 +1,135 @@
+{
+  "at": "2026-10-24T02:22:31.876076+00:00",
+  "head": "7a378aff715c6c87fb779de619abc069e471ca25",
+  "run": 40053796887,
+  "job": 120752130533,
+  "conclusion": "success",
+  "unitSummary": {
+    "tests": 8,
+    "pass": 8,
+    "fail": 0,
+    "skipped": 0
+  },
+  "nativeStarts": [
+    {
+      "nonce": "fb6536db4583",
+      "sourcePins": 1118,
+      "expectedChecks": 12
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "fb6536db4583",
+      "check": 1,
+      "name": "fresh current state map V4, console queue V4 and finalized SQL write fence share one database"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 2,
+      "name": "current-map platform uses actual HTTP mTLS MQTT materials and the receiving lock on its write connection"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 3,
+      "name": "a second real platform instance cannot acquire the same current-database receiving ownership"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 4,
+      "name": "actual read-only OPC UA events commit in the current map and signed MQTT ACKs clear the real edge queue"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 5,
+      "name": "actual SQL fence closure also denies a no-operation replay before any signed business ACK"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 6,
+      "name": "changed recovery control bytes withdraw current admission even for a previously committed event"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 7,
+      "name": "stop during a held actual OPC UA read leaves current-map points and spool sequence unchanged"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 8,
+      "name": "lost business ACK after current-map COMMIT retains the exact signed pending events through normal edge stop"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 9,
+      "name": "real MQTT replay reuses the original current-map audit receipt and does not duplicate a point"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 10,
+      "name": "HTTP MQTT and platform drain wait for the held owner transaction to roll back and retain the edge queue"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 11,
+      "name": "standby can acquire only after the original owner drains and all actual owner sockets release their locks"
+    },
+    {
+      "nonce": "fb6536db4583",
+      "check": 12,
+      "name": "all owned edge broker HTTP OPC UA MQTT SQL and PostgreSQL resources retire normally"
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "fb6536db4583",
+      "passed": true,
+      "checks": 12,
+      "cleanupComplete": true,
+      "cleanupErrorCount": 0,
+      "failure": null,
+      "realOpcuaReadExecuted": true,
+      "realMtlsMqttExecuted": true,
+      "platformIdentityAuthorityExecuted": false,
+      "allProductionDependenciesRegistered": false
+    }
+  ],
+  "independentCleanup": [
+    {
+      "nonce": "fb6536db4583",
+      "readOnly": true,
+      "nativeChecks": 12,
+      "sourcePinsVerified": 1118,
+      "currentRootMembershipProofsVerified": 41,
+      "storedPointsVerified": 4,
+      "businessAckSignaturesVerified": 5,
+      "ownedEdgeRootsVerified": 5,
+      "actualOwnerSocketsRetired": true,
+      "closedFenceNoopReplayDenied": true,
+      "currentRecoveryFileReplayDenied": true,
+      "brokerNormalStopVerified": true,
+      "postgresCleanOffline": true,
+      "retainedPendingEventsVerified": 2,
+      "retainedSequence": 6,
+      "spoolStateMacVerified": true,
+      "pendingEventSignaturesVerified": true,
+      "realOpcuaReadExecuted": true,
+      "realMtlsMqttExecuted": true,
+      "declaredWitnessModel": false,
+      "platformIdentityAuthorityExecuted": false,
+      "allProductionDependenciesRegistered": false,
+      "fullGoalComplete": false
+    }
+  ],
+  "typecheckSuccess": true,
+  "frozenSourceProfilesAuthenticated": true,
+  "trackedSourceUnchanged": true,
+  "failedSteps": [],
+  "rawLogsOrCredentialsSaved": false,
+  "externalGuardIsQaModel": true,
+  "recoveryControlIsQaModel": true,
+  "registeredPlatformControllerGateVerified": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false,
+  "format": "IDMS_FIELD_MAP_GATEWAY_LINUX_PUBLIC_V1",
+  "rawCredentialsOrPrivatePathsIncluded": false
+}
