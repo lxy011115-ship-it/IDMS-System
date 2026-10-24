@@ -1,0 +1,30 @@
+import {canonical} from '../server/imports.ts';
+import {sourceFreezeSha} from './field-source-freeze-policy.mjs';
+import {recoveryExternalConfig,externalJson,externalRequire as need,externalObject as object,externalUuid} from './field-recovery-external-config.mjs';
+export const recoveryWorkflowBpmnSha256='847ed336a71628dd4b1ff67ad0a670935ee0bc86d0343b9f69dad3beeb93ccc3';
+const bounded=(v,n=256)=>typeof v==='string'&&v.length>0&&v.length<=n&&!/[\u0000-\u001f\u007f]/.test(v),hash=v=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
+export function validateCurrentRecoveryWorkflowSnapshotV1(binding,orders,snapshot){
+ object(binding,['tenantId','authorityId','definitionSha256']);const c={tenantId:binding.tenantId},w=binding;
+ need(w.definitionSha256===recoveryWorkflowBpmnSha256,'FIELD_RECOVERY_WORKFLOW_DEFINITION_MISMATCH');
+ need(Array.isArray(orders)&&orders.length<=512&&snapshot&&Buffer.byteLength(canonical(snapshot))<=3*1024**2,'FIELD_RECOVERY_WORKFLOW_LIMIT');
+ object(snapshot,['format','tenantId','authorityId','engine','version','readOnly','isolation','latestDefinitionId','definitions','activeProcessIds','cases','commandCount','commandBytes','commandSha256']);
+ need(snapshot.format==='idms-workflow-recovery-state-v1'&&snapshot.tenantId===c.tenantId&&snapshot.authorityId===w.authorityId&&snapshot.engine==='Flowable'&&snapshot.version==='7.2.0'&&snapshot.readOnly===true&&snapshot.isolation==='repeatable read','FIELD_RECOVERY_WORKFLOW_BINDING_MISMATCH');
+ need(Number.isSafeInteger(snapshot.commandCount)&&snapshot.commandCount>=0&&snapshot.commandCount<=8192&&Number.isSafeInteger(snapshot.commandBytes)&&snapshot.commandBytes>=0&&snapshot.commandBytes<=16*1024**2&&hash(snapshot.commandSha256)&&snapshot.definitions&&Object.getPrototypeOf(snapshot.definitions)===Object.prototype&&Object.keys(snapshot.definitions).length<=513,'FIELD_RECOVERY_WORKFLOW_INVALID');
+ need(bounded(snapshot.latestDefinitionId)&&Object.hasOwn(snapshot.definitions,snapshot.latestDefinitionId),'FIELD_RECOVERY_WORKFLOW_DEFINITION_MISMATCH');for(const [id,d]of Object.entries(snapshot.definitions)){object(d,['id','key','version','tenantId','bpmnSha256']);need(d.id===id&&d.key==='idmsMaintenanceV1'&&d.version===1&&d.tenantId===c.tenantId&&d.bpmnSha256===w.definitionSha256,'FIELD_RECOVERY_WORKFLOW_DEFINITION_MISMATCH');}
+ need(Array.isArray(snapshot.cases)&&snapshot.cases.length<=512&&Array.isArray(snapshot.activeProcessIds)&&snapshot.activeProcessIds.length<=512&&snapshot.activeProcessIds.every(v=>bounded(v))&&new Set(snapshot.activeProcessIds).size===snapshot.activeProcessIds.length,'FIELD_RECOVERY_WORKFLOW_INVALID');
+ const local=orders.filter(o=>o.workflow!==undefined);need(new Set(orders.map(o=>o.id)).size===orders.length&&orders.every(o=>o.tenantId===c.tenantId)&&local.length===snapshot.cases.length,'FIELD_RECOVERY_WORKFLOW_INVENTORY_MISMATCH');const seen=new Set(),processes=new Set(),active=[];
+ for(const row of snapshot.cases){object(row,['entityId','state','version','processInstanceId','definitionId','ended','tasks','history','assignee','evidenceDigest','submittedBy','lastCommandId','variables']);need(externalUuid(row.entityId)&&!seen.has(row.entityId)&&bounded(row.processInstanceId)&&!processes.has(row.processInstanceId)&&externalUuid(row.lastCommandId)&&Object.hasOwn(snapshot.definitions,row.definitionId)&&Number.isSafeInteger(row.version)&&row.version>=1&&typeof row.ended==='boolean'&&Array.isArray(row.tasks)&&row.tasks.length<=1&&Array.isArray(row.history)&&row.history.length<=16384,'FIELD_RECOVERY_WORKFLOW_INVALID');seen.add(row.entityId);processes.add(row.processInstanceId);const order=local.find(o=>o.id===row.entityId),f=order?.workflow;
+  need(f?.engine==='Flowable'&&f.status==='SYNCED'&&f.commandId===row.lastCommandId&&f.processInstanceId===row.processInstanceId&&f.definitionId===row.definitionId&&order.version===row.version&&order.state===row.state&&(order.assignee||'')===row.assignee&&(order.resolution?.digest??null)===row.evidenceDigest&&(order.resolution?.submittedBy??null)===row.submittedBy,'FIELD_RECOVERY_WORKFLOW_ORDER_MISMATCH');
+  need(row.ended===(order.state==='CLOSED')&&(row.ended?row.tasks.length===0:row.tasks.length===1),'FIELD_RECOVERY_WORKFLOW_TASK_MISMATCH');if(!row.ended){active.push(row.processInstanceId);const task=row.tasks[0];object(task,['id','key','name','assignee']);need(bounded(task.id)&&task.key===f.taskKey&&typeof task.name==='string'&&task.name.length<=256&&typeof task.assignee==='string'&&task.assignee.length<=256,'FIELD_RECOVERY_WORKFLOW_TASK_MISMATCH');}
+  object(row.variables,['assigned','assignee','approved']);need(typeof row.variables.assigned==='boolean'&&row.variables.assignee===row.assignee&&row.variables.approved===row.ended&&row.variables.assigned===!row.history.some(h=>h.key==='claim'),'FIELD_RECOVERY_WORKFLOW_VARIABLE_MISMATCH');const taskIds=new Set();for(const h of row.history){object(h,['id','key','assignee','startedAt','endedAt']);need(bounded(h.id)&&!taskIds.has(h.id)&&bounded(h.key)&&typeof h.assignee==='string'&&h.assignee.length<=256&&bounded(h.startedAt)&&typeof h.endedAt==='string'&&h.endedAt.length<=256,'FIELD_RECOVERY_WORKFLOW_HISTORY_INVALID');taskIds.add(h.id);}
+ }
+ need(canonical(active.sort())===canonical([...snapshot.activeProcessIds].sort()),'FIELD_RECOVERY_WORKFLOW_INVENTORY_MISMATCH');return {snapshot,sha256:sourceFreezeSha(snapshot)};
+}
+
+export async function readCurrentRecoveryWorkflow(configuration,orders,{signal}={}){
+ const c=recoveryExternalConfig(configuration),w=c.workflow;
+ need(w.definitionSha256===recoveryWorkflowBpmnSha256,'FIELD_RECOVERY_WORKFLOW_DEFINITION_MISMATCH');
+ need(Array.isArray(orders)&&orders.length<=512,'FIELD_RECOVERY_WORKFLOW_LIMIT');
+ const snapshot=await externalJson(w.baseUrl+'/v1/recovery-state',{headers:{Authorization:'Bearer '+w.recoveryReadToken,'X-IDMS-Tenant':c.tenantId},signal,max:3*1024**2});
+ return validateCurrentRecoveryWorkflowSnapshotV1({tenantId:c.tenantId,authorityId:w.authorityId,definitionSha256:w.definitionSha256},orders,snapshot);
+}
