@@ -1,0 +1,22 @@
+{
+  "format": "IDMS_FIELD_OWNED_LIFECYCLE_PUBLIC_V1",
+  "platform": "linux",
+  "head": "4105015e6624b760368e6cb774ea2ff098a68672",
+  "run": 40042071828,
+  "job": 120715227679,
+  "conclusion": "success",
+  "unitSummary": {
+    "tests": 11,
+    "pass": 11,
+    "fail": 0,
+    "skipped": 0
+  },
+  "actualOwnedChildCasesCoveredByPassingAssertions": 5,
+  "typecheckSuccess": true,
+  "frozenSourceProfilesAuthenticated": true,
+  "trackedSourceUnchanged": true,
+  "realOpcuaOrMqttOrSqlIntakeExecuted": false,
+  "businessAckPositiveCaseExecuted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false
+}
