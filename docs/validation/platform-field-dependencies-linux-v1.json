@@ -1,0 +1,76 @@
+{
+  "head": "a3e505308b3179750d355f00eb3a4788bcdbe2b7",
+  "run": 40083723899,
+  "job": 120842297470,
+  "conclusion": "success",
+  "unitSummary": {
+    "tests": 34,
+    "pass": 34,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "nativeStarts": [
+    {
+      "nonce": "fa31a69b621c",
+      "sourcePins": 1229,
+      "expectedChecks": 31
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "fa31a69b621c",
+      "passed": true,
+      "checks": 31,
+      "cleanupErrorCount": 0
+    }
+  ],
+  "independentCleanup": [
+    {
+      "nonce": "fa31a69b621c",
+      "nativeChecks": 31,
+      "sourcePinsVerified": 1229,
+      "legacyStoredPoints": 6,
+      "managerAnchorStoredPoints": 9,
+      "threePostgresDirectoriesCleanOffline": true,
+      "workflowNormalStops": 6,
+      "windowsRestrictedLaunchVerified": null,
+      "controllerGenerations": 2,
+      "actualDeclaredResourcesPerGeneration": 8,
+      "actualApplicationChildrenPerGeneration": 9,
+      "controllerReverseRetirementsVerified": true,
+      "sameRequestBlockedRetryVerified": true,
+      "startupCancellationVerified": true,
+      "unrelatedBrokerIsolationVerified": true,
+      "currentRootProofs": 89,
+      "currentStoredPoints": 12,
+      "currentPointAckCoverage": 12,
+      "verifiedAckSignatureOccurrences": 13,
+      "finalRetainedAckRows": 3,
+      "finalSpoolStateMacVerified": true,
+      "siteHostRetirements": [
+        220,
+        24
+      ],
+      "siteOwnerRetirements": [
+        1,
+        1
+      ],
+      "formalFieldActivationGranted": false,
+      "allProductionDependenciesRegistered": false,
+      "fullGoalComplete": false
+    }
+  ],
+  "typecheckSuccess": true,
+  "frozenSourceProfilesAuthenticated": true,
+  "trackedSourceUnchanged": true,
+  "independentVerifierVersion": 4,
+  "formalFieldActivationGranted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false,
+  "format": "IDMS_PLATFORM_FIELD_LINUX_VALIDATION_V1",
+  "evidenceSource": "GitHub Actions exact job terminal output; whitelisted fields only",
+  "runUrl": "https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/40083723899",
+  "actualExitCode": 0,
+  "rawLogsOrCredentialsSaved": false
+}
