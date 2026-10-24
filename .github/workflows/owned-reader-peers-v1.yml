@@ -1,0 +1,52 @@
+name: Original owned read-only workflow SQL peers
+
+on:
+  push:
+    branches: [wip/owned-reader-peers-20261025]
+    paths: ['scripts/**', 'services/workflow-review-reader-v3/**', 'docs/validation/**', '.github/workflows/owned-reader-peers-v1.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owned-reader-peers-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  read-only-engine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Authenticate existing source profiles
+        run: node scripts/verify-ci-source-policy-v2.mjs
+      - name: Fetch and authenticate Apache Maven 3.9.11
+        id: maven
+        run: python3 scripts/fetch-maven-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Verify original owned pool leases, partial failure and normal context close
+        id: native
+        env:
+          IDMS_MAVEN_HOME: ${{ steps.maven.outputs.directory }}
+        run: node scripts/verify-owned-reader-peers-v4.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME"
+      - name: Independently verify exact source, SQL fingerprints and normal retirement
+        if: always() && (steps.native.outcome == 'success' || steps.native.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const cases=(await readdir('work/owned-reader-peers-native-v4-20261025',{withFileTypes:true})).filter(x=>x.isDirectory()&&/^[a-f0-9]{12}$/.test(x.name));
+          assert.equal(cases.length,1);
+          execFileSync(process.execPath,['scripts/verify-owned-reader-peers-cleanup-v6.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source unchanged
+        if: always()
+        run: git diff --exit-code --no-ext-diff
