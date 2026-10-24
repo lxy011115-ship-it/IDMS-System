@@ -1,0 +1,131 @@
+{
+  "format": "IDMS_FIELD_MAP_LEASE_PUBLIC_V1",
+  "platform": "linux",
+  "head": "ff20abbe5eb1c438fcea17784dbaa4340ae2e1d9",
+  "run": 40048656530,
+  "job": 120736093568,
+  "conclusion": "success",
+  "unitSummary": {
+    "tests": 8,
+    "pass": 8,
+    "fail": 0,
+    "skipped": 0
+  },
+  "nativeStarts": [
+    {
+      "nonce": "2b9c0585ea85",
+      "sourcePins": 1065,
+      "expectedChecks": 13
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 1,
+      "name": "fresh current state map V4, console queue V4 and finalized SQL write fence share one database"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 2,
+      "name": "bounded field admission is read from the current verified state root and matches the original rules"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 3,
+      "name": "runtime registry observation and audit commit together and repeated configuration leaves the root unchanged"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 4,
+      "name": "lease signature follows committed current-map issuance and its read-only check matches the original rules"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 5,
+      "name": "exact authenticated lease replay retains the original expiry while a changed request is rejected"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 6,
+      "name": "concurrent real SQL issuance serializes through CAS and preserves both distinct audit positions"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 7,
+      "name": "cancellation after actual SQL delta and before COMMIT rolls back issuance and returns no signature"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 8,
+      "name": "injected current-authority withdrawal before COMMIT rolls back the actual SQL transaction"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 9,
+      "name": "lost response after real COMMIT resolves the original SQL receipt and never duplicates issuance"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 10,
+      "name": "registry replacement withdraws stale instances and restoring the same profile does not revive an old revision"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 11,
+      "name": "closed actual SQL write fence prevents current-map lease writes without changing its catalog or root"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 12,
+      "name": "V6 queue publication preserves committed runtime history and pauses leases on the matching current root"
+    },
+    {
+      "nonce": "2b9c0585ea85",
+      "check": 13,
+      "name": "all issuers clear their keys and drain owned SQL while PostgreSQL retires cleanly offline"
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "2b9c0585ea85",
+      "passed": true,
+      "checks": 13,
+      "cleanupComplete": true,
+      "cleanupErrorCount": 0,
+      "failure": null,
+      "originalDatabaseContacted": null,
+      "allProductionDependenciesRegistered": false
+    }
+  ],
+  "independentCleanup": [
+    {
+      "nonce": "2b9c0585ea85",
+      "readOnly": true,
+      "nativeChecks": 13,
+      "sourcePinsVerified": 1065,
+      "currentRootMembershipProofsVerified": 18,
+      "persistedIssuanceAuditsVerified": 6,
+      "originalCurrentCheckCompared": true,
+      "leaseAndCheckSignaturesVerified": true,
+      "rolledBackIssuancesAbsent": true,
+      "corruptedMembershipProofRejected": true,
+      "issuerKeysCleared": true,
+      "postgresCleanOffline": true,
+      "postgresNeverRestarted": true,
+      "offlineSqlRowsRequeried": false,
+      "currentMapIssuerExecuted": true,
+      "platformIdentityAuthorityExecuted": false,
+      "fieldMqttDataPathExecuted": false,
+      "allProductionDependenciesRegistered": false,
+      "fullGoalComplete": false
+    }
+  ],
+  "typecheckSuccess": true,
+  "frozenSourceProfilesAuthenticated": true,
+  "trackedSourceUnchanged": true,
+  "failedSteps": [],
+  "rawLogsOrCredentialsSaved": false,
+  "registeredPlatformControllerGateVerified": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false
+}

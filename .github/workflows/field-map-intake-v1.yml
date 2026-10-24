@@ -1,0 +1,55 @@
+name: Field intake current state transactions
+
+on:
+  push:
+    branches: [wip/field-map-intake-20261024]
+    paths: ['scripts/**', 'tests/**', 'server/**', 'integrations/**', 'package*.json', 'docs/validation/field-map-intake-parent-v1.json', '.github/workflows/field-map-intake-v1.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'tests/**', 'server/field-map-*.ts', 'docs/validation/field-map-intake-parent-v1.json', '.github/workflows/field-map-intake-v1.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: field-map-intake-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  field-map-intake:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Authenticate frozen source profiles
+        run: node scripts/verify-ci-source-policy-v2.mjs
+      - name: Typecheck current map intake backend
+        run: node node_modules/typescript/bin/tsc -p server/tsconfig.json --noEmit --allowImportingTsExtensions
+      - name: Verify original intake and bounded point queries
+        run: node --test tests/field-map-intake-v1.test.mjs
+      - name: Verify actual intake transactions and queue publication
+        id: native
+        run: node scripts/verify-field-map-intake-v1.mjs /usr/lib/postgresql/16/bin
+      - name: Independently verify stored receipts points and signed business ACKs
+        if: always() && (steps.native.outcome == 'success' || steps.native.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const root='work/field-map-intake-v1-20261024';
+          const cases=(await readdir(root,{withFileTypes:true})).filter(p=>p.isDirectory()&&/^[a-f0-9]{12}$/.test(p.name));
+          assert.equal(cases.length,1);
+          execFileSync(process.execPath,['scripts/verify-field-map-intake-cleanup-v1.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source unchanged
+        if: always()
+        run: git diff --exit-code --no-ext-diff
