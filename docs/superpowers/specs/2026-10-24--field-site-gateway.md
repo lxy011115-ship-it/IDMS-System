@@ -1,0 +1,11 @@
+# 当前现场网关进入统一站点
+
+延续现场当前映射、身份宿主和平台依赖计划。526747b的真实宿主与7a的真实数据链必须在同一个运行场景中组合；完整目标仍包括统一SITE、严格enabled/field槽位、实际broker/edge句柄、逆序排空和同请求重试。当前运行对象只是该接线的第一步，不代替最终平台验收。
+
+网关同步返回可持有的对象，提供ready、机器HTTP handler、当前资源状态和close。配置明确enabled=false时不读任何现场材料或连接数据库/MQTT，也不创建field资源。enabled=true要求真实SITE给出当前cold trust、authority文件和企业数据库/目录绑定；先核host配置属于同一次准入、同企业/数据库OID/catalog，再加载真实host并启动当前FieldMapPlatform和MQTT intake。HTTP读取角色和现场写入角色用途不同，不比较为同一角色；写入身份仍由host实际核验。
+
+机器HTTP复用原HMAC/无Cookie-Origin/限量/取消handler，挂统一SITE受管监听，不另开生产端口。启动完成要求接收独占权与所有配置通道实际连接；当前状态随底层状态变化。明确JSON配置固定摘要，每次host guard前再核，不能自动再基线。
+
+关闭先取消自身启动/机器请求，并同时请求intake和platform关闭，等待所有接收/签发/持锁事务排空后再关闭host。部分启动失败也必须关闭实际已创建对象。调用者在ready结束前就可以用同一个对象请求关闭；所有启动调用仍须等待完成，不能丢弃晚到的host。关闭证明记录实际资源状态，同requestId复用，换requestId拒绝。未证明退役不得允许上层停止PG。
+
+验证先覆盖严格配置、disabled零额外资源、启动前取消及跨站点错绑定在SQL前拒绝。随后在实际Keycloak、物理冷恢复ADMITTED、当前map、真实OPC UA/MQTT环境验证完整接收/签名ACK/补传及关闭。治理V6切换前排空旧任务、完整字段索引/接收标记、旧SQL现场历史迁移与授权HTTP/页面/预测消费仍为必要步骤，不能以新对象或局部单测宣称完成。
