@@ -1,0 +1,97 @@
+{
+  "format": "IDMS_FIELD_OWNED_DATA_PATH_PUBLIC_V1",
+  "platform": "linux",
+  "head": "d7fb5a9d775d40a10dfe538cf400356233a1c4b7",
+  "run": 40044263032,
+  "job": 120722223325,
+  "conclusion": "success",
+  "unitSummary": {
+    "tests": 11,
+    "pass": 11,
+    "fail": 0,
+    "skipped": 0
+  },
+  "nativeStarts": [
+    {
+      "nonce": "1872fbfeb171",
+      "sourcePins": 1024,
+      "expectedChecks": 7
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "1872fbfeb171",
+      "check": 1,
+      "name": "production issuer and transactional intake use the generated PostgreSQL and recovery binding"
+    },
+    {
+      "nonce": "1872fbfeb171",
+      "check": 2,
+      "name": "actual OPC UA, mTLS, committed SQL and signed ACK produce stable READY"
+    },
+    {
+      "nonce": "1872fbfeb171",
+      "check": 3,
+      "name": "stop during a held native OPC UA read leaves PostgreSQL and spool sequence unchanged"
+    },
+    {
+      "nonce": "1872fbfeb171",
+      "check": 4,
+      "name": "lost business ACK after COMMIT retains the exact pending events through normal stop"
+    },
+    {
+      "nonce": "1872fbfeb171",
+      "check": 5,
+      "name": "replay uses the original committed receipt without duplicate points"
+    },
+    {
+      "nonce": "1872fbfeb171",
+      "check": 6,
+      "name": "held SQL prevents intake drain and PostgreSQL stop; cancellation rolls back and retains the queue"
+    },
+    {
+      "nonce": "1872fbfeb171",
+      "check": 7,
+      "name": "owned edge, intake, broker, worker and PostgreSQL all retired normally"
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "1872fbfeb171",
+      "passed": true,
+      "checks": 7,
+      "cleanupComplete": true,
+      "cleanupErrorCount": 0,
+      "failure": null,
+      "originalDatabaseContacted": false,
+      "allProductionDependenciesRegistered": false
+    }
+  ],
+  "independentCleanup": [
+    {
+      "nonce": "1872fbfeb171",
+      "readOnly": true,
+      "nativePassed": true,
+      "nativeChecks": 7,
+      "ownedEdgeRootsVerified": 5,
+      "brokerNormalStopVerified": true,
+      "postgresCleanOffline": true,
+      "sourcePinsVerified": 1024,
+      "retainedPendingEventsVerified": 2,
+      "retainedSequence": 6,
+      "spoolStateMacVerified": true,
+      "pendingEventSignaturesVerified": true,
+      "offlineSqlRowsRequeried": false,
+      "allProductionDependenciesRegistered": false,
+      "fullGoalComplete": false
+    }
+  ],
+  "typecheckSuccess": true,
+  "frozenSourceProfilesAuthenticated": true,
+  "trackedSourceUnchanged": true,
+  "failedSteps": [],
+  "registeredPlatformControllerGateVerified": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false,
+  "rawLogsOrCredentialsSaved": false
+}
