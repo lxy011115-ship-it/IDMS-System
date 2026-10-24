@@ -1,0 +1,55 @@
+name: Field lease current state transactions
+
+on:
+  push:
+    branches: [wip/field-map-lease-20261024]
+    paths: ['scripts/**', 'tests/**', 'server/**', 'integrations/**', 'package*.json', 'docs/validation/field-map-lease-parent-v1.json', '.github/workflows/field-map-lease-v1.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'tests/**', 'server/field-map-*.ts', 'server/field-runtime-map-v1.ts', 'server/governance-*-v6.ts', 'docs/validation/field-map-lease-parent-v1.json', '.github/workflows/field-map-lease-v1.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: field-map-lease-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  field-map-lease:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Authenticate frozen source profiles
+        run: node scripts/verify-ci-source-policy-v2.mjs
+      - name: Typecheck current map issuer backend
+        run: node node_modules/typescript/bin/tsc -p server/tsconfig.json --noEmit --allowImportingTsExtensions
+      - name: Verify original issuance and current check rules
+        run: node --test tests/field-map-lease-v1.test.mjs
+      - name: Verify actual lease transactions and queue publication
+        id: native
+        run: node scripts/verify-field-map-lease-v1.mjs /usr/lib/postgresql/16/bin
+      - name: Independently verify persisted lease evidence and clean offline PostgreSQL
+        if: always() && (steps.native.outcome == 'success' || steps.native.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const root='work/field-map-lease-v1-20261024';
+          const cases=(await readdir(root,{withFileTypes:true})).filter(p=>p.isDirectory()&&/^[a-f0-9]{12}$/.test(p.name));
+          assert.equal(cases.length,1);
+          execFileSync(process.execPath,['scripts/verify-field-map-lease-cleanup-v1.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source unchanged
+        if: always()
+        run: git diff --exit-code --no-ext-diff
