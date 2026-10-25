@@ -1,0 +1,31 @@
+{
+  "format": "COLD_AUTH_AUDIT_MAP_LINUX_FAILURE_V3",
+  "at": "2026-10-25T19:29:02.560859+00:00",
+  "head": "8cab3b5db9b0394916da4f50dd3dba4fc476760a",
+  "run": 40222439976,
+  "job": 121256715036,
+  "url": "https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/40222439976",
+  "conclusion": "failure",
+  "nodeTests": 205,
+  "javaBoundaryChecks": 16,
+  "nativeChecksCompleted": 24,
+  "nativeExpectedChecks": 57,
+  "nativeSourcePins": 1733,
+  "nativeReportedCleanupErrorCount": 0,
+  "independentRetirementPassed": false,
+  "outerErrorCode": "READER_PEER_OPERATION_UNCONFIRMED",
+  "nestedIoCode": "ENOENT",
+  "actualOriginalHelperAcquireAndReleaseExitCodes": [
+    2,
+    2
+  ],
+  "allOriginalHelperHandlesAndStreamsClosed": true,
+  "helperKnownErrorCode": "OWNED_READER_PEER_REPLY_UNCONFIRMED",
+  "targetOriginalNormalReaderRetirementBound": true,
+  "targetPeerAgentFrames": 0,
+  "rawLogsOrCredentialsSaved": false,
+  "terminalLogConsumedOnce": true,
+  "deeperHelperCauseConfirmed": false,
+  "previousLinuxFailureFixed": false,
+  "fullGoalComplete": false
+}
