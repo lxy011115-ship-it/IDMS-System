@@ -1,0 +1,326 @@
+{
+  "format": "COLD_AUTH_AUDIT_MAP_WINDOWS_V4",
+  "at": "2026-10-25T16:55:04.395Z",
+  "nonce": "dd7554efc169",
+  "actualExitCode": 0,
+  "nativeChecks": 57,
+  "sourcePins": 1730,
+  "allOriginal1682SourceBytesRetained": true,
+  "componentUnitSuites": [
+    {
+      "scope": "PURE_PERSISTED_AUTHENTICATION_VALUES",
+      "tests": 12,
+      "pass": 12,
+      "actualExitCode": 0,
+      "aggregateFullRegressionClaimed": false
+    },
+    {
+      "scope": "UNCHANGED_INDEX_V2_AND_PREVIOUS_COORDINATOR_V17_BOUNDARIES",
+      "tests": 17,
+      "pass": 17,
+      "actualExitCode": 0,
+      "aggregateFullRegressionClaimed": false
+    },
+    {
+      "scope": "SYNTHETIC_OFFLINE_RAW_WITNESS_INPUTS",
+      "tests": 7,
+      "pass": 7,
+      "actualExitCode": 0,
+      "aggregateFullRegressionClaimed": false
+    },
+    {
+      "scope": "ACTIVE_COORDINATOR_V18_AND_EXACT_ERROR_REDACTION",
+      "tests": 10,
+      "pass": 10,
+      "actualExitCode": 0,
+      "aggregateFullRegressionClaimed": false
+    }
+  ],
+  "combinedNewFullRegressionClaimed": false,
+  "originalNativeHandleExitObserved": true,
+  "originalSupervisorHandleExitCode": 0,
+  "windowsRestrictedLaunchVerified": true,
+  "cleanupErrorCount": 0,
+  "independentActualExitCode": 0,
+  "independentVerifierSha256": "b5868b47d268a2ea4ade69753d03edc7f253f146ea54e813ff3bee15c621e953",
+  "independentSummary": {
+    "format": "COLD_AUTH_AUDIT_MAP_INDEPENDENT_V3",
+    "independentSupplementalSourcePins": [
+      {
+        "path": "scripts/fixtures/cold-auth-audit-map-independent-v3-qa.mjs",
+        "sha256": "b3b6558bdab0b0a5ef746ffb310277fe8c59a64480e55a513e5fa5a17677e4df"
+      },
+      {
+        "path": "scripts/verify-cold-auth-audit-map-cleanup-v6.mjs",
+        "sha256": "b5868b47d268a2ea4ade69753d03edc7f253f146ea54e813ff3bee15c621e953"
+      }
+    ],
+    "independentSupplementalSourcePinsVerified": 2,
+    "independentSupplementalSourcesUnchanged": true,
+    "nonce": "dd7554efc169",
+    "nativeChecks": 57,
+    "approvalFullRootsIndependentlyRebuilt": 20,
+    "approvalActualEngineSnapshotsReverified": 34,
+    "approvalCurrentReviewerObservationsReverified": 5,
+    "additionalPlanCurrentActorObservationsReverified": 2,
+    "approvalSignedHistoryRecordsReverified": 4,
+    "actualCoordinatorWriterLockRejectionVerified": true,
+    "actualApplicationReplyDiscardRecoveryVerified": true,
+    "actualMidreadContributorRevocationVerified": true,
+    "actualApprovalProcessReopenVerified": true,
+    "actualAfterInsertBeforeAnchorSaveFaultVerified": true,
+    "actualSqliteCommitExecutionFailureVerified": false,
+    "tcpOrSqliteCommitReplyLossTested": false,
+    "allCurrentReviewersAuthenticated": false,
+    "reviewApproved": false,
+    "formalFieldActivationGranted": false,
+    "fullGoalComplete": false,
+    "corePeerEvidenceReferencesReverified": 50,
+    "additionalAuthenticationMapRootsIndependentlyRebuilt": 4,
+    "authenticationMapOfflineResults": [
+      {
+        "format": "COLD_AUTH_AUDIT_MAP_OFFLINE_VERIFICATION_V2",
+        "rawNamespaceRowsIndependentlyRehashed": true,
+        "rawNamespaceCiphertextsIndependentlyDecrypted": true,
+        "completeCurrentRootsAndAuditChainsIndependentlyRebuilt": true,
+        "allBusinessReceiptsCursorsAndV4AuditsBidirectionallyMatched": true,
+        "events": 8,
+        "streams": [
+          {
+            "tenantId": "acme",
+            "emitted": 3,
+            "sourceAcknowledged": 1,
+            "businessCommitted": 2
+          },
+          {
+            "tenantId": "sandbox",
+            "emitted": 5,
+            "sourceAcknowledged": 1,
+            "businessCommitted": 2
+          }
+        ],
+        "mapped": 4,
+        "unacknowledged": 2,
+        "legacyAuthenticationAuditLeaves": 2,
+        "sourceRowsOwnerTokenFenceAndLeasePreserved": true,
+        "originalSourceAcknowledgementsUnchanged": true,
+        "witnessSha256": "716548f2a90a6d5db2f0d3e9e753f81b475f71e0f6ef4f3316ee858e081340e8",
+        "witnessBytes": 17274,
+        "fullGoalComplete": false,
+        "privateIndexNormallyRetired": true,
+        "witnessId": "a5c30dac-7063-4903-8190-a954d74505cd"
+      },
+      {
+        "format": "COLD_AUTH_AUDIT_MAP_OFFLINE_VERIFICATION_V2",
+        "rawNamespaceRowsIndependentlyRehashed": true,
+        "rawNamespaceCiphertextsIndependentlyDecrypted": true,
+        "completeCurrentRootsAndAuditChainsIndependentlyRebuilt": true,
+        "allBusinessReceiptsCursorsAndV4AuditsBidirectionallyMatched": true,
+        "events": 8,
+        "streams": [
+          {
+            "tenantId": "acme",
+            "emitted": 3,
+            "sourceAcknowledged": 1,
+            "businessCommitted": 2
+          },
+          {
+            "tenantId": "sandbox",
+            "emitted": 5,
+            "sourceAcknowledged": 1,
+            "businessCommitted": 2
+          }
+        ],
+        "mapped": 4,
+        "unacknowledged": 2,
+        "legacyAuthenticationAuditLeaves": 2,
+        "sourceRowsOwnerTokenFenceAndLeasePreserved": true,
+        "originalSourceAcknowledgementsUnchanged": true,
+        "witnessSha256": "716548f2a90a6d5db2f0d3e9e753f81b475f71e0f6ef4f3316ee858e081340e8",
+        "witnessBytes": 17274,
+        "fullGoalComplete": false,
+        "privateIndexNormallyRetired": true,
+        "witnessId": "f3293adf-5bcc-4bb1-9a81-d59d1725c63f"
+      }
+    ],
+    "coreDistinctPeerEvidenceFilesReverified": 40,
+    "sharedSqlPeerCohortsIndependentlyBound": 2,
+    "allSharedSqlIntervalsInsideUnextendedFileWindow": true,
+    "coreFullRootsIndependentlyRebuilt": 4,
+    "coreActualEngineSnapshotsReverified": 8,
+    "coreCurrentActorObservationsReverified": 2,
+    "coreMaterialFilesMetadataRechecked": 31,
+    "actualAuthenticationSqlEvidenceBoundToSource": true,
+    "actualAuthenticationAuditSqlEvidenceBoundToSource": true,
+    "authenticationAuditNamespaceProofsReverified": 2,
+    "actualWrongAuditCatalogRejectionEvidenceRechecked": true,
+    "rawAuthenticationAuditSqlRowsIndependentlyDecryptedOffline": true,
+    "deliveryReceiptsReverifiedAgainstCurrentBusinessMaps": true,
+    "actualQueueSqlEvidenceBoundToSource": true,
+    "queueDatabaseProofsReverified": 4,
+    "queueNamespaceProofsReverified": 16,
+    "originalJobKeyWitnessesReconstructed": 2,
+    "actualWrongClonedJobKeyRejectionEvidenceRechecked": true,
+    "rawQueueSqlRowsIndependentlyDecryptedOffline": false,
+    "rawAuthenticationRowsIndependentlyDecryptedOffline": false,
+    "actualWrongClonedKeyRejectionEvidenceRechecked": true,
+    "ordinaryAuthenticationLoginRefusalsRechecked": 6,
+    "completeDeploymentMaterialsVerified": false,
+    "sourcePinsVerified": 1730,
+    "fullArchiveAuthenticated": true,
+    "legacyArchiveReaderRejectsNewFormat": true,
+    "capturedReaderHbaBoundToArchive": true,
+    "strictInitialAndSelectiveReviewProfilesDistinct": true,
+    "originalIntentCredentialsAndTwoSqlWitnessesVerified": true,
+    "actualCommitFaultEventsRechecked": true,
+    "testTransportTcpNoDelayVerified": true,
+    "sourceAndTargetHbaBytesVerified": true,
+    "allCapturedSqlFingerprintsEqualityRechecked": true,
+    "sqlRelationRowsIndependentlyRecomputedOffline": false,
+    "originalSourceFullFactsBound": true,
+    "sourceAndTargetFullRootsIndependentlyRebuilt": true,
+    "originalSourceEvidenceTamperRejected": true,
+    "actualTargetLargeObjectDriftRejected": true,
+    "allRegisteredDatabaseSqlFactsBoundToOriginalSource": true,
+    "actualLargeObjectMetadataRows": 1,
+    "actualLargeObjectChunks": 6,
+    "fullMapTenants": [
+      {
+        "tenantId": "acme",
+        "nodes": 5057,
+        "leaves": 2529,
+        "receiptRows": 111,
+        "auditEvents": 96
+      },
+      {
+        "tenantId": "sandbox",
+        "nodes": 3577,
+        "leaves": 1789,
+        "receiptRows": 88,
+        "auditEvents": 61
+      }
+    ],
+    "workflowFactsComparedWithOriginalSqlCapture": true,
+    "closedMaintenanceReceiptVerified": true,
+    "databaseCount": 7,
+    "workflowJvmNormalStops": 4,
+    "workflowPoolClosures": 16,
+    "identityNormalStopVerified": true,
+    "bothClustersActuallyCleanOffline": true,
+    "targetControlState": "shut down",
+    "newColdCoordinatorIntegrated": true,
+    "ownedReaderPeerCapabilityIntegrated": true,
+    "originalMaintenanceGuardsComposed": true,
+    "runningReaderCompleteOriginalFactsVerified": true,
+    "independentlyRebuiltLiveRoots": 46,
+    "originalPeerEvidenceReferencesReverified": 378,
+    "originalPeerEvidenceFilesReverified": 368,
+    "originalOwnedReaderBackendCount": 4,
+    "originalOwnedGuardBackendCount": 2,
+    "originalGuardsAndReaderBackendsActuallyRetired": true,
+    "workflowOrderInventoryVerified": true,
+    "independentReviewInputPayloadsRebuilt": 42,
+    "additionalAuthenticationMapFullRootsRebuilt": 4,
+    "recoveryReviewIntegrationComplete": false,
+    "currentOidcReviewerVerified": true,
+    "rawJwtIndependentlyReverifiedOffline": false,
+    "currentActorObservationsReverified": 9,
+    "additionalActualEngineSnapshotsReverified": 66,
+    "actualMidreadExternalRevocationRechecked": true,
+    "actualOriginalPendingPeerQueueVerified": true,
+    "declaredCurrentCohortParticipants": 6,
+    "durablePlanContributorsVerified": true,
+    "durablePlanRevisionsVerified": 4,
+    "planCurrentActorObservationsReverified": 3,
+    "planFullRootsIndependentlyRebuilt": 10,
+    "planActualEngineSnapshotsReverified": 16,
+    "actualPlanProcessReopenVerified": true,
+    "actualAncestorRoleRevocationRejected": true,
+    "actualPersistedPlanSignatureTamperRejected": true,
+    "historyReadsDoNotClaimCurrentIdentity": true,
+    "composedOriginalJvmSqlWindowVerified": true,
+    "originalJvmProbesPerCompletePeerCheck": 2,
+    "completeSqlObservationsPerPeerCheck": 2,
+    "identityWindowMilliseconds": 30000,
+    "readerReplyBudgetVerified": true,
+    "actualMoreThan512OriginalRepliesVerified": true,
+    "originalReaderReleaseReceiptsVerified": 2,
+    "actualRequestBudgetExhaustionTested": false
+  },
+  "independentSupplementalSourcePins": [
+    {
+      "path": "scripts/fixtures/cold-auth-audit-map-independent-v3-qa.mjs",
+      "sha256": "b3b6558bdab0b0a5ef746ffb310277fe8c59a64480e55a513e5fa5a17677e4df"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-cleanup-v6.mjs",
+      "sha256": "b5868b47d268a2ea4ade69753d03edc7f253f146ea54e813ff3bee15c621e953"
+    }
+  ],
+  "realRoundComparisonUnitSummary": {
+    "tests": 11,
+    "pass": 11,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "verifiedOriginalTerminals": [
+    {
+      "jobId": "e14f60d8-ded1-4b6c-a4fe-bc3617c42c82",
+      "inputSha256": "802e91efc1636aaafd77312c02f9bd98c9b1f9b35341b559422804bf566c9e5f",
+      "actualExitCode": 0,
+      "actualOriginalSupervisorExitCode": 0
+    },
+    {
+      "jobId": "720fbb8d-765a-4af8-9ded-064f89294050",
+      "inputSha256": "8af364092cc6030a53e7e5f617f1bcd041e67addab3ac2aa33cd7563c53f58dc",
+      "actualExitCode": 0,
+      "actualOriginalSupervisorExitCode": 0
+    },
+    {
+      "jobId": "d6dea1a2-820e-409b-b6ac-852c6eeb7b48",
+      "inputSha256": "d9b75a43041ce8c067a882dbf7659b395fc23c8972545c23b8ed786e511c0ab1",
+      "actualExitCode": 0,
+      "actualOriginalSupervisorExitCode": 0
+    },
+    {
+      "jobId": "18fd21ed-8653-4e43-b05d-d1a3af1d507f",
+      "inputSha256": "7131ebea3deb6cc9357469a7786883e24efbbb2954aee7a4f7b473cd0dfb3dea",
+      "actualExitCode": 0,
+      "actualOriginalSupervisorExitCode": 0
+    },
+    {
+      "jobId": "ea5b4c5c-3ad6-41ef-87bf-ba7e99384c2f",
+      "inputSha256": "23234d9229d6c29abe34e3c37e77fba49eb752584062f6c5e9578c065954eb6c",
+      "actualExitCode": 0,
+      "actualOriginalSupervisorExitCode": 0
+    },
+    {
+      "jobId": "4f00fa38-0fef-4261-89eb-f2e9810d170b",
+      "inputSha256": "2ff1e505cfe528810a41945376fe14dff9f838b99c8bef20d506ec366a7dea9b",
+      "actualExitCode": 0,
+      "actualOriginalSupervisorExitCode": 0
+    },
+    {
+      "jobId": "e40f0ea7-133c-4207-a16b-e1629bcbf140",
+      "inputSha256": "878b5c80494753b23d29cffa018df18a4a272c488ed6874681b5a874b853d0c7",
+      "actualExitCode": 0,
+      "actualOriginalSupervisorExitCode": 0
+    }
+  ],
+  "fullSevenDatabaseIntegrationVerified": true,
+  "sharedSqlPeerCohortsIndependentlyBound": 2,
+  "allSharedSqlIntervalsInsideUnextendedFileWindow": true,
+  "fileWindowMilliseconds": 30000,
+  "currentOidcIdentityVerified": true,
+  "deliveryReceiptsReverifiedAgainstCurrentBusinessMaps": true,
+  "rawAuthenticationAuditSqlRowsIndependentlyDecryptedOffline": true,
+  "actualSourceRowsOwnerTokenFenceAndLeasePreserved": true,
+  "emptyQueueUsedAsKeyProof": false,
+  "coreMaterialCandidatePersisted": false,
+  "allEncryptedApplicationStateVerified": false,
+  "completeDeploymentMaterialsVerified": false,
+  "businessWritesEnabled": false,
+  "formalFieldActivationGranted": false,
+  "fullGoalComplete": false
+}
