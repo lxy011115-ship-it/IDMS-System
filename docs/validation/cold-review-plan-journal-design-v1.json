@@ -1,0 +1,25 @@
+{
+  "format": "COLD_REVIEW_PLAN_JOURNAL_DESIGN_V1",
+  "purpose": "Persist authenticated read-only recovery plan submissions and derive all prior submitters and declared coauthors from the complete signed lineage.",
+  "integration": "A new preparer method calls the journal only after its own original-session, full-source, complete SQL/root, current identity and two actual workflow captures have succeeded, inside its already-held control SQLite transaction.",
+  "storage": "Dedicated bounded journal table and signed sibling details.planJournal anchor in the original control SQLite; SOURCE_V3, fullFacts, details.review and its first result remain unchanged.",
+  "recordAuthentication": "Canonical records and anchor use separate HMAC domains derived from the original private credential key, bound to control/source/recovery/intent/credential hashes. Verify every revision, parent, original observation file and complete contributor lineage.",
+  "submissionRules": [
+    "Caller supplies only a plan UUID, expected parent hash, original session and current participant tokens; caller actor records, approval flags and callbacks are invalid.",
+    "Every new author is a real current submission actor. The union of prior submitters and all declared coauthors must be present in the freshly authenticated current cohort.",
+    "The independently observed reviewer cannot be any contributor. Submission records an intended reviewer without granting approval.",
+    "Same head plan UUID, original expected parent and identical semantic inputs/participants may replay after fresh verification without a new revision; changed replay actors, stale parent or superseded IDs reject.",
+    "Maximum64 plans and128KiB per record, complete history, no filtering or truncation. Plan lifetime30min; fresh submission evidence retains the unchanged30sec identity window.",
+    "All journal rows and anchor changes are in the caller's existing transaction. A rollback must leave neither a plan nor a changed anchor. Process reopen reauthenticates stored history."
+  ],
+  "verification": [
+    "Real temporary SQLite persistence, rollback and process reopen unit tests; these tests validate the persistence contract and do not authenticate real users.",
+    "Reject altered signatures, parent/revision/schema/source binding, missing or changed original evidence, omitted contributor, reviewer conflict and replay mismatch.",
+    "New coordinator entry rejects forged sessions and injected authorization before opening a state store.",
+    "Full native real OIDC/Flowable and complete restore integration is required before publication or a live identity completion claim."
+  ],
+  "implementationCompletionNotClaimedByThisDesign": true,
+  "approvalGranted": false,
+  "formalFieldActivationGranted": false,
+  "fullGoalComplete": false
+}
