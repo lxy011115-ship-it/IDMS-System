@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-25T01:45:37.696292+00:00",
+  "goal": "Avoid rejecting an original held reader capability solely because its own serialized keeper probe is still authenticating. Preserve every identity, source, peer and SQL check.",
+  "evidence": "Both original Linux failures have message SHA matching READER_PEER_NOT_MINTED; pending keeper causality in those historical runs remains an inference.",
+  "selectedChange": "Wait for the captured original queue tail, then verify the exact same WeakMap entry, owner peer and HELD phase before all unchanged original JVM/SQL probes.",
+  "rejectedAlternatives": [
+    "Accept UNCERTAIN as HELD.",
+    "Disable keeper or skip actual peer proofs.",
+    "Edit frozen old source or restart the live V5b case."
+  ],
+  "verification": [
+    "Isolated in-memory copies of exact original source reproduce old scheduling rejection and check new waiting/failed/released/replaced/forged outcomes; no live authentication claim from unit tests.",
+    "A real newly minted original reader lease starts an actual probe; while its phase is UNCERTAIN, actual bootstrap SQL invokes the same strict peer assertion and verifies all original backends.",
+    "Release and independently observe retirement of that original test lease before minting the main owned review session.",
+    "Retain all original36 native checks plus this real overlap check=37, all complete-root/7DB/COMMIT/current identity tests and independent evidence.",
+    "Require exact new Linux terminal results, without claiming the old unknown request reason was recovered."
+  ],
+  "reviewOrActivationGranted": false,
+  "fullGoalComplete": false
+}
