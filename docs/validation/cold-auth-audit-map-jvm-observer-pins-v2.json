@@ -1,0 +1,107 @@
+{
+  "format": "COLD_AUTH_AUDIT_MAP_JVM_OBSERVATION_PINS_V2",
+  "at": "2026-10-25T18:33:01.274104+00:00",
+  "parentCommit": "2260ce99954c25e27ca009137557d76f3ac98977",
+  "innerNativeEntry": {
+    "path": "scripts/verify-cold-auth-audit-map-v6.mjs",
+    "sha256": "a65b8fad49eacff8a7542c95c7f451a171066b9c1876b96a8c4e5086e94a9916"
+  },
+  "innerNativeSourcePins": 1733,
+  "originalWindowsSourcePins": 1730,
+  "additionalOuterObservationInputs": [
+    {
+      "path": "scripts/fixtures/owned-reader-jvm-failure-v2-qa.mjs",
+      "sha256": "b1ce9adc1de66816cdd2238f955faea766feb56dc2a4366ce1f13273e6c423e7"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-diagnostic-bootstrap-v1.mjs",
+      "sha256": "6783a37fb1b0b090807a157f511978a7a18c7a636d14f81408111dab96f483b6"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-observed-v7.mjs",
+      "sha256": "f7ce25ed6a453092a7870762429161452eabae709c6977a2eb6b461f5d642c9f"
+    }
+  ],
+  "unitTestInput": {
+    "path": "tests/owned-reader-jvm-failure-v2.test.mjs",
+    "sha256": "ba19799992186ed079926747c291a429562c546a388838fbdd64a193b5c86877"
+  },
+  "retainedEarlierDiagnosticSources": [
+    {
+      "path": "scripts/fixtures/owned-reader-jvm-failure-v1-qa.mjs",
+      "sha256": "f32377f99fcdebfa9c9009a888688defd22a17e94d5a65e856b68d46b414f6e2"
+    },
+    {
+      "path": "docs/validation/history/owned-reader-jvm-failure-v1.test.mjs.txt",
+      "sha256": "7a21ee37f89a9553ffc75c4c1dfc859fe26f9a98913ca43d1ac494ecbb3104a3",
+      "originalExecutedPath": "tests/owned-reader-jvm-failure-v1.test.mjs",
+      "originalNegativeUnitResultPreserved": true,
+      "activeTestDiscoveryExcluded": true
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-observed-v5.mjs",
+      "sha256": "db6f0f022bba9d6f232303e94db2ad4701034b06b1918748aeddc25e0af4aa1d"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-observed-v6.mjs",
+      "sha256": "4aac901985ed88e55d631691104b0b048f3c9a7d3b04bdec51bf812b172133b3"
+    }
+  ],
+  "fixedPublicJavaSources": [
+    {
+      "path": "services/workflow-review-reader-v4/src/main/java/com/idms/workflowreview/Application.java",
+      "sha256": "d7a3b7bcf99730421b63c5e18293b004389a446f9489650ff5a8eac2bdb5a95c"
+    },
+    {
+      "path": "services/workflow-review-reader-v4/src/main/java/com/idms/workflowreview/OwnedReaderPeers.java",
+      "sha256": "d12444961d967964a43ca4693db642a296ecec669df57f2d5cf49741293b6dd3"
+    },
+    {
+      "path": "services/workflow-review-reader-v4/src/main/java/com/idms/workflowreview/OwnedReaderPeersMBean.java",
+      "sha256": "3d8320963d904804033f3eb4f70462a7cd07c1832aa413242e972e9585b4faa9"
+    },
+    {
+      "path": "services/workflow-review-reader-v4/src/main/java/com/idms/workflowreview/ReaderPeerReplyBudget.java",
+      "sha256": "010772b2bd4111377d709528d2002495e78db6742487ade2f8aa34fb773670e7"
+    },
+    {
+      "path": "services/workflow-review-reader-v4/src/main/java/com/idms/workflowreview/ReaderRegistry.java",
+      "sha256": "2c41f6a777a6fd2e9b25956f0f776a8c69bf5740432ccf2ce69c7f504d520edb"
+    },
+    {
+      "path": "services/workflow-review-reader-v4/src/main/java/com/idms/workflowreview/RecoveryCapture.java",
+      "sha256": "5607c44d8d9955f67b72c5b3c1103aa1b2246a87abfbe0a88ec872d179140fc6"
+    },
+    {
+      "path": "services/workflow-review-reader-v4/src/main/java/com/idms/workflowreview/RecoveryReadController.java",
+      "sha256": "9220495b5f4f37e07ac8e92c41c4ce887a57ece85237c44b6ed4d219cb2589e7"
+    },
+    {
+      "path": "scripts/lifecycle-java/LifecycleWireV1.java",
+      "sha256": "c476929b61d28d648bcc67ca20c2804e91089bb78331b90b18ed233d4c6d5085"
+    },
+    {
+      "path": "scripts/lifecycle-java/OwnedReaderPeerAgentV1.java",
+      "sha256": "809bd7ae30f3be11d09be1a6519e54d4c6378156f4027634033684d6eca3b32e"
+    },
+    {
+      "path": "scripts/lifecycle-java/OwnedReaderPeerAttachV1.java",
+      "sha256": "630270f9211e2bbed2259ac39b6af3de823ac2bf96c0eea664a9a2fe8066ef45"
+    }
+  ],
+  "unitSummary": {
+    "tests": 8,
+    "pass": 8,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "actualUnitAndOriginalHostExitCodes": 0,
+  "realMissingClassJavaChildObservationOnly": true,
+  "originalWindowsReaderNormalRetirementAndCopiedFilesBound": true,
+  "productionNativeLifecycleAndPeerCodeUnchanged": true,
+  "spawnOrExecReplaced": false,
+  "signalsSent": false,
+  "newLinuxExecuted": false,
+  "fullGoalComplete": false
+}
