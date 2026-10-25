@@ -1,0 +1,37 @@
+{
+  "format": "COLD_AUTH_AUDIT_MAP_LINUX_FAILURE_V4",
+  "at": "2026-10-25T20:16:19.402714+00:00",
+  "head": "6d0e4fec50898b5152a77fb00f221d0c2a1fee24",
+  "run": 40227107534,
+  "job": 121270703985,
+  "conclusion": "failure",
+  "nodeTests": 208,
+  "javaBoundaryChecks": 16,
+  "nativeChecksCompleted": 24,
+  "nativeExpectedChecks": 57,
+  "plannedNativeSourcePins": 1763,
+  "actualNativeStartSourceCountProven": false,
+  "nativeReportedCleanupErrorCount": 0,
+  "independentVerificationPassed": false,
+  "actualHelperOperations": [
+    "ACQUIRE",
+    "RELEASE"
+  ],
+  "actualHelperExitCodes": [
+    2,
+    2
+  ],
+  "fixedHelperStage": "AGENT_LOAD",
+  "fixedHelperExceptionType": "java.io.IOException",
+  "fixedHelperKnownCode": "OWNED_READER_PEER_REPLY_UNCONFIRMED",
+  "targetFailureObservationAvailable": false,
+  "oldObserverEntryPathSelectorMismatchFound": true,
+  "originalAcceptedWindowsArgumentBytes": 947,
+  "projectedSameCanonicalLinuxArgumentBytes": 1046,
+  "projectionExplicitlyAnInference": true,
+  "actualFailedLinuxRawArgumentBytesObserved": false,
+  "terminalLogConsumedExactlyOnce": true,
+  "rawLogsOrCredentialsSaved": false,
+  "previousLinuxFailureFixed": false,
+  "fullGoalComplete": false
+}

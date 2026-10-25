@@ -1,0 +1,27 @@
+{
+  "format": "COLD_AUTH_AUDIT_MAP_WINDOWS_BASELINE_REUSE_V4",
+  "at": "2026-10-25T20:16:19.402714+00:00",
+  "originalWindowsEvidence": {
+    "path": "docs/validation/cold-auth-audit-map-windows-v4.json",
+    "sha256": "d5b9ace5616e1f4ee5d6d2fdbd44d20fc1c445aecfe2790418a8aedda2a23303",
+    "nonce": "dd7554efc169",
+    "nativeChecks": 57,
+    "nativeSourcePins": 1730,
+    "independentFullRoots": 46,
+    "actualOriginalNativeAndHostExitCodes": 0,
+    "actualIndependentAndHostExitCodes": 0
+  },
+  "originalWindowsNativeSourcePins": 1730,
+  "originalWindowsNativeChecks": 57,
+  "originalIndependentRebuiltRoots": 46,
+  "baselineExplicitlyReusedWithoutRerun": true,
+  "currentRequestFileJvmChecks": 12,
+  "currentNewObserverRegressionChecks": 2,
+  "newWindows1794NativeRunClaimed": false,
+  "newFullNativeRunClaimed": false,
+  "plannedLinuxNodeTests": 210,
+  "plannedLinuxNativeChecks": 57,
+  "plannedLinuxInnerSourcePins": 1794,
+  "linuxFailureFixed": false,
+  "fullGoalComplete": false
+}

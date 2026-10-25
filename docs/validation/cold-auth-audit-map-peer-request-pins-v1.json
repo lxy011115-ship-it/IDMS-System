@@ -1,0 +1,181 @@
+{
+  "format": "COLD_AUTH_AUDIT_MAP_PEER_REQUEST_PINS_V1",
+  "at": "2026-10-25T20:16:19.402714+00:00",
+  "parentCommit": "6d0e4fec50898b5152a77fb00f221d0c2a1fee24",
+  "codePins": [
+    {
+      "path": "scripts/cold-current-actors-v2-request-file-v1.mjs",
+      "sha256": "cfb8b84c42d368adb514d94971fc6993a3332dc9fc845461173c3c6ec3287a95"
+    },
+    {
+      "path": "scripts/cold-current-actors-v3-request-file-v1.mjs",
+      "sha256": "92d005f6ed86d531b88ac16e0d55613415979188394e5ddccdef211677358edf"
+    },
+    {
+      "path": "scripts/cold-current-plan-approval-actors-v1-request-file-v1.mjs",
+      "sha256": "359542670174993fbdc2f5f4ac8e27ac30e1612c58c4c4950165845843b10f26"
+    },
+    {
+      "path": "scripts/cold-owned-review-session-v1-request-file-v1.mjs",
+      "sha256": "fa4021aac81786a44d55ea052ae5edad520fa7b6dcbbba64a99336eab06e0773"
+    },
+    {
+      "path": "scripts/cold-owned-review-session-v2-request-file-v1.mjs",
+      "sha256": "63be7edd64244188924b8b141919b6281b1f358ac2818d8cff4fa2babeddfa63"
+    },
+    {
+      "path": "scripts/cold-owned-review-session-v3-request-file-v1.mjs",
+      "sha256": "71ead13e184f97646ef3ee6a9c986dc2bd6a7ffc59c49890c12238d166ebeb81"
+    },
+    {
+      "path": "scripts/cold-plan-approval-journal-v1-request-file-v1.mjs",
+      "sha256": "5a868e0742b88fd00f7f10a47d9385abb62afbe82a1f3f9781f3a5632cbce64e"
+    },
+    {
+      "path": "scripts/cold-registration-auth-audit-map-sql-v2-request-file-v1.mjs",
+      "sha256": "0104a1fe5208e65ca82fadb045516370370760f9ef6f78220b7452afde43e4b2"
+    },
+    {
+      "path": "scripts/cold-registration-auth-audit-sql-v1-request-file-v1.mjs",
+      "sha256": "ae89c0444268a24fabfec45be68c6608d4501ea3b9f1ce5e59f87bd84ab89be9"
+    },
+    {
+      "path": "scripts/cold-registration-auth-sql-v1-request-file-v1.mjs",
+      "sha256": "b98b44097d3ce73e2036944b188eea1ceb842c6e1230a5ab9626f06b67853f71"
+    },
+    {
+      "path": "scripts/cold-registration-core-materials-v6-request-file-v1.mjs",
+      "sha256": "9f572f6ceeac4e4de9a24f6a7c640cb8a4a97bbe5410bcf2ff418844af2a6855"
+    },
+    {
+      "path": "scripts/cold-registration-core-materials-v8-request-file-v1.mjs",
+      "sha256": "7727412f6e580ff5e0c7cfa3ea94893fb9f7033d0f285b6e91a7e5ce2fc767e4"
+    },
+    {
+      "path": "scripts/cold-registration-job-sql-v2-request-file-v1.mjs",
+      "sha256": "dcb7fcd09fbf737b73c46a75e41a1c1ed62b579cbba22d2e766853892dadd329"
+    },
+    {
+      "path": "scripts/cold-review-plan-journal-v1-request-file-v1.mjs",
+      "sha256": "1a09ab98d17bf2fc381c2027ef243198f4efa5f28f2966e9bf5bf5e4703443f0"
+    },
+    {
+      "path": "scripts/fixtures/cold-auth-audit-map-approval-order-v2-qa-request-file-v1.mjs",
+      "sha256": "66e1526001cd0f1ee8f5c9c42d511f9d82c574d1f6d598c33da4c1213cb124aa"
+    },
+    {
+      "path": "scripts/fixtures/cold-auth-audit-map-journal-order-v2-qa-request-file-v1.mjs",
+      "sha256": "f696607952b4d753d80e1c478abe720b960a4c852ccb8c7d9b46767b403a63d5"
+    },
+    {
+      "path": "scripts/fixtures/cold-auth-audit-map-live-v2-qa-request-file-v1.mjs",
+      "sha256": "41348f906acb8f6bed6798441730005def8e3adbc9eb3a487ab17037243e60d5"
+    },
+    {
+      "path": "scripts/fixtures/cold-auth-audit-map-preparation-v3-qa-request-file-v1.mjs",
+      "sha256": "c50ef54ca372a4296f4b53dae7098fcc363c2ee08ba4bcaa87d90cafdcf8841e"
+    },
+    {
+      "path": "scripts/fixtures/runtime-cold-auth-audit-map-v3-qa-request-file-v1.mjs",
+      "sha256": "7cbf46b27667ef962430df37c17f04e045d6c12684d721959d4a51ebf5ea4cc7"
+    },
+    {
+      "path": "scripts/runtime-cold-review-prepare-v13-request-file-v1.mjs",
+      "sha256": "ed50819c054aade74c046f03fa23cb0e68b3bf09b2ee783debdd56ac70f73e30"
+    },
+    {
+      "path": "scripts/runtime-cold-review-prepare-v17-request-file-v1.mjs",
+      "sha256": "267096dd631cf72e05a0f290495ef727d66d240ad1a1fa34b28022b0fc53ca8b"
+    },
+    {
+      "path": "scripts/runtime-cold-review-prepare-v20-request-file-v1.mjs",
+      "sha256": "638610cd94b41b2297cf37877f7d9b2124fcb8247956c730a4133841a80d8e4b"
+    },
+    {
+      "path": "scripts/runtime-cold-review-target-v6-request-file-v1.mjs",
+      "sha256": "ac535013eb16991743ccfb704dc1958fa2dd5f5c900ace019ac37b7007e7ea64"
+    },
+    {
+      "path": "scripts/runtime-cold-review-target-v9-request-file-v1.mjs",
+      "sha256": "ca3d4f06f167aa75d707a2d6a8a384633104fdad538d5bd040e898048175b866"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-v6-request-file-v1.mjs",
+      "sha256": "2529b54f14e0fabaf2817d70532929a95984f5d83f90fbb5c52b363a9e6ad591"
+    },
+    {
+      "path": "scripts/workflow-reader-peer-tools-v1-request-file-v1.mjs",
+      "sha256": "75208c3a5d9daf3d857041eee6c52542f394fc710c6ff76419f089f4ac6e621e"
+    },
+    {
+      "path": "scripts/workflow-review-reader-lifecycle-v5-request-file-v1.mjs",
+      "sha256": "74ae8f9f862328640342cb8bcda12ebaf89ed408f4fd42a40d9bbb4c73395d3d"
+    },
+    {
+      "path": "scripts/workflow-review-reader-lifecycle-v6-request-file-v1.mjs",
+      "sha256": "85868f923b7942bd7fe0d4f39c749ffd4f12a44d0814fb5290bd9e50efc4f53c"
+    },
+    {
+      "path": "scripts/workflow-review-reader-lifecycle-v7-request-file-v1.mjs",
+      "sha256": "9241a5c1d1a688b74486874f2150960fdfcc7117f2e99f10f51efc643dddacb3"
+    },
+    {
+      "path": "scripts/lifecycle-java-peer-file-v4/OwnedReaderPeerAgentV1.java",
+      "sha256": "de81e8a05e818d9f7107d769d20f74ed3fff73f167bf7f1628d0feb2e08dbb4c"
+    },
+    {
+      "path": "scripts/lifecycle-java-peer-file-v4/OwnedReaderPeerAttachV1.java",
+      "sha256": "38fd1c9b19cd1573c808407bbeb926cfde6e122f0a4a1987fb863846e1f06ac9"
+    },
+    {
+      "path": "scripts/fixtures/owned-reader-jvm-failure-v5-qa.mjs",
+      "sha256": "655f3a2555c712f4fc3a48339577191c561399808cde6c61f79e5b8af72ec577"
+    },
+    {
+      "path": "tests/owned-reader-jvm-failure-v5.test.mjs",
+      "sha256": "fa66b8f76df3ad09b867566150e7d5b41d3cbc7d092117259bf0e3b7a59881e0"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-diagnostic-bootstrap-v3.mjs",
+      "sha256": "800883183d2317528d185b349e25504c508eff2f6cad0b2e9db2a6e84e0e692e"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-observed-v9.mjs",
+      "sha256": "6631a6be84d2277abddf8726a210f5c195026a6fa46655e019ab9c8a2c039e88"
+    },
+    {
+      "path": ".github/workflows/cold-auth-audit-map-peer-request-v1.yml",
+      "sha256": "60f8d72b7fedbb6baa4092aece705a6d9f190acb9fa63850c5d93929fc1a3be6"
+    },
+    {
+      "path": "tests/fixtures/OwnedReaderPeerRequestFileQaV1.java",
+      "sha256": "ba6bf43ee76e9600ed87ab309121a3d309e56460193cc661aea78829e00b6ae3"
+    }
+  ],
+  "privateRequestFileTransport": true,
+  "agentLoadTokenCarriesOnlyFixedFormatRequestIdAndExpectedContentDigest": true,
+  "maximumRequestPayloadBytes": 16384,
+  "maximumAgentLoadArgumentBytes": 1024,
+  "newOwnerDependencyModules": 29,
+  "pairedJavaSources": 2,
+  "allOriginalAgentOperationsAndReceiptChecksPreserved": true,
+  "allOriginalAttachIdentityChecksPreserved": true,
+  "actualFileIoChecks": 12,
+  "newObserverPathChecks": 2,
+  "originalObserverElevenChecksReused": true,
+  "strictParserFixtureChecks": 17,
+  "workflowFilesParsed": 47,
+  "plannedNodeTests": 210,
+  "plannedOriginalJvmBoundaryChecks": 16,
+  "plannedJavaClassifierChecks": 6,
+  "plannedJavaRequestFileChecks": 12,
+  "plannedNativeChecks": 57,
+  "plannedInnerNativeSourcePins": 1794,
+  "outerObservationInputs": 3,
+  "actualNewNativeSourceCountProven": false,
+  "completeNativeIntegrationVerified": false,
+  "linuxFailureFixed": false,
+  "completeFieldMaterialsVerified": false,
+  "formalFieldActivationGranted": false,
+  "fullGoalComplete": false
+}
