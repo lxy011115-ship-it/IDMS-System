@@ -1,0 +1,68 @@
+name: Independent recovery approvals with complete owned facts
+
+on:
+  push:
+    branches: [wip/cold-plan-approval-20261025]
+    paths: ['scripts/**', 'tests/**', 'docs/validation/**', '.github/workflows/cold-plan-approval-v1.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cold-plan-approval-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  cold-readonly-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Authenticate existing source profiles
+        run: node scripts/verify-ci-source-policy-v2.mjs
+      - name: Check credential, SCRAM and intent boundaries
+        run: node --max-old-space-size=1024 --experimental-vm-modules --test --test-reporter=tap tests/cold-source-full-facts-v2.test.mjs tests/cold-readonly-review-v13.test.mjs tests/cold-owned-review-session-v5.test.mjs tests/cold-plan-approval-progress-v1.test.mjs tests/cold-review-image-config-v2.test.mjs tests/cold-review-consistency-v1.test.mjs tests/cold-current-actors-v6.test.mjs tests/cold-review-plan-journal-v2.test.mjs tests/workflow-reader-peer-queue-v1.test.mjs tests/workflow-reader-sql-window-v1.test.mjs tests/cold-plan-approval-journal-v1.test.mjs tests/cold-plan-approval-coordinator-v1.test.mjs tests/cold-plan-approval-wal-lock-v1.test.mjs tests/cold-plan-approval-anchor-abort-v1.test.mjs tests/cold-plan-approval-capacity-v1.test.mjs
+      - name: Verify actual JVM reply count, byte and reserved-release boundaries
+        run: |
+          mkdir -p "$RUNNER_TEMP/idms-reader-reply-budget"
+          "$JAVA_HOME_21_X64/bin/javac" --release 21 -d "$RUNNER_TEMP/idms-reader-reply-budget" services/workflow-review-reader-v4/src/main/java/com/idms/workflowreview/ReaderPeerReplyBudget.java tests/fixtures/java/ReaderPeerReplyBudgetQa.java
+          "$JAVA_HOME_21_X64/bin/java" -Xms32m -Xmx256m -cp "$RUNNER_TEMP/idms-reader-reply-budget" com.idms.workflowreview.ReaderPeerReplyBudgetQa
+      - name: Fetch and authenticate Apache Maven 3.9.11
+        id: maven
+        run: python3 scripts/fetch-maven-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Fetch and authenticate Keycloak 26.8.1
+        id: identity
+        run: python3 scripts/fetch-keycloak-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Prepare public approved source data
+        id: source
+        run: node scripts/fixtures/create-controlled-cold-public-source-v1-qa.mjs "$RUNNER_TEMP/idms-readonly-review-source.json" "$GITHUB_OUTPUT"
+      - name: Verify complete restore, both commit outcomes and running owned-reader review
+        id: native
+        env:
+          IDMS_MAVEN_HOME: ${{ steps.maven.outputs.directory }}
+          IDMS_KEYCLOAK_SOURCE: ${{ steps.identity.outputs.directory }}
+          IDMS_SOURCE_BUNDLE: ${{ steps.source.outputs.file }}
+          IDMS_SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
+        run: node scripts/verify-cold-plan-approval-observed-v1.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256" ""
+      - name: Independently rebuild both roots, authenticate full archive and normal retirement
+        if: always() && (steps.native.outcome == 'success' || steps.native.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const cases=(await readdir('work/cold-plan-approval-native-v1-20261025',{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
+          assert.equal(cases.length,1);
+          execFileSync(process.execPath,['scripts/verify-cold-plan-approval-cleanup-v1.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source unchanged
+        if: always()
+        run: git diff --exit-code --no-ext-diff
