@@ -1,0 +1,37 @@
+import test,{before,after} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {resolve,join,dirname} from 'node:path';
+import {randomBytes} from 'node:crypto';
+import {inspectColdRegistrationCoreMaterialsV10 as inspect} from '../scripts/cold-registration-core-materials-v10-request-file-v1.mjs';
+import {createColdRegistrationCoreMaterialQaV2 as create} from '../scripts/fixtures/cold-registration-core-materials-v2-qa.mjs';
+import {describeColdRegistrationRoleResponsibilitiesV1 as describe} from '../scripts/cold-registration-role-responsibilities-v1.mjs';
+import {readRuntimeColdReviewWithFieldSourceV2} from '../scripts/runtime-cold-readonly-control-v7.mjs';
+const original=resolve('work/field-current-materials-native-v8-20261026/542c8702bd63'),root=resolve('work/cold-role-credentials-v1-20261026'),json=async file=>JSON.parse(await readFile(file,'utf8'));
+let cap,fixture,proof,raw;
+const runtimeDuties=new Set(['CORE_BUSINESS_HTTP','CORE_QUEUE_HTTP','CORE_BUSINESS_WORKER','CORE_QUEUE_WORKER','AUTHENTICATION_RUNTIME','WORKFLOW_RUNTIME','WORKFLOW_CANCEL','WORKFLOW_RESERVATION']);
+before(async()=>{
+  const report=await json(join(original,'verification.json')),trust=report.fieldColdSourceCreation.sources.find(value=>value.mode==='ENABLED').trust;
+  fixture=await create({directory:join(root,'positive'),originalDirectory:original,trust});cap=await inspect(fixture.config);proof=cap.evidence();
+  const source=(await readRuntimeColdReviewWithFieldSourceV2(trust)).source,auth=await json(fixture.paths.get('auth-runtime.private.json'));
+  raw={source,runtimeRoles:proof.roleResponsibilities.rows.flatMap(row=>row.duties.filter(value=>runtimeDuties.has(value.kind)).map(value=>({roleOid:row.roleOid,databaseOid:value.databaseOid,duty:value.kind}))),authenticationDatabaseOid:proof.authDatabaseOid,authenticationBackupRoleOid:source.inventory.roles.find(value=>value.rolname===auth.account.backupRole).oid};
+});
+after(async()=>{await cap?.close();});
+const rejects=(mutate,code)=>{const value=structuredClone(raw);mutate(value);assert.throws(()=>describe(value),error=>error.code===code);};
+test('real core configuration identifies 26 of 29 registered roles and eleven runtime identities',()=>{assert.equal(proof.implementationVersion,10);assert.equal(proof.roleResponsibilities.registeredRoles,29);assert.equal(proof.roleResponsibilities.describedRoles,26);assert.equal(proof.roleResponsibilities.runtimeRoleCount,11);assert.equal(proof.roleResponsibilities.uncoveredRoleOids.length,3);});
+test('the unconfigured audit delivery and two retired backup roles remain explicitly uncovered',()=>{const names=proof.roleResponsibilities.uncoveredRoleOids.map(oid=>raw.source.inventory.roles.find(value=>value.oid===oid).rolname);assert.equal(names.filter(name=>name.endsWith('_delivery')).length,1);assert.equal(names.filter(name=>name.endsWith('_backup')).length,2);assert.equal(proof.roleResponsibilities.allRegisteredResponsibilitiesDescribed,false);assert.equal(proof.roleResponsibilities.fullRegisteredRoleMatrixVerified,false);assert.equal(proof.roleResponsibilities.authorizationGranted,false);});
+test('configured password verification rejects a supplied non-owned SQL-shaped callback before I/O',()=>{let called=false;assert.throws(()=>cap.verifyConfiguredRoleCredentialsSql({getTransactionStatus(){return 'T';},query(){called=true;}}),error=>error.code==='COLD_REGISTRATION_CORE_ROLE_SQL_TRANSACTION');assert.equal(called,false);});
+test('the role description and core public evidence contain no configured password or private path',async()=>{const auth=await json(fixture.paths.get('auth-runtime.private.json')),member=await json(fixture.components[0].runtimeFile),text=JSON.stringify(proof);for(const value of [auth.account.password,member.business.account.password,fixture.root])assert(!text.includes(value));assert.equal(proof.roleResponsibilities.currentConfiguredPasswordsVerified,false);assert.equal(proof.roleResponsibilities.currentRolePrivilegesVerified,false);});
+test('duplicate registered source OID is rejected',()=>rejects(value=>value.source.inventory.roles.push(structuredClone(value.source.inventory.roles[0])),'COLD_REGISTRATION_ROLE_RESPONSIBILITY_ROLE_SET'));
+test('same role name with a different OID is rejected',()=>rejects(value=>{value.source.inventory.roles[1].rolname=value.source.inventory.roles[0].rolname;},'COLD_REGISTRATION_ROLE_RESPONSIBILITY_ROLE_SET'));
+test('an extra registered OID cannot be treated as covered by equal array counts',()=>rejects(value=>{value.source.registeredRoleOids[0]='4294967294';},'COLD_REGISTRATION_ROLE_RESPONSIBILITY_ROLE_SET'));
+test('duplicate runtime duty claim is rejected',()=>rejects(value=>value.runtimeRoles.push(structuredClone(value.runtimeRoles[0])),'COLD_REGISTRATION_ROLE_RESPONSIBILITY_RUNTIME_DUPLICATE'));
+test('a runtime identity cannot be rebound to another database',()=>rejects(value=>{value.runtimeRoles[0].databaseOid=raw.source.active.find(gate=>gate.databaseOid!==value.runtimeRoles[0].databaseOid).databaseOid;},'COLD_REGISTRATION_ROLE_RESPONSIBILITY_RUNTIME_BINDING'));
+test('a database owner cannot be relabeled as a runtime account',()=>rejects(value=>{const gate=value.source.active.find(gate=>gate.databaseOid===value.runtimeRoles[0].databaseOid);value.runtimeRoles[0].roleOid=gate.ownerOid;},'COLD_REGISTRATION_ROLE_RESPONSIBILITY_RUNTIME_BINDING'));
+test('unknown runtime duties cannot act as an other-covered category',()=>rejects(value=>{value.runtimeRoles[0].duty='OTHER_COVERED';},'COLD_REGISTRATION_ROLE_RESPONSIBILITY_RUNTIME'));
+test('new role membership cannot turn an already-configured runtime into a migrator',()=>rejects(value=>value.source.inventory.memberships.push({roleid:value.source.active[0].ownerOid,member:value.runtimeRoles[0].roleOid,grantor:value.source.inventory.identity.control_oid,admin_option:false,inherit_option:false,set_option:true}),'COLD_REGISTRATION_ROLE_RESPONSIBILITY_CONFLICT'));
+test('different passwords for the same real configured role are rejected by the new core compiler',async()=>{
+  const broken=await create({directory:join(root,'conflict'),originalDirectory:original,trust:fixture.trust});
+  await broken.change(broken.components.find(value=>value.tenantId==='acme'&&value.mode==='HTTP'&&value.kind==='GOVERNANCE').runtimeFile,value=>{value.business.account.password=randomBytes(32).toString('base64url');});
+  await assert.rejects(inspect(broken.config),error=>error.code==='COLD_REGISTRATION_CORE_ROLE_CREDENTIAL_CONFLICT');
+});

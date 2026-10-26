@@ -1,0 +1,9 @@
+# 跨平台测试任务的原监督进程退出证明
+
+现有Windows使用C#原进程拥有者观察Node监督者退出；新的Linux同版验证需要可移植父进程链。新增Node启动者仅启动固定自有监督模块，验证原私密任务、Node/入口/监督者源码摘要及账户绑定，排他保存一次启动意图，随后始终持有新spawn的原ChildProcess并等待真实close及双输出流关闭。不接管PID、不用信号结束任务，不把超时当终态，也不因观察失败重启。
+
+监督者继续持有实际测试根进程并签名其原终态。父启动者保存的是监督者的真实退出证明，明确process kind=ORIGINAL_SUPERVISOR_CHILD；还要求签名任务终态中的supervisorPid等于自己的新ChildProcess.pid。监督者exit0不能单独视为测试通过：测试根exit7等负例仍由原签名回执保留，最终normal=false。重复启动被原排他意图拒绝。父启动者只记录有界字节计数和安全状态，不保存原监督者stderr/stdout。
+
+owned-verification-job-v2保留原V1私密任务/签名协议及Windows命名管道，Linux改为固定短抽象Unix socket名，避免GitHub长checkout路径超过Unix socket路径限制。依据[Node 24.20.0 net官方文档](https://nodejs.org/download/release/v24.20.0/docs/api/net.html#identifying-paths-for-ipc-connections)，Linux可使用以NUL开头的抽象地址；Windows继续使用命名管道。此处文档支持接口语义，真实Linux执行仍须后续精确Git版CI证明，Windows通过不能替代Linux通过。
+
+组件验证使用新的无业务测试根：实际RUNNING探测、原根正常0及监督者正常0/双流关闭、根故意7而监督者仍真实0的区别、重复启动拒绝。所有原资源自然退出，保留私密回执用于核验。不会操作现有网站或数据库。新启动者并不授予系统部署或业务权限，也不代表当前60项或完整目标通过。

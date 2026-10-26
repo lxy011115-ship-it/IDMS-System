@@ -1,0 +1,8 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {DatabaseSync} from 'node:sqlite';
+import {canonical} from '../../server/imports.ts';
+import {reviewSourceHashV1 as hash} from '../../scripts/workflow-review-source-facts-v1.mjs';
+import {readColdCurrentDeploymentReviewIntentV1} from '../../scripts/cold-current-deployment-review-contract-v1.mjs';
+assert.equal(process.argv.length,3);const input=JSON.parse(await readFile(process.argv[2],'utf8')),context=JSON.parse(await readFile(input.contextFile,'utf8')).context,db=new DatabaseSync(input.databaseFile,{readOnly:true,allowExtension:false});
+try{db.exec('BEGIN');const row=db.prepare('SELECT body,body_hash,phase,details,details_hash FROM cold_control WHERE id=1').get();assert.equal(hash(row.body),row.body_hash);assert.equal(row.body_hash,context.trust.sourceHash);assert.equal(row.phase,'REVIEW_READY_V3');assert.equal(hash(row.details),row.details_hash);const details=JSON.parse(row.details),before=canonical(details.review),value=readColdCurrentDeploymentReviewIntentV1({db,details,context,privateRecord:input.privateRecord,expectedIntentSha256:input.expectedIntentSha256});assert.equal(canonical(details.review),before);db.exec('COMMIT');console.log(JSON.stringify({format:'CURRENT_DEPLOYMENT_CONTRACT_REOPEN_COMPONENT_V1',recorded:value.recorded,historicalDataOnly:value.historicalDataOnly,ownedRuntimeSessionMinted:value.ownedRuntimeSessionMinted,programStartupGranted:value.programStartupGranted,mqttApplicationProbeGranted:value.mqttApplicationProbeGranted,businessWritesEnabled:value.businessWritesEnabled,formalFieldActivationGranted:value.formalFieldActivationGranted}));}finally{db.close();}
