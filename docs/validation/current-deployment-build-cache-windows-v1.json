@@ -1,0 +1,28 @@
+{
+  "format": "CURRENT_DEPLOYMENT_BUILD_CACHE_WINDOWS_VALIDATION_V1",
+  "at": "2026-10-26T20:36:59.317Z",
+  "platform": "win32",
+  "actualEmptyOfflineCacheFailureReproduced": true,
+  "actualOnlineBuilds": 2,
+  "actualOfflineRebuilds": 2,
+  "projects": [
+    {
+      "kind": "workflow",
+      "entries": 217,
+      "allDecompressedJarEntryBytesIdentical": true
+    },
+    {
+      "kind": "reader",
+      "entries": 211,
+      "allDecompressedJarEntryBytesIdentical": true
+    }
+  ],
+  "all4085OriginalInputsUnchanged": true,
+  "staticModules": 92,
+  "completeNative15OrOriginalSqlOidcTransportReplayed": false,
+  "noDatabaseIdentityBrokerOrBusinessServerStarted": true,
+  "actualLinuxExecuted": false,
+  "originalGitHubFailureSoleCauseClaimed": false,
+  "actualStartupProgramsApproved": false,
+  "fullGoalComplete": false
+}
