@@ -1,0 +1,32 @@
+{
+  "format": "FIELD_CURRENT_ROOT_DEPENDENCY_COMPATIBILITY_V1",
+  "parentCommit": "e1e92252485e7406bb367c07513530f0b66da3b5",
+  "pins": [
+    {
+      "path": "package.json",
+      "localSha256": "2319f1b7676794c3cfad3be38d444870e3da22e716410c800ec8e2fd3000c5ba",
+      "publishedParentSha256": "03f72e0ec9aea8d1ab48db71d0f09cfe65a5a462a3a920bfc54e8d7c56aa45ff",
+      "publishedParentOid": "72f0fa69fd8cf1d75d330dae0f33abac101c5f80"
+    },
+    {
+      "path": "package-lock.json",
+      "localSha256": "612f2cf7d5ade96eb3c8417ae988f56cd36eb899d8825e30beec6fc19338b056",
+      "publishedParentSha256": "f13878b138d235e8a0a481a1ee18a503aefb1c2709ec67f1cf2830c06382512b",
+      "publishedParentOid": "7dbb1e4e43601e2785c344ded26fd440daac5c92"
+    }
+  ],
+  "exactAdditionalDirectDependencies": {
+    "node-opcua-common": "2.187.8",
+    "node-opcua-crypto": "6.2.3",
+    "node-opcua-nodeid": "2.187.0",
+    "node-opcua-status-code": "2.187.0"
+  },
+  "onlyAdditionalScript": "pretest creates .local",
+  "allNonRootLockEntriesExactlyEqual": true,
+  "allInstalledAdditionalDirectVersionsMatchPublishedLock": true,
+  "noDependencyVersionResolutionOrIntegrityChanged": true,
+  "localManifestsUnchanged": true,
+  "parentGitManifestsPreserved": true,
+  "actualNativeRerun": false,
+  "fullGoalComplete": false
+}
