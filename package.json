@@ -84,7 +84,9 @@
     "calendar:history:sql:verify": "node scripts/verify-calendar-history-sql.mjs",
     "calendar:history:live:verify": "node scripts/verify-live-calendar-history.mjs",
     "spares:setup": "node scripts/setup-spares.mjs",
-    "spares:verify": "node scripts/verify-spares.mjs"
+    "spares:verify": "node scripts/verify-spares.mjs",
+    "spares:insights:setup": "node scripts/setup-spares-insights.mjs",
+    "spares:insights:verify": "node scripts/verify-spares-insights.mjs"
   },
   "dependencies": {
     "@js-temporal/polyfill": "0.5.1",

@@ -110,7 +110,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse) {
 
     const ctx = await context(req);
     authorize(ctx, "read");bindRequestTenant(ctx.tenantId);
-    if(['/api/v1/spares/summary','/api/v1/spares/list','/api/v1/spares/detail','/api/v1/spares/options','/api/v1/spares/workorder-usage'].includes(url.pathname)){
+    if(['/api/v1/spares/summary','/api/v1/spares/list','/api/v1/spares/detail','/api/v1/spares/options','/api/v1/spares/workorder-usage','/api/v1/spares/material-plans','/api/v1/spares/stock-insight','/api/v1/spares/replacement-insight'].includes(url.pathname)){
       if(storageMode!=='postgres-tenant-databases')throw new DomainError(503,'备件采购模块需要企业PostgreSQL数据库');
       if(req.method!=='GET'){res.setHeader('Allow','GET');throw new DomainError(405,'备件查询仅支持GET');}const pool=tenantPool(ctx.tenantId),endpoint=url.pathname.slice('/api/v1/spares/'.length) as SpareEndpoint;
       return json(res,200,await readSparesQuery(pool,ctx,endpoint,url.searchParams,c=>verifySqlRead(pool,c,ctx.tenantId)));

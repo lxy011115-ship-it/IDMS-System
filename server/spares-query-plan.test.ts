@@ -23,6 +23,16 @@ test('cursor binds actor, scope, tenant, query and both business revisions',()=>
  assert.throws(()=>sparePageAnchor(ctx,{...next,cursor:cursor.slice(0,-2)+'zz'},stamp),e=>e.status===400);
  assert.throws(()=>sparePageAnchor(ctx,{...next,cursor:'.invalid'},stamp),e=>e.status===400);
 });
+test('insight parameters require exact references and cursors bind the basis and tuple',()=>{
+ const partId='00000000-0000-0000-0000-000000000001',warehouseId='00000000-0000-0000-0000-000000000002',params=new URLSearchParams({partId,warehouseId,limit:'1'}),plan=spareQueryPlan('stock-insight',params);
+ assert.equal(plan.basis,'plans');assert.equal(spareQueryPlan('material-plans',new URLSearchParams('workOrderId=WO-UPPER')).workOrderId,'WO-UPPER');
+ for(const query of ['partId='+partId,'partId='+partId+'&warehouseId='+warehouseId+'&basis=unknown','partId='+partId+'&warehouseId='+warehouseId+'&warehouseId='+warehouseId,'partId='+partId+'&warehouseId='+warehouseId+'&q=hidden'])assert.throws(()=>spareQueryPlan('stock-insight',new URLSearchParams(query)),e=>e.status===400);
+ for(const endpoint of ['material-plans','replacement-insight'] as const)assert.throws(()=>spareQueryPlan(endpoint,new URLSearchParams()),e=>e.status===400);
+ assert.equal(spareQueryPlan('replacement-insight',new URLSearchParams({linkId:partId})).linkId,partId);
+ const anchor={first:'2026-12-01',second:partId},cursor=sparePageCursor(ctx,plan,stamp,anchor),next={...plan,cursor};
+ assert.deepEqual(sparePageAnchor(ctx,next,stamp),anchor);
+ for(const changed of [{...next,basis:'purchases'},{...next,warehouseId:partId},{...next,partId:warehouseId}])assert.throws(()=>sparePageAnchor(ctx,changed,stamp),e=>e.status===409);
+});
 test('cancelled reads do not borrow a connection and release a begun transaction after proof cancellation',async()=>{
  const before=resident.snapshot().total,controller=new AbortController();let acquired=0,released=0;const calls:string[]=[];
  let destroyed=false;const client=Object.assign(new EventEmitter(),{async query(sql:string){calls.push(sql);return {rows:sql.includes('to_regclass')?[{relation:'qa-present'}]:sql.includes('SELECT version')?[{version:1}]:[]};},release(remove?:boolean){released++;destroyed=!!remove;if(remove)queueMicrotask(()=>client.emit('end'));}}),pool={async connect(){acquired++;return client;}};

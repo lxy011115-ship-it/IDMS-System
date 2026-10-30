@@ -5,6 +5,7 @@ import {authorizeSpare,type SparesState,type SpareEntity,type SpareReferences} f
 import type {AccessContext} from './access.ts';
 import {factKey,exactFact,type SparesFacts} from './spares-facts.ts';
 import {checkSparesRead} from './spares-audit.ts';
+import {assertSparesInsightsSchema} from './spares-insights-schema.ts';
 
 const bad=()=>new DomainError(503,'备件命令资料边界暂无法核验');
 const uuid=/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
@@ -22,7 +23,7 @@ export async function prepareSpareCommand(client:pg.PoolClient,ctx:AccessContext
  const ready=(await client.query("SELECT to_regclass('idms_spares.migrations') AS relation")).rows[0]?.relation;
  const capability=ready?(await client.query("SELECT version FROM idms_spares.migrations WHERE name='capacity'")).rows[0]?.version:undefined;
  if(![1,2].includes(capability))throw new DomainError(503,'请先完成兼容的备件容量索引迁移');
- if(capability===2&&(await client.query("SELECT version FROM idms_spares.migrations WHERE name='insights'")).rows[0]?.version!==1)throw new DomainError(503,'备件用料计划能力标记不完整');
+ if(capability===2)await assertSparesInsightsSchema(client);
  if(action.startsWith('material-plan.')&&capability!==2)throw new DomainError(503,'请先完成工单用料计划专用迁移');
  const pending=new Set<string>(),seen=new Set<string>(),entities:SpareEntity[]=[];
  const enqueue=(value:unknown,stored=false)=>{if(typeof value!=='string'||!uuid.test(value))throw stored?bad():new DomainError(400,'备件关联标识无效');const id=value.toLowerCase();if(!seen.has(id))pending.add(id);};

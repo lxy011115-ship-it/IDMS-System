@@ -1,0 +1,104 @@
+import assert from 'node:assert/strict';
+import {withSparesInsightsFixture} from './fixtures/spares-insights-fixture.mjs';
+import {migrateSparesInsights} from './spares-insights-migration.mjs';
+import {captureSparesBackupAnchor} from './spares-backup-anchor.mjs';
+import {verifySparesDatabase} from '../server/spares-db.ts';
+
+if(process.argv.slice(2).some(v=>v!=='--growth')||process.argv.slice(2).length>1)throw Error('Only optional --growth is supported');
+await withSparesInsightsFixture(async f=>{
+ const {owner,migrator,roles,ctx,reviewer,proof,command,query,historical}=f,checks=[];
+ await owner.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');const backup={checks:await proof(owner),spares:await captureSparesBackupAnchor(owner,'qa')};await owner.query('COMMIT');
+ const migrate=()=>migrateSparesInsights({client:migrator,tenantId:'qa',...roles,backup,verifyCurrent:proof});
+ const unavailable=await query('material-plans',{workOrderId:'QA-ORDER'});assert.equal(unavailable.ready,false);assert.equal(unavailable.features.materialPlans,false);
+ await owner.query('GRANT CREATE ON SCHEMA idms_spares TO "'+roles.appRole+'"');await assert.rejects(migrate(),/grants/);
+ assert.equal((await owner.query("SELECT version FROM idms_spares.migrations WHERE name='capacity'")).rows[0].version,1);
+ assert.equal((await owner.query("SELECT to_regclass('idms_spares.material_plan_records') AS name")).rows[0].name,null);
+ await owner.query('REVOKE CREATE ON SCHEMA idms_spares FROM "'+roles.appRole+'"');
+ const installed=await migrate();assert.equal(installed.capacity,2);assert.equal(installed.postedFactsUnchanged,true);assert.equal((await migrate()).alreadyInstalled,true);
+ await assert.rejects(f.pool.query('CREATE TABLE idms_spares.forbidden_by_role(id int)'),/permission denied/);
+ await assert.rejects(f.pool.query('UPDATE idms_spares.events SET hash=hash'),/permission denied/);
+ checks.push('explicit migration rolls back incomplete privileges, preserves facts, grants only required reads and supports exact re-run');
+ const part=await command('part.create',{siteCode:'F1',code:'BASIS-BRG',name:'依据轴承',unit:'只',safety:'3'}),warehouse=await command('warehouse.create',{siteCode:'F1',code:'BASIS-WH',name:'依据仓库'}),supplier=await command('supplier.create',{siteCode:'F1',code:'BASIS-SUP',name:'合成供应商',leadDays:0});
+ const reload=async id=>(await owner.query("SELECT body FROM idms_spares.entities WHERE tenant_id='qa' AND id=$1",[id])).rows[0].body;
+ async function purchase(quantity,status='ORDERED'){
+  let p=await command('purchase.create',{supplierId:supplier.id,warehouseId:warehouse.id,dueDate:'2026-12-01',lines:[{partId:part.id,quantity,unitPrice:'10'}]});
+  if(status==='DRAFT')return p;p=await command('purchase.submit',{id:p.id,expectedVersion:p.version});p=await command('purchase.approve',{id:p.id,expectedVersion:p.version,decision:'APPROVED',comment:'独立核对合成采购'},reviewer);
+  if(status==='APPROVED')return p;return command('purchase.order',{id:p.id,expectedVersion:p.version});
+ }
+ const supply=await purchase('10');await command('purchase.receive',{id:supply.id,expectedVersion:supply.version,lineId:supply.lines[0].id,accepted:'10',reason:'合成收齐'});
+ const issue=await command('stock.issue',{partId:part.id,warehouseId:warehouse.id,deviceCode:'QA-PUMP',workOrderId:'QA-ORDER',quantity:'6',reason:'实际领用6只'});
+ const link=await command('link.create',{partId:part.id,deviceCode:'QA-PUMP',position:'实际安装不重复扣库',quantity:'6',cycleDays:60});await command('replacement.create',{id:issue.id,linkId:link.id,quantity:'6',date:new Date(Date.now()+8*3600000).toISOString().slice(0,10),reason:'实际领用内安装'});
+ let plan=await command('material-plan.create',{partId:part.id,warehouseId:warehouse.id,workOrderId:'QA-ORDER',quantity:'14',needDate:'2026-12-01',reason:'计划14，净领6，待领8'});
+ let incoming=await purchase('2');await purchase('3','APPROVED');await purchase('99','DRAFT');
+ const pair={partId:part.id,warehouseId:warehouse.id},stock=()=>query('stock-insight',pair);
+ let view=await stock();assert.deepEqual([view.calculation.onHandMilli,view.calculation.safetyMilli,view.calculation.remainingDemandMilli,view.calculation.registeredOutstandingMilli,view.calculation.currentDemandGapMilli,view.calculation.suggestedMilli],[4000,3000,8000,2000,4000,5000]);
+ assert.equal(view.calculation.approvedNotOrderedMilli,3000);assert.equal(view.calculation.reserved,false);assert.equal(view.canRequest,true);
+ const work=await query('material-plans',{workOrderId:'QA-ORDER'});assert.equal(work.items[0].quantities.netIssuedMilli,6000);assert.equal(work.items[0].operations.edit,true);assert.equal(work.items[0].quantities.remainingMilli,8000);
+ const unassigned={...ctx,actorId:'other-tech',roles:['maintenance-engineer']};const readOnlyPlan=await query('material-plans',{workOrderId:'QA-ORDER'},unassigned);assert.equal(readOnlyPlan.canCreate,false);assert.equal(readOnlyPlan.items[0].operations.edit,false);assert.equal(readOnlyPlan.items[0].operations.close,false);
+ checks.push('4/3/8/2 example agrees with explicit reference quantities; actual installation does not deduct twice and approved/draft lines are excluded from registered outstanding');
+ const receipt=await command('purchase.receive',{id:incoming.id,expectedVersion:incoming.version,lineId:incoming.lines[0].id,accepted:'1',reason:'部分到货1只'});
+ view=await stock();assert.equal(view.calculation.onHandMilli,5000);assert.equal(view.calculation.registeredOutstandingMilli,1000);assert.equal(view.calculation.suggestedMilli,5000);
+ await command('stock.supplier-return',{id:receipt.id,quantity:'1',reason:'原到货退供'});view=await stock();assert.equal(view.calculation.onHandMilli,4000);assert.equal(view.calculation.registeredOutstandingMilli,2000);
+ incoming=await reload(incoming.id);await command('purchase.close',{id:incoming.id,expectedVersion:incoming.version,reason:'未收部分取消补购'});view=await stock();assert.equal(view.calculation.registeredOutstandingMilli,0);assert.equal(view.calculation.suggestedMilli,7000);
+ const purchaseBasis=await query('stock-insight',{...pair,basis:'purchases',limit:'100'});assert.ok(purchaseBasis.basis.items.some(p=>p.purchaseId===incoming.id&&p.status==='CLOSED'&&p.outstandingMilli===0));assert.ok(purchaseBasis.basis.items.every(p=>p.arrivalDate===null));
+ checks.push('partial receipts and supplier returns preserve net outstanding; closed, approved-only and draft purchases do not provide incoming cover or an arrival promise');
+ plan=await command('material-plan.edit',{id:plan.id,expectedVersion:plan.version,quantity:'4',needDate:'2026-12-01',reason:'核对实际领用超过计划'});
+ let plans=await query('material-plans',{workOrderId:'QA-ORDER'});assert.equal(plans.items[0].quantities.overPlanMilli,2000);assert.equal(plans.items[0].quantities.remainingMilli,0);
+ const extra=await command('stock.issue',{partId:part.id,warehouseId:warehouse.id,deviceCode:'QA-PUMP',workOrderId:'QA-ORDER',quantity:'1',reason:'超计划合法领用仍允许'});await command('stock.return',{id:extra.id,quantity:'1',reason:'未使用退回'});
+ plan=await command('material-plan.edit',{id:plan.id,expectedVersion:plan.version,quantity:'14',needDate:'2026-12-01',reason:'恢复核对计划'});
+ plan=await command('material-plan.close',{id:plan.id,expectedVersion:plan.version,reason:'先关闭计划核对'});assert.equal((await stock()).calculation.remainingDemandMilli,0);
+ await owner.query("UPDATE public.business_work_orders SET body=body||'{\"state\":\"CLOSED\"}'::jsonb WHERE id='QA-ORDER';UPDATE public.business_state SET revision=revision+1 WHERE tenant_id='qa'");assert.equal((await query('material-plans',{workOrderId:'QA-ORDER'})).canCreate,false);
+ await owner.query("UPDATE public.business_work_orders SET body=body||'{\"state\":\"IN_PROGRESS\"}'::jsonb WHERE id='QA-ORDER';UPDATE public.business_state SET revision=revision+1 WHERE tenant_id='qa'");assert.equal((await stock()).calculation.remainingDemandMilli,0);
+ plan=await command('material-plan.reopen',{id:plan.id,expectedVersion:plan.version,reason:'人工确认重新启用'});assert.equal((await stock()).calculation.remainingDemandMilli,8000);
+ await owner.query("UPDATE public.business_work_orders SET body=body||'{\"state\":\"CLOSED\"}'::jsonb WHERE id='QA-ORDER';UPDATE public.business_state SET revision=revision+1 WHERE tenant_id='qa'");assert.equal((await stock()).calculation.remainingDemandMilli,0);assert.equal((await query('material-plans',{workOrderId:'QA-ORDER'})).items[0].operations.edit,false);
+ await owner.query("UPDATE public.business_work_orders SET body=body||'{\"state\":\"IN_PROGRESS\"}'::jsonb WHERE id='QA-ORDER';UPDATE public.business_state SET revision=revision+1 WHERE tenant_id='qa'");assert.equal((await stock()).calculation.remainingDemandMilli,8000);
+ await owner.query('INSERT INTO public.business_work_orders VALUES($1,$2,$3)',['qa','ORPHAN-ORDER',{id:'ORPHAN-ORDER',deviceCode:'NO-APPROVED-ASSET',assignee:'clerk',state:'IN_PROGRESS'}]);await owner.query("UPDATE public.business_state SET revision=revision+1 WHERE tenant_id='qa'");const orphan=await query('material-plans',{workOrderId:'ORPHAN-ORDER'});assert.equal(orphan.canCreate,false);assert.ok(orphan.missingConditions.includes('NO_APPROVED_DEVICE'));
+ checks.push('over-plan use remains a warning; net returns, closed plans/orders and explicit reopen retain correct non-reserving demand');
+ await owner.query("INSERT INTO public.managed_import_rows VALUES('qa',2,'00000000-0000-0000-0000-000000000001',3,'DEVICE','synthetic','QA-HIDDEN','synthetic',$1)",[{device_code:'QA-HIDDEN',device_name:'隐藏范围合成泵',site_code:'F1',line_code:'L2'}]);
+ await owner.query('INSERT INTO public.business_work_orders VALUES($1,$2,$3)',['qa','HIDDEN-ORDER',{id:'HIDDEN-ORDER',deviceCode:'QA-HIDDEN',assignee:'other',state:'IN_PROGRESS'}]);
+ await owner.query("UPDATE public.business_state SET revision=revision+1 WHERE tenant_id='qa'");
+ await command('material-plan.create',{...pair,workOrderId:'HIDDEN-ORDER',quantity:'100',needDate:'2026-12-01',reason:'隐藏需求不得泄漏'});
+ await command('stock.issue',{...pair,deviceCode:'QA-HIDDEN',workOrderId:'HIDDEN-ORDER',quantity:'2',reason:'完整共享库存应计入此领用'});
+ const tech={...ctx,actorId:'clerk',roles:['maintenance-engineer'],scope:{sites:['F1'],lines:['L1'],devices:['*'],provided:true}};
+ const restricted=await query('stock-insight',pair,tech);assert.equal(restricted.calculation.remainingDemandMilli,8000);assert.equal(restricted.calculation.onHandMilli,2000);assert.equal(restricted.calculation.suggestedMilli,9000);assert.equal(restricted.calculation.visiblePlanCount,1);assert.ok(!JSON.stringify(restricted).includes('HIDDEN-ORDER'));assert.ok(!JSON.stringify(restricted).includes('隐藏需求'));await assert.rejects(query('material-plans',{workOrderId:'HIDDEN-ORDER'},tech),e=>e.status===404);
+ checks.push('visible demand excludes hidden devices and orders while shared inventory includes their legitimate movements');
+ for(let i=2;i<=3;i++){
+  await owner.query('INSERT INTO public.business_work_orders VALUES($1,$2,$3)',['qa','QA-ORDER-'+i,{id:'QA-ORDER-'+i,deviceCode:'QA-PUMP',assignee:'clerk',state:'IN_PROGRESS'}]);await owner.query("UPDATE public.business_state SET revision=revision+1 WHERE tenant_id='qa'");
+  const p=await command('material-plan.create',{...pair,workOrderId:'QA-ORDER-'+i,quantity:'1',needDate:'2026-12-0'+i,reason:'验证跨页汇总'});await command('material-plan.cancel',{id:p.id,expectedVersion:p.version,reason:'保留取消历史但不计需求'});
+ }
+ const first=await query('stock-insight',{...pair,limit:'1'},tech);assert.equal(first.basis.hasMore,true);assert.equal(first.basis.items.length,1);assert.equal(first.calculation.remainingDemandMilli,8000);assert.equal(first.calculation.visiblePlanCount,3);
+ const next=await query('stock-insight',{...pair,limit:'1',cursor:first.basis.nextCursor},tech);assert.notEqual(first.basis.items[0].entity.id,next.basis.items[0].entity.id);
+ await assert.rejects(query('stock-insight',{...pair,basis:'purchases',limit:'1',cursor:first.basis.nextCursor},tech),e=>e.status===409);
+ await owner.query("UPDATE public.business_state SET revision=revision+1 WHERE tenant_id='qa'");await assert.rejects(query('stock-insight',{...pair,limit:'1',cursor:first.basis.nextCursor},tech),e=>e.status===409);
+ const fresh=await query('stock-insight',{...pair,limit:'1'},tech);const updated=await command('part.update',{id:part.id,expectedVersion:part.version,name:part.name,active:false});await assert.rejects(query('stock-insight',{...pair,limit:'1',cursor:fresh.basis.nextCursor},tech),e=>e.status===409);
+ const inactive=await stock();assert.equal(inactive.calculation.suggestedMilli,null);assert.equal(inactive.canRequest,false);assert.ok(inactive.missingConditions.includes('INACTIVE_CATALOG'));
+ await command('part.update',{id:part.id,expectedVersion:updated.version,name:part.name,active:true});
+ checks.push('basis pages remain bounded and totals span all visible plans; dual revisions and basis changes expire cursors; inactive catalogs make no new recommendation');
+ const decimal=await command('part.create',{siteCode:'F1',code:'BASIS-KG',name:'计量备件',unit:'kg',precision:3,safety:'0.125'});await command('material-plan.create',{partId:decimal.id,warehouseId:warehouse.id,workOrderId:'QA-ORDER',quantity:'1.234',needDate:'2026-12-01',reason:'保留毫单位精度'});
+ const decimalView=await query('stock-insight',{partId:decimal.id,warehouseId:warehouse.id});assert.equal(decimalView.calculation.suggestedMilli,1359);assert.equal(decimalView.part.unit,'kg');
+ const noDemand=await query('stock-insight',{partId:decimal.id,warehouseId:warehouse.id}, {...tech,scope:{sites:['F1'],lines:['L2'],devices:['*'],provided:true}});assert.equal(noDemand.calculation.demandRegistered,false);assert.ok(noDemand.missingConditions.includes('DEMAND_NOT_REGISTERED'));assert.equal(noDemand.calculation.suggestedMilli,125);
+ checks.push('decimal quantities retain exact milli-units and absent visible plans use only safety stock with an explicit missing-demand condition');
+ // Generate actual domain-valid historical replacement evidence solely in QA.
+ const hp=await historical('part.create',{siteCode:'F1',code:'HIST-BRG',name:'登记间隔样本轴承',unit:'只'},'2026-01-01'),hw=await historical('warehouse.create',{siteCode:'F1',code:'HIST-WH',name:'合成历史仓库'},'2026-01-01');
+ const hl=await historical('link.create',{partId:hp.id,deviceCode:'QA-PUMP',position:'历史完整位置',quantity:'2',cycleDays:45,lastDate:'2025-12-01'},'2026-01-01');
+ const opening=await historical('adjustment.create',{partId:hp.id,warehouseId:hw.id,type:'OPENING',quantity:'50',reason:'合成历史期初'},'2026-01-01');await historical('adjustment.approve',{id:opening.id,expectedVersion:opening.version,decision:'APPROVED',comment:'独立合成建账'},'2026-01-01',reviewer);
+ const evidence=()=>query('replacement-insight',{linkId:hl.id,limit:'2'});
+ let e=await evidence();assert.equal(e.evidence.qualifyingDateCount,0);assert.equal(e.link.lastDateRecordExists,false);assert.equal(e.evidence.medianDays,null);
+ async function register(date,quantities){const total=quantities.reduce((a,b)=>a+b,0),m=await historical('stock.issue',{partId:hp.id,warehouseId:hw.id,deviceCode:'QA-PUMP',workOrderId:'QA-ORDER',quantity:String(total),reason:'合成历史领用'},date);for(const quantity of quantities)await historical('replacement.create',{id:m.id,linkId:hl.id,quantity:String(quantity),date,reason:'合成实际更换登记'},date);}
+ await register('2026-01-10',[2]);e=await evidence();assert.equal(e.evidence.qualifyingDateCount,1);assert.equal(e.evidence.enoughSamples,false);assert.equal(e.evidence.minimumDays,null);
+ await register('2026-01-20',[1,1]);await register('2026-02-10',[2,2]);await register('2026-03-05',[2]);
+ e=await evidence();assert.equal(e.evidence.qualifyingDateCount,3);assert.equal(e.evidence.excludedPartialRecordCount,2);assert.equal(e.evidence.fullRecordCount,4);assert.equal(e.evidence.medianDays,null);
+ await register('2026-04-10',[2]);e=await evidence();assert.equal(e.evidence.qualifyingDateCount,4);assert.equal(e.evidence.intervalCount,3);assert.equal(e.evidence.medianDays,31);assert.equal(e.evidence.minimumDays,23);assert.equal(e.evidence.earlyRegistrationDateCount,3);assert.equal(e.evidence.firstDate,'2026-01-10');assert.equal(e.evidence.lastDate,'2026-04-10');assert.equal(e.link.lastDateRecordExists,true);assert.equal(e.evidence.recordCount,7);assert.equal(e.items.length,2);
+ let records=[],cursor='';do{const p=await query('replacement-insight',{linkId:hl.id,limit:'2',...(cursor?{cursor}:{})});records.push(...p.items);cursor=p.nextCursor||'';}while(cursor);assert.equal(records.length,7);assert.equal(new Set(records.map(r=>r.id)).size,7);assert.equal(records.filter(r=>!r.qualifies).length,2);
+ await register('2026-05-10',[2]);e=await evidence();assert.equal(e.evidence.intervalCount,4);assert.equal(e.evidence.medianDays,30.5);assert.equal(e.evidence.minimumDays,23);
+ const noCycle=await historical('link.create',{partId:hp.id,deviceCode:'QA-PUMP',position:'未配置周期',quantity:'1'},'2026-01-01');assert.ok((await query('replacement-insight',{linkId:noCycle.id})).missingConditions.includes('NO_CYCLE_CONFIGURED'));
+ checks.push('replacement evidence handles 0/1/3/4 dates, same-day duplicates, excluded split quantities and manual dates; intervals are 31/23/36 days with median31/min23, never a lifetime prediction');
+ await assert.rejects(migrate(),/changed since/);await verifySparesDatabase(owner,'qa');
+ await owner.query('ALTER INDEX idms_spares.spares_material_plan_unique RENAME TO spares_material_plan_unique_qa_fault');await assert.rejects(stock(),e=>e.status===503&&e.message.includes('索引'));
+ await owner.query('ALTER INDEX idms_spares.spares_material_plan_unique_qa_fault RENAME TO spares_material_plan_unique');assert.equal((await stock()).ready,true);
+ const firstEvent=(await owner.query("SELECT body FROM idms_spares.events WHERE tenant_id='qa' AND sequence=1")).rows[0].body;await owner.query("UPDATE idms_spares.events SET body=body||'{\"actor\":\"tampered\"}'::jsonb WHERE tenant_id='qa' AND sequence=1");
+ await assert.rejects(stock(),e=>e.status===503);await owner.query("UPDATE idms_spares.events SET body=$1 WHERE tenant_id='qa' AND sequence=1",[firstEvent]);await verifySparesDatabase(owner,'qa');
+ checks.push('stale backups cannot authorize migration; hidden old-history corruption blocks insights until the original verified bytes are restored');
+ assert.ok(f.metrics.maxRows<=101);assert.equal(f.metrics.requests,f.metrics.connections);const counts=(await owner.query("SELECT (SELECT count(*)::text FROM idms_spares.entities WHERE tenant_id='qa') AS entities,revision::text AS events FROM idms_spares.state WHERE tenant_id='qa'")).rows[0];if(process.argv.includes('--growth')){assert.ok(BigInt(counts.entities)>10000n);assert.ok(BigInt(counts.events)>20000n);}
+ return {checks,capacity:2,insights:1,counts,applicationRoleQueries:true,historicalEvidence:'domain-generated owner append, synthetic public projection; not enterprise or full-platform evidence'};
+},{growth:process.argv.includes('--growth')});

@@ -72,8 +72,8 @@ const demoGrants: Record<string, string[]> = {
   'demo.auditor': ['read'], 'demo.connector': ['read', 'upload']
 };
 export const sparesPermissionLabels:Record<string,string>={
- 'spares:read':'查看备件采购资料','spares:history':'查询备件业务历史','spares:manage':'维护备件、仓库与供应商及执行采购收货',
- 'spares:request':'编制并提交采购申请','spares:move':'设备领退料及登记实际更换','spares:approve':'独立审批采购及库存调整','spares:finance':'登记发票与付款凭证（不执行支付）'
+ 'spares:read':'查看备件采购资料','spares:history':'查询备件业务历史','spares:manage':'维护备件、仓库、供应商及工单用料计划，执行采购收货',
+ 'spares:request':'编制并提交采购申请','spares:move':'设备领退料、登记实际更换及维护本人负责工单的用料计划','spares:approve':'独立审批采购及库存调整','spares:finance':'登记发票与付款凭证（不执行支付）'
 };
 const sparesWrites=['spares:manage','spares:request','spares:move','spares:approve','spares:finance'];
 // Make existing domain capabilities visible in the same catalog as the other

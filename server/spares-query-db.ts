@@ -10,6 +10,8 @@ import {businessDay,sparesCapabilities} from './spares.ts';
 import {spareQueryScope} from './spares-query-scope.ts';
 import {spareQueryPlan,sparePageCursor,sparePageAnchor,type SpareEndpoint,type SpareQueryPlan,type SpareQueryStamp} from './spares-query-plan.ts';
 import {spareTransaction} from './spares-transaction.ts';
+import {readSpareInsights} from './spares-insights-db.ts';
+import {assertSparesInsightsSchema} from './spares-insights-schema.ts';
 
 const integrity=()=>new DomainError(503,'备件查询资料暂无法核验');
 const integer=(value:unknown,negative=false)=>exactFact(value,!negative);
@@ -41,7 +43,7 @@ export async function readSparesQuery(pool:pg.Pool,ctx:AccessContext,endpoint:Sp
    if(!(await c.query("SELECT to_regclass('idms_spares.migrations') AS relation")).rows[0]?.relation)throw new DomainError(503,'请先完成备件容量索引迁移');
    const capability=(await c.query("SELECT version FROM idms_spares.migrations WHERE name='capacity'")).rows[0]?.version;
    if(![1,2].includes(capability))throw new DomainError(503,'备件数据库能力与当前代码不兼容');
-   if(capability===2&&(await c.query("SELECT version FROM idms_spares.migrations WHERE name='insights'")).rows[0]?.version!==1)throw new DomainError(503,'备件用料计划能力标记不完整');
+   if(capability===2)await assertSparesInsightsSchema(c);
    // Verification belongs to the caller's established current-business proof.
    // It must run on this connection, never through a second pool acquisition.
    await verifyCurrent(c);checkSparesRead();
@@ -51,9 +53,11 @@ export async function readSparesQuery(pool:pg.Pool,ctx:AccessContext,endpoint:Sp
    const anchor=sparePageAnchor(ctx,plan,stamp);await verifySpareAudit(c,ctx.tenantId,stamp.revision);
    const scope=spareQueryScope(ctx),values=[...scope.values];
    const param=(v:unknown)=>{values.push(v);return '$'+values.length;};
-   const query=async(text:string)=>{checkSparesRead();const rows=(await currentQuery(c,scope.cte+text,values)).rows;checkSparesRead();accountValue(rows);return rows;};
-   const result=endpoint==='summary'?await summary():endpoint==='detail'?await detail():endpoint==='options'?await options():endpoint==='workorder-usage'?await usage():await list();
-   checkSparesRead();accountValue(result);return {available:true,...stamp,capabilities:sparesCapabilities(ctx),...result};
+   const query=async(text:string,extra?:unknown[])=>{checkSparesRead();const rows=(await currentQuery(c,scope.cte+text,extra?[...scope.values,...extra]:values)).rows;checkSparesRead();accountValue(rows);return rows;};
+   const features={materialPlans:capability===2,insights:capability===2},insight=['material-plans','stock-insight','replacement-insight'].includes(endpoint);
+   if(insight&&capability!==2)return {available:true,...stamp,features,ready:false,notice:'工单用料与备件洞察待专用迁移，现有库存和采购功能仍可使用。'};
+   const result=insight?await readSpareInsights(ctx,plan,(text,extra)=>query(text,extra),page,anchor):endpoint==='summary'?await summary():endpoint==='detail'?await detail():endpoint==='options'?await options():endpoint==='workorder-usage'?await usage():await list();
+   checkSparesRead();accountValue(result);return {available:true,...stamp,features,capabilities:sparesCapabilities(ctx),...(insight?{ready:true,businessDay:businessDay()}:{}),...result};
 
    function page(rows:Record<string,any>[],map:(r:any)=>any){
     if(rows.length>plan.limit+1)throw integrity();const hasMore=rows.length>plan.limit,selected=rows.slice(0,plan.limit);

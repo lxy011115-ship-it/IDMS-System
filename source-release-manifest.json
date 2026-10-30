@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-30T11:19:08.113Z",
+  "createdAt": "2026-10-30T11:44:07.190Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -778,8 +778,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 9826,
-      "sha256": "d9197a8747349b6d7f3f853ab3102896216d417759b641c0c90e8466b2aa90cd",
+      "bytes": 10353,
+      "sha256": "c5325b112ad80089539986ed1e502437fd0fa45a07803ba0294c38b2545b08a0",
       "mode": 438
     },
     {
@@ -2308,8 +2308,8 @@
     },
     {
       "name": "docs/source-release-guide.md",
-      "bytes": 4452,
-      "sha256": "545b58dfddb99d1a7bd3fe326ced7c35399c8c1a25921304cbd62ea733a6781b",
+      "bytes": 4617,
+      "sha256": "f8707738665b22e267d80939a296c93403cef25a17684f89f1c430378f8b77b1",
       "mode": 438
     },
     {
@@ -2322,6 +2322,12 @@
       "name": "docs/spares-audit-proof-guide.md",
       "bytes": 5588,
       "sha256": "9a96f5c175d7dbd204f202610f009aff5e4a69fd256f102c57c9a5cb4c46c521",
+      "mode": 438
+    },
+    {
+      "name": "docs/spares-demand-and-insights-guide.md",
+      "bytes": 6317,
+      "sha256": "f6db8a5242b8b3d771a225417ae2055b8a6627f165f39b0de160da91b9bf65fa",
       "mode": 438
     },
     {
@@ -2338,8 +2344,8 @@
     },
     {
       "name": "docs/spares-paged-query-guide.md",
-      "bytes": 8273,
-      "sha256": "58c0f365bdc6d06f02386957fea642283c4477352c175f063f5c236547eefb1f",
+      "bytes": 8496,
+      "sha256": "12c14c81d6fb16234b5686318ce386279a939e131f7a38673b0e6b29a753b440",
       "mode": 438
     },
     {
@@ -3232,8 +3238,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-10-30--spares-demand-and-explainable-insights.md",
-      "bytes": 3858,
-      "sha256": "f45c7880a7a86c91f9a085c8c5bcb2d31f78c2edbeb4857f582f0b25e2482a73",
+      "bytes": 4630,
+      "sha256": "665eb7980320b4e263ed585103e532da0bee51eb0b32785c994c3f271980e2e2",
       "mode": 438
     },
     {
@@ -5872,8 +5878,8 @@
     },
     {
       "name": "package.json",
-      "bytes": 5899,
-      "sha256": "0fbfc632f489780cacdb4179c8189fd0e76634e1fd0e6b8e683c6749f8b0e4da",
+      "bytes": 6045,
+      "sha256": "9607e8e4b9ec6165db41328482171889ce3a02438c071a5b55bd6d9b6998f1b6",
       "mode": 438
     },
     {
@@ -11907,6 +11913,18 @@
       "mode": 438
     },
     {
+      "name": "scripts/fixtures/spares-insights-fixture.mjs",
+      "bytes": 8833,
+      "sha256": "34186e7ea4c85a42d87993037c535871e4c93fa22e76ed02c05632b69c4e056b",
+      "mode": 438
+    },
+    {
+      "name": "scripts/fixtures/spares-insights-growth-fixture.mjs",
+      "bytes": 1978,
+      "sha256": "dca893020d241f2611118168f6f808f80e8115c293be7496a2f7386710059c0e",
+      "mode": 438
+    },
+    {
       "name": "scripts/fixtures/spares-joint-acceptance.mjs",
       "bytes": 12836,
       "sha256": "6de09fe3a6b07832e34be407c25f3496e147b72ec19d9c69e04e9710b474ebda",
@@ -13731,6 +13749,12 @@
       "mode": 438
     },
     {
+      "name": "scripts/setup-spares-insights.mjs",
+      "bytes": 2544,
+      "sha256": "bce9dcdc73b027bee586159e3ee6e2d414d52ce0a993c931bc21c6fab765a31b",
+      "mode": 438
+    },
+    {
       "name": "scripts/setup-spares.mjs",
       "bytes": 2385,
       "sha256": "d22c8e557bcecb97c3b90ee9d400301b50102d38243ca44dd45e000017176892",
@@ -13782,6 +13806,12 @@
       "name": "scripts/spares-backup-anchor.mjs",
       "bytes": 2545,
       "sha256": "124870cc919b8290aaf2208b6fe572695101a1a22006b8694d1f7434d91bb2a6",
+      "mode": 438
+    },
+    {
+      "name": "scripts/spares-insights-migration.mjs",
+      "bytes": 4741,
+      "sha256": "377b6c11524dda7655e4b286206ee9213b18e2316d3052e26cf1c45d9d1f683b",
       "mode": 438
     },
     {
@@ -14032,8 +14062,8 @@
     },
     {
       "name": "scripts/verify-build.mjs",
-      "bytes": 12315,
-      "sha256": "e8cd40fd4032e9f2f354ce1f8cc0f44b731afe673fa2a391c9962d0f1aa22753",
+      "bytes": 12475,
+      "sha256": "2595903295a5255d0fe1d5ee06b0377a7054b4788c0e6444bfac833423500b33",
       "mode": 438
     },
     {
@@ -17091,6 +17121,12 @@
       "mode": 438
     },
     {
+      "name": "scripts/verify-spares-insights.mjs",
+      "bytes": 19345,
+      "sha256": "f533a2f9e8b33b053979668e9ff82503dfcf288bb26c69eb7d5fd960f8e05a42",
+      "mode": 438
+    },
+    {
       "name": "scripts/verify-spares-transactions.mjs",
       "bytes": 16762,
       "sha256": "168fe7d6a10cc269d0b30a565908231f54acd40d21d7b7a37ce173765f200b81",
@@ -17680,8 +17716,8 @@
     },
     {
       "name": "server/access.ts",
-      "bytes": 7745,
-      "sha256": "3d6da95e3a6c7996f5cef5e9da5afbb002cc120cd86a6c6ae350ae01c8bce35a",
+      "bytes": 7808,
+      "sha256": "7dcc6b77f4c18b113e50e3a83e0bc1bf13428968f9836fa150b9359b7cb3d20c",
       "mode": 438
     },
     {
@@ -19096,8 +19132,8 @@
     },
     {
       "name": "server/index.ts",
-      "bytes": 32222,
-      "sha256": "6d480cd1b90367d317e88bb89e3723a52e5cf337dc930767626872c25045cf77",
+      "bytes": 32322,
+      "sha256": "a043125e3e791418b225184bcdd2bb8e667933129293b41307c46c4fb331ffef",
       "mode": 438
     },
     {
@@ -20176,14 +20212,20 @@
     },
     {
       "name": "server/spares-history.ts",
-      "bytes": 8370,
-      "sha256": "82084df2b9896113af9b99fb4ece4729d2813b03819d2ababbdf45df49a00c65",
+      "bytes": 8400,
+      "sha256": "ab53434684638be26bae2a3515df7d7aeb0de78940c09a02cff0ebd7db53dfa3",
+      "mode": 438
+    },
+    {
+      "name": "server/spares-insights-db.ts",
+      "bytes": 10285,
+      "sha256": "4412e1e3ffa7c78c0df6721f2aed7b2b69a19b177dd26ed331ae56d07f2db46b",
       "mode": 438
     },
     {
       "name": "server/spares-insights-schema.ts",
-      "bytes": 1085,
-      "sha256": "58d7252df29075e0487cefd8f8de5ef79ac306236bf3c02277e884ce23252d76",
+      "bytes": 2129,
+      "sha256": "b2d11e0493a0331667250bce879549084c0c9da6d939dcc591afdd0c5b1f2f76",
       "mode": 438
     },
     {
@@ -20212,26 +20254,32 @@
     },
     {
       "name": "server/spares-query-db.ts",
-      "bytes": 14598,
-      "sha256": "06b62df0b7251234069ccf54af4aba63113f83eb681b9a7030877524e1f1c21e",
+      "bytes": 15130,
+      "sha256": "c43fac3b931f9b604bf491803e46809f8cbc5c4cabfe485e386f081037ae1f05",
       "mode": 438
     },
     {
       "name": "server/spares-query-plan.test.ts",
-      "bytes": 4007,
-      "sha256": "75552860bfa2c0f823038f5ad23e43a04449f0d177c1ccb25344bd0d961c588d",
+      "bytes": 5413,
+      "sha256": "90a07dbbf2ad78abf5b0052c595231b688f6693c9ef9459ad7ab9db832bc5d22",
       "mode": 438
     },
     {
       "name": "server/spares-query-plan.ts",
-      "bytes": 5178,
-      "sha256": "59e39f8ca3c45ae607cbbefdbf9b31889186a39765492e25abb283cfb3253fb6",
+      "bytes": 5815,
+      "sha256": "379a0348683540d8d01c670f76d064a349672bd3006a0306a52f26f273b36eb1",
       "mode": 438
     },
     {
       "name": "server/spares-query-scope.ts",
       "bytes": 1845,
       "sha256": "e9379cb8ec969f45cc47a1eba51f3c1ffeabe018d8ace6fab6b514e3af1f7a97",
+      "mode": 438
+    },
+    {
+      "name": "server/spares-replacement-insight.ts",
+      "bytes": 5284,
+      "sha256": "7144d92e3036d21e6dd1d46a11b0f8bcb5e984b9e39f42b05ee5637dac9a03c7",
       "mode": 438
     },
     {
@@ -20242,8 +20290,8 @@
     },
     {
       "name": "server/spares-workset.ts",
-      "bytes": 9559,
-      "sha256": "bb6e03cb9c7892c1825af3319327910f0b2892f8fd27fde565cd9762e269c415",
+      "bytes": 9493,
+      "sha256": "ba53f837ee692e198d1d979140c81d1b704eb954e09956a0c15a8afa9070ae13",
       "mode": 438
     },
     {
