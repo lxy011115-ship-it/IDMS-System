@@ -1,7 +1,7 @@
 export const e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const qty=n=>Number(n||0)/1000,price=n=>(Number(n||0)/100).toFixed(2),date=v=>v?String(v).slice(0,10):'—';
 export const today=()=>new Date(Date.now()+8*3600000).toISOString().slice(0,10);
-export const statuses={DRAFT:'草稿',SUBMITTED:'待独立审批',APPROVED:'已批准',ORDERED:'已下单',PART_RECEIVED:'部分到货',RECEIVED:'已收齐',CLOSED:'已关闭',CANCELLED:'已取消',RETURNED:'已退回',REJECTED:'已驳回'};
+export const statuses={ACTIVE:'进行中',DRAFT:'草稿',SUBMITTED:'待独立审批',APPROVED:'已批准',ORDERED:'已下单',PART_RECEIVED:'部分到货',RECEIVED:'已收齐',CLOSED:'已关闭',CANCELLED:'已取消',RETURNED:'已退回',REJECTED:'已驳回'};
 export const moves={RECEIPT:'采购入库',ISSUE:'设备领用',RETURN:'未用退料',SUPPLIER_RETURN:'供应商退货',TRANSFER_IN:'调拨入库',TRANSFER_OUT:'调拨出库',OPENING:'期初入库',COUNT:'盘点调整',SCRAP:'报损'};
 export const tabs=[['inventory','库存概况'],['parts','易损备件'],['suppliers','供应商'],['purchases','采购单'],['movements','收发与调拨'],['links','设备与更换'],['adjustments','盘点与报损'],['documents','票款登记'],['history','操作历史']];
 export const button=(label,action='spares-new',attrs='',kind='secondary')=>`<button type="button" class="${kind}" data-action="${action}" ${attrs}>${e(label)}</button>`;

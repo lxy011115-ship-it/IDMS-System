@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-30T11:44:07.190Z",
+  "createdAt": "2026-10-30T12:31:34.565Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -286,8 +286,8 @@
     },
     {
       "name": ".github/workflows/linux-verification.yml",
-      "bytes": 2510,
-      "sha256": "a25910bb34934d513c3d6145612702eb14ed3561bf10c8a03a2a87d122311251",
+      "bytes": 2667,
+      "sha256": "8a88576ea14ee7e489fd6dc9bc038030404477df9c37ab1290fd40ae5ff30dac",
       "mode": 438
     },
     {
@@ -2326,8 +2326,8 @@
     },
     {
       "name": "docs/spares-demand-and-insights-guide.md",
-      "bytes": 6317,
-      "sha256": "f6db8a5242b8b3d771a225417ae2055b8a6627f165f39b0de160da91b9bf65fa",
+      "bytes": 7491,
+      "sha256": "bbd5915037d267984ca221a28a100bea8658509f0064df11c039da3b8b27a844",
       "mode": 438
     },
     {
@@ -3238,8 +3238,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-10-30--spares-demand-and-explainable-insights.md",
-      "bytes": 4630,
-      "sha256": "665eb7980320b4e263ed585103e532da0bee51eb0b32785c994c3f271980e2e2",
+      "bytes": 5497,
+      "sha256": "7fa6631cdf3a02155531eed0611c8710343b890b4590b85cc6fb1462e09ac878",
       "mode": 438
     },
     {
@@ -6292,8 +6292,8 @@
     },
     {
       "name": "public/spares-editor-ui.js",
-      "bytes": 6228,
-      "sha256": "028981b8522b59027760a2520ce958600e650cbc1175d270e89ac5f401d8c83e",
+      "bytes": 7033,
+      "sha256": "bd1fe4769c3b7b6f9e4f933a1d7944bcabee64b703686b3e2292aec4d9b7d0e6",
       "mode": 438
     },
     {
@@ -6303,27 +6303,39 @@
       "mode": 438
     },
     {
+      "name": "public/spares-insights-controller.js",
+      "bytes": 6830,
+      "sha256": "9ca132c1f4b333d7db45df0598e194c46849f1315bb98dfdef80bcf94d59bb32",
+      "mode": 438
+    },
+    {
+      "name": "public/spares-insights-ui.js",
+      "bytes": 9812,
+      "sha256": "277125b7b57b25a6dec3e3d49066ab49919d0c86999d76113916d4b61217f0da",
+      "mode": 438
+    },
+    {
       "name": "public/spares-options-ui.js",
-      "bytes": 2922,
-      "sha256": "c90d7a1d9ef153de5a85157a0432137f8562557996b5733590f3687dcc763f5e",
+      "bytes": 3035,
+      "sha256": "a01c030228304e81645c7b226a1f17f8c3b82c7faacafb20443391be2f8e5379",
       "mode": 438
     },
     {
       "name": "public/spares-paged-controller.js",
-      "bytes": 14538,
-      "sha256": "17328282a53bba335d5cb213bfdb74628573ff11560c8f3078e81fa7627d111a",
+      "bytes": 16582,
+      "sha256": "ac9bdd506b890e8de8a936798725d71f293387a8a8045d7bc01b3a55b539048d",
       "mode": 438
     },
     {
       "name": "public/spares-paged-ui.js",
-      "bytes": 15462,
-      "sha256": "473422b29dca90dc08e73399a4762634be123b34afd408462dc4c50c22794344",
+      "bytes": 15941,
+      "sha256": "03b0cb4deee53797942d1a5b0195675c6e22b988b6a815c07b38a55b132f6f8d",
       "mode": 438
     },
     {
       "name": "public/spares-ui-base.js",
-      "bytes": 3739,
-      "sha256": "09d678c5b010964a9286e45555a6d6c59d38026205a1e7050615de584f641e26",
+      "bytes": 3758,
+      "sha256": "47e5a79c1b8376b0b8e4b9f1dbc85ec8e763d8e3ce605eaec6247e8a898d32c5",
       "mode": 438
     },
     {
@@ -6364,8 +6376,8 @@
     },
     {
       "name": "public/workspace.css",
-      "bytes": 19838,
-      "sha256": "91cf2c7fa891f6b931ff62984143ada0a1a8f27a6648b43ecc25fb1f52ae384d",
+      "bytes": 22976,
+      "sha256": "61c6020eb465bbd7b5a1c4edcf815a6e681a76316e362f74e0042fa555098778",
       "mode": 438
     },
     {
@@ -11925,6 +11937,18 @@
       "mode": 438
     },
     {
+      "name": "scripts/fixtures/spares-insights-preview.html",
+      "bytes": 4900,
+      "sha256": "02becca268e4d8b76b0f706ff8092c3b51c6ecc32f2897a4cbc082ab09ebf733",
+      "mode": 438
+    },
+    {
+      "name": "scripts/fixtures/spares-insights-preview.mjs",
+      "bytes": 7612,
+      "sha256": "21950ad5e35b241b397d4294385bb617784f27e8500e5a42bc721b3df0a6d5b7",
+      "mode": 438
+    },
+    {
       "name": "scripts/fixtures/spares-joint-acceptance.mjs",
       "bytes": 12836,
       "sha256": "6de09fe3a6b07832e34be407c25f3496e147b72ec19d9c69e04e9710b474ebda",
@@ -14062,8 +14086,8 @@
     },
     {
       "name": "scripts/verify-build.mjs",
-      "bytes": 12475,
-      "sha256": "2595903295a5255d0fe1d5ee06b0377a7054b4788c0e6444bfac833423500b33",
+      "bytes": 12559,
+      "sha256": "02de58dfdd6cd7149071244760b6599c9425f581dbff2ba11a64805114dacb4d",
       "mode": 438
     },
     {
@@ -17118,6 +17142,12 @@
       "name": "scripts/verify-spares-growth.mjs",
       "bytes": 19654,
       "sha256": "85c4b66e0c077f92c54a4dcd404d06e89617e9628598e1e88b762ff0cb51274a",
+      "mode": 438
+    },
+    {
+      "name": "scripts/verify-spares-insights-ui.mjs",
+      "bytes": 4441,
+      "sha256": "a64392bf4f78e8a42bff1bac22fb954c8153f2ba2fa1bd455eb3ae966f97f559",
       "mode": 438
     },
     {
@@ -22632,6 +22662,12 @@
       "name": "tests/spares-history-ui.test.mjs",
       "bytes": 3951,
       "sha256": "120da27ea725594cdddaf568efc13f06b75590c5a00f4b501bd7e799759f8b02",
+      "mode": 438
+    },
+    {
+      "name": "tests/spares-insights-ui.test.mjs",
+      "bytes": 12386,
+      "sha256": "68eac467bcad71f7751a196afeb737a15a9735597fb9338fcb5acb2e8fe87dc4",
       "mode": 438
     },
     {

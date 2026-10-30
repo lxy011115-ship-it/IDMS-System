@@ -62,6 +62,7 @@ files.push('public/spares-ui-base.js','public/spares-options-ui.js','public/spar
 files.push('server/spares-history.ts','server/spares-history-db.ts','public/spares-history-ui.js');
 files.push('server/spares-material-plan.ts','server/spares-insights-schema.ts');
 files.push('server/spares-insights-db.ts','server/spares-replacement-insight.ts','scripts/spares-insights-migration.mjs','scripts/setup-spares-insights.mjs');
+files.push('public/spares-insights-controller.js','public/spares-insights-ui.js');
 files.push('server/spares.ts','server/spares-db.ts','public/spares-ui.js','public/workspace-navigation.js','public/workspace.css','scripts/setup-spares.mjs');
 for(const file of files){await access(file);const text=await readFile(file,"utf8");if(!text.trim())throw new Error(`${file} is empty`);if(/\.(ts|js)$/.test(file))execFileSync(process.execPath,['--check',file],{stdio:'inherit',windowsHide:true});}
 for(const file of await readdir('scripts'))if(file.endsWith('.mjs'))execFileSync(process.execPath,['--check','scripts/'+file],{stdio:'inherit',windowsHide:true});

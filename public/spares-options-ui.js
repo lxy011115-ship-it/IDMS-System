@@ -4,6 +4,7 @@ export function optionSpecs(ed){
  if(['purchase.create','purchase.edit'].includes(a)){add('supplierId','供应商','supplier');add('warehouseId','收货仓库','warehouse');for(let i=0;i<(ed.values.lines||[{}]).length;i++)add('line.'+i+'.partId','第'+(i+1)+'行备件','part');}
  if(['stock.issue','stock.transfer','adjustment.create','link.create'].includes(a))add('partId','备件','part');
  if(['stock.issue','stock.transfer','adjustment.create'].includes(a))add('warehouseId','仓库','warehouse');
+ if(a==='material-plan.create'){add('partId','备件','part');add('warehouseId','同工厂仓库','warehouse');}
  if(['stock.issue','link.create'].includes(a))add('deviceCode','已批准设备','device');
  if(a==='stock.issue')add('workOrderId','关联工单','order',false,ed.values.deviceCode?{deviceCode:ed.values.deviceCode}:{});
  if(a==='stock.transfer')add('targetWarehouseId','调入仓库','warehouse');

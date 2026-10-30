@@ -8,6 +8,11 @@ export function editorView(s){
   if(kind==='supplier')fields+=field('contact','联系人',v.contact||'','text',false)+field('phone','联系电话',v.phone||'','text',false)+field('leadDays','交货期（天）',v.leadDays??0,'number');
   if(kind==='warehouse')fields+=field('location','库位说明',v.location||'','text',false);
   fields+=field('remark','备注',v.remark||'','text',false);if(ed.action.endsWith('.update'))fields+=select('active','状态',[{id:'true',name:'启用'},{id:'false',name:'停用'}],String(v.active));
+ }else if(kind==='material-plan'){
+  fields=`<p class="insight-note">关联工单 ${e(ed.contextOrderId)}。计划不预留库存；填写总量，系统另扣实际净领用。</p>`;
+  if(ed.action==='material-plan.create')fields+=`<input type="hidden" name="workOrderId" value="${e(v.workOrderId)}">`+remote('partId','备件','part',v.partId)+remote('warehouseId','同工厂仓库','warehouse',v.warehouseId);
+  if(['material-plan.create','material-plan.edit'].includes(ed.action))fields+=field('quantity','计划总量（含已净领用）',v.quantity||'')+field('needDate','需用日期',v.needDate||'','date');
+  fields+=field('reason',ed.action==='material-plan.reopen'?'人工恢复依据':'计划或处理依据',v.reason||'');
  }else if(['purchase.create','purchase.edit'].includes(ed.action)){
   fields=remote('supplierId','供应商','supplier',v.supplierId)+remote('warehouseId','收货仓库','warehouse',v.warehouseId)+field('dueDate','需求日期',v.dueDate||'','date')+field('remark','采购说明',v.remark||'','text',false);
   fields+=`<div class="spares-lines"><h3>采购明细（人民币）</h3>${(v.lines||[{}]).map((l,i)=>`<div class="spares-line">${remote('line.'+i+'.partId','备件','part',l.partId)}${field('line.'+i+'.quantity','数量',l.quantity??qty(l.quantityMilli))}${field('line.'+i+'.unitPrice','单价（元）',l.unitPrice??price(l.unitPriceCents))}${(v.lines||[]).length>1?button('删除此行','spares-remove-line',`data-row="${i}"`):''}</div>`).join('')}${button('增加一行','spares-add-line')}</div>`;
@@ -26,5 +31,5 @@ export function editorView(s){
  else if(ed.action==='replacement.create'){
   fields=remote('linkId','设备适用位置','link',v.linkId)+field('quantity','实际更换数量',v.quantity||'')+field('date','实际更换日期',v.date||today(),'date')+field('reason','更换与复测依据',v.reason||'');
  }else if(ed.action==='document.create')fields=select('type','凭证类型',[{id:'INVOICE',name:'发票登记'},{id:'PAYMENT',name:'付款凭证登记'}],v.type||'INVOICE')+field('number','票号或付款凭证号',v.number||'')+field('amount','金额（元）',v.amount||'')+field('date','凭证日期',v.date||today(),'date')+field('reason','登记依据',v.reason||'');
- return `<section class="panel spares-editor"><div class="panel-head"><h2>${e(ed.title||'填写业务资料')}</h2>${button('取消','spares-editor-close')}</div><form id="spares-form"><div class="form-grid">${fields}</div><p>保存后保留业务记录；采购及库存调整须独立审批。领料不等于更换完成，付款凭证登记不执行支付。</p><button class="primary" data-action="spares-save" type="submit" ${s.busy?'disabled':''}>${s.busy?'正在保存…':'保存本次操作'}</button></form></section>`;
+ return `<section class="panel spares-editor"><div class="panel-head"><h2>${e(ed.title||'填写业务资料')}</h2>${button('取消','spares-editor-close')}</div>${ed.prefillNote?`<p class="insight-note">${e(ed.prefillNote)}</p>`:''}<form id="spares-form"><div class="form-grid">${fields}</div><p>保存后保留业务记录；采购及库存调整须独立审批。领料不等于更换完成，付款凭证登记不执行支付。</p><button class="primary" data-action="spares-save" type="submit" ${s.busy?'disabled':''}>${s.busy?'正在保存…':'保存本次操作'}</button></form></section>`;
 }
