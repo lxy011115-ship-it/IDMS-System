@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-30T13:36:51.320Z",
+  "createdAt": "2026-10-30T13:46:50.017Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -778,8 +778,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 10506,
-      "sha256": "6d4f89b77c51b115c5799f9b35d74861e812f40507f604ffa0e67b7b190dc537",
+      "bytes": 10606,
+      "sha256": "0eb796b36d6628ff6e28c0052f59c792568b5192e2e613c7a85a13fac994188c",
       "mode": 438
     },
     {
@@ -1234,8 +1234,8 @@
     },
     {
       "name": "docs/enterprise-optimization-plan-2026-10-30.md",
-      "bytes": 12527,
-      "sha256": "11b238fceee8b710c4b173095b3cdf4cba668f0dadcf4a07c09e81380f056940",
+      "bytes": 13453,
+      "sha256": "2fe86d2508e655438ada2cc08c6b06398ac7b4f419381577317534ecc02485c4",
       "mode": 438
     },
     {
@@ -2086,8 +2086,8 @@
     },
     {
       "name": "docs/production-readiness.md",
-      "bytes": 6903,
-      "sha256": "6aaf573d6a05e0b7a150ffa39602cbfd52e15241b87e13d0f4123f2ab4ce35e8",
+      "bytes": 8128,
+      "sha256": "0088f87481ef619b4233b8337fbab2a5f6909374d760ac3208aec0c6361a50e2",
       "mode": 438
     },
     {
@@ -2350,8 +2350,8 @@
     },
     {
       "name": "docs/spares-procurement-guide.md",
-      "bytes": 11839,
-      "sha256": "b2776e550c3e15f36523cd5d45bc6dcb8b3840c8506116bf475d4b6c91ec5ad4",
+      "bytes": 12020,
+      "sha256": "1f5364ca5c0d1934f99d80d8a42200239862cc87f76666f43be52b848c273966",
       "mode": 438
     },
     {
@@ -3238,8 +3238,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-10-30--spares-demand-and-explainable-insights.md",
-      "bytes": 7609,
-      "sha256": "837a03af40c8b72e126b04a81a864e64944fd3fea33bba8b7f55c30edfbcb1f5",
+      "bytes": 8196,
+      "sha256": "98770b0399b14f854fcd744f9f13ac0ac9aa4e656f03f767a607d3d86f1e4944",
       "mode": 438
     },
     {
@@ -4440,6 +4440,12 @@
       "name": "docs/tenant-workspaces-guide.md",
       "bytes": 6587,
       "sha256": "ffa2cdab956b1d300fedac75312000bfb6f87b428ab54f53f9cdc88bf908d334",
+      "mode": 438
+    },
+    {
+      "name": "docs/training-delivery-guide.md",
+      "bytes": 3038,
+      "sha256": "6abd93a650fd62cf0af4090c3dc7222cbc3f3362e2fb9c6a3bcc85bfcee9da2f",
       "mode": 438
     },
     {

@@ -8,7 +8,7 @@
 - 启动：项目根目录“启动IDMS本地网站.cmd”；它使用`scripts/start-platform-v4.mjs`，不是根Compose。
 - 网站：http://127.0.0.1:4010/ ；备件：http://127.0.0.1:4010/?view=spares 。
 - 登录：从网站“使用企业账号登录”进入现有OIDC服务。账户与私密配置不属于公开交付文件，不复制进仓库、镜像或说明书。
-- 操作指南：[备件采购](spares-procurement-guide.md)、[操作历史与岗位权限](spares-history-and-permissions-guide.md)、[上传审批](upload-approval-experience-guide.md)、[本地启动与演示候选包](local-startup-and-package-guide.md)。完整Word/PDF保留于本地outputs历史版本，尚未全部纳入本轮新界面。
+- 操作指南：[备件采购](spares-procurement-guide.md)、[操作历史与岗位权限](spares-history-and-permissions-guide.md)、[上传审批](upload-approval-experience-guide.md)、[本地启动与演示候选包](local-startup-and-package-guide.md)。[新版图文手册、PPT与操作视频](training-delivery-guide.md)已完成：37页PDF、16页可编辑PPT及约2分8秒中文字幕实操视频，实际文件保留于本机outputs。
 - 数据保护：[完整业务备份](backup-recovery-guide.md)、[备件完整归档与恢复](spares-archive-recovery-guide.md)。加密档案和密钥均保留在私密目录，不作为公开材料。
 - 新增开发能力：[工单用料计划及备件洞察](spares-demand-and-insights-guide.md)。页面、专用迁移CLI和完整认证档案恢复已通过独立隔离验证；两本地企业已备份并验证隔离恢复后迁移，当前数据库只读查询确认能力已启用。真实登录页面及企业岗位签收继续。
 
