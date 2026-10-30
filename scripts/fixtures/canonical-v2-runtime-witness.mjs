@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFileSync,appendFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {dirname,resolve,relative,join} from 'node:path';
+import {createHash} from 'node:crypto';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..'),expected=process.env.IDMS_CANONICAL_V2_QA_ROOT,journal=process.env.IDMS_CANONICAL_V2_WITNESS_FILE;
+assert.ok(expected&&root===resolve(expected)&&journal,'Explicit isolated canonical QA binding required');
+await import('../canonical-stream-v2-loader.mjs');
+const actual=await import('../../server/canonical-state.ts'),next=await import('../../server/canonical-stream-v2.ts');assert.equal(actual.canonicalDigest,next.canonicalDigest);assert.equal(actual.emitCanonical,next.emitCanonical);
+const sha=p=>createHash('sha256').update(readFileSync(join(root,p))).digest('hex');
+appendFileSync(journal,JSON.stringify({format:'idms-canonical-v2-runtime-witness-v1',at:new Date().toISOString(),pid:process.pid,parentPid:process.ppid,entry:process.argv[1]?relative(root,resolve(process.argv[1])).replaceAll('\\','/'):null,actualV2CanonicalFunctionReferenceBound:true,originalModuleSha256:sha('server/canonical-state.ts'),v2ModuleSha256:sha('server/canonical-stream-v2.ts'),loaderSha256:sha('scripts/canonical-stream-v2-loader.mjs')})+'\n',{mode:0o600});

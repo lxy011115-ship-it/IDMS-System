@@ -1,0 +1,22 @@
+{
+  "format": "COLD_REMAINING_PROGRAM_INDEPENDENT_WINDOWS_COMPONENT_VALIDATION_V1",
+  "at": "2026-10-26T15:21:35.229Z",
+  "scope": "OFFLINE_ACTUAL_AUTH_WORKFLOW_OWNER_AND_PUBLIC_OBSERVATIONS_AND_STRICT_INTEGRITY_REGRESSIONS",
+  "earlierIndependentIntegrityTestsPassed": 5,
+  "repairedDecoderRegressionTestsPassed": 2,
+  "earlierPassedTestsRerun": false,
+  "actualOriginalAuthPrivilegeDecisionsIndependentlyRebuilt": 1246,
+  "actualOriginalWorkflowPrivilegeDecisionsIndependentlyRebuilt": 4326,
+  "actualOriginalOwnerCapabilityDecisionsIndependentlyRebuilt": 48,
+  "actualOriginalMapPublicPrivilegeDecisionsIndependentlyRebuilt": 32,
+  "referenceComponentReceiptsAndSourcePinsAuthenticated": true,
+  "producerSqlPrivilegePolicyImported": false,
+  "originalSqlOidcOrTransportReplayed": false,
+  "repairedDefaultAclFormatDifference": true,
+  "failedOriginalDecoderCasePreserved": true,
+  "newDecoderRootHostNormalExitCode": 0,
+  "newWholeSourceHeldCaseIndependentlyVerified": false,
+  "fullRegisteredRoleMatrixVerified": false,
+  "fullGoalComplete": false,
+  "privatePathsOrCredentialsIncluded": false
+}

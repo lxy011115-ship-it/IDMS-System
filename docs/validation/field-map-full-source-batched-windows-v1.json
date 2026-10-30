@@ -1,0 +1,100 @@
+{
+  "format": "FIELD_MAP_FULL_SOURCE_BATCHED_WINDOWS_V1",
+  "at": "2026-10-27T00:54:03.805Z",
+  "actualCompleteSourceComparisons": [
+    {
+      "kind": "ORIGINAL_BATCH",
+      "resultSha256": "190b4468482aa4570f901044fa792c0616ca49d8effa59dac2f97b7a26f5ef37",
+      "actualResultSha256": "b6722e6c4ee4ab6350ca901326ed948d5f259a31722a8bd45fdbf114e150ea6d",
+      "staticModules": 131,
+      "passes": 4,
+      "originalTotalMs": [
+        30857.563999999995,
+        30319.3284
+      ],
+      "batchedTotalMs": [
+        34667.43979999999,
+        34412.18609999999
+      ],
+      "speedup": 0.8855996482748759,
+      "allSevenDatabaseFactsAndBothActualEvidenceFilesMatched": true,
+      "allOriginalMaterialsAndFourOfflinePgDirectoriesUnchanged": true,
+      "allOwnSqlAndNewPostgresNormallyClosed": true
+    },
+    {
+      "kind": "PHASE_PROFILED_BATCH",
+      "resultSha256": "95e5652d6098150ab20f28d410ceac9e013f9bea16d74047f70cfcd8d900ed51",
+      "actualResultSha256": "94467e844c09c0e123e133cafc9a42f4821e0235928d5ccd9e3fa73875060c66",
+      "staticModules": 131,
+      "passes": 4,
+      "originalTotalMs": [
+        31089.875400000004,
+        30765.345600000015
+      ],
+      "batchedTotalMs": [
+        34948.998799999994,
+        35124.6054
+      ],
+      "speedup": 0.8827178465582625,
+      "allSevenDatabaseFactsAndBothActualEvidenceFilesMatched": true,
+      "allOriginalMaterialsAndFourOfflinePgDirectoriesUnchanged": true,
+      "allOwnSqlAndNewPostgresNormallyClosed": true
+    },
+    {
+      "kind": "EQUIVALENT_HASH_BATCH",
+      "resultSha256": "90526ff665623e0c83e74fe1d8411f236b13cb902f9ec5d7e7b6a39e4824b02c",
+      "actualResultSha256": "6acf2b450a4b0414d9fd111eadacf2b5934e3dff4c951b5f42479bb24541fc21",
+      "staticModules": 132,
+      "passes": 4,
+      "originalTotalMs": [
+        30265.075500000003,
+        29989.08750000001
+      ],
+      "batchedTotalMs": [
+        27592.479400000004,
+        27433.89360000001
+      ],
+      "speedup": 1.0950051714293436,
+      "allSevenDatabaseFactsAndBothActualEvidenceFilesMatched": true,
+      "allOriginalMaterialsAndFourOfflinePgDirectoriesUnchanged": true,
+      "allOwnSqlAndNewPostgresNormallyClosed": true
+    }
+  ],
+  "completeQaPasses": 12,
+  "databasesPerPass": 7,
+  "mapsPerPass": 2,
+  "oldAndNewActualEvidenceByteComparisons": 18,
+  "actualNewIsolatedQaPostmastersNormallyClosed": 3,
+  "originalSlowOfflineIndependentVerifierPreserved": true,
+  "equivalentHashV1": {
+    "testsPassed": 10,
+    "staticModules": 5,
+    "allDepthsCountsTreesAndProofsMatchedOriginal": true,
+    "componentTiming": {
+      "format": "FIELD_EQUIVALENT_HASH_COMPONENT_TIMING_V1",
+      "loops": 256,
+      "originalMs": 139.06040000000007,
+      "equivalentMs": 60.643800000000056,
+      "fullSourcePerformanceAccepted": false
+    }
+  },
+  "oneShotHashV2": {
+    "testsPassed": 10,
+    "staticModules": 5,
+    "componentTiming": {
+      "format": "FIELD_EQUIVALENT_HASH_COMPONENT_TIMING_V1",
+      "loops": 256,
+      "originalMs": 148.22199999999998,
+      "equivalentMs": 44.44730000000004,
+      "fullSourcePerformanceAccepted": false
+    },
+    "actualCompleteSourceExecuted": false
+  },
+  "allProtectedInputs": 4321,
+  "originalThirtySecondWindowChanged": false,
+  "currentUserInstallationAccepted": false,
+  "control4OrNative20Prepared": false,
+  "newPurposeHeldOrStartupOrMqttGranted": false,
+  "newCodePublishedOrLinuxAccepted": false,
+  "fullGoalComplete": false
+}

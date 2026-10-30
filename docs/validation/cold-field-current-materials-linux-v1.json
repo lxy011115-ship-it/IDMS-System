@@ -1,0 +1,235 @@
+{
+  "head": "f93c72ffeb6d744717aff9bb52e028a7f2661d70",
+  "branch": "wip/field-current-materials-v1-20261026",
+  "run": 40247291736,
+  "job": 121331442259,
+  "attempt": 1,
+  "workflow": ".github/workflows/field-current-materials-v1.yml",
+  "format": "FIELD_CURRENT_MATERIALS_LINUX_ACTUAL_EVIDENCE_V1",
+  "nonce": "f212cb6534c7",
+  "nativeChecks": 43,
+  "sourcePins": 1322,
+  "independentActualExitCode": 0,
+  "caseTests": 103,
+  "separateScramTests": 8,
+  "independentSummary": {
+    "format": "IDMS_FIELD_CURRENT_MATERIALS_INDEPENDENT_V5",
+    "nonce": "f212cb6534c7",
+    "nativeChecks": 43,
+    "originalSource32ChecksRetained": true,
+    "actualCurrentFieldCases": 2,
+    "controlledTransportCases": 1,
+    "controlledQaPeersNotPhysicalDeviceAttestation": true,
+    "originalCurrentAccountsObserved": 2,
+    "newArchiveAndMaterialFilesIndependentlyChecked": true,
+    "currentSqlAndIdentityLiveReplayPerformed": false,
+    "siteGatewayChecks": 7,
+    "managedRuntimeChecks": 6,
+    "actualManagedChildren": 9,
+    "actualOriginalSourceOwnerVerified": true,
+    "sourceCapabilities": 2,
+    "sourceCreationIntegrated": true,
+    "historicalSources": 2,
+    "originalFullReaderAwareArchiveIndependentlyAuthenticated": true,
+    "independentlyRebuiltSourceMapFiles": 4,
+    "explicitDisabledManagerChildren": 9,
+    "completeFieldMaterialsVerified": false,
+    "managedCurrentRootProofs": 72,
+    "managedStoredPoints": 9,
+    "managedRetainedAckSignatures": 3,
+    "managedArchivedAckSignatures": 7,
+    "managedCurrentPointsWithVerifiedAck": 9,
+    "actualManagedHostConnectionsRetired": 154,
+    "actualManagedOwnerConnectionsRetired": 1,
+    "managedEdgeBeforeSiteStop": true,
+    "managedSqlRollbackBeforeBackgroundStop": true,
+    "sourcePinsVerified": 1322,
+    "realIdentityAndPhysicalColdAdmission": true,
+    "independentOidcPolicyCommands": 6,
+    "legacyAnchorMembershipProofsVerified": 64,
+    "storedPointsVerified": 6,
+    "businessAckSignaturesVerified": 7,
+    "actualHostConnectionsRetired": 348,
+    "ownedEdgeRootsVerified": 5,
+    "brokerNormalStop": true,
+    "spoolStateMacVerified": true,
+    "threePostgresDirectoriesCleanOffline": true,
+    "workflowNormalStops": 4,
+    "declaredFieldActivationControl": true,
+    "formalFieldActivationGranted": false,
+    "allProductionDependenciesRegistered": false,
+    "fullGoalComplete": false
+  },
+  "allEightRedundantSafeFramesVerified": true,
+  "nativeAndIndependentAndUnitOriginalProcessesAccepted": true,
+  "variableConnectionRetirementCountsRetainedAndBounded": true,
+  "noRawLogsFetched": true,
+  "completeFieldMaterialsVerified": false,
+  "formalFieldActivationGranted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false,
+  "workflowUrl": "https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/40247291736",
+  "workflowSha256": "68401ba98bc3968d019db33b176d06d60bc040f0ee171ede8538132b3cffaf36",
+  "artifactId": 12619956735,
+  "archiveSha256": "b4c5700c659ee23c6745de61102c520d28142bc28e063a77a1696ea2937c4802",
+  "entries": [
+    {
+      "name": "case-unit-process.json",
+      "bytes": 372,
+      "sha256": "ca23c31858188b39520a92aeabb7cc248f0e8b4cbf791ae76bd05a3a091eeb34"
+    },
+    {
+      "name": "independent-process.json",
+      "bytes": 543,
+      "sha256": "5fa8380e020cc2bad2b71ba52b5f657c05023eac7400a715388aaf3eef27ffaf"
+    },
+    {
+      "name": "case-unit-summary.json",
+      "bytes": 3468,
+      "sha256": "4dba9906c9ce3801b9e83b59832587eda826e3d040bd445ce6be05efb121a28b"
+    },
+    {
+      "name": "independent-unverified.json",
+      "bytes": 2139,
+      "sha256": "eee8df549b95566af86081bf66ab30d9ede3dede4a316e324ca55a665ff6bc5f"
+    },
+    {
+      "name": "native-public.json",
+      "bytes": 1769,
+      "sha256": "13b6f185d721704bce11419dc365059ff3da70ffb9540501388f4c26a38bf3de"
+    },
+    {
+      "name": "scram-unit-process.json",
+      "bytes": 372,
+      "sha256": "5a62561f097a909b185b09ed93ee896a1ef7af40f3863f826901704761654190"
+    },
+    {
+      "name": "scram-unit-summary.json",
+      "bytes": 1516,
+      "sha256": "40cdc9e24f0e935ebcb4c4117f639c9ce53c70ddc9b4124f810d83826d78cab8"
+    },
+    {
+      "name": "verification-process-result.json",
+      "bytes": 5009,
+      "sha256": "c8b9fa78cc97c0a7e9949c389e561433ef516c7d56bc3add7533e7ac22c7b11a"
+    }
+  ],
+  "allRequiredStepOutcomes": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Run npm ci --ignore-scripts --no-audit --no-fund",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Authenticate unchanged historical source profiles",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Typecheck SITE backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Verify actual PostgreSQL SCRAM and original-owner boundaries",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Fetch and authenticate Apache Maven 3.9.11",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Fetch and authenticate Keycloak 26.8.1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Prepare approved public QA source data",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Install broker libraries without a daemon",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Authenticate and extract broker package",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Verify complete SOURCE and current guarded FIELD materials and controlled transport",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Independently verify original case and retain bounded public result before final summary checks",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Verify exact accepted case contracts, complete files and SOURCE-bound spool semantics",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Preserve bounded JSON results only",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Confirm tracked source unchanged",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Run actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "boundedDataRetainedBeforeStrictChecks": true,
+  "oldTerminalLogsFetched": false,
+  "at": "2026-10-26T01:28:46.921273+00:00",
+  "implementationVersion": 8,
+  "materialImplementationVersion": 4,
+  "readerOriginalActualExitCode": 0,
+  "readerOriginalHostActualExitCode": 0,
+  "readerJobId": "56805130-d961-4ef9-b6d0-412b8886a563",
+  "readerInputSha256": "2841c9f4777449770880b3d8c46f5835f3f87b93f4ce6fea27b3e44e4c00c25f",
+  "controlledQaPeersNotPhysicalDeviceAttestation": true,
+  "rawCredentialValuesOrPrivatePathsPublished": false,
+  "artifactConsumedExactlyOnce": true,
+  "allOriginalStepOutcomesSucceeded": true,
+  "originalReportNotChanged": true,
+  "completeDeploymentMaterialsVerified": false,
+  "businessWritesEnabled": false
+}

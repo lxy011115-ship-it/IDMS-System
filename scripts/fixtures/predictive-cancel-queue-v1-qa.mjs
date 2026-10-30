@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import pg from 'pg';
+import {readFile,writeFile} from 'node:fs/promises';
+import {randomBytes,createHash} from 'node:crypto';
+import {resolve,join} from 'node:path';
+import {privateDirectory,privateNewFile} from '../backup-support.mjs';
+import {stateMapSchemaSqlV4} from '../state-map-schema-v4.mjs';
+import {inspectStateMapCatalog} from '../../server/state-map-catalog-v1.ts';
+import {predictiveCancelJobsSchemaSqlV1} from '../predictive-cancel-jobs-schema-v1.mjs';
+import {inspectPredictiveCancelJobCatalogV1} from '../../server/predictive-cancel-job-catalog-v1.ts';
+import {PredictiveCancelJobStoreV1} from '../../server/predictive-cancel-job-store-v1.ts';
+export async function createPredictiveCancelQueueQaV1(){
+ const runtime=JSON.parse(await readFile('.local/postgres-runtime.json','utf8')),nonce=randomBytes(6).toString('hex'),work=resolve('work/predictive-cancel-queue-v1-20261021',nonce);await privateDirectory(work);
+ const adminAccount={host:runtime.host,port:runtime.port,user:'idms_bootstrap',password:runtime.bootstrapPassword,database:'postgres'},admin=new pg.Client(adminAccount),resources={nonce,databases:[],roles:[]},names={},secrets={};await admin.connect();let root;
+ const q=n=>{assert.match(n,new RegExp('^idms_reconjobs_'+nonce+'_(owner|app|qi|reader|db)$'));return '"'+n+'"';},journal=()=>writeFile(join(work,'resources.private.json'),JSON.stringify(resources,null,2));
+ const close=async()=>{await root?.end();for(const d of resources.databases.toReversed()){const actual=(await admin.query('SELECT oid::text,pg_get_userbyid(datdba) AS owner FROM pg_database WHERE datname=$1',[d.name])).rows[0];assert.equal(actual.oid,d.oid);assert.equal(actual.owner,d.owner);assert.equal((await admin.query('SELECT count(*)::int AS n FROM pg_stat_activity WHERE datid=$1::oid',[d.oid])).rows[0].n,0);await admin.query('DROP DATABASE '+q(d.name));}for(const r of resources.roles.toReversed()){assert.equal((await admin.query('SELECT oid::text FROM pg_roles WHERE rolname=$1',[r.name])).rows[0].oid,r.oid);await admin.query('DROP ROLE '+q(r.name));}await admin.end();const result={databasesRemoved:resources.databases.length,rolesRemoved:resources.roles.length,exactOidOwnerAndZeroBackends:true,force:false};await privateNewFile(join(work,'cleanup.json'),JSON.stringify(result));return result;};
+ try{
+  for(const kind of ['owner','app','qi','reader']){const name=names[kind]='idms_reconjobs_'+nonce+'_'+kind,password=secrets[kind]=randomBytes(32).toString('base64url');assert.equal((await admin.query('SELECT 1 FROM pg_roles WHERE rolname=$1',[name])).rowCount,0);await admin.query(`CREATE ROLE ${q(name)} ${kind==='owner'?'NOLOGIN':`LOGIN PASSWORD '${password}'`} NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS NOREPLICATION`);resources.roles.push({name,oid:(await admin.query('SELECT oid::text FROM pg_roles WHERE rolname=$1',[name])).rows[0].oid});await journal();}
+  const database='idms_reconjobs_'+nonce+'_db';assert.equal((await admin.query('SELECT 1 FROM pg_database WHERE datname=$1',[database])).rowCount,0);await admin.query(`CREATE DATABASE ${q(database)} OWNER ${q(names.owner)} TEMPLATE template0 ENCODING 'UTF8'`);const databaseOid=(await admin.query('SELECT oid::text FROM pg_database WHERE datname=$1',[database])).rows[0].oid;resources.databases.push({name:database,oid:databaseOid,owner:names.owner});await journal();await admin.query(`REVOKE ALL ON DATABASE ${q(database)} FROM PUBLIC`);await admin.query(`GRANT CONNECT ON DATABASE ${q(database)} TO ${q(names.app)},${q(names.qi)},${q(names.reader)}`);
+  root=new pg.Client({...adminAccount,database});await root.connect();const tenant='sandbox',deployment=createHash('sha256').update(nonce).digest('hex');await root.query('BEGIN');try{await root.query(await stateMapSchemaSqlV4({tenant,owner:names.owner,app:names.app,reader:names.reader}));await root.query(await predictiveCancelJobsSchemaSqlV1({tenant,owner:names.owner,worker:names.app,ingress:names.qi,deployment}));await root.query('COMMIT');}catch(e){await root.query('ROLLBACK');throw e;}
+  const catalogHash=await inspectPredictiveCancelJobCatalogV1(root),stateCatalogHash=await inspectStateMapCatalog(root),roleOid=k=>resources.roles.find(r=>r.name===names[k]).oid,account=k=>({host:runtime.host,port:runtime.port,database,user:names[k],password:secrets[k]}),queueBinding=k=>({tenantId:tenant,databaseOid,roleOid:roleOid(k),catalogHash,stateCatalogHash,deployment}),binding={tenantId:tenant,databaseOid,roleOid:roleOid('app'),catalogHash:stateCatalogHash};
+  return {nonce,work,resources,root,names,adminAccount,account,binding,queueBinding,worker:new PredictiveCancelJobStoreV1(account('app'),queueBinding('app')),ingress:new PredictiveCancelJobStoreV1(account('qi'),queueBinding('qi')),close};
+ }catch(e){await privateNewFile(join(work,'setup-failure.private.json'),JSON.stringify({code:e.code,message:e.message,stack:e.stack}));await close();throw e;}
+}

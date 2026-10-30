@@ -1,0 +1,11 @@
+# 工作流捕获发布边界修订
+
+延续既有已授权工作流升级计划。实际漂移测试发现旧v2入口在6个场景留下已发布归档：捕获中控制DB ACL变化、密封前/发布前key变化、发布前LOGIN变化、同字节dump inode替换、未知run文件。后两种是在发布后清理才报错。旧源码与证据保留，新增createGuardedWorkflowArchive用于新受控部署，不回写旧快照。
+
+选定修订保持v2密文/manifest格式和隔离恢复协议，在独立readonly管理连接持续核对控制DB/owner/membership/ACL、控制表OID/owner/ACL/RLS/触发器/列结构；私密意图绑定该能力摘要。完整源catalog与原baseline比较（当前NOLOGIN/DB connlimit0），原native observer仍负责准确source reader/dump/session lease。密钥指纹在捕获及密封/发布/重放边界复核。
+
+READERS_CLOSED通知之后、密封之前，核对源零会话、当前控制/源catalog、独占工作根、固定run文件集合及实际native dump inode。BEFORE_PUBLICATION通知之后再核对，并核对stage proof。发布采用原非覆盖link协议；完成重放认证后也复核当前边界。工作根未有本入口意图时必须为空，有意图时只允许对应固定文件/目录，不能清理另一个恢复任务的明文。key/config放独立私密目录。
+
+source/authority/schema/key/目录漂移均拒绝不自动修复，未知会话不终止。测试控制器在注入前遇未知会话拒绝时，必须实际退出且源后台真实归零，最多fresh重试3次；不绕过任何产品检查。发布后通知属于已经提交的事件，真实进程中断用同意图认证重放处理，不把已经提交归档当作未发布。管理员仍属信任边界，无法以SQL/文件检查抵抗恶意超级管理员在最后检查与link之间的并发修改。
+
+QA包括31项显式拒绝矩阵、正常capture/原密文重放/38表两序列和context隔离恢复、发布前后真实控制器退出。同名源OID/角色OID及控制表OID实际替换，不将mock比较当实际证据；源OID替换为最后一次性QA场景，原两个workflow库不动。另真实两个幸存孤儿pg_restore精确退休，证明不误停相似进程。v1 LIVE_REVIEW_COPY_ONLY仅作该原语测试输入，不提升为正式恢复资格。

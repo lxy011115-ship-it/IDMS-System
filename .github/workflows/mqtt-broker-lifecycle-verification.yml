@@ -1,0 +1,60 @@
+name: Owned MQTT broker lifecycle verification
+
+on:
+  push:
+    branches: [main, wip/predictive-creation-v4]
+    paths: ['scripts/**', 'tests/**', 'server/**', 'services/**', 'integrations/**', 'package*.json', 'docs/validation/mqtt-broker-parent-v1.json', '.github/workflows/mqtt-broker-lifecycle-verification.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'tests/**', 'server/**', 'services/**', 'integrations/**', 'package*.json', 'docs/validation/mqtt-broker-parent-v1.json', '.github/workflows/mqtt-broker-lifecycle-verification.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mqtt-broker-lifecycle-v1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mqtt-broker:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify fixed broker configuration, certificate material and Windows-only controls
+        run: node --test --test-concurrency=1 tests/mqtt-broker-runtime-v1.test.mjs tests/mqtt-broker-materials-v1.test.mjs tests/mqtt-broker-windows-control-v1.test.mjs tests/mqtt-broker-windows-host-v1.test.mjs tests/mqtt-broker-linux-control-v1.test.mjs
+      - name: Install shared broker libraries without installing a broker service
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends libcjson1 libdlt2 libwrap0 libwebsockets19t64 libmosquitto1
+      - name: Authenticate and extract the repository broker package without service installation
+        id: broker
+        run: python3 scripts/fetch-mosquitto-package-v2.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Verify actual mTLS ACL, creation identity, drift retry and owned normal shutdown
+        id: native
+        env:
+          IDMS_QA_MOSQUITTO_BIN: ${{ steps.broker.outputs.directory }}
+        run: node scripts/verify-mqtt-broker-lifecycle-v5.mjs
+      - name: Independently inspect actual owned exits and preserved inputs
+        if: always() && (steps.native.outcome == 'success' || steps.native.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const root='work/mqtt-broker-lifecycle-v5-20261024';
+          const cases=(await readdir(root,{withFileTypes:true})).filter(item=>item.isDirectory()&&/^[a-f0-9]{12}$/.test(item.name));
+          assert.equal(cases.length,1);
+          execFileSync(process.execPath,['scripts/verify-mqtt-broker-lifecycle-cleanup-v5.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source files were not changed
+        if: always()
+        run: git diff --exit-code --no-ext-diff

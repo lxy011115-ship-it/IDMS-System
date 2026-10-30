@@ -1,0 +1,77 @@
+name: Field SITE managed process data path
+
+on:
+  push:
+    branches: [wip/field-application-manager-20261024]
+    paths: ['scripts/**', 'tests/**', 'server/**', 'services/**', 'integrations/**', 'package*.json', 'docs/validation/**', '.github/workflows/field-application-manager-v3.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'tests/**', 'server/**', 'services/**', 'integrations/**', 'package*.json', 'docs/validation/**', '.github/workflows/field-application-manager-v3.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: field-application-manager-v3-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  field-site-manager:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Authenticate frozen source profiles
+        run: node scripts/verify-ci-source-policy-v2.mjs
+      - name: Typecheck current SITE field backend
+        run: node node_modules/typescript/bin/tsc -p server/tsconfig.json --noEmit --allowImportingTsExtensions
+      - name: Verify strict manifests, retirement gates, actual fork cancellation and prior field boundaries
+        run: node --test --test-concurrency=1 tests/field-map-authority-gateway-v1.test.mjs tests/field-map-site-runtime-v1.test.mjs tests/field-site-source-upgrade-v1.test.mjs tests/runtime-field-site-child-v1.test.mjs tests/owned-verification-job-portable-v1.test.mjs tests/field-site-stage-observer-v1.test.mjs tests/runtime-application-config-v2.test.mjs tests/runtime-field-site-retirement-v1.test.mjs tests/runtime-application-registry-v2.test.mjs tests/runtime-field-site-managed-proof-v1.test.mjs tests/application-lifecycle-v3.test.mjs
+      - name: Fetch and authenticate Apache Maven 3.9.11
+        id: maven
+        run: python3 scripts/fetch-maven-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Fetch and authenticate Keycloak 26.8.1
+        id: identity
+        run: python3 scripts/fetch-keycloak-distribution-v1.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Prepare public approved source data
+        id: source
+        run: node scripts/fixtures/create-controlled-cold-public-source-v1-qa.mjs "$RUNNER_TEMP/idms-controlled-source.json" "$GITHUB_OUTPUT"
+      - name: Install broker libraries without installing a daemon
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends libcjson1 libdlt2 libwrap0 libwebsockets19t64 libmosquitto1
+      - name: Authenticate and extract broker package
+        id: broker
+        run: python3 scripts/fetch-mosquitto-package-v2.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Verify actual identity, cold admission, managed SITE, MQTT replay and SQL-blocked retirement
+        id: native
+        env:
+          IDMS_MAVEN_HOME: ${{ steps.maven.outputs.directory }}
+          IDMS_KEYCLOAK_SOURCE: ${{ steps.identity.outputs.directory }}
+          IDMS_SOURCE_BUNDLE: ${{ steps.source.outputs.file }}
+          IDMS_SOURCE_SHA256: ${{ steps.source.outputs.sha256 }}
+          IDMS_QA_MOSQUITTO_BIN: ${{ steps.broker.outputs.directory }}
+        run: node scripts/verify-field-application-manager-v3.mjs /usr/lib/postgresql/16/bin "$JAVA_HOME_21_X64" "$IDMS_MAVEN_HOME" "$IDMS_KEYCLOAK_SOURCE" "$IDMS_SOURCE_BUNDLE" "$IDMS_SOURCE_SHA256" "" "$IDMS_QA_MOSQUITTO_BIN"
+      - name: Independently verify historical anchor and later managed current root, child results and clean retirement
+        if: always() && (steps.native.outcome == 'success' || steps.native.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const root='work/field-application-manager-v3-native-20261024';
+          const cases=(await readdir(root,{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
+          assert.equal(cases.length,1);
+          execFileSync(process.execPath,['scripts/verify-field-application-manager-cleanup-v4.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source unchanged
+        if: always()
+        run: git diff --exit-code --no-ext-diff

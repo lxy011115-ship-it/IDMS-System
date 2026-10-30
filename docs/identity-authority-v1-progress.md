@@ -1,0 +1,17 @@
+# 持久身份权威与入口验证进度
+
+2026-10-22：新签名SQLite权威控制与只读Keycloak marker校验、受保护R4站点和对账worker入口已实际验证。原运行、原身份库、原R5 owner未切换，原完整目标继续。
+
+主验证faef1f732c39一次通过10项，290直接/静态依赖源码pins保持，主验证后无这些执行源补丁。真实源/目标身份PG独立，源码流程先提交DRAINING再停源与整库迁移；复制出的旧marker在过渡期不能放行。实际目标SQL与API属性、源NOLOGIN/DB禁连/零旧连接核验后发布epoch2。最终签名链5条：源TRANSITION1/ACTIVE1、DRAINING2、目标TRANSITION2/ACTIVE2。
+
+两个独立writer并发只提交一个DRAINING；另一独立进程写入未提交记录后exit77，重读仍是原revision3。新进程可读同一ACTIVE；同operation的activation重试保持同head，不追加发布。服务账户实际GET realm成功、PUT realm403。
+
+真实R4站点CLI与对账worker CLI均READY，共享真实登录会话返回四模块context200；真实空队列claim执行。篡改签名使运行HTTP503、普通授权resolver拒绝、worker在claim前拒绝；恢复原签名后服务恢复。之后实际重新启用自有旧源连接并启动旧Keycloak，用同issuer/旧marker模拟身份后端复活，运行HTTP/worker和独立进程启动均拒绝。转回正确目标后原运行入口自动恢复200/claim，epoch2/revision5未重写。
+
+本轮没有新的普通业务任务提交或浏览器PKCE跨迁移验证。HTTP/授权/领取边界不等于跨在途业务提交的原子围栏；其他后台worker与全局维护/排空仍待。
+
+另3项边界验证通过：不同公钥（自身hash正确）/错误issuer拒绝；错误writer私钥不追加DRAINING；新自有SQL集群即使DB/owner同名，也不能替代签名绑定的目标。head保持不变。首次边界测试晚于主测试清理，第三项因原测试端口已关闭无法证明SQL错绑定；该失败记录保留，改用新自有独立PG完成同一绑定拒绝检查，未重启主测试环境。
+
+独立只读清理核3个自有PG均clean shutdown；4个身份JVM和2个Flowable JVM均正常退出/完整proof，无目标signal；5个受管Node CLI子进程退休。主环境9DB/29roles按既有OID/owner/零连接流程清理，附加SQL负例1DB/1role清理；私有签名链/key、配置、数据包和失败证据离线保留，不提交。原JAR/原服务/云DNS/TLS/安全组保持。
+
+下一步仍是全局持久维护与恢复准入、退休身份库围栏与业务冷恢复联动、全部后台组件的代数围栏和提交边界、可信legacy owner接管及原运行迁移。不能把本轮入口功能当作旧R4冷恢复布尔准入已移除或原R5控制器已上线。原商用/PITR/HA/旧workflow权限/C outbox/整站切换与最终中文PDF/DOCX真实截图、实际讲解字幕MP4继续。

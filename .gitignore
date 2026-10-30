@@ -1,24 +1,52 @@
 node_modules/
-.local/
+.npm-cache/
 .demo-data/
+.env
+.local/
+services/workflow/target/
+outputs/IDMS手动上传演示包.zip
+
+# Private runtime, verification history and generated delivery files are not source.
 work/
 outputs/
-.env
+历史工作目录/
+迁移记录/
+.demo-data/
 .env.*
 !.env.example
-*.private.*
 *.log
-*.pem
-*.key
-*.p12
-*.db
-*.sqlite*
 *.dump
-*.bkp
-target/
-downloads/
-.npm-cache/
 
+# Local cross-chat context and migration notes are not public product source.
+/项目上下文记忆.md
+/项目迁移说明.md
 
-__pycache__/
-*.pyc
+# Keep future commits consistent with the reviewed source export boundary.
+**/__pycache__/
+**/.pytest_cache/
+**/target/
+**/dist/
+**/server-dist/
+**/build/
+test-results/
+playwright-report/
+coverage/
+*.idmsbackup
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+service-token
+本机登录账户.txt
+postgres-runtime.json
+postgres-business.json
+postgres-backup.json
+postgres-migration.json
+keycloak-runtime.json

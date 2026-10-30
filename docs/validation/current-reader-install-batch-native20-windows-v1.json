@@ -1,0 +1,80 @@
+{
+  "format": "CURRENT_READER_INSTALL_BATCH_NATIVE20_WINDOWS_PROGRESS_V1",
+  "at": "2026-10-27T01:08:17.180Z",
+  "newCompleteSourceComparisons": [
+    {
+      "kind": "ONE_SHOT_HASH",
+      "resultSha256": "b3386db80e42c03ca5f702771945d780e2eb5f57cf156b0c680258e23d105bb0",
+      "actualResultSha256": "08b3df2f1cc4cf12364dd4fbfcaf6d1677696148ee017adb44b5e610e1757410",
+      "staticModules": 132,
+      "passes": 4,
+      "originalTotalMs": [
+        30590.8095,
+        30230.4384
+      ],
+      "batchedTotalMs": [
+        26049.583599999998,
+        26322.815799999997
+      ],
+      "speedup": 1.1613225400553255,
+      "allActualEvidenceBytesAndFactsMatched": true,
+      "allOriginalMaterialsAndFourOldPgDirectoriesUnchanged": true,
+      "allOwnSqlAndNewPostgresNormallyClosed": true,
+      "originalOfflineWorkerProcesses": 0
+    },
+    {
+      "kind": "PARALLEL_ORIGINAL_EVIDENCE",
+      "resultSha256": "87e93704b49f220bf666419c813ff7c0ba76ca24f9b0adc5b573f7ab848c2309",
+      "actualResultSha256": "12ad02e8d75a35646af39b5b217b1eaf443b2d7ffb35718877439959e90e4082",
+      "staticModules": 133,
+      "passes": 4,
+      "originalTotalMs": [
+        30968.791699999998,
+        30953.508799999996
+      ],
+      "batchedTotalMs": [
+        24778.069499999998,
+        24804.7549
+      ],
+      "speedup": 1.2488659379395903,
+      "allActualEvidenceBytesAndFactsMatched": true,
+      "allOriginalMaterialsAndFourOldPgDirectoriesUnchanged": true,
+      "allOwnSqlAndNewPostgresNormallyClosed": true,
+      "originalOfflineWorkerProcesses": 4
+    }
+  ],
+  "cumulativeCompleteSourceQaPasses": 20,
+  "databasesPerPass": 7,
+  "mapsPerPass": 2,
+  "cumulativeActualEvidenceByteComparisons": 30,
+  "originalSlowIndependentAlgorithmPreserved": true,
+  "offlineWorkerComponent": {
+    "testsPassed": 6,
+    "actualOriginalProcesses": 4,
+    "twoActualWorkersOverlapped": true,
+    "staticModules": 114,
+    "malformedEvidenceAndFakeHandlesRejected": true,
+    "allSourceEvidenceAndControlBytesAndIdentitiesUnchanged": true
+  },
+  "control4": {
+    "onlyCompleteValidatorRouteAndExportNamesChanged": true,
+    "exactReverseNormalizationMatchedControl3": true,
+    "requestChecksPassed": 10,
+    "staticModules": 507
+  },
+  "native20": {
+    "status": "RUNNING_UNACCEPTED",
+    "expectedChecks": 66,
+    "expectedSourcePins": 1510,
+    "actualSourcePinsObserved": 1510,
+    "originalLiveHandleObserved": true,
+    "completedChecksAtObservation": 0,
+    "stageAtObservation": "IDENTITY_CREATE",
+    "fullSourceAndUsersAndInstallationAccepted": false,
+    "sameCaseIndependentAccepted": false
+  },
+  "originalThirtySecondWindowChanged": false,
+  "programStartupOrNewPurposeHeldOrMqttApplicationPermissionGranted": false,
+  "newCodePublishedOrLinuxAccepted": false,
+  "fullGoalComplete": false
+}

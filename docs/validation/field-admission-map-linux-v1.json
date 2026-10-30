@@ -1,0 +1,99 @@
+{
+  "format": "IDMS_FIELD_ADMISSION_MAP_PUBLIC_V1",
+  "platform": "linux",
+  "head": "eefed165141dec26f4c9c341cd0997ef61491c55",
+  "run": 40046864260,
+  "job": 120730493227,
+  "conclusion": "success",
+  "unitSummary": {
+    "tests": 7,
+    "pass": 7,
+    "fail": 0,
+    "skipped": 0
+  },
+  "nativeStarts": [
+    {
+      "nonce": "0083ac642591",
+      "sourcePins": 1035,
+      "expectedChecks": 7
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "0083ac642591",
+      "check": 1,
+      "name": "fresh current state map V4, console queue V4 and finalized SQL write fence share one database"
+    },
+    {
+      "nonce": "0083ac642591",
+      "check": 2,
+      "name": "bounded field admission is read from the current verified state root and matches the original rules"
+    },
+    {
+      "nonce": "0083ac642591",
+      "check": 3,
+      "name": "three staged queue candidates withdraw runtime admission until atomic publication"
+    },
+    {
+      "nonce": "0083ac642591",
+      "check": 4,
+      "name": "independent-model approval publishes the paused field decision and matching governance anchor together"
+    },
+    {
+      "nonce": "0083ac642591",
+      "check": 5,
+      "name": "replaying the committed governance command leaves the current root and receipt unchanged"
+    },
+    {
+      "nonce": "0083ac642591",
+      "check": 6,
+      "name": "closed SQL write fence rejects field-root changes and reopens without rebaselining"
+    },
+    {
+      "nonce": "0083ac642591",
+      "check": 7,
+      "name": "all owned SQL connections and heartbeat threads retired and PostgreSQL clean offline"
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "0083ac642591",
+      "passed": true,
+      "checks": 7,
+      "cleanupComplete": true,
+      "cleanupErrorCount": 0,
+      "failure": null,
+      "originalDatabaseContacted": null,
+      "allProductionDependenciesRegistered": false
+    }
+  ],
+  "independentCleanup": [
+    {
+      "nonce": "0083ac642591",
+      "readOnly": true,
+      "nativeChecks": 7,
+      "postgresCleanOffline": true,
+      "postgresNeverRestarted": true,
+      "sourcePinsVerified": 1035,
+      "currentRootMembershipProofsVerified": 24,
+      "originalRuleComparisons": 2,
+      "stagedIsolationGroupsVerified": 6,
+      "independentModelActorIdsVerified": true,
+      "replayAndBlockedFenceHeadUnchanged": true,
+      "corruptedMembershipProofRejected": true,
+      "offlineSqlRowsRequeried": false,
+      "platformIdentityAuthorityExecuted": false,
+      "fieldIssuerOrMqttDataPathExecuted": false,
+      "allProductionDependenciesRegistered": false,
+      "fullGoalComplete": false
+    }
+  ],
+  "typecheckSuccess": true,
+  "frozenSourceProfilesAuthenticated": true,
+  "trackedSourceUnchanged": true,
+  "failedSteps": [],
+  "rawLogsOrCredentialsSaved": false,
+  "registeredPlatformControllerGateVerified": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false
+}

@@ -1,0 +1,5 @@
+# 读者密码阶段的共享目录并发锁
+
+V2已实际通过16项新PG检查，但SERIALIZABLE快照内前后相等不能单独排除其他backend在快照后提交成员关系、数据库属性或角色设置变化。V3保留全部V2范围，在准备和新连接结果观察时同时获取pg_authid、pg_auth_members、pg_database、pg_db_role_setting四个共享目录的ShareRowExclusiveLock；调用者实际事务持有这些锁到COMMIT/ROLLBACK。本层仍不创建事务、不提交、不授予当前用户或程序权限。
+
+新测试保留原16项，并读取真实pg_locks证明四个目录锁均granted；另用第二条实际连接分别尝试角色属性、成员关系、数据库属性和角色设置变更，以真实lock_timeout/55P03证明锁阻止变更。第二连接正常关闭后，原阶段仍能按原基线完成并由调用者回滚。原V2成功案例和所有旧源不重跑或修改。完整Control/authority锁、用户确认、持久安装意图、全SOURCE和真实网络COMMIT回复未知整合仍待后续实现。

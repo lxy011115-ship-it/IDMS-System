@@ -1,0 +1,15 @@
+{
+  "format": "IDMS_CORE_MIGRATOR_OBSERVATION_PUBLIC_V1",
+  "platform": "windows",
+  "originalEntrySha256": "d724acab8db94340d1d1a165f27dc0db8919d9c83b879c2ec466ba36b10b50e6",
+  "nativeChecks": 37,
+  "nonce": "fa4898576919",
+  "actualTerminalSuccess": true,
+  "independentCleanupSuccess": true,
+  "migratorClientsObserved": 3,
+  "migratorErrorsObserved": 0,
+  "hookRestored": true,
+  "originalV20FailureResolved": false,
+  "productionMigrationLogicChanged": false,
+  "fullGoalComplete": false
+}

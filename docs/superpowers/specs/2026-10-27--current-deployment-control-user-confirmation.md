@@ -1,0 +1,11 @@
+# 原控制与身份锁内的持久用户确认
+
+Control v2沿用已验收的原SOURCE/旧review、真实control SQLite与identity authority双BEGIN IMMEDIATE、原文件句柄/目录身份检查和前后签名head/当前realm marker检查。可信构造增加准确企业的身份读取配置与固定读者HTTP来源；外部请求不能提供这些配置、SOURCE、actor、approved、SQL、命令或验证回调。
+
+首次prepare由真实新私密文件拥有者创建并保存独立意图和原两anchor，再初始化用户日志EMPTY anchor并保存同一事务。任何已经存在的意图必须已有合法日志；V1旧意图缺日志时拒绝，不能静默补建。普通status和私密数据桥也认证既有日志。
+
+confirmUsers仅接受本次固定用途/ID/意图摘要、完整SOURCE企业的明确action、准确来源/全事实/部署/程序摘要、确认ID/时间和当前用户令牌。新PG只读token从实际新私密上下文派生，不接收调用者提供的旧工作流凭据。持有原两锁期间实际执行Gate2认证及再次核验，记录三组可独立重建的私密响应、原确认和ROW/ANCHOR签名，再次检查原SOURCE/旧review及当前权威和文件身份，才提交控制元数据。
+
+完全相同的已记录请求可读取原历史结果，不再次认证或刷新时限；确认ID、确认时间、原令牌摘要或输入变化时拒绝。userConsentStatus是明确的只读恢复路径，不需要重做确认，也不能推断为当前账号仍有效。所有公开结果都没有原始令牌；actualCurrentUsersVerifiedDuringThisRequest只描述本次确实执行的检查，不授予运行时权限。
+
+所有失败路径关闭本次Gate2原身份读取器、context fileOwner、control/authority事务及文件句柄。原目标PG、新JVM/HELD、程序批准、MQTT和业务写入仍未执行。此元数据COMMIT及只读恢复不替代最终业务COMMIT回复未知恢复的验收。后续必须在新的完整真实SOURCE/Keycloak案例中执行本协调器并由同案例消费者重建全部raw记录；当前Native16使用Control v1，保持不改。

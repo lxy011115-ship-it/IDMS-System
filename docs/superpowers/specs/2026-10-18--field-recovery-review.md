@@ -1,0 +1,13 @@
+# 权威恢复计划提交与独立审批
+
+沿用完整备份“恢复批准”、维护和外态设计。实现原恢复操作锁下的计划提交、不同主体审批、唯一SQL审计及可恢复提交记录。后续新维护锚点/重新注册/激活仍在同一完整第6项中；本阶段不开放普通业务或FIELD，也不把审批记录当作已激活。
+
+计划输入来自原归档认证和实际已恢复目标的完整核验，不接收调用者工单JSON。绑定operation/backup、新数据库和激活身份、原restore结果、父阶段和微秒根、完整事实、精确已发布策略引用、受控外态配置摘要、当前作者和独立贡献者集合。调用者预先提供plan UUID、expected facts SHA；替换计划必须显式提供superseded plan UUID。最大64计划；旧作者均留在contributors，不能通过换作者实现自审。
+
+复用原authority独占锁/静默期/原生Windows原子发布；在已知operations内增加review-baseline/plan/submit/approve/result不可变记录，拒绝未知文件/链接/非规范内容/覆盖。每次执行独立attempt UUID绑定新鲜外态观察；事务提交时数据库comment写入独立review阶段并绑定attempt/audit/完整新事实。正式restore-target的原结果和VERIFIED证明不改写。提交回复丢失后读取实际DB阶段和完整数据重建结果，不能凭外部日志猜测提交。
+
+应用、迁移、owner仍NOLOGIN、backup仍只读，无新表或宽权限。先完成初始真实restore核验，或对新review阶段验证父基线/审计唯一/业务根及完整链。新事件仅用既有appendAudit/savePostgres事务路径，事务内RESTART分配审计序列确保回滚不漂移；同事务根revision+1与review comment。完整35关系扫描证明除audit/root/runtime view之外原字节和迁移身份不变；旧根以微秒原始JSON恢复，旧审计前缀独立增量SHA核对。提交后重新全扫再发布结果。
+
+作者和审批都使用当前真实JWT与外态读取器；当前权限先于旧幂等结果。审批人不能是任何贡献者，并重新查询已提交作者的当前用户/角色/范围/notBefore/活跃sid，不能因原JWT已过期而假造新JWT。原作者的首次JWT证明由提交审计和不可变计划固定，审批时仅重查该已认证主体当前权限；不能将松散离线actor JSON用作身份认证。计划对应的外部完整工作流摘要须仍一致，提交前再次现查并保持短期窗口；不宣称跨服务原子事务。
+
+初版提供正式CLI和内核，不向backup-only维护HTTP传入authority。审批开始后旧维护清单拒绝；后续新的受验证维护锚点另行发布，尚无此锚点时保持入口关闭，可由正式review-status全量核对后返回状态。已APPROVED仍RESTORING且激活关闭。不同subject/actor绑定回放与严格冲突、失权、事务回滚、真实COMMIT回复丢失必须实测。原运行/66契约/十轮双份快照保持。

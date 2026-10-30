@@ -1,0 +1,19 @@
+# 工作流捕获发布修订入口
+
+新操作使用 `createGuardedWorkflowArchive`（`scripts/workflow-archive-guarded.mjs`），参数与旧捕获API相同：当前DRAINED config/operationId、独立keyFile、操作独占workDirectory和outputDirectory。旧 `createWorkflowArchive` 及16源审阅保留历史；新受控部署不要再选旧入口。当前核心/原workflow尚未加载这个运维入口。
+
+实际基线发现6个“有漂移仍发布”场景，不能用此前正常恢复/中断验证推断完整漂移保护。修订没有修改旧源码或重标v1副本。输出仍为严格IDMSWFA2归档，原认证和隔离恢复程序可读。私密意图新增控制能力摘要，因此旧入口工作区不得交给新入口隐式接管，应为修订操作选择新专用目录。
+
+readonly边界连接核对controlDB/owner OID和属性、membership/ACL、freeze表OID/owner/ACL/RLS/触发器/列结构，记录能力摘要并持续比较。对源DB/role/membership/权限/密码验证器摘要比较当前冻结baseline；原observer同时核对实际session advisory lease及准确holder/native连接，未知会话拒绝且不终止。源NOLOGIN和DB连接上限0的要求不放宽。
+
+初始key指纹在native检查、密封和发布前及完成重放后重新比较。READERS_CLOSED回调返回后先检查源零会话、control/source catalog、工作根和dump inode/登记身份，再密封。BEFORE_PUBLICATION回调返回后同样检查，还检查stage proof。未知文件、链接数或身份变化在发布前拒绝，不等到清理才报错。
+
+workDirectory必须专用：尚无本入口意图时应为空；有意图时仅允许对应的固定run、tool、认证和closed记录。根文件数上限4096，是拒绝边界而非长期容量承诺。key和配置放独立私密目录，不能混入捕获工作根。拒绝不会删除未知文件或修复catalog/key漂移；运维必须先确认来源再显式修复。输出目录也受原anti-link检查，不允许junction重定向。
+
+非覆盖link是发布提交点。AFTER_PUBLICATION通知或后续真实进程退出发生在提交点之后，可能已有有效归档；同意图fresh重试须认证并复用，而不是覆盖或自动回滚。最终SQL/文件检查与link之间仍有极短并发窗口，超级管理员/OS管理员必须遵守操作隔离约束；这不是对恶意管理员的安全隔离。
+
+测试中真实后台活动造成注入前拒绝时，仅在旧控制器实际退出、源后台真实归零后有限fresh重试；既不把超时视为退出，也不跳过产品检查。31项矩阵、正常capture/replay/38表两序列context恢复和发布前后真实kill证据见阶段进度。源OID替换只作用于最后一次性QA库，原workflow9124/4016及两个原库保持。
+
+恢复孤儿阳性另以两个真实detached QA pg_restore测试：杀owner后确认两个原生进程仍在，精确退休第一个并确认第二个仍在，再单独退休第二个，最后观察SQL后台退出。生产恢复仍attached，输入旧LIVE_REVIEW_COPY_ONLY只供QA原语测试，不因此获得正式恢复激活资格。
+
+精选源码不是完整安装包。后续原workflow升级须显式使用修订入口创建原源围栏绑定归档，真实隔离恢复后才进入受控切换，并建立新的运行拓扑核验；保留旧两jar/配置、当前core/edge协调器和旧运行证据。本阶段尚未冻结或切换原workflow，不构成跨服务原子恢复或商业验收。

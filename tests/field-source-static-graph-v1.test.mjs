@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,mkdir,writeFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {resolve,join} from 'node:path';
+const helper=resolve('scripts/field-source-static-graph-v1.mjs');
+async function fixture(){await mkdir('work/field-map-authority-host-20261024',{recursive:true});return mkdtemp(resolve('work/field-map-authority-host-20261024/graph-test-'));}
+function run(root,input){return JSON.parse(execFileSync(process.execPath,['--experimental-vm-modules',helper,root,input],{encoding:'utf8',windowsHide:true,stdio:['ignore','pipe','pipe']}));}
+test('actual static imports are parsed without evaluating source or interpreting template text as code',async()=>{const root=await fixture();await writeFile(join(root,'main.ts'),'import {value} from "./real.mjs"; const t: string=`import "./not-a-module.ts";`; throw Error("MUST_NOT_EXECUTE");');await writeFile(join(root,'real.mjs'),'export const value=1;');await writeFile(join(root,'input.json'),JSON.stringify({format:'FIELD_SOURCE_STATIC_GRAPH_V1',roots:['main.ts'],paths:['main.ts']}));const result=run(root,join(root,'input.json'));assert.deepEqual(result.paths,['main.ts','real.mjs']);assert.equal(result.parsedModules,2);assert.equal(result.productModulesLinkedOrEvaluated,false);});
+test('historical pinned modules keep their bytes in scope while only actual roots are traversed',async()=>{const root=await fixture();await writeFile(join(root,'main.mjs'),'export const value=1;');await writeFile(join(root,'historical.mjs'),'import "./generated-layout-only.mjs";');await writeFile(join(root,'input.json'),JSON.stringify({format:'FIELD_SOURCE_STATIC_GRAPH_V1',roots:['main.mjs'],paths:['main.mjs','historical.mjs']}));const result=run(root,join(root,'input.json'));assert.deepEqual(result.paths,['historical.mjs','main.mjs']);assert.equal(result.parsedModules,1);});
+test('an actual root cannot import outside the fixed project directory',async()=>{const root=await fixture();await writeFile(join(root,'main.mjs'),'import "../outside.mjs";');await writeFile(join(root,'input.json'),JSON.stringify({format:'FIELD_SOURCE_STATIC_GRAPH_V1',roots:['main.mjs'],paths:['main.mjs']}));assert.throws(()=>run(root,join(root,'input.json')));});

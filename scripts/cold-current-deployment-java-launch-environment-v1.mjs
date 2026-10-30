@@ -1,0 +1,11 @@
+import {resolve,isAbsolute,join,delimiter} from 'node:path';
+import {createHash} from 'node:crypto';
+import {canonical} from '../server/imports.ts';
+const need=(v,c)=>{if(!v)throw Object.assign(Error(c),{code:c});},exact=(v,keys)=>v&&Object.getPrototypeOf(v)===Object.prototype&&Object.keys(v).sort().join(',')===[...keys].sort().join(','),path=v=>typeof v==='string'&&v.length>0&&v.length<=4096&&!/[\u0000-\u001f\u007f]/.test(v)&&isAbsolute(v)&&resolve(v)===v;
+/** Fixed descriptive values only; the future trusted coordinator must authenticate files and current approval. */
+export function buildColdCurrentDeploymentJavaLaunchEnvironmentV1(raw){
+ need(exact(raw,['javaHome','planDirectory'])&&path(raw.javaHome)&&path(raw.planDirectory)&&['win32','linux'].includes(process.platform),'CURRENT_JAVA_LAUNCH_ENVIRONMENT_INPUT');
+ const home=join(raw.planDirectory,'home'),temporary=join(raw.planDirectory,'tmp'),runtime=join(raw.planDirectory,'reader-runtime.private.json'),environment={JAVA_HOME:raw.javaHome,HOME:home,TMPDIR:temporary,LANG:'C.UTF-8',LC_ALL:'C.UTF-8',TZ:'UTC',IDMS_WORKFLOW_READER_CONFIG:runtime};
+ if(process.platform==='win32'){const root=process.env.SystemRoot,windir=process.env.WINDIR;need(path(root)&&path(windir)&&resolve(root).toLowerCase()===resolve(windir).toLowerCase(),'CURRENT_JAVA_LAUNCH_WINDOWS_ROOT');Object.assign(environment,{SystemRoot:root,WINDIR:root,USERPROFILE:home,TEMP:temporary,TMP:temporary,PATH:[join(raw.javaHome,'bin'),join(root,'System32')].join(delimiter)});}else environment.PATH=join(raw.javaHome,'bin');
+ const javaProperties={'file.encoding':'UTF-8','user.timezone':'UTC','user.home':home,'java.io.tmpdir':temporary,'java.net.useSystemProxies':'false','java.awt.headless':'true'},body={format:'CURRENT_DEPLOYMENT_FIXED_DIAGNOSTIC_JAVA_ENVIRONMENT_V1',platform:process.platform,javaHome:raw.javaHome,planDirectory:raw.planDirectory,homeDirectory:home,temporaryDirectory:temporary,readerRuntimeFile:runtime,environment,javaProperties,parentEnvironmentCopied:false,descriptiveDataOnly:true,filesOrSourceOrCurrentUserAuthenticated:false,startupAuthorizationGranted:false,readerJvmStarted:false,fullGoalComplete:false};return{...body,sha256:createHash('sha256').update(canonical(body)).digest('hex')};
+}

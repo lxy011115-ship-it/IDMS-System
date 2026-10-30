@@ -1,0 +1,16 @@
+export const e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export const qty=n=>Number(n||0)/1000,price=n=>(Number(n||0)/100).toFixed(2),date=v=>v?String(v).slice(0,10):'—';
+export const today=()=>new Date(Date.now()+8*3600000).toISOString().slice(0,10);
+export const statuses={DRAFT:'草稿',SUBMITTED:'待独立审批',APPROVED:'已批准',ORDERED:'已下单',PART_RECEIVED:'部分到货',RECEIVED:'已收齐',CLOSED:'已关闭',CANCELLED:'已取消',RETURNED:'已退回',REJECTED:'已驳回'};
+export const moves={RECEIPT:'采购入库',ISSUE:'设备领用',RETURN:'未用退料',SUPPLIER_RETURN:'供应商退货',TRANSFER_IN:'调拨入库',TRANSFER_OUT:'调拨出库',OPENING:'期初入库',COUNT:'盘点调整',SCRAP:'报损'};
+export const tabs=[['inventory','库存概况'],['parts','易损备件'],['suppliers','供应商'],['purchases','采购单'],['movements','收发与调拨'],['links','设备与更换'],['adjustments','盘点与报损'],['documents','票款登记'],['history','操作历史']];
+export const button=(label,action='spares-new',attrs='',kind='secondary')=>`<button type="button" class="${kind}" data-action="${action}" ${attrs}>${e(label)}</button>`;
+export const cmd=(label,command,id='',extra='')=>button(label,'spares-new',`data-command="${command}" data-id="${e(id)}" ${extra}`);
+export const table=(heads,rows)=>`<div class="table-wrap"><table><thead><tr>${heads.map(h=>`<th>${e(h)}</th>`).join('')}</tr></thead><tbody>${rows.length?rows.join(''):`<tr><td colspan="${heads.length}" class="empty-row">暂无匹配记录，请建立资料或调整筛选。</td></tr>`}</tbody></table></div>`;
+export const field=(name,label,value='',type='text',required=true)=>`<label>${e(label)}<input name="${name}" type="${type}" value="${e(value)}" ${required?'required':''} maxlength="2000" ${type==='number'?'min="0" step="1"':''}></label>`;
+export const select=(name,label,items,value='',required=true)=>`<label>${e(label)}<select name="${name}" ${required?'required':''}><option value="">请选择</option>${items.map(x=>`<option value="${e(x.id)}" ${x.id===value?'selected':''}>${e(x.name)}</option>`).join('')}</select></label>`;
+export function readForm(form){const v=Object.fromEntries(new FormData(form)),lines=[];for(const [key,value]of Object.entries(v)){const m=/^line\.(\d+)\.(.+)$/.exec(key);if(m){const i=Number(m[1]);lines[i]??={};lines[i][m[2]]=value;delete v[key];}}if(lines.length)v.lines=lines;if(v.active!==undefined)v.active=v.active==='true';if(v.precision!==undefined)v.precision=Number(v.precision);if(v.wearPart!==undefined)v.wearPart=v.wearPart==='true';return v;}
+const fieldKeys=name=>name.replace(/^line\./,'lines.').split('.');
+export const getField=(values,name)=>fieldKeys(name).reduce((v,k)=>v?.[k],values);
+export function setField(values,name,value){const keys=fieldKeys(name);let item=values;for(const k of keys.slice(0,-1))item=item[k]??={};item[keys.at(-1)]=value;}
+export function receiptView(s){const receipt=s.receipt;return `${receipt?`<div class="spares-receipt ${s.refreshFailed?'receipt-warning':''}" role="status"><div><b>${s.refreshFailed?'已保存，列表刷新失败':'本次操作已保存'}</b><p>${e(receipt.number||receipt.id)}${s.refreshFailed?'。请重新读取，不要新建同一笔业务。':''}</p></div>${s.refreshFailed?button('重新读取列表','spares-refresh'):''}</div>`:''}${s.pendingCommand?`<div class="spares-receipt receipt-warning" role="alert"><div><b>提交结果尚未确认</b><p>已保留本次请求，请按原请求核对，勿修改后另建。刷新列表不代表本次提交已确认。</p></div>${button('按原请求核对结果','spares-confirm')}</div>`:''}`;}

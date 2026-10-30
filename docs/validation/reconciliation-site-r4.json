@@ -1,0 +1,59 @@
+{
+  "stage": "SITE_CONSOLE_R4_RECONCILIATION_WORKSPACE_WIP",
+  "passedForObservedScenarios": true,
+  "backendChecks": 3,
+  "browserFunctionalChecks": 9,
+  "actualBrowserPkce": true,
+  "browserDirectGrantDisabled": true,
+  "actualFlowable": true,
+  "actualBlockedAndHeldBranches": true,
+  "actualUnknownActionAndAuthorizationFences": true,
+  "actualOriginalCommandFindsExistingCase": true,
+  "actualScopeAfterNaturalTokenExpiry": true,
+  "wholeSessionExceptionGatePassed": false,
+  "capturedUnclassifiedExceptions": 2,
+  "rawLocalStorageInspected": false,
+  "metadataWhitelistUnitVerified": true,
+  "observedViewportWidths": [
+    1440,
+    390,
+    320
+  ],
+  "noGlobalHorizontalOverflowObserved": true,
+  "nativeCancellationsUnchanged": 5,
+  "finalObservedCounts": {
+    "orders": 9,
+    "audits": 89
+  },
+  "auditChainValid": true,
+  "runtimeAndUiSourcePinsMatchedObservedVersion": 24,
+  "qaHarnessOnlyPostQaPatches": [
+    {
+      "path": "scripts/verify-site-console-v4-r4.mjs",
+      "qaSha256": "b47656cc3a2b4a121153f9c196a8c76e0a40a49513db54c7b6a036767c4d38f6",
+      "publishedSha256": "5b8bb375075a7c8fea6bdc59e512437212f41bfe424411ba89b40aea6fddc3b6",
+      "type": "QA_HARNESS_ONLY",
+      "change": "Return SessionChange.session to persist test-session expiry; observed browser scope case waited for natural 60s token expiry. No runtime/UI source changed."
+    }
+  ],
+  "qaVerificationSha256": "7d0613e70a13a7ed4364cade1404329239f081358b0197c13af074e268036ff8",
+  "liveReadProofSha256": "ffdb0a7078ab6efb27907de501fdde15ed9a1d1a8896e054e5ee2731748a49ae",
+  "browserNetworkEvidenceSha256": "1b9199a7ded36d771d82d0bb85da045e4ae68414fcac7ac98d388738ead17522",
+  "sqlUiProtocolChecks": 3,
+  "sqlVerificationSha256": "57b31d622281186c0f603f8e1f8bb397d1ede8651e92ea6cadfdb32a56637e7f",
+  "canonicalUnitTests": 615,
+  "repositoryUnitTests": 606,
+  "knownPreexistingTestDifference": 9,
+  "testDatabasesRemoved": 35,
+  "testRolesRemoved": 135,
+  "testRealmsRemoved": 5,
+  "additionalMinimalSqlDatabasesRemoved": 1,
+  "additionalMinimalSqlRolesRemoved": 4,
+  "cleanupLeftovers": 0,
+  "originalJarUnchanged": true,
+  "originalRuntimeChanged": false,
+  "formalRestoreComplete": false,
+  "productionAcceptance": false,
+  "fullOriginalGoalComplete": false,
+  "finalUserMaterialsComplete": false
+}

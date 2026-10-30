@@ -1,0 +1,33 @@
+{
+  "format": "COLD_CORE_ROLE_CONFIGURATION_WINDOWS_ACTUAL_EVIDENCE_V1",
+  "at": "2026-10-26T07:34:43.912894+00:00",
+  "coreImplementationVersion": 10,
+  "coreWireFormat": "COLD_REGISTRATION_CORE_MATERIALS_V8",
+  "preparationImplementationVersion": 23,
+  "preparationClassVersion": 21,
+  "actualConfigurationAndResponsibilityTestsPassed": 13,
+  "protectedSourceCount": 1990,
+  "originalSourcesAndReportUnchanged": true,
+  "registeredSourceRoles": 29,
+  "explicitlyDescribedSourceRoles": 26,
+  "configuredCoreRuntimeIdentities": 11,
+  "uncoveredRoleCount": 3,
+  "uncoveredResponsibilities": [
+    "authentication audit delivery",
+    "retired acme database backup",
+    "retired sandbox database backup"
+  ],
+  "actualOriginalChildExitCode": 0,
+  "actualOriginalHostExitCode": 0,
+  "testJobId": "32fe8338-ccc8-4571-8d44-10ab1ce3b31a",
+  "testInputSha256": "bb6633bd4ff3b85e69e0f3d6d67b75af69eaf25975f35dc9124f74cd132555e1",
+  "configuredPasswordConflictsRejectedAtCompilation": true,
+  "runtimeDatabaseAndOwnerRebindingRejected": true,
+  "unknownDutyFallbackRejected": true,
+  "actualTargetRoleCredentialSqlExecuted": false,
+  "actualCombinedSqlAndTransportExecuted": false,
+  "fullRegisteredRoleMatrixVerified": false,
+  "completeDeploymentMaterialsVerified": false,
+  "formalFieldActivationGranted": false,
+  "fullGoalComplete": false
+}

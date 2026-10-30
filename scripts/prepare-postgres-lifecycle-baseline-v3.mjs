@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+import {privateDirectory,privateNewFile} from './backup-support.mjs';
+const hash=b=>createHash('sha256').update(b).digest('hex'),value=JSON.parse(await readFile('docs/validation/postgres-lifecycle-baseline-v3.json','utf8'));
+assert.equal(value.format,'IDMS_POSTGRES_LIFECYCLE_SOURCE_BASELINE_V3');assert.equal(value.baselineParentCommit,'b1a351b0cb6fd798082a5c0742e8d5b00fc25a20');assert.equal(value.parentBlobs.length,640);assert.equal(value.blobs.length,640);
+assert.equal(hash(JSON.stringify(value.parentBlobs.map(r=>({path:r.path,sha256:r.sha256})),['path','sha256'])),'5f063a18e79b9daa4d6c522b006de2b71093ecebfb99e99eb8fd6efb018f9208');
+const approved=[{"path":".github/workflows/platform-core-lifecycle-verification.yml","parentSha256":"4d7669eaebfb383e51801cab2eb869f2afc17faecb52b335a630fb2e2176ffaa","currentSha256":"d39319abe4c2671a992caa846ab6a7ef9b97d4df0067878d346d9dd11e0d9590","reason":"Bind the accepted cancellation inspector and the explicit source baseline profile in CI"},{"path":".github/workflows/postgres-lifecycle-verification.yml","parentSha256":"478e75b145f5ec25694e06f34c956b189dde17e2ad011ba26db6019f0a6be8ea","currentSha256":"330b1d5590969d0137cec8475adc276408df501e89c14547a319c34d024959d6","reason":"Bind the accepted cancellation inspector and the explicit source baseline profile in CI"}];assert.deepEqual(value.approvedChanges,approved);assert.equal(value.unchangedParentBlobs,638);
+const parents=new Map(value.parentBlobs.map(r=>[r.path,r.sha256]));assert.equal(parents.size,640);const seen=new Set();
+for(const row of value.blobs){assert(/^[A-Za-z0-9_./-]+$/.test(row.path)&&!row.path.startsWith('/')&&!row.path.split('/').includes('..')&&!seen.has(row.path));seen.add(row.path);const change=approved.find(c=>c.path===row.path);if(change){assert.equal(parents.get(row.path),change.parentSha256);assert.equal(row.sha256,change.currentSha256);}else assert.equal(row.sha256,parents.get(row.path));assert.equal(hash(await readFile(resolve(row.path))),row.sha256);}
+await privateDirectory('work/postgres-lifecycle-baseline-v3-20261023');await privateNewFile('work/postgres-lifecycle-baseline-v3-20261023/git-publication.json',JSON.stringify(value));
+console.log(JSON.stringify({sourceBaselineVerified:true,baselineParentCommit:value.baselineParentCommit,sourceBlobsVerified:640,unchangedParentBlobs:638,explicitCiSourceChanges:2,historicalParentBaselineRewritten:false,nativePostgresExecuted:false}));

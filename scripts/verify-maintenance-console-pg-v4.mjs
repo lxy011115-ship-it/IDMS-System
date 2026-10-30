@@ -1,0 +1,114 @@
+import assert from 'node:assert/strict';
+import {readFile,mkdir} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import {randomBytes,randomUUID,createHash} from 'node:crypto';
+import pg from 'pg';
+import {createServer} from 'node:http';
+import {createMaintenanceConsolePgV4Qa} from './fixtures/maintenance-console-pg-v4-qa.mjs';
+import {bootstrapMaintenanceMapV4Qa} from './fixtures/maintenance-map-bootstrap-v4.mjs';
+import {createMaintenanceConsoleCommitProxyV4} from './fixtures/maintenance-console-commit-proxy-v4.mjs';
+import {activateDomainReadCatalogV4} from './domain-read-activation-v4.mjs';
+import {activateMaintenanceMapV4} from './maintenance-map-activation-v4.mjs';
+import {MaintenanceJobStoreV4,MaintenanceQueueCommitUnknownV4} from '../server/maintenance-job-store-v4.ts';
+import {MaintenanceFlowStoreV4} from '../server/maintenance-flow-store-v4.ts';
+import {MaintenanceCommandWorkerV4} from '../server/maintenance-command-worker-v4.ts';
+import {MaintenanceMapV4} from '../server/maintenance-map-v4.ts';
+import {maintenanceWriteEntityV4} from '../server/maintenance-map-common-v4.ts';
+import {DomainMapV4,DomainMapSnapshot} from '../server/domain-map-v4.ts';
+import {reconstructDomainPayload} from '../server/domain-entities-v4.ts';
+import {canonicalDigest} from '../server/canonical-state.ts';
+import {verifyAuditChain} from '../server/audit.ts';
+import {privateDirectory,privateNewFile} from './backup-support.mjs';
+import {MaintenanceConsoleReadV4} from '../server/maintenance-console-read-v4.ts';
+import {MaintenanceConsoleJobApiV4} from '../server/maintenance-console-job-api-v4.ts';
+import {createMaintenanceConsoleHttpV4} from '../server/maintenance-console-http-v4.ts';
+import {verifyMaintenanceCompletionV4} from '../server/maintenance-job-proof-v4.ts';
+import {memoryAuditCursorCodec} from '../server/audit-cursor.ts';
+import {DomainError} from '../server/service.ts';
+const names=['scripts/verify-maintenance-console-pg-v4.mjs','scripts/fixtures/maintenance-console-pg-v4-qa.mjs','scripts/fixtures/maintenance-console-commit-proxy-v4.mjs','scripts/fixtures/maintenance-map-bootstrap-v4.mjs','scripts/maintenance-jobs-schema-v4.mjs','scripts/maintenance-jobs-v4.sql','server/maintenance-job-store-v4.ts','server/maintenance-job-crypto-v4.ts','server/maintenance-job-catalog-v4.ts','server/maintenance-job-heartbeat-v4.ts','server/maintenance-command-worker-v4.ts','server/maintenance-flow-worker-v4.ts','server/maintenance-flow-store-v4.ts','server/maintenance-map-v4.ts','server/governance-job-auth-v4.ts'];
+names.push('scripts/fixtures/maintenance-console-business-v4-qa.mjs','server/maintenance-console-read-v4.ts','server/maintenance-console-job-api-v4.ts','server/maintenance-console-http-v4.ts','server/maintenance-job-proof-v4.ts');
+const inputs=await Promise.all(names.map(async path=>{const bytes=await readFile(path);return {path,bytes,sha256:createHash('sha256').update(bytes).digest('hex')};}));
+const qa=await createMaintenanceConsolePgV4Qa(),work=resolve('work/maintenance-console-pg-v4-20261020',qa.nonce);await privateDirectory(work);
+const checks=[],errors=[];let proxy,report,http;const check=name=>{checks.push(name);console.log('PASS '+name);};
+try{
+ console.log('QA_DIRECTORY '+work);for(const p of inputs){const out=join(work,'input-source',p.path);await mkdir(resolve(out,'..'),{recursive:true});await privateNewFile(out,p.bytes);}
+ const source={tenantId:'sandbox',edgeId:'maint-console-'+qa.nonce,deviceCode:'MAINT-SOURCE',origin:'SIMULATOR',mapVersion:'maint-console-1',signingKey:randomBytes(32).toString('base64url'),acknowledgementKey:randomBytes(32).toString('base64url'),statusKey:randomBytes(32).toString('base64url'),statusUrl:'http://127.0.0.1:1/status',points:[{tagCode:'vibration_rms',nodeId:'ns=1;s=vibration_rms',unit:'mm/s'}]},clock={at:Date.now()-60000},RealDate=Date;let boot;
+ globalThis.Date=class extends RealDate{constructor(...a){super(...(a.length?a:[clock.at]));}static now(){return clock.at;}};try{boot=await bootstrapMaintenanceMapV4Qa(qa,source,clock);}finally{globalThis.Date=RealDate;}
+ const {target:t,maintenanceFixtures:f}=boot;await activateDomainReadCatalogV4(t.account,t.binding);await activateMaintenanceMapV4(t.account,t.binding);
+ const m=t.maintenance,crypto=m.crypto,queue=new MaintenanceJobStoreV4(t.account,m.worker),ingress=new MaintenanceJobStoreV4(t.queue.ingressAccount,m.ingress),flows=new MaintenanceFlowStoreV4(queue),flowIngress=new MaintenanceFlowStoreV4(ingress),map=new DomainMapV4(t.account,t.binding);
+ const full=async()=>{const s=await DomainMapSnapshot.open(t.account,t.binding,{maintenance:true});try{return await reconstructDomainPayload('sandbox',(ns,k)=>s.get(ns,k));}finally{await s.close();}};
+ const tech={tenantId:'sandbox',actorId:'maint-engineer',actorType:'USER',authMode:'oidc',roles:['maintenance-engineer','final-approver'],scope:{provided:true,sites:['V4-SITE'],lines:['V4-LINE'],devices:['*']},correlationId:'maintenance-console-pg'},reviewer={...tech,actorId:'maint-approver',roles:['final-approver']};
+ const refs=new Map([['tech',tech],['reviewer',reviewer]]),reference={kind:'BEARER',value:'tech'},auth={async resolve(ref){assert.ok(refs.has(ref.value));return {context:refs.get(ref.value),deadline:Date.now()+60000,referenceUntil:Date.now()+120000};}};
+ const enqueue=async(command,who=tech,ref=reference,store=ingress,id=randomUUID())=>{const meta={id:randomUUID(),actorId:who.actorId,commandId:id,requestHash:canonicalDigest(command)};return store.enqueue(who.actorId,meta.id,id,command.action,meta.requestHash,crypto.seal(command,meta,'COMMAND'),crypto.seal(ref,meta,'GRANT'),Date.now()+120000);};
+ const worker=(q=queue)=>new MaintenanceCommandWorkerV4({queue:q,crypto,auth,account:t.account,binding:t.binding,onError:async e=>{errors.push(e.message);}});
+ const run=async(id,action,input,who=tech,ref=reference)=>{const job=await enqueue({id,action,input},who,ref);await worker().runOne();const result=await ingress.read(who.actorId,job.id);assert.equal(result.status,'COMMITTED',JSON.stringify({status:result.status,error:result.errorCode,errors}));return result.result;};
+ const sql=new pg.Client(t.queue.ingressAccount),app=new pg.Client(t.account),root=new pg.Client({...qa.adminAccount,database:t.account.database});await Promise.all([sql.connect(),app.connect(),root.connect()]);
+ try{
+  for(const c of [sql,app]){for(const stmt of ['SELECT * FROM maintenance_jobs_v4.jobs','SELECT * FROM maintenance_jobs_v4.flows','UPDATE maintenance_jobs_v4.jobs SET status=\'COMMITTED\'','TRUNCATE maintenance_jobs_v4.flows'])await assert.rejects(()=>c.query(stmt),/permission denied/);}
+  await assert.rejects(()=>sql.query('SELECT maintenance_jobs_v4.claim_v4($1,$2,$3)',['sandbox',randomUUID(),randomUUID()]),/permission denied/);
+  await assert.rejects(()=>app.query('SELECT maintenance_jobs_v4.enqueue_v4($1,$2,$3,$4,$5,$6,$7,$8,$9)',['sandbox',tech.actorId,randomUUID(),randomUUID(),'claim','0'.repeat(64),{}, {},new Date(Date.now()+60000)]),/permission denied/);
+  check('QI cannot claim or write business data; APP and QI cannot read or mutate private queue/flow tables directly');
+  const unknown=randomUUID();assert.equal((await ingress.closeCommand(tech.actorId,unknown)).job,null);await assert.rejects(()=>enqueue({id:f[0].id,action:'claim',input:{expectedVersion:1}},tech,reference,ingress,unknown),/ACCEPTANCE_CLOSED/);assert.equal(await ingress.commandClosed(tech.actorId,unknown),true);
+  check('durable acceptance fence rejects a delayed enqueue for an unknown cancelled command');
+  const cmd={id:f[0].id,action:'claim',input:{expectedVersion:1}},commandId=randomUUID(),both=await Promise.all([enqueue(cmd,tech,reference,ingress,commandId),enqueue(cmd,tech,reference,ingress,commandId)]);assert.equal(both[0].id,both[1].id);assert.equal(await ingress.read(reviewer.actorId,both[0].id),null);
+  const auditBefore=(await full()).audits.length,results=await Promise.all([worker().runOne(),worker().runOne()]);assert.equal(results.filter(Boolean).length,1);let o=(await ingress.read(tech.actorId,both[0].id)).result;assert.equal(o.assignee,tech.actorId);assert.equal((await full()).audits.length,auditBefore+1);
+  check('concurrent enqueue resolves one actor command and two workers publish exactly one local completion and audit');
+  o=await run(o.id,'start',{expectedVersion:o.version});
+  const evidence={failureCode:'BEARING-WEAR',cause:'QA bearing wear',action:'Replace bearing',verification:'Load retest passed',minutes:40,partsUsed:['QA-bearing'],customFields:{post_vibration:3.1}};
+  o=await run(o.id,'submit',{...evidence,expectedVersion:o.version});
+  const self=await enqueue({id:o.id,action:'approval',input:{decision:'APPROVED',snapshotDigest:o.resolution.digest,comment:'self review must fail',expectedVersion:o.version}});assert.equal((await worker().runOne()).status,'WAITING_AUTH');assert.equal((await ingress.read(tech.actorId,self.id)).status,'WAITING_AUTH');
+  // Remove this intentionally forbidden pending action through the product cancellation protocol.
+  await ingress.closeCommand(tech.actorId,self.commandId);const current=await ingress.read(tech.actorId,self.id);await ingress.authorize(current,crypto.seal(reference,current,'GRANT',String(BigInt(current.grantRevision)+1n)),Date.now()+120000,true);assert.equal((await worker().runOne()).status,'CANCELLED');
+  o=await run(o.id,'approval',{decision:'RETURNED',snapshotDigest:o.resolution.digest,comment:'Repeat load measurement',expectedVersion:o.version},reviewer,{kind:'BEARER',value:'reviewer'});
+  o=await run(o.id,'submit',{...evidence,verification:'Repeated load measurement passed',expectedVersion:o.version});o=await run(o.id,'approval',{decision:'APPROVED',snapshotDigest:o.resolution.digest,comment:'Independent confirmation',expectedVersion:o.version},reviewer,{kind:'BEARER',value:'reviewer'});assert.equal(o.state,'CLOSED');
+  const closed=await full();assert.equal(closed.business.predictiveAlerts.find(a=>a.id===f[0].alertId).state,'RESOLVED');assert.equal(closed.business.maintenanceRecommendations.find(a=>a.id===f[0].recId).status,'EXECUTED');
+  check('persistent command workers complete claim start template evidence return resubmit and independent close with related state');
+  const denied=await enqueue({id:f[1].id,action:'claim',input:{expectedVersion:1}}),beforeDenied=await map.head();refs.set('tech',{...tech,roles:['auditor']});assert.equal((await worker().runOne()).status,'WAITING_AUTH');assert.deepEqual(await map.head(),beforeDenied);refs.set('tech',tech);
+  const old=await ingress.read(tech.actorId,denied.id),revision=String(BigInt(old.grantRevision)+1n);await ingress.authorize(old,crypto.seal(reference,old,'GRANT',revision),Date.now()+120000);assert.equal((await worker().runOne()).status,'COMMITTED');
+  check('current authorization denial leaves business unchanged and a fresh grant resumes the original actor command');
+  const leased=await enqueue({id:f[2].id,action:'claim',input:{expectedVersion:1}}),claim=await queue.claim();assert.equal(claim.id,leased.id);await ingress.authorize(claim,crypto.seal(reference,claim,'GRANT','2'),Date.now()+120000);await assert.rejects(()=>queue.checkLease(claim,Date.now()+60000),/LEASE_LOST/);assert.equal((await worker().runOne()).status,'COMMITTED');
+  check('grant revision update revokes a live SQL lease and prevents the old worker from publishing');
+  const invalid=await enqueue({id:f[2].id,action:'claim',input:{expectedVersion:999}}),beforeInvalid=await map.head();assert.equal((await worker().runOne()).status,'FAILED');assert.deepEqual(await map.head(),beforeInvalid);assert.equal((await ingress.read(tech.actorId,invalid.id)).result.status,409);
+  check('known domain validation failure is durable FAILED without an order audit or root mutation');
+  const retry=await enqueue({id:f[3].id,action:'claim',input:{expectedVersion:1}}),prepare=queue.prepare.bind(queue);queue.prepare=async(lease,binding,head,id,ops,deadline)=>prepare(lease,binding,head,id,ops.filter(v=>!v.key.startsWith('maintenance:')),deadline);
+  const beforeRollback=await map.head();assert.equal((await worker().runOne()).status,'RETRY');assert.deepEqual(await map.head(),beforeRollback);queue.prepare=prepare;
+  const pending=await ingress.read(tech.actorId,retry.id);await ingress.authorize(pending,crypto.seal(reference,pending,'GRANT','2'),Date.now()+120000);assert.equal((await worker().runOne()).status,'COMMITTED');
+  check('missing atomic completion receipt rolls back the actual delta, audit and queue finish together, then original command recovers');
+  proxy=await createMaintenanceConsoleCommitProxyV4(t.account.host,t.account.port,'maintenance_jobs_v4.prepare_console_v4');const lossQueue=new MaintenanceJobStoreV4({...t.account,port:proxy.port},m.worker),lost=await enqueue({id:f[3].id,action:'start',input:{expectedVersion:2}}),beforeLoss=(await full()).audits.length;
+  assert.equal((await worker(lossQueue).runOne()).status,'COMMITTED');assert.ok(proxy.observedTarget&&proxy.observedCommit&&proxy.connections>1);assert.equal((await ingress.read(tech.actorId,lost.id)).status,'COMMITTED');assert.equal((await full()).audits.length,beforeLoss+1);await proxy.close();proxy=undefined;
+  check('actual maintenance prepare COMMIT reply loss resolves its original business receipt and returns one committed job');
+  const s=await map.snapshot();try{const row=await new MaintenanceMapV4(t.account,t.binding).get(f[4].id,tech);row.workflow={engine:'Flowable',status:'SYNCED',commandId:randomUUID(),processInstanceId:'synthetic-queue-only',definitionId:'synthetic-queue-only'};await map.commit(s.head,randomUUID(),await maintenanceWriteEntityV4(s,'business/workOrders',row));}finally{await s.close();}
+  // This case proves only the persistent handoff protocol. It does not dispatch a real engine.
+  const flowQueued=await enqueue({id:f[4].id,action:'claim',input:{expectedVersion:1}}),flowWorker=new MaintenanceCommandWorkerV4({queue,crypto,auth,account:t.account,binding:t.binding,workflowBinding:'a'.repeat(64)});assert.equal((await flowWorker.runOne()).status,'COMMITTED');const flowResult=await ingress.read(tech.actorId,flowQueued.id);assert.equal(flowResult.result.workflow.status,'PENDING');
+  const grant=await flows.read(flowResult.result.workflow.commandId);assert.equal(grant.actorId,tech.actorId);assert.deepEqual(crypto.open(grant.sealedGrant,grant.job,'GRANT',grant.revision),reference);assert.equal(await flows.defer({...grant,commandId:randomUUID()},false),false);assert.equal(await flows.defer(grant,true),true);
+  assert.equal(await flowIngress.authorize(grant,crypto.seal(reference,grant.job,'GRANT','2'),Date.now()+120000),true);assert.equal(await flows.defer(grant,true),false);const currentFlow=await flows.read(grant.commandId);assert.equal(currentFlow.revision,'2');assert.equal(currentFlow.waitingAuth,false);
+  const beforeOldFlow=await map.head(),staleSnapshot=await map.snapshot();let staleOps;try{staleOps=[await staleSnapshot.operation('receipt','qa-stale-flow-grant',{neverApplied:true})];}finally{await staleSnapshot.close();}await assert.rejects(()=>flows.apply(grant,t.binding,Date.now()+60000,beforeOldFlow,randomUUID(),staleOps),/AUTH_CHANGED/);assert.deepEqual(await map.head(),beforeOldFlow);
+  check('flow grant is created atomically for the original actor; missing and stale defer return false and old authorization cannot apply');
+  const reader=new MaintenanceConsoleReadV4(t.readAccount,t.readBinding,memoryAuditCursorCodec(),m.worker.deployment),page=await reader.list(new URLSearchParams('pageSize=2'),tech);assert.equal(page.items.length,2);assert.ok(page.nextCursor);await run(f[2].id,'start',{expectedVersion:2});const historical=await reader.list(new URLSearchParams({cursor:page.nextCursor}),tech);assert.equal(historical.items.find(x=>x.id===f[2].id).version,2);assert.equal((await reader.detail(f[2].id,tech)).item.version,3);const paged=[...page.items];let cursor=page.nextCursor;
+  while(cursor){const v=await reader.list(new URLSearchParams({cursor}),tech);paged.push(...v.items);cursor=v.nextCursor;}assert.equal(paged.length,8);assert.equal(new Set(paged.map(x=>x.id)).size,8);
+  await assert.rejects(()=>reader.list(new URLSearchParams({cursor:page.nextCursor}),reviewer),/CURSOR/);await assert.rejects(()=>reader.list(new URLSearchParams({cursor:page.nextCursor}),{...tech,roles:['auditor']}),/CURSOR/);
+  let originalCatalog;const changeCatalog=async value=>{const snapshot=await map.snapshot();try{originalCatalog??=await snapshot.get('domain_head','read_catalog');await map.commit(snapshot.head,randomUUID(),[await snapshot.operation('domain_head','read_catalog',value||originalCatalog)]);}finally{await snapshot.close();}};const catalogSnapshot=await map.snapshot();let changedCatalog;try{changedCatalog={...await catalogSnapshot.get('domain_head','read_catalog'),generation:'f'.repeat(64)};}finally{await catalogSnapshot.close();}await changeCatalog(changedCatalog);await assert.rejects(()=>reader.list(new URLSearchParams({cursor:page.nextCursor}),tech),/CATALOG_CHANGED/);await changeCatalog();
+  assert.equal((await reader.list(new URLSearchParams(),{...tech,scope:{...tech.scope,sites:['HIDDEN']}})).items.length,0);assert.equal((await reader.list(new URLSearchParams(),{...tech,actorId:'not-assignee',roles:['operator']})).items.length,0);
+  await assert.rejects(()=>reader.detail(f[0].id,{...tech,scope:{...tech.scope,sites:['HIDDEN']}}),e=>e.status===404);
+  const committed=await ingress.read(tech.actorId,both[0].id);assert.ok(await verifyMaintenanceCompletionV4(t.readAccount,t.readBinding,committed));await assert.rejects(()=>verifyMaintenanceCompletionV4(t.readAccount,t.readBinding,{...committed,result:{...committed.result,version:999}}),/COMPLETION_RECEIPT/);
+  check('READER lists fixed-root pages once, binds cursors to current identity and scope, hides other tasks and verifies terminal business proof');
+  const captured=async req=>{const ref={kind:'BEARER',value:String(req.headers.authorization||'').replace(/^Bearer /,'')};if(!refs.has(ref.value))throw new DomainError(401,'QA_AUTH_REQUIRED');return {...await auth.resolve(ref),reference:ref};};
+  const fakeHttpAuth={mode:'oidc',context:async req=>(await captured(req)).context,handle:async()=>false},jobAuth={capture:captured};
+  proxy=await createMaintenanceConsoleCommitProxyV4(t.account.host,t.account.port,'maintenance_jobs_v4.enqueue_console_v4');const httpQueue=new MaintenanceJobStoreV4({...t.queue.ingressAccount,port:proxy.port},m.ingress),jobs=new MaintenanceConsoleJobApiV4({queue:httpQueue,crypto,auth:jobAuth,read:reader,readAccount:t.readAccount,readBinding:t.readBinding});
+  http=createServer(createMaintenanceConsoleHttpV4({auth:fakeHttpAuth,jobs,read:reader}));await new Promise(ok=>http.listen(0,'127.0.0.1',ok));const base='http://127.0.0.1:'+http.address().port;
+  const request=async(path,{method='GET',body,actor='tech',tenant='sandbox'}={})=>{const r=await fetch(base+path,{method,headers:{authorization:'Bearer '+actor,'x-tenant-id':tenant,'content-type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});return {status:r.status,body:await r.json()};};
+  assert.equal((await request('/api/v4/maintenance/context',{actor:'none'})).status,401);assert.equal((await request('/api/v4/maintenance/orders',{tenant:'acme'})).status,403);assert.equal((await request('/api/v4/maintenance/context')).body.phase,'ACTIVE');
+  const httpId=randomUUID(),httpBody={commandId:httpId,command:{id:f[5].id,action:'claim',input:{expectedVersion:1}}},acceptedHttp=await request('/api/v4/maintenance/jobs',{method:'POST',body:httpBody});assert.equal(acceptedHttp.status,202,JSON.stringify(acceptedHttp));assert.equal(acceptedHttp.body.job.status,'ACCEPTED');assert.ok(proxy.observedTarget&&proxy.observedCommit);assert.equal(acceptedHttp.body.job.sealedCommand,undefined);assert.equal(acceptedHttp.body.job.sealedGrant,undefined);
+  assert.equal((await request('/api/v4/maintenance/jobs',{method:'POST',body:httpBody})).body.job.id,acceptedHttp.body.job.id);assert.equal((await worker().runOne()).status,'COMMITTED');const observed=await request('/api/v4/maintenance/commands/'+httpId);assert.equal(observed.status,200);assert.equal(observed.body.job.result.assignee,tech.actorId);assert.equal((await request('/api/v4/maintenance/jobs/'+acceptedHttp.body.job.id,{actor:'reviewer'})).status,404);
+  const cancelId=randomUUID();assert.equal((await request('/api/v4/maintenance/commands/'+cancelId+'/cancel',{method:'POST',body:{}})).body.acceptanceClosed,true);const afterCancel=await request('/api/v4/maintenance/jobs',{method:'POST',body:{...httpBody,commandId:cancelId}});assert.equal(afterCancel.status,409);assert.equal(afterCancel.body.acceptance.attempt,'CLOSED');
+  assert.equal((await request('/api/v4/maintenance/flows/'+grant.commandId,{actor:'reviewer'})).status,404);assert.equal((await request('/api/v4/maintenance/flows/'+grant.commandId+'/authorize',{method:'POST',body:{}})).status,202);assert.equal((await flows.read(grant.commandId)).revision,'3');
+  await new Promise(ok=>http.close(ok));http=undefined;await proxy.close();proxy=undefined;
+  check('real HTTP with QI and READER recovers lost enqueue COMMIT, serves only owner jobs, closes unknown acceptance and restricts flow regrant to original actor');
+  for(const stmt of ['UPDATE maintenance_jobs_v4.jobs SET request_hash=repeat(\'f\',64)','DELETE FROM maintenance_jobs_v4.flows','TRUNCATE maintenance_jobs_v4.flows'])await assert.rejects(()=>root.query(stmt),/DIRECT_WRITE/);
+  await root.query("SET session_replication_role='replica'");try{await assert.rejects(()=>root.query('DELETE FROM maintenance_jobs_v4.flows'),/DIRECT_WRITE/);}finally{await root.query("SET session_replication_role='origin'");}
+  const payload=await full();assert.ok(verifyAuditChain(payload.audits,'sandbox'));
+  check('ALWAYS queue and flow triggers reject root and replica direct mutation; reconstructed audit chain remains valid');
+ }finally{await Promise.allSettled([sql.end(),app.end(),root.end()]);}
+ for(const p of inputs)assert.equal(createHash('sha256').update(await readFile(p.path)).digest('hex'),p.sha256,p.path+' changed during verification');
+ report={status:'PASS',checkedAt:new Date().toISOString(),checks,scope:'Real isolated PostgreSQL maintenance console queue and workers; trusted identity callback only; no real OIDC/browser/Flowable dispatch in this verifier',sourcePins:inputs.map(({path,sha256,bytes})=>({path,sha256,bytes:bytes.length})),knownErrorsObserved:errors};
+}finally{if(http)await new Promise(ok=>http.close(ok));await proxy?.close();await qa.close();if(report){report.cleanup=JSON.parse(await readFile(join(qa.work,'cleanup.json'),'utf8'));await privateNewFile(join(work,'verification.json'),JSON.stringify(report,null,2));console.log('VERIFIED '+checks.length+' '+work);}}

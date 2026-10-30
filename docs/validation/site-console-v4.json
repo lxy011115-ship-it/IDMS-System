@@ -1,0 +1,91 @@
+{
+  "status": "ISOLATED_TWO_TENANT_SITE_CONSOLE_VERIFIED",
+  "at": "2026-10-20T11:27:08.669734+00:00",
+  "productionAcceptance": false,
+  "originalRuntimeChanged": false,
+  "cloudMainChanged": false,
+  "branch": "wip/site-console-v4",
+  "deployedMain": "044eab28ca5fa398527b00237d6eebc9004f094f",
+  "backendChecks": [
+    "one shared authenticated runtime admits two registered tenants and refuses an unregistered real OIDC identity",
+    "same origin routes each verified tenant to its registered database and rejects cross-tenant headers, foreign order IDs and absent or stale actor headers",
+    "public same-origin landing and both console navigation shells serve strict CSP, refuse static writes and expose no private runtime paths",
+    "separate product governance and maintenance worker CLIs complete real queued template and claim actions through the unified HTTP while other tenant job IDs stay hidden",
+    "independent authentication delivery CLI writes each real login once to its tenant audit chain and unified audit API returns only that tenant lifecycle",
+    "logout invalidates the common session across both modules and the independent delivery writes each actual logout once",
+    "suspended registered tenant refuses a fresh real OIDC session before creating a login event",
+    "five invalid site configurations fail separate CLI startup before READY without logging service material"
+  ],
+  "browserChecks": [
+    {
+      "name": "authentication-audit",
+      "domEvidence": "Sandbox browser PKCE login appeared as second AUTH_LOGIN, distinct event timestamp. Opened detail: browser hash verification passed and OIDC_LOGIN reason. Independent delivery remained running."
+    },
+    {
+      "name": "shared-navigation",
+      "domEvidence": "Sandbox PKCE session remained same actor on home, governance/audit and maintenance links. Opened SITE-SANDBOX order and submitted a real claim; same-origin job UI showed business action completed, then returned home without logging in again."
+    },
+    {
+      "name": "mobile",
+      "domEvidence": "Home 1440 screenshot reviewed; 390/320 home screenshots show wrapped identity and stacked cards, document widths375/305 within viewport. Both console navigation strips tested at320: all three links within10..230px, document305. Default viewport restored."
+    },
+    {
+      "name": "logout",
+      "domEvidence": "Home logout returned explicit signed-out notice. Following governance and maintenance links showed both welcome/login pages with no business workspace."
+    },
+    {
+      "name": "pkce",
+      "domEvidence": "With direct grants disabled, Edge completed actual S256 PKCE for sandbox then acme. Acme maintenance showed SITE-ACME and no SITE-SANDBOX, its job recovery list empty, same identity on home. Both browser sessions explicitly logged out."
+    }
+  ],
+  "actualTwoTenantBrowserPkce": true,
+  "backendDirectGrantFixtureUsed": true,
+  "browserDirectGrantDisabled": true,
+  "loginLogoutDeliveryAssertions": {
+    "perTenantLogins": 2,
+    "perTenantLogouts": 2,
+    "note": "One real-token backend fixture session plus one actual browser PKCE session per tenant; independent delivery verified by final harness assertions"
+  },
+  "canonicalUnitTests": 562,
+  "branchUnitTests": 553,
+  "testDifference": "Nine pre-existing unpublished legacy-edge tests excluded from managed branch",
+  "buildArtifacts": 268,
+  "historicalReadOnlyChecks": 15,
+  "qaCleanup": {
+    "checkedAt": "2026-10-20T11:22:59.625Z",
+    "runs": [
+      {
+        "nonce": "5e46892d7dd2",
+        "databasesRemoved": 5,
+        "rolesRemoved": 21
+      },
+      {
+        "nonce": "a198fc6a9332",
+        "databasesRemoved": 5,
+        "rolesRemoved": 21
+      }
+    ],
+    "databasesRemoved": 10,
+    "rolesRemoved": 42,
+    "ownedDatabaseLeftovers": 0,
+    "ownedRoleLeftovers": 0,
+    "onlyReadOnlyInventoryQueries": true
+  },
+  "sourceReview": {
+    "files": 19,
+    "localSecretValuesCompared": 474,
+    "matches": 0,
+    "scope": "Explicit new site source and documentation against sensitive .local JSON values and named plaintext secret/key/token files; runtime material excluded"
+  },
+  "evidence": {
+    "path": "work/site-console-v4-20261020/a198fc6a9332/verification.json",
+    "sha256": "1b9c32d39d428e45c8fe99cbdb4472c8ed90e4f1e61b636edf150940262d415e"
+  },
+  "pending": [
+    "Predictive analysis and new order creation in v4",
+    "Unresolved legacy workflow outbox migration",
+    "Other modules, full site controlled migration and production resource/restore validation",
+    "Key witness and full rotation, HA/PITR/TLS/MFA/field/RUL/licensing",
+    "ICP and public domain activation"
+  ]
+}

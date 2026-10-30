@@ -2,7 +2,7 @@ import { spawn,execFile } from 'node:child_process';
 import { readFile,writeFile,mkdir } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import { promisify } from 'node:util';
-import { localConfig } from './keycloak-local.mjs';
+import { localConfig } from './keycloak-runtime.mjs';
 import { createMqttConfig,launchBroker } from './mqtt-local.mjs';
 import { setupWorkflow,buildWorkflow,launchWorkflow,workflowReady } from './workflow-local.mjs';
 import {setupAi,launchOllama,stopOllama,ollamaReady,launchAi,aiReady} from './ai-local.mjs';
@@ -10,7 +10,7 @@ import { resolve } from 'node:path';
 import net from 'node:net';
 const exec=promisify(execFile);
 await exec(process.execPath,['scripts/bootstrap-postgres.mjs'],{windowsHide:true});
-await exec(process.execPath,['scripts/keycloak-local.mjs'],{windowsHide:true,timeout:300000});
+await exec(process.execPath,['scripts/keycloak-runtime.mjs'],{windowsHide:true,timeout:300000});
 const identity=await localConfig();
 await mkdir('.local',{recursive:true});
 let token;try{token=(await readFile('.local/service-token','utf8')).trim();}catch(e){if(e.code!=='ENOENT')throw e;}

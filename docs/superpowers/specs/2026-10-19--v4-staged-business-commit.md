@@ -1,0 +1,13 @@
+# 治理大事务的独立准备根
+
+完整方案A继续。治理/导入变更会超过单delta的64项/8MiB，不能把大批导入缩成小样本或放宽接收中途的一致性。选择独立准备根：短事务先将企业control置UPDATING，分批在SQL保护的独立branch构建，核验完整候选业务/旧审计/来源治理/资产目录后一次CAS切换公开head。读者与采集在UPDATING拒绝；历史根仍可验证，治理目录切换后旧HTTP游标要求刷新，单独追加采集数据仍可延续旧窗口。当前授权和目录校验继续前置。
+
+不选择在公开根逐批覆盖业务后重新开门，因为崩溃留下混合数据，审计/批准不能称一次提交；不选择扩大单事务限制至任意大小，因为失去有界协议。新能力复用原SMT节点/根/hash格式，原apply和14基础源不改；仅新SQL实现3在全新QA库新增branch heads/immutable steps和受限函数，不对原库DDL或盲重绑目录。
+
+branch固定tenant、UUID、公开base revision/root/receipt锚；分批step用原64/8MiB校验、旧值CAS与audit/receipt/blob不可变规则，每step有独立请求/回执摘要。stage只写内容寻址节点/值和branch私密元数据，不改变公开head或公开receipt链。当前branch head必须与最后step回执匹配；stage竞争只允许一胜，重放同命令一次，错body拒绝。准备根可以服务端验证proof，不能由HTTP任意root输入选择。
+
+publish须匹配当前公开base与branch最终revision/root/step receipt，生成旧格式公开receipt，并在同一事务切公开head且将branch标记已发布；公开revision只增1。成功COMMIT回复丢失时不业务ACK，同操作从新连接回执恢复。普通APP仍不能直接写表/私密_ctx/内部函数；READER只读证明与已受权branch状态，不能创建/stage/publish。ALWAYS保护新增表，DDL shared/exclusive与非MVCCepoch、外置完整目录/DB角色pin继续覆盖，禁用篡改重启或回滚DDL均拒绝。
+
+下一层治理worker以持久intent/job与旧业务函数准备模板创建/提交/独立批准及导入/更正，完整核验候选后使用branch一次发布；权限检查先于缓存回执，恢复必须同requestHash且重新授权，不静默采纳新输入。该维护准备允许全量验证；正常采集/查询保持有限证明，所有常规写者的有界依赖闭包仍需后续完成，不把兼容桥当全部增量领域已完成。
+
+真实QA先重跑原15组PG守卫，再验证多批>64键准备期间公开根不变、一次完整发布、独立重建根/旧根证明、回滚/竞争/重连/实际提交响应丢失/最小角色/新增表守卫及epoch。治理业务层必须另验批准/更正的真实规则和失败恢复，不因基础通过就声称业务接入已完成。所有旧发布保持，精确清理自有数据库/OID/owner，完整商用目标ACTIVE。

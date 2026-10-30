@@ -1,0 +1,39 @@
+{
+  "format": "COLD_CURRENT_DEPLOYMENT_USER_CONSENT_COMPONENT_WINDOWS_V1",
+  "journal": {
+    "testsPassed": 16,
+    "staticModules": 300,
+    "protectedInputs": 4132,
+    "resultSha256": "16cc0d134e4aeff8d3766f27a25e2810012258a763f02fd86b7eed04e500213f",
+    "actualSqliteCommitAndSeparateOriginalChildReopen": true,
+    "originalExclusiveFileCreatorOnlyInitialization": true,
+    "rollbackOrReopenOrMissingStorageCannotRemintInitializer": true,
+    "actualThirtySecondProofExpiryWaited": true,
+    "expiredCurrentCapabilityRejectedAndHistoryReadable": true,
+    "rawUserRecordsPrivateAndPublicStatusTokenFree": true
+  },
+  "controlV2": {
+    "requestTestsPassed": 7,
+    "staticModules": 299,
+    "protectedInputs": 4137,
+    "resultSha256": "dcf67ac01fe9c10d9e6886ce2f5ce0732887a9409676f3c5057628911a500886",
+    "originalControlAndAuthorityGuardCodeRetained": true,
+    "callerActorOrApprovalOrSqlOrCallbacksRejected": true,
+    "actualCompleteSourceCoordinatorAcceptance": false
+  },
+  "native17Preflight": {
+    "staticModules": 496,
+    "protectedInputs": 4142,
+    "original62ScopePreserved": true,
+    "newExpectedChecks": 64,
+    "expectedSourcePins": 1472,
+    "fullNative17Accepted": false
+  },
+  "allComponentOriginalRootsAndHostsAndChildrenExitedNormally": true,
+  "allPrivateTestResourcesRetired": true,
+  "allSourceInputsUnchanged": true,
+  "newTargetCredentialsOrHeldOrProgramApprovalProven": false,
+  "mqttApplicationAclProven": false,
+  "formalFieldActivationGranted": false,
+  "fullGoalComplete": false
+}

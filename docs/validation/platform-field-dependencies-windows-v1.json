@@ -1,0 +1,44 @@
+{
+  "format": "PLATFORM_FIELD_WINDOWS_EVIDENCE_V1",
+  "actualExitCode": 0,
+  "independentActualExitCode": 0,
+  "independentVerifierVersion": 4,
+  "nonce": "923e291173ba",
+  "unitTests": 34,
+  "unitTestFiles": 14,
+  "nativeChecks": 31,
+  "sourcePins": 1229,
+  "declaredResourcesPerGeneration": 8,
+  "controllerGenerations": 2,
+  "actualApplicationChildrenPerGeneration": 9,
+  "currentStoredPoints": 12,
+  "currentPointsWithVerifiedAck": 12,
+  "currentRootProofs": 89,
+  "retainedAckRows": 3,
+  "verifiedAckSignatureOccurrences": 13,
+  "siteHostRetirements": [
+    166,
+    22
+  ],
+  "siteOwnerRetirements": [
+    1,
+    1
+  ],
+  "sameRequestBlockedRetryVerified": true,
+  "startupCancellationVerified": true,
+  "unrelatedBrokerIsolationVerified": true,
+  "threePostgresDirectoriesCleanOffline": true,
+  "workflowNormalStops": 6,
+  "windowsRestrictedLaunch": {
+    "sameAccount": true,
+    "administratorsEnabled": false,
+    "powerUsersEnabled": false,
+    "defaultDaclCurrentUserExplicit": true,
+    "originalSupervisorHandleExitCode": 0,
+    "hostSourceAndExecutableVerified": true
+  },
+  "failedEarlierCasesRetained": true,
+  "formalFieldActivationGranted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false
+}

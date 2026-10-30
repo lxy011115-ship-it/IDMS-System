@@ -1,0 +1,5 @@
+# 原事务中的实时后端检查
+
+PostgreSQL16官方文档说明，同一事务首次读取当前会话活动后会重复显示同一快照；pg_stat_clear_snapshot()可清除该缓存：https://www.postgresql.org/docs/16/monitoring-stats.html#MONITORING-STATS-VIEWS 。因此目录锁不能代替实时后端核对。V4保留V3四共享目录锁及全部既有约束，每次目标身份/静默检查前先执行pg_stat_clear_snapshot，再读取实际pg_stat_activity；不重设统计、不改变事务权限、不扩大30秒期限。
+
+新测试在真实PG中重现首次为0、加入第二backend后缓存仍为0、清快照后实际为1；随后验证准备能力后加入的真实backend会使阶段失败，原尝试被消费且全部密码不变。测试用静默等待器也按同样方式刷新。原16成功案例保持，未启动的18项任务明确SUPERSEDED_BEFORE_START，不当作通过或失败运行，也不再启动；本次新20项完整SQL组件覆盖原16+四目录并发锁2+实时快照2。生产Control/authority/用户/持久安装意图、全SOURCE和网络回复未知仍需后续整合。

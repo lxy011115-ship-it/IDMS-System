@@ -71,14 +71,35 @@ const demoGrants: Record<string, string[]> = {
   'demo.technician': ['read', 'maintenance:execute', 'analyze', 'alarm:review'],
   'demo.auditor': ['read'], 'demo.connector': ['read', 'upload']
 };
+export const sparesPermissionLabels:Record<string,string>={
+ 'spares:read':'查看备件采购资料','spares:history':'查询备件业务历史','spares:manage':'维护备件、仓库与供应商及执行采购收货',
+ 'spares:request':'编制并提交采购申请','spares:move':'设备领退料及登记实际更换','spares:approve':'独立审批采购及库存调整','spares:finance':'登记发票与付款凭证（不执行支付）'
+};
+const sparesWrites=['spares:manage','spares:request','spares:move','spares:approve','spares:finance'];
+// Make existing domain capabilities visible in the same catalog as the other
+// permissions. This changes no identity-provider role assignments.
+for(const grants of Object.values(rolePermissions))if(grants.includes('read'))grants.push('spares:read','spares:history');
+for(const role of ['tenant-admin','spare-parts-clerk'])rolePermissions[role].push('spares:manage','spares:request','spares:move','spares:finance');
+for(const role of ['data-uploader','maintenance-engineer'])rolePermissions[role].push('spares:request');
+rolePermissions['maintenance-engineer'].push('spares:move');
+rolePermissions['final-approver'].push('spares:approve');
+for(const grants of Object.values(demoGrants))if(grants.includes('read'))grants.push('spares:read','spares:history');
+demoGrants['demo.admin'].push('spares:manage','spares:request','spares:move','spares:finance');
+demoGrants['demo.uploader'].push('spares:request');demoGrants['demo.technician'].push('spares:request','spares:move');demoGrants['demo.approver'].push('spares:approve');
 export function permissionsFor(roles: string[]) {
   const grants=[...new Set(roles.flatMap(r => rolePermissions[r] || []))];
   // Platform operations never obtains business responsibility by stacking another role.
-  return roles.includes('system-admin')?grants.filter(p=>!p.includes('approve')&&!['template:publish','plugin:activate','plugin:certify'].includes(p)):grants;
+  return roles.includes('system-admin')?grants.filter(p=>!p.includes('approve')&&!['template:publish','plugin:activate','plugin:certify',...sparesWrites].includes(p)):grants;
+}
+export function hasAccess(ctx:AccessContext,permission:string){
+ const grants=ctx.authMode==='oidc'?permissionsFor(ctx.roles||[]):demoGrants[ctx.actorId]||[];
+ if(!grants.includes(permission))return false;
+ if(permission==='spares:history'&&ctx.actorType!=='USER')return false;
+ if(sparesWrites.includes(permission)&&(ctx.actorType!=='USER'||ctx.roles?.includes('system-admin')))return false;
+ return true;
 }
 export function requireAccess(ctx: AccessContext, permission: string) {
-  const grants = ctx.authMode === 'oidc' ? permissionsFor(ctx.roles || []) : demoGrants[ctx.actorId] || [];
-  if (!grants.includes(permission)) throw new DomainError(403, '当前身份无此操作权限');
+  if (!hasAccess(ctx,permission)) throw new DomainError(403, '当前身份无此操作权限');
   if (permission !== 'read' && !['USER', 'INTERFACE'].includes(ctx.actorType)) throw new DomainError(403, '该身份不可执行业务写入');
   if ((permission.includes('approve') || permission.startsWith('maintenance:') || ['template:publish','template:edit','template:submit','plugin:certify','plugin:activate'].includes(permission)) && ctx.actorType !== 'USER') throw new DomainError(403, '责任动作必须由真实用户执行');
 }

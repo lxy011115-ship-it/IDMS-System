@@ -1,0 +1,9 @@
+if(process.argv[2]==='nonzero'){
+ process.exitCode=7;if(process.connected)process.disconnect();
+}else{
+ process.once('disconnect',()=>console.log('OWNED_FORK_FIXTURE_CLOSED'));
+ process.on('message',()=>{});
+ console.log('OWNED_FORK_FIXTURE_READY');
+ if(process.connected)process.send({event:'READY'},()=>{});
+ setTimeout(()=>{if(process.connected)process.disconnect();},3000).unref();
+}

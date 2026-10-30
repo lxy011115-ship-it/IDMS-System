@@ -1,0 +1,13 @@
+# 完整原件等价哈希候选的安装接线边界
+
+先等待全新物理比较真实终态，并验证原始进程句柄、双流、父进程退出、7库完整事实、两完整映射与6次全字节比较、16个新旧worker记录、两Source失败清理、8份目标原件直接旧慢重建、原Source两份旧慢重建、原四PG目录及档案/key/control/review/全部源pin不变、新PG smart正常退出和clean offline。25项组件成功本身不能证明完整预检或安装可行；不重跑冻结案例、不延长30秒、不刷新旧确认。
+
+比较A固定为现有Source并行、领域三原SQL一次协议与旧完整慢worker；比较B只换新的完整等价哈希worker。两者必须保留同样的完整SQL、每次writer身份scope、所有节点/分支/根/回执/关系/领域/审计/EOF检查。B和捕获器共享EquivalentHash2原语，最终独立验收必须仍直接原field-map-full-evidence-v1，不把共享原语称为不同密码实现。完整实测若仍不足，继续查实际耗时，不接安装控制器；若有可用改善，才能尝试全新Native，安装成功仍须原窗口内实际证据。
+
+未来新Control6从原Control5派生，只换固定Source材料和target完整验证路由，并在现有签名PREFLIGHT正文中加入sourceEvidenceWorkers，绑定两份Source原件的真实记录。原Gate2、Journal1、SQL6、Source与旧review、全部锁、当前用户原确认ID与30秒、原角色密码/权限、COMMIT未知恢复和正常清理保持。不能只记录materialBindingSha256而丢弃新Source worker原始记录，也不能用调用方布尔值授信。
+
+未来新安装独立helper3从旧helper2派生，严格接受新PREFLIGHT字段并逐项核验Source与目标四个V3 worker记录，固定entry2/owner3/fast verifier/EquivalentHash2四个Source程序pin与Node、八原文件字节和身份、原input/nonce/stdout/结果/实际终态。Source worker目录固定为workDirectory/original-source-evidence-workers；目标固定workDirectory。旧V2记录不得升级。保留原schema/HMAC/用户6条raw身份/30秒、唯一attempt和authorization、密码/目录/后台原frame、分开的postinstall独立QA见证、重复历史及全部旧慢原件重建；不得删去旧字段检查来匹配新结果。
+
+之后新metadata/install fixture、原Source固定程序清单与全新Native22，完整66=原64+两安装、field29/原27及旧62/60/58/54均保持。旧Native21 FAILED50、零安装尝试和过期下界2718ms不更改、不重开。新生产阳性及所有原资源真实终态后，新增同案例scope/owned-case/checker/CLI进行完整独立；旧17/64或失败21不可套用。
+
+完整启动计划和新当前用户明确批准、新原reader/HELD、真实MQTT应用ACL、全部独立批准/候选、最终多库唯一审计与真实网络COMMIT回复未知恢复及后续业务、整站/现场/安全容量灾备商业、同版Git/Linux与未备案域名服务器准备、中文图文说明及真实旁白字幕MP4仍属于最终范围。此文档是后续接线规范，不表示Control6/helper3/Native22已经实现或安装已接受。

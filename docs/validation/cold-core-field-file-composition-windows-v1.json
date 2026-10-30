@@ -1,0 +1,33 @@
+{
+  "format": "COLD_CORE_FIELD_FILE_COMPOSITION_WINDOWS_ACTUAL_EVIDENCE_V1",
+  "at": "2026-10-26T07:26:12.932412+00:00",
+  "coreImplementationVersion": 9,
+  "coreWireFormat": "COLD_REGISTRATION_CORE_MATERIALS_V8",
+  "preparationImplementationVersion": 22,
+  "preparationClassVersion": 20,
+  "wrapperTestsPassed": 20,
+  "sharedSourceFileCompilationCasesPassed": 2,
+  "enabledAndExplicitDisabledBothExecuted": true,
+  "actualCoreMembersPerCase": 16,
+  "sharedPhysicalSiteTrustAndAuthorityReferencesChecked": true,
+  "bothCompilersRefuseSharedWrapperDrift": true,
+  "originalFieldMaterialFilesUnchanged": 44,
+  "protectedSourceCounts": [
+    1981,
+    1987
+  ],
+  "originalSourcesAndReportsUnchanged": true,
+  "wrapperJobId": "c906ae02-5a87-4480-8753-ee0a9f7440ee",
+  "wrapperInputSha256": "5f934ddc2afdbaeaddb6e37f7e155d8bc69b5a3dcb93d1634c7d6d0f31ab6baf",
+  "sharedFilesJobId": "baa03a8e-8304-4261-9009-877e979bcf39",
+  "sharedFilesInputSha256": "fe9e01e47a20e1b0b7c7ee605de13d5d2e99d1203bab689923c02d158e940e40",
+  "bothOriginalChildrenAndHostsActualExitCode": 0,
+  "preparationFullCoordinatorExecuted": false,
+  "fileCompilationOnly": true,
+  "originalHeldSessionVerified": false,
+  "actualCombinedSqlIdentityAndTransportVerified": false,
+  "fullRegisteredRoleMatrixVerified": false,
+  "completeDeploymentMaterialsVerified": false,
+  "formalFieldActivationGranted": false,
+  "fullGoalComplete": false
+}

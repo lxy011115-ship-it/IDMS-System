@@ -1,0 +1,164 @@
+{
+  "format": "OWNED_READER_PEERS_LINUX_TERMINAL_V1",
+  "at": "2026-10-24T17:04:43.126670+00:00",
+  "head": "52b60d0711bf5ede4c02a14a118add7ca40b12d1",
+  "run": 40114071846,
+  "job": 120931639727,
+  "conclusion": "success",
+  "nativeStarts": [
+    {
+      "nonce": "6b958a134a52",
+      "sourcePins": 1322,
+      "expectedChecks": 15
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "6b958a134a52",
+      "check": 1,
+      "name": "real ordinary Flowable writes create an active case and a separately approved closed case with command history"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 2,
+      "name": "separate Flowable reader starts with dedicated nonowner SQL roles while all original business roles remain NOLOGIN"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 3,
+      "name": "actual read-only repeatable-read engine returns complete active and closed cases, history and original command ledger digests"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 4,
+      "name": "cross-tenant and ordinary service tokens, write routes, actual SQL DML/DDL and bootstrap impersonation all reject"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 5,
+      "name": "live privilege drift rejects the next snapshot; restored privileges revalidate and every user table/sequence stays byte-identical"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 6,
+      "name": "forged peer capability and a configuration not copied into the original JVM both reject before SQL adoption"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 7,
+      "name": "actual owned JVM holds all four original Hikari slots in two tenant read-only repeatable-read transactions and reuses the same lease"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 8,
+      "name": "HTTP snapshots drain with 503 while complete real Flowable history and command ledgers are captured inside the original held transaction"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 9,
+      "name": "bootstrap independently matches every backend start, root, database and role; a foreign SQL session rejects and stays alive"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 10,
+      "name": "actual copied configuration byte drift rejects; restoring identical bytes revalidates the same original lease"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 11,
+      "name": "original worker transactions actually roll back, all four backend identities disappear, HTTP resumes and every SQL table and sequence stays unchanged"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 12,
+      "name": "a fresh lease is minted only after the original was actually released and retires through the same original worker path"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 13,
+      "name": "real connection-limit partial borrow failure retires original transactions and pools while the foreign role connection survives"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 14,
+      "name": "owned reader JVM shuts down normally with original receipts, both pool callbacks and actual zero exit"
+    },
+    {
+      "nonce": "6b958a134a52",
+      "check": 15,
+      "name": "original lifecycle closes an active owned lease through PreDestroy and actual rollback without requiring a peer decoder success"
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "6b958a134a52",
+      "passed": true,
+      "checks": 15,
+      "cleanupErrorCount": 0
+    }
+  ],
+  "independentCleanup": [
+    {
+      "format": "OWNED_WORKFLOW_READER_PEERS_INDEPENDENT_V6",
+      "nonce": "6b958a134a52",
+      "sourcePinsVerified": 1322,
+      "at": "2026-10-24T17:01:45.363Z",
+      "nativeChecks": 15,
+      "originalManagedSourcesVerified": 1178,
+      "readerInputsVerified": 8,
+      "originalDriverAndLifecycleSourceVerified": true,
+      "completeUserTableAndSequenceFingerprintEqualityRechecked": true,
+      "rawSqlRowsIndependentlyRecomputedOffline": false,
+      "tenants": [
+        {
+          "tenant": "acme",
+          "tables": 41,
+          "sequences": 2
+        },
+        {
+          "tenant": "sandbox",
+          "tables": 41,
+          "sequences": 2
+        }
+      ],
+      "ownedJvmNormalStops": 3,
+      "expectedPoolClosures": 10,
+      "originalNormalStopReceiptsVerified": true,
+      "actualPostgresDirectoryCleanOffline": true,
+      "sourceReaderCaptureContractImplemented": false,
+      "recoveryReviewIntegrationComplete": false,
+      "currentOidcReviewerVerified": false,
+      "formalFieldActivationGranted": false,
+      "fullGoalComplete": false,
+      "originalNativeEntryAuthenticatedWithSignedSupervisor": false,
+      "actualNativeEntrySourceIndependentlyReverified": true,
+      "linuxActualNativeExitNeedsExternalCiTerminalProof": true,
+      "dedicatedDriverMetadataRefersToHistoricalBaseline": true,
+      "partialBorrowOriginalCleanupRechecked": true,
+      "activeLeaseNormalContextCloseRechecked": true,
+      "ownedReaderPeerCapabilityImplemented": true,
+      "ownedReaderPeerCapabilityIntegrated": false,
+      "originalPeerOperationReceiptsIndependentlyChecked": 4,
+      "originalLeaseCount": 2,
+      "heldOriginalConnectionCount": 4,
+      "bootstrapRetirementProofRechecked": true
+    }
+  ],
+  "trackedSourceUnchanged": true,
+  "actualNativeExitVerifiedByCiStep": true,
+  "failedSteps": [],
+  "rawLogsOrCredentialsSaved": false,
+  "jobStepMetadataMissing": true,
+  "executedPublicCommandGroups": [
+    "node scripts/verify-owned-reader-peers-v4.mjs /usr/lib/postgresql/16/bin \"$JAVA_HOME_21_X64\" \"$IDMS_MAVEN_HOME\"",
+    "git diff --exit-code --no-ext-diff"
+  ],
+  "noContinueOnErrorInPinnedWorkflow": true,
+  "ownedReaderPeerCapabilityImplemented": true,
+  "ownedReaderPeerCapabilityIntegrated": false,
+  "recoveryReviewIntegrationComplete": false,
+  "currentOidcReviewerVerified": false,
+  "formalFieldActivationGranted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false
+}

@@ -1,0 +1,56 @@
+name: Owned PostgreSQL lifecycle verification
+
+on:
+  push:
+    branches: [main, wip/predictive-creation-v4]
+    paths: ['tests/**', 'scripts/**', 'server/**', 'package*.json', 'docs/validation/ci-source-*.json', 'docs/validation/postgres-lifecycle-baseline-v4.json', '.github/workflows/postgres-lifecycle-verification.yml']
+  pull_request:
+    branches: [main]
+    paths: ['tests/**', 'scripts/**', 'server/**', 'package*.json', 'docs/validation/ci-source-*.json', 'docs/validation/postgres-lifecycle-baseline-v4.json', '.github/workflows/postgres-lifecycle-verification.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: postgres-lifecycle-v1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  postgres-lifecycle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Authenticate all source profiles with six exact CI bindings
+        run: node scripts/verify-ci-source-policy-v2.mjs
+      - name: Verify source policy boundaries and actual isolated file tampering
+        run: node --test --test-concurrency=1 tests/ci-source-policy-v2.test.mjs tests/ci-source-policy-preflight-v2.test.mjs
+      - name: Prepare current 762-file execution baseline without rewriting the historical PG snapshot
+        run: node scripts/prepare-postgres-lifecycle-baseline-v5.mjs
+      - name: Verify actual owned startup, rejected takeover and smart shutdown
+        id: lifecycle
+        env:
+          IDMS_QA_POSTGRES_BIN: /usr/lib/postgresql/16/bin
+        run: node scripts/verify-postgres-lifecycle-v5.mjs
+      - name: Independently inspect terminal processes and clean offline state
+        if: always() && (steps.lifecycle.outcome == 'success' || steps.lifecycle.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const cases=(await readdir('work/postgres-lifecycle-v5-20261024',{withFileTypes:true})).filter(x=>x.isDirectory()&&/^[a-f0-9]{12}$/.test(x.name));
+          assert.equal(cases.length,1);
+          execFileSync(process.execPath,['scripts/verify-postgres-lifecycle-cleanup-v5.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source files were not changed
+        if: always()
+        run: git diff --exit-code --no-ext-diff

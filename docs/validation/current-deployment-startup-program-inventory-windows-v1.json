@@ -1,0 +1,22 @@
+{
+  "format": "CURRENT_DEPLOYMENT_STARTUP_PROGRAM_INVENTORY_WINDOWS_V1",
+  "at": "2026-10-26T23:46:34.259Z",
+  "testsPassed": 10,
+  "staticModules": 89,
+  "protectedInputs": 4243,
+  "originalFileDescriptions": 8,
+  "completeFileDescriptions": 19,
+  "additionalActualProgramFiles": 11,
+  "actualOriginalLifecycleAndPeerToolBrandsVerified": true,
+  "fullNative19ExpectedChecks": 66,
+  "fullNative19ObservedChecks": 29,
+  "fullNative19Phase": "RUNNING",
+  "fullNative19Accepted": false,
+  "actualSameCaseInstallationIndependentAccepted": false,
+  "descriptiveProgramFileInventoryOnly": true,
+  "runArgumentsAndConfigurationIncluded": false,
+  "sourceAndCurrentUserApprovalGranted": false,
+  "readerJvmGuardOrBrokerStarted": false,
+  "businessWritesEnabled": false,
+  "fullGoalComplete": false
+}

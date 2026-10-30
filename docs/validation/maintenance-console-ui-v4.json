@@ -1,0 +1,92 @@
+{
+  "status": "ISOLATED_MAINTENANCE_CONSOLE_UI_VERIFIED",
+  "checkedAt": "2026-10-20T11:01:07.558539+00:00",
+  "productionAcceptance": false,
+  "originalSiteChanged": false,
+  "cloudMainChanged": false,
+  "branch": "wip/maintenance-console-v4",
+  "deployedMain": "044eab28ca5fa398527b00237d6eebc9004f094f",
+  "canonicalUnitTests": {
+    "tests": 560,
+    "pass": 560,
+    "fail": 0,
+    "note": "Includes nine pre-existing unpublished legacy-edge-flow tests excluded from managed branch"
+  },
+  "branchUnitTests": {
+    "tests": 551,
+    "pass": 551,
+    "fail": 0
+  },
+  "buildArtifacts": 268,
+  "historicalPreservationChecks": 14,
+  "interactiveBrowserPkce": true,
+  "browserDirectGrantDisabled": true,
+  "browserChecks": [
+    "pkce-login",
+    "template-validation",
+    "local-lifecycle",
+    "independent-approval",
+    "flowable",
+    "manual-flow-retry",
+    "grant-recovery",
+    "unknown-acceptance",
+    "lost-reply-reload",
+    "offline-draft",
+    "maintenance-draft",
+    "responsive-1440",
+    "responsive-390",
+    "responsive-320",
+    "late-identity"
+  ],
+  "qaCleanup": {
+    "runs": 16,
+    "databasesRemoved": 81,
+    "rolesRemoved": 301,
+    "ownedDatabaseLeftovers": 0,
+    "ownedRoleLeftovers": 0
+  },
+  "sourceReview": {
+    "files": 39,
+    "localSecretValuesCompared": 373,
+    "matches": 0,
+    "scope": "Explicit maintenance console source/docs compared with sensitive string values from .local JSON; runtime and QA artifacts excluded"
+  },
+  "evidence": [
+    {
+      "kind": "pg",
+      "checks": 13,
+      "path": "work/maintenance-console-pg-v4-20261020/b305cff6a0d0/verification.json",
+      "sha256": "14ac94776a41bd80b26a97d950eac2370924225ccf90be76b26ff7af98c7fca6"
+    },
+    {
+      "kind": "flow",
+      "checks": 8,
+      "path": "work/maintenance-console-flow-v4-20261020/99f02459726e/verification.json",
+      "sha256": "1410a46e1d061215028c9926480574923fc05d8e014b28d5e0d9db8a458d1b8a"
+    },
+    {
+      "kind": "auth",
+      "checks": 6,
+      "path": "work/maintenance-console-auth-v4-20261020/a6f433cc991a/verification.json",
+      "sha256": "7d7b5a19f728d0cc5246d8d528827d10e389dd474acc93f6759ae3a7851a55de"
+    },
+    {
+      "kind": "ui",
+      "checks": 15,
+      "path": "work/maintenance-console-ui-v4-20261020/320096c5a666/verification.json",
+      "sha256": "a582d8fd79ef9c40b0e4a163da392f4799c27b0297bd93dda15c03e2b24bcf17"
+    }
+  ],
+  "pending": [
+    "Whole-site integration and controlled migration",
+    "Legacy unresolved workflow outbox migration and new predictive/work order creation",
+    "Key startup witness, full key rotation, capacity and complete restore/HA validation",
+    "ICP registration and public domain activation"
+  ],
+  "browserIterationNotes": [
+    "Early proxy forwarded wrong Host; corrected to node:http preserving Host",
+    "Early stale completed list, field labels, offline notice and 320px buttons corrected before final run",
+    "Dropped accepted response caused Edge transparent SAME UUID retry, not an observed UI network error",
+    "Short locator timeouts were resolved by observing original job, never duplicate submission"
+  ]
+}

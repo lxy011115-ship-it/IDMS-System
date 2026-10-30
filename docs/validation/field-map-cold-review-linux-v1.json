@@ -1,0 +1,198 @@
+{
+  "format": "FIELD_MAP_COLD_REVIEW_LINUX_TERMINAL_V1",
+  "at": "2026-10-24T12:16:44.565664+00:00",
+  "head": "b111014c364782e6bcfa9845f3db493727f166ad",
+  "run": 40092477720,
+  "job": 120867825361,
+  "conclusion": "success",
+  "unitSummary": {
+    "tests": 7,
+    "pass": 7,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "nativeStarts": [
+    {
+      "nonce": "09379f5ea0b3",
+      "sourcePins": 1276,
+      "expectedChecks": 23
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 1,
+      "name": "independent own business/identity PG clusters and real current signed Keycloak authority"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 2,
+      "name": "full R4 factory with all real tenant/auth/queue/workflow schemas bootstrapped under provisional SQL guards"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 3,
+      "name": "actual complete business-cluster DB inventory matches sealed manifest; catalogs/ordinary-table coverage and minimal runtime roles verified, workflow restarted"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 4,
+      "name": "300 additional owned QA namespace entries extend the real map; the recovery graph must cover them without filtering"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 5,
+      "name": "actual authority site HTTP READY and shared auth session four-module context200; real reconciliation empty claim under sealed guards"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 6,
+      "name": "ordinary current predictive worker analysis and independent approval commit through sealed queues/StateMap and actual Flowable APP without table ownership or CREATE"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 7,
+      "name": "actual R4 HTTP ingress OPEN and reconciliation worker commit over real canceled native task after sealing"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 8,
+      "name": "persistent multi-DB DRAINING intent survives actual controller process exit77 after first SQL close; other DBs remain OPEN and conflicting operations refused"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 9,
+      "name": "fresh controller process resumes same per-DB operation IDs, closes all registered DBs, and repeated close returns identical receipt without revision advance"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 10,
+      "name": "both tenant unchanged SDK writes, shared-auth APP and both transferred Flowable APPs denied by CLOSED; retired legacy APP DML/LO denied by permanent privileges; SDK reads available"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 11,
+      "name": "all own HTTP/predictor/workflow/worker SQL handles retired; complete role registry, actual encrypted JWT expiries, verifier tolerance and RUNNING lease deadlines fixed outside PGDATA"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 12,
+      "name": "all registered roles actually NOLOGIN/limit0 and all DB limits0, zero other clients, source smart stopped; controller captures real encrypted entire PGDATA and verifies same archive on repeat"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 13,
+      "name": "new physical target actually restored and started while source remains offline; frozen APP login and cold READY denied; same expiry gate was proven to refuse while captured lease/JWT window was still live before capture"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 14,
+      "name": "actual cold producer inventory requires both tenant maps; omitted enterprise scope rejects without claiming or opening SQL identities"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 15,
+      "name": "unminted PID-shaped allowances reject; a real unrelated SQL session blocks the owned-guard path and survives the failed claim"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 16,
+      "name": "real independent Keycloak realm marker drift rejects the durable claim before any field review phase is written"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 17,
+      "name": "real full cold restore is durably claimed for both tenants, with complete graph and domain/audit facts beyond the old 256-key budget"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 18,
+      "name": "existing cold admission rejects the new persisted phase and actual ordinary tenant SQL LOGIN stays denied"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 19,
+      "name": "same original recovery operation revalidates exact facts and identities; a different operation cannot take over the durable claim"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 20,
+      "name": "a fresh actual CLI process reopens the original claim and verifies full roots from the real cold control without adopting SQL handles"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 21,
+      "name": "offline evidence verification independently reconstructs the full root and domain, and rejects a modified leaf in a separate copy"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 22,
+      "name": "current external identity still precedes an existing idempotent status; authority drift never reopens the original claim"
+    },
+    {
+      "nonce": "09379f5ea0b3",
+      "check": 23,
+      "name": "all status reads preserve the captured roots, audit histories, CLOSED generations and complete frozen role inventory; no approval is granted"
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "09379f5ea0b3",
+      "passed": true,
+      "checks": 23,
+      "cleanupErrorCount": 0
+    }
+  ],
+  "independentCleanup": [
+    {
+      "format": "FIELD_MAP_COLD_REVIEW_INDEPENDENT_V2",
+      "nonce": "09379f5ea0b3",
+      "nativeChecks": 23,
+      "sourcePinsVerified": 1276,
+      "realColdControlClaimVerified": true,
+      "fullColdArchiveAuthenticated": true,
+      "sourceAndTargetActuallyCleanOffline": true,
+      "allThreePostgresDirectoriesActuallyCleanOffline": true,
+      "targetControlState": "shut down",
+      "entireCurrentRootsIndependentlyRebuilt": true,
+      "fullDomainPayloadsIndependentlyReconstructed": true,
+      "sqlRelationDigestsAuthenticatedFromCapture": true,
+      "sqlRelationRowsIndependentlyRecomputedOffline": false,
+      "workflowNormalStops": 3,
+      "identityNormalStopVerified": true,
+      "allOwnedNodeChildrenTerminal": true,
+      "actualFreshStatusProcessVerified": true,
+      "oldAdmissionDenied": true,
+      "currentOidcReviewerVerified": false,
+      "formalFieldActivationGranted": false,
+      "fullGoalComplete": false,
+      "tenantFullFacts": [
+        {
+          "tenantId": "acme",
+          "nodes": 4899,
+          "leaves": 2450,
+          "sqlReceiptRows": 91,
+          "auditEvents": 78,
+          "factsSha256": "07abad74668e67d860c8716ae56ed682040f42248c47553846158de9fb54d804"
+        },
+        {
+          "tenantId": "sandbox",
+          "nodes": 3467,
+          "leaves": 1734,
+          "sqlReceiptRows": 76,
+          "auditEvents": 49,
+          "factsSha256": "fcff8ead5c90f27d458292afb46b46deef2cb76675dfb57170079fa5bab75902"
+        }
+      ]
+    }
+  ],
+  "trackedSourceUnchanged": true,
+  "failedSteps": [],
+  "rawLogsOrCredentialsSaved": false,
+  "currentOidcReviewerVerified": false,
+  "reviewApproved": false,
+  "formalFieldActivationGranted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false
+}

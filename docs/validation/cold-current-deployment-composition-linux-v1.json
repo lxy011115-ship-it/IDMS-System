@@ -1,0 +1,43 @@
+{
+  "format": "COLD_CURRENT_DEPLOYMENT_COMPOSITION_LINUX_ACCEPTANCE_V1",
+  "commit": "e64f03316321280dfdb31d863fc2fa3f415aa289",
+  "branch": "wip/current-deployment-composition-v2-20261027",
+  "run": 40399262955,
+  "attempt": 1,
+  "workflowUrl": "https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/40399262955",
+  "actualLinuxExecuted": true,
+  "allOriginalJobsAndRequiredStepsSuccessful": true,
+  "boundedArtifactsFetchedExactlyOnce": true,
+  "strictLocalReaderOriginalExitCode": 0,
+  "baseline": {
+    "nativeChecks": 43,
+    "sourcePins": 1322,
+    "scramTests": 8,
+    "caseTests": 103,
+    "strictAccepted": true
+  },
+  "current": {
+    "nativeChecks": 60,
+    "nativeSourcePins": 1455,
+    "independentSourcePins": 1480,
+    "independentStaticModules": 382,
+    "independentCompleteCases": 2,
+    "databasesPerCase": 7,
+    "registeredRolesPerCase": 29,
+    "sqlScopesPerCase": 23,
+    "programAndOwnerDecisionsPerCase": 138417,
+    "additionalTests": 59,
+    "originalWindowMs": 30000,
+    "genuinelyEmptyStreams": 2,
+    "actualOidcPolicyCommands": 15,
+    "portableOriginalSupervisorChain": true,
+    "original58ChecksExactlyRetained": true,
+    "sourceReportSha256": "b0ecffa08ee3e372bae08093c1dfdac5dfa45768a36d37b5925849534c85c63b",
+    "independentResultSha256": "cea85237cf8a8b72aa0324199a1ef8739a9580c4bb8dd8df15b580990a9baca4"
+  },
+  "newHeldOrProgramApprovalProven": false,
+  "mqttApplicationAclProven": false,
+  "physicalFieldAttested": false,
+  "formalFieldActivationGranted": false,
+  "fullGoalComplete": false
+}

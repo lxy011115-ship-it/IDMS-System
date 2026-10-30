@@ -1,0 +1,11 @@
+# 原固定上下文中的读者安装日志
+
+新日志在原control SQLite与当前身份权威锁下接线。仅实际固定context文件的首次拥有者可以尝试初始化两表及EMPTY sibling anchor；初始化机会在DDL前消费。重开、回滚、丢表/丢锚不能伪装成首次。外部请求不能提供actor、approved、路径、SQL、密钥或验证回调。
+
+安装尝试和实际观察分别最多8条，只能追加。每条记录绑定原control/source/review/operation/intent、原用户确认、原SQL完整基线与真实backend帧；有不同HMAC域和前行摘要链接。锚点与两表数量、完整链尖一致。只有上一尝试实际观察到ALL_ORIGINAL、原确认/上下文/当前用户能力仍有效且原SQL基线不变，才允许下一个真实新尝试。结果未知不能发第二次；ALL_INSTALLED后只读。相同已记录结果不得更新时间或覆盖记录。
+
+准备从原文件/原SOURCE派生目标和读者OID，核原旧readers.private.json字节/形状，结合新context中的真实新凭据与Gate2生成SQL V6真实PREPARED能力。私密恢复记录的密钥来自context。原用户持久确认的截止时间限制SQL阶段，不因新认证或重开刷新。记录先由协调器COMMIT保存，阶段入口再用独立SQLite只读连接确认原尝试和锚点确实已对其他连接可见，才执行PASSWORD阶段。SQL COMMIT仍由协调器负责。
+
+恢复使用原签名基线和新真实SQL连接。实际结果必须由SQL V6观察WeakMap产生；公开JSON不能代替。每条观察同时绑定原记录MAC、新实际SQL帧及原backend已不存在的事实。只读历史不铸造SQL阶段或当前权限；历史上下文读取继续认证原fileOwner、原文件字节/身份及SQLite两原锚，不通过刷新30分钟数据意图取得新权限。
+
+本模块不创建目标连接、程序、HELD或业务准入，不COMMIT。生产协调器还须保留原双锁、原SOURCE/旧review、完整7库/SQL/材料事实、原进程正常退休、当前用户前后复验和真实SQL提交/中断恢复。原64案例保持，须在全新完整案例中实际执行并由新独立消费者重建。

@@ -13,6 +13,12 @@ test('resource accounts enforce category and process totals and release exactly 
 test('partial memory leases return evicted rows without returning other retained values',()=>{
  const ledger=new MemoryLedger(100,{task:100}),account=ledger.account('task');account.grow(10);const a=account.hold(30),b=account.hold(40);assert.equal(account.bytes,80);assert.throws(()=>account.hold(21));a();a();assert.equal(account.bytes,50);assert.equal(ledger.snapshot().total,50);account.hold(50);account.release();b();assert.equal(ledger.snapshot().total,0);assert.throws(()=>account.hold(1));
 });
+
+test('memory watermarks retain actual allocation peaks after release without counting refused growth',()=>{
+ const ledger=new MemoryLedger(100,{task:80,cache:50}),a=ledger.account('task'),b=ledger.account('cache');a.grow(70);b.grow(30);assert.throws(()=>b.grow(1));a.release();b.grow(20);b.release();
+ assert.deepEqual(ledger.snapshot(),{total:0,categories:{task:0,cache:0}});assert.deepEqual(ledger.watermarks(),{total:100,categories:{task:70,cache:50}});
+ const external=ledger.watermarks();external.categories.task=999;assert.equal(ledger.watermarks().categories.task,70);
+});
 test('fair queue bounds active and pending work without head-of-line blocking another tenant',async()=>{
  const q=new FairScheduler({active:2,tenantActive:1,pending:2,tenantPending:1,waitMs:5000}),a=deferred(),b=deferred(),events:string[]=[];
  const first=q.run('a',async()=>{events.push('a1');await a.promise;}),next=q.run('a',async()=>{events.push('a2');});await assert.rejects(q.run('a',async()=>{}),e=>(e as any).status===429);

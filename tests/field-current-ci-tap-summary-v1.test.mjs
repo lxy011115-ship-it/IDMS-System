@@ -1,0 +1,9 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {retainFieldCiTapSummaryV1 as retain} from '../scripts/field-current-ci-tap-summary-v1.mjs';
+const text=(changes={})=>Object.entries({tests:88,pass:88,fail:0,cancelled:0,skipped:0,todo:0,...changes}).map(([key,value])=>'# '+key+' '+value).join('\n')+'\n';
+test('exact actual counters retain a passing shape without granting authorization',()=>{const value=retain(text(),88);assert(value.exactExpectedPass&&!value.authorizationGranted&&!value.rawTapRetained&&!value.fullGoalComplete);assert.equal(value.counters.pass,88);});
+test('a bounded unexpected total is retained only as unaccepted diagnostics',()=>{const value=retain(text({tests:87,pass:87}),88);assert(!value.exactExpectedPass&&value.counters.tests===87);});
+test('failures, cancellations, skips and todos cannot become an exact pass',()=>{for(const key of ['fail','cancelled','skipped','todo']){const value=retain(text({pass:87,[key]:1}),88);assert.equal(value.counters[key],1);assert.equal(value.exactExpectedPass,false);}});
+test('duplicate or missing summary counters reject without preserving raw output',()=>{for(const changed of [text()+'# tests 88\n',text().replace('# cancelled 0\n','')])assert.throws(()=>retain(changed,88),error=>error.code==='FIELD_CI_TAP_SUMMARY_REJECTED');});
+test('negative, nondecimal and excessive counters reject',()=>{for(const value of ['-1','1.5','1e2','1000001','88 private'])assert.throws(()=>retain(text().replace('# tests 88','# tests '+value),88),error=>error.code==='FIELD_CI_TAP_SUMMARY_REJECTED');});
+test('invalid expected totals and excessive TAP input reject',()=>{for(const expected of [0,1025,1.5,null])assert.throws(()=>retain(text(),expected),error=>error.code==='FIELD_CI_TAP_SUMMARY_REJECTED');assert.throws(()=>retain('x'.repeat(8*1024**2+1),88),error=>error.code==='FIELD_CI_TAP_SUMMARY_REJECTED');});

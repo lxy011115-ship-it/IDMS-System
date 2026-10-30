@@ -1,0 +1,2 @@
+@import url("/site/console.css");
+.modules{grid-template-columns:repeat(3,minmax(0,1fr))}.module{min-width:0;overflow-wrap:anywhere}.account{min-width:0}.account span{overflow-wrap:anywhere}body{min-width:0}@media(max-width:900px){.modules{grid-template-columns:1fr}}

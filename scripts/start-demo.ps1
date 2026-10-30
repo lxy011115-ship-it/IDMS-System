@@ -12,4 +12,4 @@ if (-not (Test-Path -LiteralPath 'node_modules\exceljs')) {
 }
 Write-Host 'IDMS Demo: http://127.0.0.1:4010/'
 Write-Host 'Keep this window running. Press Ctrl+C to stop.'
-& node server/index.ts
+& node scripts/demo-runtime.mjs

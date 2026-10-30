@@ -1,0 +1,93 @@
+{
+  "format": "COLD_AUTH_AUDIT_MAP_WINDOWS_BASELINE_REUSE_V3",
+  "at": "2026-10-25T19:29:02.560859+00:00",
+  "parentCommit": "8cab3b5db9b0394916da4f50dd3dba4fc476760a",
+  "originalWindowsEvidence": {
+    "path": "docs/validation/cold-auth-audit-map-windows-v4.json",
+    "sha256": "d5b9ace5616e1f4ee5d6d2fdbd44d20fc1c445aecfe2790418a8aedda2a23303",
+    "nonce": "dd7554efc169",
+    "nativeChecks": 57,
+    "nativeSourcePins": 1730,
+    "independentFullRoots": 46,
+    "actualOriginalNativeAndHostExitCodes": 0,
+    "actualIndependentAndHostExitCodes": 0
+  },
+  "additionalObservationSources": [
+    {
+      "path": "scripts/fixtures/controlled-cold-failure-chain-v1-qa.mjs",
+      "sha256": "0a629fdef8dd5dfe501c50ed799d507612938b0bf43673f41cbac12860123818"
+    },
+    {
+      "path": "tests/controlled-cold-failure-chain-v1.test.mjs",
+      "sha256": "ba60dc632bff5abf09c9eb29bc5ce620cdbf92787417f886c1db5abe2566bed3"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-v6.mjs",
+      "sha256": "a65b8fad49eacff8a7542c95c7f451a171066b9c1876b96a8c4e5086e94a9916"
+    }
+  ],
+  "diagnosticUnitSummary": {
+    "tests": 6,
+    "pass": 6,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "diagnosticPreflightOriginalJob": {
+    "jobId": "fb5746ef-3ef6-4599-a1d3-f30fb4446e95",
+    "inputSha256": "5aedb40baadb6d0dce708a4ad57ef1784a5774a482eeda5ccce1c08fb09aaad1",
+    "actualExitCode": 0,
+    "actualOriginalHostExitCode": 0
+  },
+  "original1730SourceBytesUnchanged": true,
+  "threeByteExactObservationEditsOnly": true,
+  "newWindows1733NativeRunClaimed": false,
+  "expectedLinuxNodeTests": 208,
+  "expectedLinuxJvmChecks": 16,
+  "expectedLinuxNativeChecks": 57,
+  "expectedLinuxNativeSourcePins": 1763,
+  "independentSupplementalSourcePins": [
+    {
+      "path": "scripts/fixtures/cold-auth-audit-map-independent-v3-qa.mjs",
+      "sha256": "b3b6558bdab0b0a5ef746ffb310277fe8c59a64480e55a513e5fa5a17677e4df"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-cleanup-v6.mjs",
+      "sha256": "b5868b47d268a2ea4ade69753d03edc7f253f146ea54e813ff3bee15c621e953"
+    }
+  ],
+  "completeFieldMaterialsVerified": false,
+  "formalFieldActivationGranted": false,
+  "fullGoalComplete": false,
+  "additionalOuterObserverSourcesSeparateFromNativePins": [
+    {
+      "path": "scripts/fixtures/owned-reader-jvm-failure-v2-qa.mjs",
+      "sha256": "b1ce9adc1de66816cdd2238f955faea766feb56dc2a4366ce1f13273e6c423e7"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-diagnostic-bootstrap-v1.mjs",
+      "sha256": "6783a37fb1b0b090807a157f511978a7a18c7a636d14f81408111dab96f483b6"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-observed-v7.mjs",
+      "sha256": "f7ce25ed6a453092a7870762429161452eabae709c6977a2eb6b461f5d642c9f"
+    }
+  ],
+  "outerObserverUnitSummary": {
+    "tests": 11,
+    "pass": 11,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "outerObserverUnitAndOriginalHostActualExitCodes": 0,
+  "originalNative1733BodyBytesUnchanged": true,
+  "newBootstrapNativeRunClaimed": false,
+  "expectedLinuxDiagnosticClassifierJavaChecks": 6,
+  "additionalOuterObservationInputs": 3,
+  "originalWindowsNativeSourcePins": 1730,
+  "originalWindowsNativeChecks": 57,
+  "newWindows1763NativeRunClaimed": false,
+  "innerGuardStatementsExactOutsideDependencyBindingsAndDiagnosticJavaSourceSelection": true,
+  "diagnosticJavaActualChecks": 9
+}

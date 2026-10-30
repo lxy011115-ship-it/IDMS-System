@@ -1,0 +1,17 @@
+import pg from 'pg';
+const need=(v,code)=>{if(!v)throw Object.assign(Error(code),{code});},hex=v=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v),exact=(v,k)=>v&&Object.getPrototypeOf(v)===Object.prototype&&Object.getOwnPropertySymbols(v).length===0&&Object.keys(v).sort().join(',')===[...k].sort().join(',');
+const identifier=v=>'"'+v.replaceAll('"','""')+'"',text=v=>"E'"+v.replaceAll('\\','\\\\').replaceAll("'","''")+"'",bytes=v=>"E'\\\\x"+v+"'::bytea",active=new WeakSet();
+function request(raw){need(exact(raw,['tenantId','writer','keyHash','rootId'])&&typeof raw.tenantId==='string'&&Buffer.byteLength(raw.tenantId)>0&&Buffer.byteLength(raw.tenantId)<=64&&!raw.tenantId.includes('\0')&&typeof raw.writer==='string'&&Buffer.byteLength(raw.writer)>0&&Buffer.byteLength(raw.writer)<=63&&!raw.writer.includes('\0')&&hex(raw.keyHash)&&(raw.rootId===null||hex(raw.rootId)),'COLD_DOMAIN_PROOF_BATCH_REQUEST');return{tenantId:raw.tenantId,writer:raw.writer,keyHash:raw.keyHash,rootId:raw.rootId};}
+/** One message, at most four original SET/read/RESET triplets; every response is for a separately executed read. */
+export async function readColdDomainProofTripletBatchV1(client,raw){
+ need(client instanceof pg.Client&&!Object.hasOwn(client,'query')&&pg.Client.prototype.getTransactionStatus.call(client)==='T'&&client.connection?.stream&&!active.has(client),'COLD_DOMAIN_PROOF_ORIGINAL_TRANSACTION');
+ need(exact(raw,['requests'])&&Array.isArray(raw.requests)&&Object.getPrototypeOf(raw.requests)===Array.prototype&&raw.requests.length>=1&&raw.requests.length<=4&&Reflect.ownKeys(raw.requests).length===raw.requests.length+1&&Object.keys(raw.requests).join(',')===Array.from({length:raw.requests.length},(_,i)=>String(i)).join(','),'COLD_DOMAIN_PROOF_BATCH_REQUEST');
+ const requests=raw.requests.map(request),sql=requests.map(r=>'SET LOCAL SESSION AUTHORIZATION '+identifier(r.writer)+';SELECT state_map_v1.read_proof_v1('+text(r.tenantId)+'::text,'+bytes(r.keyHash)+','+(r.rootId===null?'NULL::bytea':bytes(r.rootId))+') AS value;SET LOCAL SESSION AUTHORIZATION DEFAULT').join(';'),connection=client.connection,stream=connection.stream,commandTags=[];
+ const onCommand=message=>commandTags.push(message.text);active.add(client);connection.on('commandComplete',onCommand);
+ try{
+  const results=await pg.Client.prototype.query.call(client,sql);need(client.connection===connection&&connection.stream===stream&&pg.Client.prototype.getTransactionStatus.call(client)==='T','COLD_DOMAIN_PROOF_ORIGINAL_TRANSACTION');
+  need(Array.isArray(results)&&results.length===requests.length*3&&commandTags.length===requests.length*3,'COLD_DOMAIN_PROOF_BATCH_RESULT');const proofs=[];
+  for(let i=0;i<requests.length;i++){const at=i*3,a=results[at],b=results[at+1],c=results[at+2];need(a?.command==='SET'&&Array.isArray(a.rows)&&a.rows.length===0&&b?.command==='SELECT'&&b.rowCount===1&&Array.isArray(b.rows)&&b.rows.length===1&&Object.keys(b.rows[0]).join(',')==='value'&&c?.command==='SET'&&Array.isArray(c.rows)&&c.rows.length===0&&commandTags[at]==='SET'&&commandTags[at+1]==='SELECT 1'&&commandTags[at+2]==='SET','COLD_DOMAIN_PROOF_BATCH_RESULT');proofs.push(b.rows[0].value);}
+  return{proofs,logicalGets:requests.length,networkQueries:1,serverStatements:commandTags.length,observedCommandTags:[...commandTags],perGetSessionAuthorizationPreserved:true};
+ }finally{connection.removeListener('commandComplete',onCommand);active.delete(client);}
+}

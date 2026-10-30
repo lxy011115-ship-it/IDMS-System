@@ -1,8 +1,98 @@
+## v4认证生命周期审计隔离验证完成（2026-10-20）
+
+新增SESSION/outbox原子生命周期、有界旧格式审计CAS及独立投递CLI；三处丢COMMIT回复、实际子退出/30s接管/32s阻塞心跳、真实Keycloak/六动作/业务不可用退出和挂起租户准入、7启动负例通过。原913源站点保持，完整目标ACTIVE，AI/outbox其余写者及全站升级继续。见 docs/auth-audit-v4-progress.md。
+
+## v4治理控制台隔离验证完成（2026-10-20）
+
+治理六动作UI、当前范围分页/原件SHA、未知请求接受关闭、真实Keycloak/Chrome及断网/撤权/身份切换、10000行与8MiB原件独立批准、SQL实际丢提交回复已验证。原913源站点保持；维护仍全图，其他写者/认证审计outbox/全站升级与完整商用验收继续。见 docs/governance-console-v4-progress.md。
+
+## v4治理持久作业隔离验证完成（2026-10-20）
+
+真实HTTP/PG队列、30秒租约接管、32秒主线程阻塞独立心跳、原子准备/发布/取消、COMMIT回复丢失、真实Keycloak浏览器登录与角色刷新撤销、六动作及CSV/XLSX原件、独立HTTP/worker CLI均通过。原913源站点保持，完整方案A继续；维护准备仍全图，其他领域写者、UI/部署、AI outbox和完整商用验收未完成。见 docs/governance-jobs-v4-progress.md。
+
 # IDMS 方案 A 开发状态与验收缺口
+
+## v4治理大事务内核（2026-10-19）
+
+v4治理内核已实际执行模板四动作、导入创建/独立批准及更正；独立准备根解决64项单delta限制，96行一次业务发布、子进程退出接续、真实COMMIT回复丢失恢复和来源定义更正失效控制通过。原站点未切换，继续写HTTP/调度及完整方案A。详见 docs/governance-command-v4-progress.md。
+
+## v4认证查询（2026-10-19）
+
+v4资产分页、审计分页及回执追溯已通过真实HTTP/PG/JWKS与独立Node旧窗口读取，含37资产/19范围、旧审计规则逐条比对及权限/游标/保护负例。原站点未切换，下一步继续其他领域写者协同及整站回归。详见 docs/domain-read-v4-progress.md。
+
+当前采集领域发布校验使用 `python work/telemetry-map-v4-20261019/check-progress-r2.py`；原校验器误读旧基线缺失字段已保留，修订说明见 docs/telemetry-map-v4-verifier-revision-2.md，原34源/证据不改。
+
+## v4采集领域独立服务（2026-10-19）
+
+独立v4采集worker已通过真实MQTT/双核心一次提交/未知COMMIT恢复和1024点-回执-唯一审计逐条核验，另有15组SQL守卫、同输入ABBA与正常时钟CLI验证。原站点未切换；继续所有读写领域与完整方案A。详见 docs/telemetry-map-v4-progress.md。
+
+## v4旧图迁移锚（2026-10-19）
+
+已在自有四库完成31/33表及全部旧payload到增量映射的重构验证，含六原件14513B、大SQL行分块、源APP持久停写、迁移子进程实际退出后的重验和不可变seal；原库只读、当前v2继续运行，领域采集事务尚未接入。详见 docs/legacy-v4-migration-progress.md。
+
+## 增量状态存储基础（2026-10-19）
+
+增量存储基础已在两个独立PG测试库通过4新增单元与15组真实事务/权限/故障检查，包括丢失提交响应的回执恢复、真实DDL advisory等待和禁用篡改再启用拒绝；9执行源/14精选源双份固定。当前913源v2仍运行，未迁移原租户或接入业务写入，保留期仍待做。详见 docs/incremental-state-foundation-progress.md。
+
+## v2实际运行恢复（2026-10-19）
+
+冻结913源修订2的v2已实际运行，核心28472/独立协调器10320/PG32152，九服务与原数据/角色/工作流/源码后验通过。新鲜恢复会话跨只读入口到完整核心的SID-CSRF-游标/6原件14513B/两CSV/范围/UI通过；两轮两原库31/33表加密档案真实恢复后才开写，临时资源清理。中断前会话及旧12进程身份不声称保留。详见 docs/canonical-v2-live-recovery-progress.md。
+
+## v2核心受控切换准备（2026-10-19）
+
+v2切换准备已完成：数据库维护门/可重复HTTP门、913源修订2、9类实际文件拒绝、锁内冷启动与真实OIDC/旧SID-CSRF-游标、两QA库31/33表加密隔离恢复通过。原core5356尚未退休/启用v2，原库前后档案与实际切换协调器待续。详见 docs/canonical-v2-core-upgrade-progress.md。
+
+## v2完整核心隔离回归（2026-10-19）
+
+启用v2的独立核心已过当前509单元（R2 500+新增9）、13组集成与真实Flowable/AI双核心租约回归，所有实际Node有函数引用/SHA见证。原acme只读克隆六份14513B原件、OIDC加密会话/范围/CSV/旧游标/同键并发/独立审批/回滚/320与390移动通过。原核心尚未部署；万条原待传已全部逐条PG守恒，当前新增队列仍1376待传。详见 docs/canonical-v2-core-regression-progress.md。
+
+## CPU定位与canonical v2（2026-10-19）
+
+完成实际接收CPU三档历史定位：45000历史新事件中位约1.92s、重放0.91s，canonical自耗时约41.5%。新增字节兼容canonical-stream-v2及显式loader，1581向量一致；同45000链原/v2/v2/原完整接收与旧编码器独立验根通过，常规中位新事件1855.90→1547.86ms（-16.60%）、重放911.35→813.70ms（-10.72%）。原核心尚未部署，下一步隔离完整网站/业务回归。详见 docs/telemetry-cpu-profile-progress.md。
+
+## 采集容量诊断与实际增长（2026-10-19）
+
+新增只读采集容量诊断CLI，21样本299.615秒实测点/回执/审计各+178、capture+90、积压净少88、0新重试/缺口；核心CPU+298.609秒、工作集约1GB，业务库分配+434176B。真实PG并发RR/拒写、SQLite签名守恒/拒删/来源与OID漂移、模型及进程身份边界通过。尚未实现保留删除或CPU热点优化，下一步独立QA定位完整企业事务成本。详见 docs/telemetry-capacity-progress.md。
+
+## 当前工作流已受控升级（2026-10-19）
+
+原工作流已实际受控升级，新Java25776/协调器43680运行于4016；两原源持久冻结、guarded正式加密归档、真实隔离恢复与38表/两序列/context和Java快照一致，源权限精确释放。旧配置/token/两jar及core5356、edge17428和六依赖保持；新重复核验入口work/workflow-controlled-upgrade-20261019/verify-runtime.mjs。详见 docs/workflow-controlled-upgrade-progress.md。
+
+旧工作流9124已退休，历史核验器不适用于当前拓扑。两原验证目标已精确清理；正式密文和独立key受限保留。现场配置、采集容量/保留期、跨服务灾备和完整商业范围继续ACTIVE。
+
+## 工作流捕获发布边界修订（2026-10-19）
+
+修复6类已复现的捕获发布边界缺口，新增guarded入口；当前31项真实漂移拒绝均无新归档，正常捕获/密文重放/38表两序列context恢复及发布前后kill通过。两个真实幸存pg_restore精确退休且不误停相似进程通过。原workflow9124仍未冻结/升级；下一步使用修订入口准备原服务受控切换，完整商业目标ACTIVE。详见 docs/workflow-capture-guard-progress.md。
+
+## 工作流隔离恢复持久状态机（2026-10-19）
+
+工作流隔离恢复持久状态机已实现；源QA库实际离线时，9类控制器中断及32MiB实际COPY中断恢复通过，38表/两序列/上下文和真实Java快照一致，隔离目标保持NOLOGIN/连接上限0。原workflow9124仍未冻结/升级；下一步恢复孤儿Stop阳性、捕获漂移矩阵，再受控部署。完整商业目标ACTIVE。详见 docs/workflow-restore-resumer-progress.md。
+
+## 工作流正式归档v2隔离验证（2026-10-19）
+
+围栏绑定工作流加密归档v2已实现；真实非空4工单/15命令、38表/2序列/上下文隔离还原与Java快照一致，三控制器中断、实际COPY中断及独立存活孤儿原生Stop通过。原workflow9124仍未冻结/升级；下一步恢复侧持久中断状态机和完整漂移负例，再受控部署。完整商业目标ACTIVE。详见 docs/workflow-formal-archive-progress.md。
+
+## 工作流持久围栏隔离验证（2026-10-19）
+
+工作流持久写入围栏和显式CLI已实现，最终模块三轮独立38表QA目标各8个真实控制进程终止/PG后端退役/同ID恢复通过，精确还原权限及写/序列恢复；末轮同名新OID拒绝。原workflow9124仍未部署或冻结，正式归档绑定继续，完整商业目标ACTIVE。详见 docs/workflow-persistent-fence-progress.md。
+
+## 长窗口观测与工作流隔离准备（2026-10-19）
+
+采集602.63秒实测ACK/点/回执各+424、capture+183、积压净少241、额外重试0；后续1173原待传清理逐条PG/审计守恒通过。工作流R2六源离线新构建及两原38表活库QA副本恢复/4流程15命令/真实重启通过，原workflow9124仍未部署。两条非MVCC日志序列使活库副本仅QA用途，下一步持久停写与正式归档门槛；完整商业目标ACTIVE。详见 docs/legacy-edge-long-window-progress.md 和 docs/workflow-runtime-readiness-progress.md。
+
+## 模拟边缘端受控接替已验证（2026-10-18）
+
+原模拟边缘端已受控接替为edge17428/协调器27984/session73945；301.347秒实际点/回执/ACK各+118、capture+54，积压10000→9936（净少64），118条原待传清理逐条匹配PG点/回执/审计。前/旧退出后/新运行后三份SQLite加密隔离恢复通过；原core5356/5348与7依赖保持。积压未清空，完整商业目标ACTIVE。详见 docs/legacy-edge-handoff-progress.md。
+
+## 模拟链路背压隔离验证通过（2026-10-18）
+
+旧模拟链路新增显式业务ACK背压入口，509单元、真实MQTT/OPC UA及实际PG提交后丢ACK验证通过：15事件/14点/15回执/15审计/1拒收，一次同字节重试无重复业务。原core5356/edge13072/原队列未变；下一步受控接替及万条积压长期观察，完整商业目标ACTIVE。详见 docs/legacy-edge-flow-progress.md。
 
 ## 现场安全通道开发中（2026-10-18）
 
-浏览器批准→正式激活→真实新流→导出及清理后离线重算联合验证通过；另通过浏览器外态漂移拒绝、正常OIDC治理与事务接收、机器接口及13组旧功能回归。500单元沿用同一业务/单元源码验证，268构件/全脚本类型语法通过。已创建两处独立逐文件核验的现场开发源码/公开证据审阅快照，原431运行源码/两旧jar/66契约/十轮冻结保持。下一步第7项受控部署及前后恢复；原正式FIELD尚未部署，完整商用目标ACTIVE。详见 docs/field-channel-browser-release-progress.md。
+主核心已受控切换到修订2冻结源码，现场治理页面已可用；真实原SID/CSRF/加密审计游标、完整/限域权限、6原件14513B及前后数据保持通过。两个原租户前后均实际加密备份/隔离恢复（Acme31、Sandbox33表），旧依赖进程/两jar与全部冻结保持。新core5356由coordinator5348/session69179持有，旧22784已退役。FIELD实际签发/接收仍未配置，模拟队列仍有积压/容量告警；完整商业目标ACTIVE。详见 docs/field-channel-controlled-core-deployment-progress.md。
+
+当前冻结应用源码审阅说明：`docs/field-source-review-snapshot-revision-2.md`；完整清单：`outputs/field-channel-release-revision-2-verification.json`。当前运行加载修订2，源码冻结与部署事实分别保留。
 
 
 ## UUID 回执规则 v2（2026-10-17，本轮已部署）

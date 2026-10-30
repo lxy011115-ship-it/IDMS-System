@@ -1,0 +1,91 @@
+{
+  "stage": "WORKFLOW_NORMAL_STOP_V1_NEW_OWNED_JVM_ONLY",
+  "passed": true,
+  "checks": 9,
+  "sourcePins": [
+    {
+      "path": "scripts/lifecycle-java/LifecycleWireV1.java",
+      "sha256": "c476929b61d28d648bcc67ca20c2804e91089bb78331b90b18ed233d4c6d5085"
+    },
+    {
+      "path": "scripts/lifecycle-java/OwnedSpringAttachV1.java",
+      "sha256": "c2b975a257f507e67837e733d53bb7c198cfb8bad1deaba9ac2c29dfa2265372"
+    },
+    {
+      "path": "scripts/lifecycle-java/OwnedSpringShutdownAgentV1.java",
+      "sha256": "8f65f077323920d229ea0a640263fe9ad23c6d46a52a5006e254e0f8b14193ae"
+    },
+    {
+      "path": "scripts/workflow-lifecycle-tools-v1.mjs",
+      "sha256": "cc94fe012ee899dc20f36e27dd206db53f406a0cc98974e63915560b61c01fad"
+    },
+    {
+      "path": "scripts/workflow-lifecycle-v1.mjs",
+      "sha256": "eed5cd765a09e8aeeed255dc7a6c03965a34c6a7ddb7cb0e1ad73c9686e5b6b5"
+    },
+    {
+      "path": "scripts/fixtures/LifecycleAgentGuardQaV1.java",
+      "sha256": "45b30d0dee4a7f248512ee4d465df6494ba5016965ae8e654e082d1ea094bb7e"
+    },
+    {
+      "path": "scripts/fixtures/predictive-cancel-graceful-flow-v1-qa.mjs",
+      "sha256": "8a840ff0e9edd54bb7408ece6ea3d6f3870fcc8309335b769fc7fa3885c424b6"
+    },
+    {
+      "path": "scripts/verify-workflow-normal-stop-v1.mjs",
+      "sha256": "eb98e49b6563466474ced4045a0e788ce1debf3e156c824204ff4f9773b20611"
+    },
+    {
+      "path": "scripts/fixtures/owned-cold-pg-v1-qa.mjs",
+      "sha256": "fe75da317b17586dd364c2befb77ad6fcc748e9b4a5fafd52d0ceafa8ff7bee8"
+    }
+  ],
+  "sourcePinsMatchedObservedVersion": 9,
+  "postQaSourcePatches": [],
+  "testedPlatform": "Windows",
+  "testedJavaMajor": 21,
+  "springBootVersion": "3.5.7",
+  "actualPostgreSql": true,
+  "actualFlowable": true,
+  "actualNormalStops": 4,
+  "actualPoolClosures": 20,
+  "jdbcConnectionsRetired": 48,
+  "allTargetExitsZero": true,
+  "actualTargetSignalsSent": 0,
+  "inflightSqlBlockedRequestDrained": true,
+  "sameCommandRetainedExactlyOnce": true,
+  "heldReservationPreservedAcrossNormalRestart": true,
+  "ownerDeploymentJarAndStartMismatchRejected": true,
+  "agentInternalOwnerGuardTested": true,
+  "existingReceiptRefusedWithoutOverwrite": true,
+  "repeatedStopUsesOriginalOperation": true,
+  "stopEvidenceDeeplyImmutable": true,
+  "platformMBeanEnabledOnlyForNewOwnedJvms": true,
+  "remoteJmxConnectorStarted": false,
+  "httpManagementRouteAdded": false,
+  "helperRepliesConfirmed": 4,
+  "helperReplyLossFaultInjected": false,
+  "selectedJdkProgramAndLibraryWitnesses": 7,
+  "wholeRuntimeEnvironmentWitnessComplete": false,
+  "qaVerificationSha256": "01c8b5039ba6bd29fc20474c761c88b8eaabb209da2cd9c0b5809002f7ca59cb",
+  "cleanupVerificationSha256": "7a809f4b5b0bc074fca6157d6d6d84379d46fd28f05ddfd14eb8f0b2c01e5c12",
+  "historicalRuns": 3,
+  "recordedJavaInstancesRetired": 7,
+  "ownedPgClustersCleanlyStopped": 3,
+  "finalQaDatabasesRemoved": 2,
+  "finalQaRolesRemovedByCompletedCleanup": 6,
+  "failedRunArtifactsRetained": true,
+  "canonicalUnitTests": 615,
+  "repositoryUnitTests": 606,
+  "knownPreexistingTestDifference": 9,
+  "originalRuntimeChanged": false,
+  "originalJarChanged": false,
+  "existingOriginalJvmAdopted": false,
+  "controllerCrashReentryComplete": false,
+  "identityMigrationComplete": false,
+  "productionRecoveryControllerComplete": false,
+  "productionAcceptance": false,
+  "publicCutover": false,
+  "fullOriginalGoalComplete": false,
+  "finalUserMaterialsComplete": false
+}

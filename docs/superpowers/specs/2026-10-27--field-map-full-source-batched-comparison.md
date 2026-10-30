@@ -1,0 +1,9 @@
+# 新隔离物理目标的完整来源原版/批量版比较
+
+使用Native19已认证且保持不变的ENABLED SOURCE加密档案，只读原控制库、密钥、原映射原件和原集群管理员配置。底层restoreColdReviewImageV2创建全新QA目录，不重开或修改失败的target、原控制意图、用户确认或旧案例。只有新PG原生命周期句柄被启动和正常退休；没有Keycloak、读者、guard或broker启动，输出不包含管理员密码。
+
+新增captureColdTargetMapFactsV2和coldReviewValidateCatalogsBatchedV1：前者仅换新捕获器并增加独立诊断，仍用原Source语义比较和原离线完整原件核验；后者逐字保留旧validator的全部七库事务、临时ORIGINAL、结构/活动与退休fence/读者权限、完整SQL事实、映射覆盖、ROLLBACK和静默检查，仅替换映射捕获函数。
+
+新QA目标设置原REVIEW权限配置后，依次执行原版/新版/新版/原版。每次完整执行原档案/离线来源/原件核验、七库完整validator和目标权限前后核对；所有PG客户端顺序创建且实际关闭。比较每库完整事实摘要、每份映射facts与独立结果，并逐块比较原版与新版实际原件字节。保存各次完整、材料、validator、最终权限核对耗时和新批次诊断。禁止只测小向量或用批次数代替完整耗时。
+
+比较只是完整数据路径的正确性与性能证据，不能授予当前用户、安装、程序启动或正式准入。原30秒不改，是否满足实际授权仍须接入Control4后由全新Native20完整66及同案例独立验证。全部原输入文件字节/身份在前后保持，新目标最后实际clean offline。

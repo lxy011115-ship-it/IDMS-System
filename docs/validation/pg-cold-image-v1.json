@@ -1,0 +1,81 @@
+{
+  "stage": "PG_COLD_IMAGE_V1_FOUNDATION_ONLY",
+  "foundationPassed": true,
+  "realPostgreSqlVersion": "16.10",
+  "realDatabaseCount": 2,
+  "realCustomSchemaCountPerDatabase": 3,
+  "realChecks": 11,
+  "sourceOnlineRefused": true,
+  "sourceAdditionDuringCopyRefusedBeforePublication": true,
+  "oidRolesGrantsAndAlwaysTriggerPreserved": true,
+  "nonMvccSequencePreserved": true,
+  "databaseOidBoundTestCiphertextDecrypts": true,
+  "actualR4BusinessSchemasExercised": false,
+  "closedControlImmutabilitySampleVerified": true,
+  "archiveFiles": 1596,
+  "archiveDirectories": 27,
+  "payloadBytes": 57752818,
+  "archiveBytes": 57937216,
+  "coldUnitTests": 7,
+  "canonicalUnitTests": 615,
+  "repositoryUnitTests": 606,
+  "knownPreexistingTestDifference": 9,
+  "runtimeInputsMatchedRealExercise": [
+    {
+      "path": "scripts/pg-cold-image-config-v1.mjs",
+      "bytes": 2077,
+      "sha256": "07039cd5637fba984d88c1345d1ca3e9aaa51b6b562ed570eeefe22c1ca9014c"
+    },
+    {
+      "path": "scripts/pg-cold-image-container-v1.mjs",
+      "bytes": 5460,
+      "sha256": "5c02638e9fe73ac5f413df7523f816f772857c686eaffc7486090e21f62a38d9"
+    },
+    {
+      "path": "scripts/pg-cold-image-manifest-v1.mjs",
+      "bytes": 5203,
+      "sha256": "b1416cf189644499431cc7dc1c855cb5832023878a0841bf51a80b4c50067983"
+    },
+    {
+      "path": "scripts/pg-cold-image-tools-v1.mjs",
+      "bytes": 2847,
+      "sha256": "e231fcf962b5f44e221b34fb40eb67f4ae48d3133ccfce0e81790d42db230cf3"
+    },
+    {
+      "path": "scripts/pg-cold-image-tree-v1.mjs",
+      "bytes": 4950,
+      "sha256": "067770d924276c725e655eea7d6b29d7a7b0cb10a998f9ed4cae3c89a4cd7d36"
+    },
+    {
+      "path": "scripts/pg-cold-image-v1.mjs",
+      "bytes": 5782,
+      "sha256": "7045d1787dc8e70612a3a2d8ad29fdfe3b4c5a5d2404d02d1c04f2a8f21c5118"
+    },
+    {
+      "path": "scripts/verify-pg-cold-image-v1.mjs",
+      "bytes": 16202,
+      "sha256": "ded57ed6afe4370c88ca49c1916f950026e022b60e6c125671c67fb5965d9667"
+    }
+  ],
+  "postQaTestOnlyAddition": {
+    "path": "scripts/pg-cold-image-v1.test.mjs",
+    "qaSha256": "1969658e026de1093e1666b65124599a5bec8fdb69d4cf09b1885a9fe3e6cdbd",
+    "publishedSha256": "85625ab0037e3bd486961b5f2dc05c96878a3943feb2ff8ab9fb9e198e87f99d",
+    "reason": "Added unknown target entry quarantine unit test only after real PG exercise; no runtime source change"
+  },
+  "qaVerificationSha256": "fc3dbca888430582e0118e0dd6c4da7f9dd517bf674885305a3da5a8c2b04ed4",
+  "readOnlyCleanupSha256": "dd451131d4ca5346e95764a2cb96cac7c3724cf20316f430f9b4465b23abb613",
+  "ownedClustersCleanlyStopped": 5,
+  "privateOfflineArtifactsRetained": true,
+  "originalRuntimeChanged": false,
+  "originalJarChanged": false,
+  "automaticActivationApproved": false,
+  "durableCrashReentryComplete": false,
+  "formalR4RecoveryAdmissionComplete": false,
+  "runtimeDllAndExtensionWitnessComplete": false,
+  "pitrComplete": false,
+  "productionAcceptance": false,
+  "publicCutover": false,
+  "fullOriginalGoalComplete": false,
+  "finalUserMaterialsComplete": false
+}

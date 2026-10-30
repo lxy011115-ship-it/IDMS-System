@@ -1,3 +1,4 @@
+import {verifySparesDatabase} from '../server/spares-db.ts';
 import {readEntities} from '../server/entity-repository.ts';
 import {verifyDataProjection} from '../server/data-projection.ts';
 import {verifyBatchMapping} from '../server/catalog.ts';
@@ -10,6 +11,8 @@ import {randomBytes,randomUUID,createHash,createCipheriv,createDecipheriv} from 
 import pg from 'pg';
 import {verifyAuditChain} from '../server/audit.ts';
 import {canonical} from '../server/imports.ts';
+import {captureSparesBackupAnchor} from './spares-backup-anchor.mjs';
+import {validateBusinessBackupManifest} from './business-backup-manifest.mjs';
 
 const exec=promisify(execFile),magic=Buffer.from('IDMSBKP1'),maxDump=128*1024*1024,maxManifest=256*1024;
 const maxArchive=maxDump+maxManifest+56;
@@ -60,8 +63,9 @@ export function openBackup(archive,key,tenantId){
   try{const cipher=createDecipheriv('aes-256-gcm',key.bytes,header.subarray(24));cipher.setAAD(header);cipher.setAuthTag(archive.subarray(-16));plaintext=Buffer.concat([cipher.update(archive.subarray(36,-16)),cipher.final()]);}
   catch{throw Error('Backup authentication failed; no database restore was attempted');}
   const length=plaintext.readUInt32BE(0);if(length<2||length>maxManifest||length>plaintext.length-9)throw Error('Invalid authenticated backup manifest');
-  const manifest=JSON.parse(plaintext.subarray(4,4+length).toString('utf8')),dump=plaintext.subarray(4+length);
-  if(manifest.format!==1||manifest.scope!=='TENANT_BUSINESS_DATABASE'||manifest.recoveryMode!=='ISOLATED_BUSINESS_ONLY'||manifest.tenantId!==tenantId||manifest.schemaVersion!==2||!Array.isArray(manifest.facts)||manifest.facts.length>1000||dump.length>maxDump||dump.subarray(0,5).toString()!=='PGDMP'||digest(dump)!==manifest.dumpSha256)throw Error('Backup tenant, manifest or dump does not match');
+  let manifest;try{manifest=JSON.parse(plaintext.subarray(4,4+length).toString('utf8'));}catch{throw Error('Invalid authenticated backup manifest');}const dump=plaintext.subarray(4+length);
+  if(!manifest||![1,2].includes(manifest.format)||manifest.scope!=='TENANT_BUSINESS_DATABASE'||manifest.recoveryMode!=='ISOLATED_BUSINESS_ONLY'||manifest.tenantId!==tenantId||manifest.schemaVersion!==2||!Array.isArray(manifest.facts)||manifest.facts.length>1000||dump.length>maxDump||dump.subarray(0,5).toString()!=='PGDMP'||digest(dump)!==manifest.dumpSha256)throw Error('Backup tenant, manifest or dump does not match');
+  if(manifest.format===2)validateBusinessBackupManifest(manifest);
   return {manifest,dump};
 }
 async function command(program,args,account,config,input){
@@ -79,22 +83,22 @@ async function command(program,args,account,config,input){
 function executable(name){return join(process.env.LOCALAPPDATA,'IDMS/runtime/pgsql/bin',name+(process.platform==='win32'?'.exe':''));}
 async function version(client){const value=(await client.query('SHOW server_version_num')).rows[0].server_version_num;if(!/^16\d{4}$/.test(value))throw Error('This recovery tool currently requires PostgreSQL 16');return value;}
 export async function databaseFacts(client){
-  const tables=(await client.query("SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename COLLATE \"C\"")).rows;
+  const tables=(await client.query("SELECT schemaname,tablename FROM pg_tables WHERE schemaname IN ('public','idms_spares') ORDER BY schemaname COLLATE \"C\",tablename COLLATE \"C\"")).rows;
   if(!tables.length||tables.length>1000)throw Error('Unexpected database schema size');
   const facts=[];
-  for(const {tablename} of tables){
-    const columns=(await client.query("SELECT column_name,data_type,udt_name,is_nullable,column_default FROM information_schema.columns WHERE table_schema='public' AND table_name=$1 ORDER BY ordinal_position",[tablename])).rows;
+  for(const {schemaname,tablename} of tables){
+    const columns=(await client.query("SELECT column_name,data_type,udt_name,is_nullable,column_default FROM information_schema.columns WHERE table_schema=$2 AND table_name=$1 ORDER BY ordinal_position",[tablename,schemaname])).rows;
     const hash=createHash('sha256');let count=0;
-    await new Promise((ok,fail)=>{const q=client.query(new pg.Query(`SELECT to_jsonb(t)::text AS record FROM public.${quote(tablename)} t ORDER BY to_jsonb(t)::text COLLATE "C"`));q.on('row',row=>{hash.update(row.record+'\n');count++;});q.once('error',fail);q.once('end',ok);});
-    facts.push({table:tablename,columns,rows:count,sha256:hash.digest('hex')});
+    await new Promise((ok,fail)=>{const q=client.query(new pg.Query(`SELECT to_jsonb(t)::text AS record FROM ${quote(schemaname)}.${quote(tablename)} t ORDER BY to_jsonb(t)::text COLLATE "C"`));q.on('row',(row,result)=>{if(result)result.rows.length=0;hash.update(row.record+'\n');count++;});q.once('error',fail);q.once('end',ok);});
+    facts.push({table:schemaname==='public'?tablename:schemaname+'.'+tablename,columns,rows:count,sha256:hash.digest('hex')});
   }
   return facts;
 }
-export async function validateBusinessDatabase(client,tenantId){
+export async function validateBusinessDatabase(client,tenantId,{normalized=false}={}){
   const result=await client.query('SELECT schema_version,payload FROM runtime_state WHERE singleton=true');
   if(result.rowCount!==1||result.rows[0].schema_version!==2)throw Error('Expected one version-2 tenant runtime snapshot');
-  const payload=result.rows[0].payload;
-  if((await client.query("SELECT to_regclass('public.business_state') AS name")).rows[0].name)await readEntities(client,tenantId);
+  let payload=result.rows[0].payload;
+  if((await client.query("SELECT to_regclass('public.business_state') AS name")).rows[0].name){const current=await readEntities(client,tenantId);if(normalized)payload=current.payload;}
   for(const [name,items] of Object.entries(payload.business))if(!Array.isArray(items)||items.some(item=>name==='tenants'?item.id!==tenantId:item.tenantId!==tenantId))throw Error('Business snapshot tenant mismatch');
   for(const name of ['batches','records'])if(payload.imports[name].some(item=>item.tenantId!==tenantId))throw Error('Import tenant mismatch');
   if(payload.imports.requests.some(item=>!item.key.startsWith(tenantId+':'))||payload.idempotency.some(([key])=>!key.startsWith(tenantId+':'))||payload.audits.some(item=>item.tenantId!==tenantId)||!verifyAuditChain(payload.audits,tenantId))throw Error('Tenant or audit chain validation failed');
@@ -108,6 +112,7 @@ export async function validateBusinessDatabase(client,tenantId){
   for(const batch of payload.imports.batches)if(typeof batch.originalBase64!=='string'||digest(Buffer.from(batch.originalBase64,'base64'))!==batch.fileSha256)throw Error('Original import file checksum mismatch');
   const tenantTables=(await client.query("SELECT table_name FROM information_schema.columns WHERE table_schema='public' AND column_name='tenant_id'")).rows;
   for(const {table_name} of tenantTables)if((await client.query(`SELECT 1 FROM public.${quote(table_name)} WHERE tenant_id IS DISTINCT FROM $1 LIMIT 1`,[tenantId])).rowCount)throw Error('A SQL table contains foreign tenant data');
+  await verifySparesDatabase(client,tenantId);
   return {batches:payload.imports.batches.length,records:payload.imports.records.length,auditEvents:payload.audits.length,workOrders:payload.business.workOrders.length,importsDigest:digest(canonical(payload.imports)),businessDigest:digest(canonical(payload.business))};
 }
 export async function createTenantBackup({config,tenantId,keyFile,outputDirectory}){
@@ -117,15 +122,15 @@ export async function createTenantBackup({config,tenantId,keyFile,outputDirector
   let output,created=false;
   await client.connect();
   try{
-    await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
+    await beginBackupSnapshot(client);
     const pgVersion=await version(client),snapshot=(await client.query('SELECT pg_export_snapshot() AS id')).rows[0].id;
-    const checks=await validateBusinessDatabase(client,tenantId),facts=await databaseFacts(client);
+    const checks=await validateBusinessDatabase(client,tenantId,{normalized:true}),spares=await captureSparesBackupAnchor(client,tenantId),facts=await databaseFacts(client);
     const dump=await command(executable('pg_dump'),['--format=custom','--no-owner','--no-acl','--no-password','--snapshot='+snapshot],account,config);
-    const manifest={format:1,backupId:randomUUID(),tenantId,createdAt:new Date().toISOString(),sourceDatabase:account.database,pgVersion,schemaVersion:2,scope:'TENANT_BUSINESS_DATABASE',recoveryMode:'ISOLATED_BUSINESS_ONLY',excluded:['identity-database','flowable-database','gateway-receipts','edge-cache','deployment-secrets','model-files'],facts,checks,dumpSha256:digest(dump)};
-    const archive=sealBackup(manifest,dump,key);await privateDirectory(outputDirectory);
+    const manifest={format:2,backupId:randomUUID(),tenantId,createdAt:new Date().toISOString(),sourceDatabase:account.database,pgVersion,schemaVersion:2,scope:'TENANT_BUSINESS_DATABASE',recoveryMode:'ISOLATED_BUSINESS_ONLY',excluded:['identity-database','flowable-database','gateway-receipts','edge-cache','deployment-secrets','model-files'],facts,checks,spares,dumpSha256:digest(dump)};
+    validateBusinessBackupManifest(manifest);const archive=sealBackup(manifest,dump,key);await privateDirectory(outputDirectory);
     output=join(resolve(outputDirectory),tenantId+'-'+manifest.backupId+'.idmsbackup');
     await privateNewFile(output,archive);created=true;await client.query('COMMIT');
-    return {backupId:manifest.backupId,tenantId,file:output,encryptedBytes:archive.length,tables:facts.length,checks,scope:manifest.scope,recoveryMode:manifest.recoveryMode,productionAcceptance:false};
+    return {backupId:manifest.backupId,tenantId,file:output,encryptedBytes:archive.length,tables:facts.length,checks,spares,manifestFormat:2,compressedDumpLimitBytes:maxDump,scope:manifest.scope,recoveryMode:manifest.recoveryMode,productionAcceptance:false};
   }catch(e){await client.query('ROLLBACK').catch(()=>{});if(created)await unlink(output).catch(()=>{});throw e;}finally{await client.end();}
 }
 export async function restoreTenantBackup({config,tenantId,keyFile,backupFile,targetDatabase,credentialFile,ownership}){
@@ -151,8 +156,15 @@ export async function restoreTenantBackup({config,tenantId,keyFile,backupFile,ta
     await admin.query(`GRANT CONNECT ON DATABASE ${quote(account.database)} TO ${quote(account.user)}`);
     await command(executable('pg_restore'),['--dbname='+targetDatabase,'--no-owner','--no-acl','--no-password','--exit-on-error','--single-transaction'],account,config,dump);
     client=new pg.Client({host:config.host,port:config.port,...account});await client.connect();
-    const facts=await databaseFacts(client),checks=await validateBusinessDatabase(client,tenantId);
+    await beginBackupSnapshot(client,manifest.format===2);const facts=await databaseFacts(client),checks=await validateBusinessDatabase(client,tenantId,{normalized:manifest.format===2}),spares=manifest.format===2?await captureSparesBackupAnchor(client,tenantId):undefined;
     if(canonical(facts)!==canonical(manifest.facts)||canonical(checks)!==canonical(manifest.checks))throw Error('Restored content differs from authenticated source snapshot; target remains isolated');
-    return {backupId:manifest.backupId,tenantId,targetDatabase,credentialFile:resolve(credentialFile),tables:facts.length,checks,verified:true,recoveryMode:'ISOLATED_BUSINESS_ONLY',liveConfigurationChanged:false,productionAcceptance:false};
-  }finally{await client?.end();await admin.end();}
+    if(manifest.format===2&&canonical(spares)!==canonical(manifest.spares))throw Error('Restored spares continuity anchor differs from authenticated source; target remains isolated');await client.query('COMMIT');
+    return {backupId:manifest.backupId,tenantId,targetDatabase,credentialFile:resolve(credentialFile),tables:facts.length,checks,...(spares?{spares}:{}),manifestFormat:manifest.format,verified:true,recoveryMode:'ISOLATED_BUSINESS_ONLY',liveConfigurationChanged:false,productionAcceptance:false};
+  }catch(e){if(client)await client.query('ROLLBACK').catch(()=>{});throw e;}finally{await client?.end();await admin.end();}
+}
+
+async function beginBackupSnapshot(client,normalizedText=true){
+ await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
+ await client.query("SET LOCAL search_path=pg_catalog,public;SET LOCAL lock_timeout='5s';SET LOCAL statement_timeout='120s'");
+ if(normalizedText)await client.query("SET LOCAL TimeZone='UTC';SET LOCAL DateStyle='ISO, YMD';SET LOCAL bytea_output='hex';SET LOCAL extra_float_digits=3");
 }

@@ -1,0 +1,33 @@
+{
+  "format": "COLD_CURRENT_DEPLOYMENT_USER_RECORD_COMPONENT_WINDOWS_V1",
+  "identityRawRecord": {
+    "testsPassed": 24,
+    "staticModules": 296,
+    "protectedInputs": 4118,
+    "resultSha256": "d0e09484e3bd7f225c300f371bde119a06c484539a997bb2083909f71609823d",
+    "actualRsaAndHttpProtocolFixture": true,
+    "rawFactSemanticRehashNegativeCases": 15,
+    "offlineNetworkRequests": 0,
+    "rawServiceTokenOrClientSecretsRecorded": false
+  },
+  "gateV2": {
+    "testsPassed": 8,
+    "staticModules": 297,
+    "protectedInputs": 4123,
+    "resultSha256": "141548d4e6b4f0f1f74e86e32828b7239cab00d08612216d0d08e71690fc474c",
+    "originalV1HandleRejected": true,
+    "actualRawIdentityRecordSetsBound": true,
+    "privateBridgeRequiresOriginalV2HandleAndActualRevalidation": true,
+    "publicProofContainsRawAccessTokens": false,
+    "deadlineExtended": false
+  },
+  "allOriginalRootsAndChildrenAndHostsExitedNormally": true,
+  "allOriginalInputPinsAndSourceStorePreserved": true,
+  "allOwnedProtocolServersAndDirectoriesRetired": true,
+  "actualCompleteKeycloakRawRecordSourceCaseAccepted": false,
+  "durableUserJournalImplemented": false,
+  "newHeldOrProgramApprovalProven": false,
+  "mqttApplicationAclProven": false,
+  "formalFieldActivationGranted": false,
+  "fullGoalComplete": false
+}

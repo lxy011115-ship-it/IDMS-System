@@ -1,0 +1,75 @@
+import assert from 'node:assert/strict';
+import {resolve,join} from 'node:path';
+import {readFile} from 'node:fs/promises';
+import {randomUUID,randomBytes} from 'node:crypto';
+import pg from 'pg';
+import {createOwnedPlatformPgQaV1} from './owned-platform-pg-v1-qa.mjs';
+import {launchPostgresLifecycleV1,bindPostgresLifecycleV1,stopPostgresLifecycleV1} from '../postgres-lifecycle-v1.mjs';
+import {stateMapSchemaSql} from '../state-map-schema-v1.mjs';
+import {runtimeWriteFenceSchemaSqlV1,restrictRuntimeWriteFenceActorsV1,wrapFreshRuntimeWriteFenceSqlV1} from '../runtime-write-fence-schema-v1.mjs';
+import {finalizeRuntimeWriteFenceV1} from '../runtime-write-fence-control-v1.mjs';
+import {coldRuntimeInventoryV1,coldRuntimeStructureV1} from '../runtime-cold-facts-v1.mjs';
+import {fieldMapFrozenProfileV1,assertFieldMapFrozenProfileV1,setFieldMapFrozenProfileV1,frozenMapHashV1} from '../field-map-frozen-profile-v1.mjs';
+import {openFieldMapFrozenMaintenanceV1} from '../field-map-frozen-maintenance-v1.mjs';
+import {inspectStateMapCatalog} from '../../server/state-map-catalog-v1.ts';
+import {stateValueText} from '../../server/state-map-v1.ts';
+import {fieldMapAuditPlanV1} from '../../server/field-map-audit-v1.ts';
+import {captureColdImageV1,restoreColdImageV1,generateColdImageKeyV1,authenticateColdImageV1} from '../pg-cold-image-portable-v1.mjs';
+import {coldStoppedV1} from '../pg-cold-image-portable-tools-v1.mjs';
+import {privateDirectory,privateNewFile} from '../backup-support.mjs';
+
+export async function exerciseFieldMapFrozenMaintenanceQaV1({pgBin,work,nonce,note,report}){
+ const clients=new Set(),q=v=>'"'+v.replaceAll('"','""')+'"';let cluster,handle,root,profile,sourceCatalog,problem;
+ const connect=async account=>{const c=new pg.Client({...account,connectionTimeoutMillis:3000,query_timeout:35000,application_name:'idms-frozen-map-qa'});c.on('error',()=>{});clients.add(c);try{await c.connect();return c;}catch(e){await c.end().catch(()=>{});clients.delete(c);throw e;}};
+ const end=async c=>{await c.end();clients.delete(c);};
+ try{
+  cluster=await createOwnedPlatformPgQaV1(pgBin);report.clusterWork=cluster.work;
+  const names={database:'fm_'+nonce,owner:'fm_owner_'+nonce,app:'fm_app_'+nonce,reader:'fm_reader_'+nonce},password=randomBytes(32).toString('base64url'),tenant='acme',deployment=randomUUID(),authority={authorityId:randomUUID(),epoch:1,hash:'1'.repeat(64)};
+  const admin=await connect(cluster.account);await admin.query(`CREATE ROLE ${q(names.owner)} NOLOGIN NOINHERIT;CREATE ROLE ${q(names.app)} LOGIN NOINHERIT PASSWORD '${password}';CREATE ROLE ${q(names.reader)} LOGIN NOINHERIT PASSWORD '${password}'`);await admin.query(`CREATE DATABASE ${q(names.database)} OWNER ${q(names.owner)}`);await end(admin);
+  const controlAccount={...cluster.account,database:names.database},appAccount={...controlAccount,user:names.app,password},readerAccount={...controlAccount,user:names.reader,password};root=await connect(controlAccount);
+  await root.query(`REVOKE ALL ON DATABASE ${q(names.database)} FROM PUBLIC;GRANT CONNECT ON DATABASE ${q(names.database)} TO ${q(names.app)},${q(names.reader)}`);
+  await root.query(await runtimeWriteFenceSchemaSqlV1({owner:names.owner,control:cluster.account.user,deployment}));await restrictRuntimeWriteFenceActorsV1(root,[names.app,names.reader]);await root.query(wrapFreshRuntimeWriteFenceSqlV1(await stateMapSchemaSql({tenant,owner:names.owner,app:names.app,reader:names.reader}),{schema:'state_map_v1',beforeEventTrigger:'state_map_ddl_start_v1'}));
+  const fenceBinding=await finalizeRuntimeWriteFenceV1(controlAccount);sourceCatalog=await inspectStateMapCatalog(root);const binding={tenantId:tenant,databaseOid:fenceBinding.databaseOid,roleOid:(await root.query('SELECT app_oid::text AS value FROM state_map_v1._meta')).rows[0].value,catalogHash:sourceCatalog};
+  await root.query('SELECT runtime_write_fence_v1.set_state_v1($1,0,$2,\'OPEN\',$3,1,$4)',[deployment,randomUUID(),authority.authorityId,authority.hash]);
+  const app=await connect(appAccount);const initial=(await app.query('SELECT state_map_v1.read_head_v1($1) AS value',[tenant])).rows[0].value;
+  await app.query('SELECT state_map_v1.apply_delta_v1($1,$2,$3,$4,$5::jsonb)',[tenant,randomUUID(),initial.revision,Buffer.from(initial.rootHash,'hex'),JSON.stringify([{namespace:'domain_head',key:'audit',expected:null,valueText:stateValueText({tenantId:tenant,count:'0',eventId:null,hash:'GENESIS'})}])]);await end(app);
+  const closeOperationId=randomUUID();await root.query('SELECT runtime_write_fence_v1.set_state_v1($1,1,$2,\'CLOSED\',NULL,NULL,NULL)',[deployment,closeOperationId]);
+  const inventory=await coldRuntimeInventoryV1(root),structureSha256=await coldRuntimeStructureV1(root);
+  profile=fieldMapFrozenProfileV1({format:'FIELD_MAP_FROZEN_PROFILE_V1',tenantId:tenant,targetDirectory:cluster.source,inventory,structureSha256,binding,fenceBinding,closed:{operationId:closeOperationId,revision:'2'}});
+  await root.query('BEGIN');await setFieldMapFrozenProfileV1(root,profile,false);await root.query('COMMIT');await assertFieldMapFrozenProfileV1(root,profile,false);await end(root);root=null;await cluster.stop();
+  const backupDir=join(work,'archive'),scratch=join(work,'scratch'),keyFile=join(work,'cold-key.private.json');await privateDirectory(backupDir);await privateDirectory(scratch);await generateColdImageKeyV1(keyFile);
+  const backup=await captureColdImageV1({sourceDirectory:cluster.source,binDirectory:cluster.bin,expectedSystemIdentifier:cluster.systemIdentifier,keyFile,workDirectory:scratch,outputDirectory:backupDir,evidence:{purpose:'FIELD_MAP_FROZEN_MAINTENANCE_QA_V1',profileSha256:frozenMapHashV1(profile)}});
+  await restoreColdImageV1({backupFile:backup.file,keyFile,workDirectory:scratch,targetDirectory:cluster.target,binDirectory:cluster.bin,expectedBackupId:backup.backupId,expectedSystemIdentifier:cluster.systemIdentifier});
+  profile=fieldMapFrozenProfileV1({...profile,targetDirectory:cluster.target});await privateNewFile(join(work,'profile.private.json'),JSON.stringify(profile));report.profileSha256=frozenMapHashV1(profile);report.coldArchive={backupId:backup.backupId,sha256:backup.sha256,sourceControl:cluster.sourceControl,restoredIntoNewDirectory:true,fullArchiveAuthenticationVerified:true};
+  handle=await launchPostgresLifecycleV1({binDirectory:cluster.bin,dataDirectory:cluster.target,workDirectory:work,expectedSystemIdentifier:cluster.systemIdentifier,port:cluster.account.port,account:{user:cluster.account.user,password:cluster.account.password,database:'postgres'}});await bindPostgresLifecycleV1(handle);report.lifecycleDirectory=handle.directory;
+  root=await connect(controlAccount);await assertFieldMapFrozenProfileV1(root,profile,false);note('complete authenticated physical archive restores a distinct owned directory with original OIDs and actual business identities frozen');
+  const denied=async()=>{for(const account of [appAccount,readerAccount]){let opened=false;try{const c=await connect(account);opened=true;await end(c);}catch(e){assert.equal(e.code,'28000');}assert.equal(opened,false);}};
+  const head=async()=>{const h=(await root.query("SELECT revision::text,encode(root_id,'hex') AS \"rootId\",encode(root_hash,'hex') AS \"rootHash\",item_count::text AS count,encode(receipt_hash,'hex') AS \"receiptHash\" FROM state_map_v1.head")).rows[0];return h;};
+  const frozen=async expected=>{await assertFieldMapFrozenProfileV1(root,profile,false);await denied();const f=(await root.query('SELECT * FROM runtime_write_fence_v1._state')).rows[0];assert.equal(f.state,'CLOSED');assert.equal(f.operation,profile.closed.operationId);assert.equal(String(f.revision),profile.closed.revision);if(expected)assert.deepEqual(await head(),expected);assert.equal((await root.query('SELECT count(*)::int AS n FROM state_map_v1._ctx')).rows[0].n,0);};
+  const before=await head();await denied();
+  for(const variant of [{...profile,binding:{...binding,catalogHash:'f'.repeat(64)}},{...profile,closed:{...profile.closed,revision:'1'}},{...profile,targetDirectory:cluster.source}]){
+   await root.query('BEGIN');await assert.rejects(openFieldMapFrozenMaintenanceV1(root,variant));assert.equal(root.getTransactionStatus(),'T');await root.query('COMMIT');await frozen(before);
+  }note('wrong fixed catalog, CLOSED revision and actual target directory reject without leaving LOGIN or root changes after caller COMMIT');
+  await root.query('BEGIN');let ctx=await openFieldMapFrozenMaintenanceV1(root,profile);assert.deepEqual(await ctx.get('domain_head','audit'),{tenantId:tenant,count:'0',eventId:null,hash:'GENESIS'});assert.equal((await ctx.state('domain_head','absent')).present,false);await denied();const readWitness=await ctx.close();assert.equal(readWitness.fence.revision,'2');await root.query('COMMIT');await frozen(before);note('bounded original-root membership reads seal without changing CLOSED revision or publishing temporary LOGIN');
+  const planId=randomUUID();
+  const makePlan=async c=>{const audit=await fieldMapAuditPlanV1(c,async()=>({tenantId:tenant,objectType:'FIELD_RECOVERY',objectId:planId,action:'FIELD_RECOVERY_PLAN_SUBMITTED',actorType:'USER',actorId:'qa-declared-author',correlationId:planId,metadata:{format:'FIELD_MAP_MAINTENANCE_QA_V1',realOidcActorVerified:false}}));return {event:audit.event,operations:[...audit.operations,await c.operation('domain_head','recovery_plan',{format:'FIELD_MAP_MAINTENANCE_QA_V1',planId,approved:false})]};};
+  await root.query('BEGIN');ctx=await openFieldMapFrozenMaintenanceV1(root,profile);const rolledPlan=await makePlan(ctx),rolledCommand={commandId:randomUUID(),expectedHead:ctx.head,operations:rolledPlan.operations,openOperationId:randomUUID(),closeOperationId:randomUUID(),authority};const rolled=await ctx.prepare(rolledCommand);assert(rolled.callerCommitRequired);await denied();await root.query('ROLLBACK');await frozen(before);note('prepared genuine map audit and plan record remain uncommitted and full caller rollback preserves the archived root');
+  await root.query('BEGIN');ctx=await openFieldMapFrozenMaintenanceV1(root,profile);const compiled=await makePlan(ctx),command={commandId:randomUUID(),expectedHead:ctx.head,operations:compiled.operations,openOperationId:randomUUID(),closeOperationId:randomUUID(),authority};const prepared=await ctx.prepare(command);assert.equal(prepared.afterFence.revision,'4');await denied();await root.query('COMMIT');profile=fieldMapFrozenProfileV1({...profile,closed:{operationId:prepared.afterFence.operation,revision:String(prepared.afterFence.revision)}});const after=await head();await frozen(after);assert.equal(after.revision,'2');report.committedPrepared=prepared;report.committedAuditEventId=compiled.event.eventId;
+  note('real maintenance COMMIT publishes one plan and its unchanged genuine audit while all roles and SQL gates remain frozen');
+  await root.query('BEGIN');ctx=await openFieldMapFrozenMaintenanceV1(root,profile);assert.equal((await ctx.get('domain_head','audit')).count,'1');assert.deepEqual(await ctx.get('audit',compiled.event.eventId),compiled.event);assert.equal((await ctx.get('domain_head','recovery_plan')).planId,planId);const replay=await ctx.prepare(command);assert(replay.receipt.replayed);assert.equal(replay.receipt.receiptHash,prepared.receipt.receiptHash);assert.deepEqual(replay.afterFence,replay.beforeFence);await root.query('COMMIT');await frozen(after);note('same original command resolves the actual receipt without another audit, state root or CLOSED generation');
+  await root.query('BEGIN');ctx=await openFieldMapFrozenMaintenanceV1(root,profile);const first=await ctx.operation('domain_head','must_rollback',{neverCommitted:true}),immutable=await ctx.operation('audit',compiled.event.eventId,compiled.event);
+  await assert.rejects(ctx.prepare({commandId:randomUUID(),expectedHead:ctx.head,operations:[first,immutable],openOperationId:randomUUID(),closeOperationId:randomUUID(),authority}),e=>e.code==='P0001'&&e.message==='STATE_MAP_IMMUTABLE_KEY');assert.equal(ctx.status().phase,'ABORTED');assert.equal(root.getTransactionStatus(),'T');await root.query('COMMIT');await frozen(after);note('actual SQL failure after an earlier delta rolls back its savepoint; caller COMMIT cannot publish data or temporary privileges');
+  const outside=await connect(cluster.account);await root.query('BEGIN');await assert.rejects(openFieldMapFrozenMaintenanceV1(root,profile),/FIELD_MAP_FROZEN_OTHER_SQL_CLIENT/);await root.query('COMMIT');await end(outside);await frozen(after);note('an unrelated actual SQL client blocks maintenance before any role staging and remains untouched');
+  await root.query('BEGIN');ctx=await openFieldMapFrozenMaintenanceV1(root,profile);for(let n=0;n<256;n++)await ctx.state('domain_head','budget-'+n);await assert.rejects(ctx.state('domain_head','budget-exceeded'),/FIELD_MAP_FROZEN_READ_LIMIT/);await root.query('COMMIT');await frozen(after);note('actual proof-read capacity failure restores the savepoint and preserves the committed plan and full frozen profile');
+  await root.query('BEGIN');ctx=await openFieldMapFrozenMaintenanceV1(root,profile);assert.equal((await ctx.state('domain_head','must_rollback')).present,false);assert.equal((await ctx.get('domain_head','audit')).count,'1');await ctx.close();await root.query('COMMIT');await frozen(after);
+  assert.equal((await root.query('SELECT count(*)::int AS n FROM state_map_v1.receipts')).rows[0].n,2);report.finalHead=after;report.finalProfile=profile;report.finalAuditEvents=1;report.actualSqlReceiptRows=2;report.sourceCatalogSha256=sourceCatalog;
+  const checked=await authenticateColdImageV1({backupFile:backup.file,keyFile,workDirectory:scratch});try{assert.equal(checked.manifest.control.systemIdentifier,cluster.systemIdentifier);assert.equal(checked.manifest.evidence.purpose,'FIELD_MAP_FROZEN_MAINTENANCE_QA_V1');}finally{await checked.dispose();}
+ }catch(e){problem=e;}
+ finally{
+  for(const c of [...clients])try{await end(c);}catch{report.cleanupErrors.push('FROZEN_MAP_SQL_CLOSE_UNPROVEN');}
+  if(handle&&handle.process.exitCode===null&&handle.process.signalCode===null)try{if(!handle.bound)await bindPostgresLifecycleV1(handle);report.postgresStop=await stopPostgresLifecycleV1(handle);}catch{report.cleanupErrors.push('FROZEN_MAP_POSTGRES_RETIREMENT_UNPROVEN');}
+  try{await cluster?.stop();if(cluster){report.sourceOfflineControl=await coldStoppedV1(cluster.source,cluster.tooling,cluster.systemIdentifier);if(handle)report.targetOfflineControl=await coldStoppedV1(cluster.target,cluster.tooling,cluster.systemIdentifier);}}catch{report.cleanupErrors.push('FROZEN_MAP_CLUSTER_OFFLINE_UNPROVEN');}
+  report.allSqlConnectionsClosed=clients.size===0;report.allOriginalProcessesTerminal=!handle||handle.process.exitCode!==null||handle.process.signalCode!==null;
+ }
+ if(problem)throw problem;
+}

@@ -1,0 +1,38 @@
+name: Browser boundary unit verification
+
+on:
+  push:
+    branches: [main, wip/predictive-creation-v4]
+    paths: ['scripts/fixtures/cold-browser-scope-v1*', 'scripts/fixtures/cold-browser-storage-v1*', '.github/workflows/browser-boundary-unit-verification.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/fixtures/cold-browser-scope-v1*', 'scripts/fixtures/cold-browser-storage-v1*', '.github/workflows/browser-boundary-unit-verification.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: browser-boundary-unit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  boundary-pure-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out the tested commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Use the deployment Node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - name: Verify scope and storage rejection cases
+        run: node --test scripts/fixtures/cold-browser-scope-v1.test.mjs scripts/fixtures/cold-browser-storage-v1.test.mjs
+      - name: Record verification scope
+        if: always()
+        run: |
+          echo 'Scope: pure scope-membership and storage-schema unit cases. This job does not run a browser, capture storage, deploy, or approve production activation.' >> "$GITHUB_STEP_SUMMARY"

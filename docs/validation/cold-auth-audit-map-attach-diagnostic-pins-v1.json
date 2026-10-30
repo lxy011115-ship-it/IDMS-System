@@ -1,0 +1,166 @@
+{
+  "format": "COLD_AUTH_AUDIT_MAP_ATTACH_DIAGNOSTIC_PINS_V1",
+  "at": "2026-10-25T19:29:02.560859+00:00",
+  "parentCommit": "8cab3b5db9b0394916da4f50dd3dba4fc476760a",
+  "codePins": [
+    {
+      "path": "scripts/cold-current-actors-v2-attach-diagnostic-v1.mjs",
+      "sha256": "7044591efb8fd125c634450347ffcf6b2061e499df5e21a26b79cae53cc8170e"
+    },
+    {
+      "path": "scripts/cold-current-actors-v3-attach-diagnostic-v1.mjs",
+      "sha256": "cb888a0c57aab91cff8e0d73d0a7d33ea07d7728edfedbcfd1bb6dabcab26db0"
+    },
+    {
+      "path": "scripts/cold-current-plan-approval-actors-v1-attach-diagnostic-v1.mjs",
+      "sha256": "05128f38c9d75b9f8e84814ca2a5ca4470d11ee4df3738fc0b4c1b046b3a8b22"
+    },
+    {
+      "path": "scripts/cold-owned-review-session-v1-attach-diagnostic-v1.mjs",
+      "sha256": "2f922b250890c0a0780ef05724f6089f59e95347fde74f9192f1feb8b315db9e"
+    },
+    {
+      "path": "scripts/cold-owned-review-session-v2-attach-diagnostic-v1.mjs",
+      "sha256": "e8d0af41d20318a0e340d41306112b55866dd5281652a8503fa097538940c9c4"
+    },
+    {
+      "path": "scripts/cold-owned-review-session-v3-attach-diagnostic-v1.mjs",
+      "sha256": "2d34b468faab3d87f0694dcf572539f8fd84842f6a0ed495e56901ffe33b62e2"
+    },
+    {
+      "path": "scripts/cold-plan-approval-journal-v1-attach-diagnostic-v1.mjs",
+      "sha256": "4b1d7ea7da6cd4b16f834a730550b7b44c9e3ea70304f09b07f5f340ea0e3d58"
+    },
+    {
+      "path": "scripts/cold-registration-auth-audit-map-sql-v2-attach-diagnostic-v1.mjs",
+      "sha256": "e53e0b88a3a0b40773f511a2e443489db1d8833fda8c444560f1952f67ef4d47"
+    },
+    {
+      "path": "scripts/cold-registration-auth-audit-sql-v1-attach-diagnostic-v1.mjs",
+      "sha256": "fff4f21c2f6535f9c58670949c5c9fa5875bc488afc0bd38ac659ce365df49fe"
+    },
+    {
+      "path": "scripts/cold-registration-auth-sql-v1-attach-diagnostic-v1.mjs",
+      "sha256": "5b833c54d8a335b842f4c30e8323bfc552d9e8eb1d05df9ecb5e7dd3041329cf"
+    },
+    {
+      "path": "scripts/cold-registration-core-materials-v6-attach-diagnostic-v1.mjs",
+      "sha256": "b0fba56df9b39da5e9b5ae52e3ec656b5a6a1919d81fac91a5f6edc016f593f7"
+    },
+    {
+      "path": "scripts/cold-registration-core-materials-v8-attach-diagnostic-v1.mjs",
+      "sha256": "6117584d67f31d65cf651282cb498aaab8729c7172372ebe47b2af702b3d1dca"
+    },
+    {
+      "path": "scripts/cold-registration-job-sql-v2-attach-diagnostic-v1.mjs",
+      "sha256": "9764e1b1ea16dd6c223879838eb7370ea4757de00c73cff360edf0c314964776"
+    },
+    {
+      "path": "scripts/cold-review-plan-journal-v1-attach-diagnostic-v1.mjs",
+      "sha256": "968e66a406221111eed2a721a14ca8889cb05f49ef72aaa05f82d7f313790d4f"
+    },
+    {
+      "path": "scripts/fixtures/cold-auth-audit-map-approval-order-v2-qa-attach-diagnostic-v1.mjs",
+      "sha256": "cb5e56cf50430c62616c2ba2aff6cb1226fd2ce96daee3200fd7dc589bf53c49"
+    },
+    {
+      "path": "scripts/fixtures/cold-auth-audit-map-journal-order-v2-qa-attach-diagnostic-v1.mjs",
+      "sha256": "83d9aaaa96935779fd0645f72a8acc45fdc162e2591f993776c0fb49d932237f"
+    },
+    {
+      "path": "scripts/fixtures/cold-auth-audit-map-live-v2-qa-attach-diagnostic-v1.mjs",
+      "sha256": "db21526d516500cf93ac188eb44a44f74d3f9c60e94d2d9416e51aebc07a920b"
+    },
+    {
+      "path": "scripts/fixtures/cold-auth-audit-map-preparation-v3-qa-attach-diagnostic-v1.mjs",
+      "sha256": "c2f38cbbcfc3b2ae408250707759e08956ddd1177b66aa155c109ef630336d62"
+    },
+    {
+      "path": "scripts/fixtures/runtime-cold-auth-audit-map-v3-qa-attach-diagnostic-v1.mjs",
+      "sha256": "c35ac53889dfe642de3b09d209ab7f9379d9fd411a678a6b64d95b14caed4a8c"
+    },
+    {
+      "path": "scripts/runtime-cold-review-prepare-v13-attach-diagnostic-v1.mjs",
+      "sha256": "5fa313690a43473aaf7cc9410ad9cdf63403115445cf724a369e415cbcf4d3ee"
+    },
+    {
+      "path": "scripts/runtime-cold-review-prepare-v17-attach-diagnostic-v1.mjs",
+      "sha256": "e6d799a9bfc64d02a1858ad30c0825d7865c8bc22ffd38d17c0862b48e475082"
+    },
+    {
+      "path": "scripts/runtime-cold-review-prepare-v20-attach-diagnostic-v1.mjs",
+      "sha256": "9e80435abdbbd9235daf03261a9031cc11db60a7cc1a375a9af9402524f52167"
+    },
+    {
+      "path": "scripts/runtime-cold-review-target-v6-attach-diagnostic-v1.mjs",
+      "sha256": "ea5f1c6c328bbb74ca2c260afe3b38c8fb5d53ad328f6af989b202d6b131d471"
+    },
+    {
+      "path": "scripts/runtime-cold-review-target-v9-attach-diagnostic-v1.mjs",
+      "sha256": "20363aa289c32a4c78ed6ca7a7447f5b94d4187607402f8a6f8724de03c920a9"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-v6-attach-diagnostic-v1.mjs",
+      "sha256": "c137eabdba3148571d56c6518300fb2b95b035851af5fcba3d978c6524901002"
+    },
+    {
+      "path": "scripts/workflow-reader-peer-tools-v1-attach-diagnostic-v1.mjs",
+      "sha256": "53fcd947abc7db099ccc13d4a0a9b94aad24777f31e4fcc2c1cf24e400e90039"
+    },
+    {
+      "path": "scripts/workflow-review-reader-lifecycle-v5-attach-diagnostic-v1.mjs",
+      "sha256": "5abdf8e5ff7686b38177b59f12032afe1f102dc97738a7271cb6131577b5f523"
+    },
+    {
+      "path": "scripts/workflow-review-reader-lifecycle-v6-attach-diagnostic-v1.mjs",
+      "sha256": "85c2dff2327ee9b410ba0c0b67d5272e35e82953b60ddb2cb2e0a5786c7cc66e"
+    },
+    {
+      "path": "scripts/workflow-review-reader-lifecycle-v7-attach-diagnostic-v1.mjs",
+      "sha256": "fc4855d9940c5d775a0e3982f576fa3503441451af1ad930a9dc41ae6aa37055"
+    },
+    {
+      "path": "scripts/lifecycle-java-peer-diagnostic-v1/OwnedReaderPeerAttachV1.java",
+      "sha256": "a48542316e50b308c7daec9f65332a248c9d83398add6b2e823a800f7af6d70a"
+    },
+    {
+      "path": "scripts/fixtures/owned-reader-jvm-failure-v4-qa.mjs",
+      "sha256": "a8c3c63f1817dc7ee0544c2b5e4582fec83c5d0dc207afe4c1f1e2ccd0593523"
+    },
+    {
+      "path": "tests/owned-reader-jvm-failure-v4.test.mjs",
+      "sha256": "f7ed3e2a08ac83de6341754724d1d84b2554af51dad541750a3c9fce21823f90"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-diagnostic-bootstrap-v2.mjs",
+      "sha256": "178f35e8185093dfd5fd64117ec1389ed99ed6d4d22063166e3f30156a91bf4c"
+    },
+    {
+      "path": "scripts/verify-cold-auth-audit-map-observed-v8.mjs",
+      "sha256": "1cd25f0fdc766be20cd7710b04bf0b722337be73be00f7bf4b0201cefebfa925"
+    },
+    {
+      "path": ".github/workflows/cold-auth-audit-map-attach-diagnostic-v1.yml",
+      "sha256": "77cc95bae92f4def1f200ec2a2e111f963ceca7c3ba4bc5c80abbea10f894b6e"
+    },
+    {
+      "path": "tests/fixtures/OwnedReaderPeerAttachDiagnosticQaV1.java",
+      "sha256": "f6607eddf042f925603880f5e89d726fe86760956cdd54e520a66c2d3c6af2ea"
+    }
+  ],
+  "originalInnerNativeSourcePins": 1733,
+  "plannedInnerNativeSourcePins": 1763,
+  "actualNewNativeSourceCountProven": false,
+  "changedGuardOrTimeoutOrLeaseRules": false,
+  "dependencyImportBindingsCompletelyRebased": true,
+  "newDependencyModules": 29,
+  "newJavaDiagnosticSources": 1,
+  "javaDiagnosticChecks": 9,
+  "structuredObserverChecks": 11,
+  "allActualUnitAndOriginalHostExitCodes": 0,
+  "rawArgumentsPathsOrMessagesPrinted": false,
+  "productionNativeExecuted": false,
+  "linuxRootCauseConfirmed": false,
+  "linuxFailureFixed": false,
+  "fullGoalComplete": false
+}

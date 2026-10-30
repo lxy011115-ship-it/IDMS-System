@@ -17,16 +17,18 @@ export class CapacityError extends DomainError {
  constructor(status=503,message='当前处理容量已满，请稍后使用同一幂等键重试',code='CAPACITY_BUSY'){super(status,message);this.code=code;}
 }
 export class MemoryLedger {
- private used=new Map<string,number>();private total=0;readonly cap:number;readonly categories:Record<string,number>;
+ private used=new Map<string,number>();private total=0;private peak=0;private peaks=new Map<string,number>();readonly cap:number;readonly categories:Record<string,number>;
  constructor(cap:number,categories:Record<string,number>){this.cap=cap;this.categories=categories;}
  account(category:string,maximum=this.categories[category]){
   if(!Object.hasOwn(this.categories,category)||!Number.isSafeInteger(maximum)||maximum<1)throw Error('Unknown resource category');
   let amount=0,released=false;const ledger=this;
-  const grow=(bytes:number)=>{if(released||!Number.isSafeInteger(bytes)||bytes<0)throw Error('Invalid resource accounting');if(amount+bytes>maximum||ledger.total+bytes>ledger.cap||(ledger.used.get(category)||0)+bytes>ledger.categories[category])throw new CapacityError(503,'当前工作区或解析预算不足，请稍后重试或联系管理员调整容量','MEMORY_BUDGET');amount+=bytes;ledger.total+=bytes;ledger.used.set(category,(ledger.used.get(category)||0)+bytes);};
+  const grow=(bytes:number)=>{if(released||!Number.isSafeInteger(bytes)||bytes<0)throw Error('Invalid resource accounting');if(amount+bytes>maximum||ledger.total+bytes>ledger.cap||(ledger.used.get(category)||0)+bytes>ledger.categories[category])throw new CapacityError(503,'当前工作区或解析预算不足，请稍后重试或联系管理员调整容量','MEMORY_BUDGET');amount+=bytes;ledger.total+=bytes;ledger.used.set(category,(ledger.used.get(category)||0)+bytes);ledger.peak=Math.max(ledger.peak,ledger.total);ledger.peaks.set(category,Math.max(ledger.peaks.get(category)||0,ledger.used.get(category)||0));};
   return {grow,hold(bytes:number){grow(bytes);let held=true;return ()=>{if(!held)return;held=false;if(released)return;amount-=bytes;ledger.total-=bytes;ledger.used.set(category,(ledger.used.get(category)||0)-bytes);};},release(){if(released)return;released=true;ledger.total-=amount;ledger.used.set(category,(ledger.used.get(category)||0)-amount);amount=0;},get bytes(){return amount;}};
 
  }
  snapshot(){return {total:this.total,categories:Object.fromEntries(this.used)};}
+ /** Monotonic since-process-start accounting, separate from sampled process RSS. */
+ watermarks(){return {total:this.peak,categories:Object.fromEntries(this.peaks)};}
 }
 export const resident=new MemoryLedger(limits.totalBytes,{task:limits.taskTotalBytes,bootstrap:limits.bootstrapBytes,cache:limits.cacheBytes,body:limits.bodyBytes,response:limits.responseBytes});
 type Account=ReturnType<MemoryLedger['account']>;

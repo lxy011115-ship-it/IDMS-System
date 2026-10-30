@@ -1,0 +1,199 @@
+{
+  "stage": "REAL_R4_COLD_RUNTIME_RECOVERY_QA_V1",
+  "realColdRecoveryPassed": true,
+  "checks": 12,
+  "sourcePins": [
+    {
+      "path": "scripts/verify-site-console-v4-r4.mjs",
+      "sha256": "5b8bb375075a7c8fea6bdc59e512437212f41bfe424411ba89b40aea6fddc3b6"
+    },
+    {
+      "path": "scripts/site-console-v4-r4.mjs",
+      "sha256": "dceb6e971dc2ff71c18a864d9f0e46bc351b0f7daa06f08f7a88385ce3c10c73"
+    },
+    {
+      "path": "scripts/reconciliation-worker-v1.mjs",
+      "sha256": "f58bd54748e15fbd22976d89d65edddc553b08d353b4bf986f63b6cf52b1af37"
+    },
+    {
+      "path": "scripts/reconciliation-ui-activation-v1.mjs",
+      "sha256": "6153cf13841b9f6457d08ce0f687e52611dea4f23b4fc1dd1fb3c1fa60638694"
+    },
+    {
+      "path": "scripts/predictive-cancel-ui-v1.sql",
+      "sha256": "41f65bbe646bd08182fe15373cce94944814fe352b6e3e8725785c79ad89bbdb"
+    },
+    {
+      "path": "scripts/predictive-cancel-ui-schema-v1.mjs",
+      "sha256": "04d765a19b21354e6c710b33602c66713e55ff28679dab0fb2c872176ef82165"
+    },
+    {
+      "path": "scripts/fixtures/site-console-r4-business-v4-qa.mjs",
+      "sha256": "ae0c4dd045709305ebfddb8173a01d0ce660a004386fba4eed86bcfe021ffc5a"
+    },
+    {
+      "path": "scripts/fixtures/site-console-r4-session-v4-qa.mjs",
+      "sha256": "cd0e32b73583b483d3cafb9957df79e5afb228896865d8a124479c926f7d1e4e"
+    },
+    {
+      "path": "scripts/fixtures/site-console-r4-v4-qa.mjs",
+      "sha256": "f8652ab5c6ae727491c1c2ed78694070a39426a726b9b8d3aaa514ce9dfa690f"
+    },
+    {
+      "path": "scripts/fixtures/site-console-r4-front-v4-qa.mjs",
+      "sha256": "5abd133e5c9506620eda9b380a5c1ced2a80d49dc6dead39103977a09a2e3e98"
+    },
+    {
+      "path": "server/reconciliation-ui-store-v1.ts",
+      "sha256": "a3961c6b1b748efd94ce878cdfdc9ac5ec810ef36d3c2f95ad0ff0dff86ec9ec"
+    },
+    {
+      "path": "server/reconciliation-ui-read-v1.ts",
+      "sha256": "9910734f4c35c87441ea9b981f6b30200be9cc09556c52fedcc74ffe71f30fc0"
+    },
+    {
+      "path": "server/reconciliation-ui-http-v1.ts",
+      "sha256": "8925bccefa868fe409da244723bfdb5a1e919af14c9172dfb0904d73657b36af"
+    },
+    {
+      "path": "server/reconciliation-runtime-v1.ts",
+      "sha256": "616eeea5f852099e5fd9aff36b23b4f64637ba33b4ffdf6c1b9675389ebd0590"
+    },
+    {
+      "path": "server/site-console-config-v4-r4.ts",
+      "sha256": "a27542d0e218a922bcc12f9f7c4053ec2c49bad2d36cc1171b54242e6e151fd8"
+    },
+    {
+      "path": "server/site-console-runtime-v4-r4.ts",
+      "sha256": "72799f34b4870daedc5f9ba4908e822dcdab6ee928a50ed2ea3d1e06e454db8e"
+    },
+    {
+      "path": "server/site-console-http-v4-r4.ts",
+      "sha256": "6084f94c501298c59c81b84e7fb6d7965d1426195c608e5348b985ed1aa24ce1"
+    },
+    {
+      "path": "public/reconciliation-console-v1.html",
+      "sha256": "a1cb4bc98cf6e468a6bce3dc73e96122d1b8e0d9a5143584195bcf7f376f005e"
+    },
+    {
+      "path": "public/reconciliation-console-v1.css",
+      "sha256": "c73fb54ca3a107744bbd2489426743de5db34b2a76320d9474c9fe4ec6559fa9"
+    },
+    {
+      "path": "public/reconciliation-console-v1.js",
+      "sha256": "a67ab721fba95cb92cb7a936638f26931a35a24b591ea59232b95aabac9cc23b"
+    },
+    {
+      "path": "public/reconciliation-protocol-v1.js",
+      "sha256": "9b7c2191bdec337c766f5e73554bf672f862efdf132c76319d3b4b7953a80315"
+    },
+    {
+      "path": "public/site-console-v4-r4.html",
+      "sha256": "35ff2c4216b473702582c8ba45b964cca6dea3ab8a54712dc4fe6492c47f38a8"
+    },
+    {
+      "path": "public/site-console-v4-r4.css",
+      "sha256": "fa211ada2ded3397f459901ca3d43d25a4b06177bf65b4125fba57b8619c32cd"
+    },
+    {
+      "path": "public/site-console-navigation-v4-r4.css",
+      "sha256": "038d020bbc15e52ed310c7febd0077b0eca44ab8a3e40a5a2024f1f6ebf33e48"
+    },
+    {
+      "path": "public/predictive-console-v4-r4.js",
+      "sha256": "9ec99436d4af1746260e261ec364f5f8108f4fdd1975a27dc695b93eee865b4b"
+    },
+    {
+      "path": "scripts/verify-r4-cold-recovery-v1.mjs",
+      "sha256": "0c84019beee7a6efe22f8a17090843b10bd7c4fe229ec2572e310dfe50cfae9e"
+    },
+    {
+      "path": "scripts/fixtures/owned-cold-pg-v1-qa.mjs",
+      "sha256": "fe75da317b17586dd364c2befb77ad6fcc748e9b4a5fafd52d0ceafa8ff7bee8"
+    },
+    {
+      "path": "scripts/fixtures/owned-cold-fence-v1-qa.mjs",
+      "sha256": "7e6e4be64a13c5bb84f9d33e6fdc67b1c3fb7b72d803e95f9e744a3c127b35ac"
+    },
+    {
+      "path": "scripts/fixtures/site-console-cold-business-v4-qa.mjs",
+      "sha256": "6d70f656564bcc4bcbd52cb71e1255bb3261b5020ece5aa79008873339e9a638"
+    },
+    {
+      "path": "scripts/fixtures/site-console-cold-session-v4-qa.mjs",
+      "sha256": "ffce7bdce2ea1281cd61eec589cb1bd71a7c93c50c539829ccb7a48a609eafd6"
+    },
+    {
+      "path": "scripts/fixtures/site-console-cold-auth-v4-qa.mjs",
+      "sha256": "739f97d8d432dcf1dc62dc6a82afe90acc4ddc49c27e4d36d634c4bc8bd3b95d"
+    },
+    {
+      "path": "scripts/fixtures/site-console-cold-v4-qa.mjs",
+      "sha256": "c8dfd519487231c89d8cb82f3d1e2b43d3f70b19a22d667cf0dde30a92f13e10"
+    },
+    {
+      "path": "scripts/fixtures/predictive-cancel-cold-flow-v1-qa.mjs",
+      "sha256": "93b5b87fd3bdc3b11840786c1b86372e3957c7affe7597005094a4ae5919e00c"
+    },
+    {
+      "path": "scripts/fixtures/r4-cold-runtime-v1-qa.mjs",
+      "sha256": "71cfd774738febe7d37c8335366ccfb48ea89b731a838a99a09c9c2a5a0730af"
+    }
+  ],
+  "sourcePinsMatchedObservedVersion": 34,
+  "postQaSourcePatches": [],
+  "actualR4Schemas": true,
+  "actualEncryptedSessions": true,
+  "actualFlowable": true,
+  "actualHttp": true,
+  "workerRuntimeExercisedInVerifierProcess": true,
+  "separatePositiveWorkerCliProcessExercisedThisRun": false,
+  "actualBrowserPkce": false,
+  "backendDirectGrantFixtureUsed": true,
+  "capturedDatabases": 7,
+  "capturedRoles": 27,
+  "archiveFiles": 4423,
+  "archiveDirectories": 32,
+  "archivePayloadBytes": 222214883,
+  "archiveBytes": 222730061,
+  "nativeCancellationsUnchanged": 5,
+  "finalCounts": {
+    "workOrders": 10,
+    "audits": 91
+  },
+  "syntheticInitialWorkOrdersIncluded": 8,
+  "capturedJwtExpiredBeforeAdmission": true,
+  "observedJwtToAdmissionMilliseconds": 19005,
+  "currentJwtVerifierClockToleranceMilliseconds": 5000,
+  "capturedLeaseExpiredAndStaleRejected": true,
+  "observedLeaseToAdmissionMilliseconds": 9216,
+  "currentOidcRevocationRetained": true,
+  "closedActionAndAuthorizationFencesRetained": true,
+  "authorizationRevisionObservedBeforeNewRequest": "2",
+  "authorizationRevisionAfterExplicitNewRequest": "3",
+  "releaseStartedRecoveredExactlyOnce": true,
+  "normalActionWithoutOldSessionWaitedForNewAuthorization": true,
+  "qaVerificationSha256": "c16cbcd08a7ca1bfd4f22636a8f09e14a81a5f664d56906edecf3219b8e3c49d",
+  "frozenStructureSha256": "625bfd7f6dcc2127e9b4f68ff7c1ebc3a7c2fccac391d6b0b810e3a6b3688202",
+  "restoredStructureSha256": "625bfd7f6dcc2127e9b4f68ff7c1ebc3a7c2fccac391d6b0b810e3a6b3688202",
+  "cleanupVerificationSha256": "484012fa2daca9d4815b909751bd37989bee988471775efae82678baa49cacc5",
+  "successfulPostmasterProcessesRetired": 4,
+  "pgdataDirectoriesVerifiedOffline": 5,
+  "testRealmsRemoved": 3,
+  "privateOfflineArtifactsRetained": true,
+  "databaseFilesDeleted": false,
+  "canonicalUnitTests": 615,
+  "repositoryUnitTests": 606,
+  "knownPreexistingTestDifference": 9,
+  "originalRuntimeChanged": false,
+  "originalJarChanged": false,
+  "productionCrashControllerComplete": false,
+  "productionAdmission": false,
+  "javaGracefulShutdownVerified": false,
+  "runtimeDllAndExternalKeyRecoveryWitnessComplete": false,
+  "productionAcceptance": false,
+  "wholeSessionBrowserExceptionGatePassed": false,
+  "publicCutover": false,
+  "fullOriginalGoalComplete": false,
+  "finalUserMaterialsComplete": false
+}

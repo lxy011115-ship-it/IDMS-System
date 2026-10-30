@@ -1,0 +1,13 @@
+# 治理写HTTP与持久作业
+
+完整方案A继续，原站点暂不切换。当前独立准备根在PLANNED后禁止公开根变化，因此不能把入队/租约状态写进同一SMT根；不使用内存队列，也不依赖HTTP长连接完成维护。选择同租户业务数据库中的独立受保护作业schema，使用独立最小ingress角色，worker继续使用业务APP。队列DDL不修改已冻结state_map源；新部署使用独立schema生成器v4，在原保护触发器安装前去掉APP直接publish权限，仅受fence保护的队列owner可发布；旧部署不在线REVOKE。新部署完成全部DDL/角色授权后固定两套目录/角色/数据库OID。原库不在线安装。
+
+POST /api/v4/governance/jobs 以真实OIDC/会话context接受六个typed业务动作，command UUID固定同主体/租户的幂等键，持久COMMIT后202，明确accepted不是业务批准。请求中的角色/上下文、AI结果和解析结果不受信；JSON原件由服务端规范生成，CSV/XLSX由受限解析器从原字节生成rows/行号/表头，原件SHA及所有映射/类型/更正引用固定。GET jobs/id只返回本人/本租户可见状态，使用当前角色及当前领域范围；不加载全历史。POST jobs/id/authorize更新加密授权引用并fence旧worker；POST cancel请求取消自己作业。
+
+命令和授权引用使用独立AES-GCM用途/部署/DB/作业/主体/请求hash/授权revision绑定，数据库不存明文Bearer或session cookie。Worker恢复及每阶段重新通过既有createAuth验证尚有效的签名Bearer或共享会话，不信任持久化roles。会话按原实现刷新；Bearer按签名与期限授权，不声称JWT有效期内角色即时全局撤销。失效/缺权限进入WAITING_AUTH，保留同命令等待本人重新授权或取消，不伪造成功。
+
+租户严格按未终态ordinal队头执行，跨实例claim采用真实DB时钟30秒租约、唯一token和递增fence，heartbeat续约。旧worker即使还在进行同计划准备，也只能重复确定的step；所有公开根准备提交及最终发布均须同事务验证有效claim；仅最终publish校验会留下取消后旧worker重新fence的竞态。最终发布先取得state_map共享保护锁，再锁定/核验queue claim与授权revision/deadline，在同一连接事务调用publish_branch，验证根内不可变命令完成回执，将queue COMMITTED及真实结果一并提交。迟到/过期/重新授权后的旧claim不能发布或标成功。队列UNKNOWN由同幂等键查新连接，不给未确认202或已提交响应。
+
+阶段：ACCEPTED/RUNNING/WAITING_AUTH/RETRY/FAILED/COMMITTED/CANCELLED，RUNNING过期可显示恢复等待。临时失败可重试，确定FAILED必须有原业务失败回执或在未开始前已验证的拒绝，不把网络断开当确定失败。取消由新claim按本人身份处理；若业务尚未提交，在同一事务写不可变取消/失败回执、恢复旧ACTIVE并标队列CANCELLED，旧准备根因base变化不能发布；若已提交则返回已提交结果，不假装回滚。
+
+SQL schema自身有NOLOGIN owner、私密上下文、ALWAYS不可变字段/状态保护、独立DDL advisory/非MVCC epoch和完整外置目录pin；ingress不能执行claim/finish、不能读写业务SMT。新schema安装不盲重绑旧目录，保持所有已发布源。测试须真实HTTP/JWKS与原Origin/CSRF校验、加密PG队列、文件冻结、幂等/越权/轮换/过期、跨Node真实30秒租约接管/旧worker迟到发布、发布及状态原子提交、真实COMMIT回复丢失、取消恢复及原数据完整核验。共享PG会话与真实Keycloak集成依现有可用能力实际验证，没做的部分明确保留，不能用fixture代替生产验收。

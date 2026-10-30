@@ -1,0 +1,2945 @@
+{
+  "format": "COLD_PLAN_APPROVAL_LINUX_TERMINAL_V1",
+  "at": "2026-10-25T07:20:23.692449+00:00",
+  "head": "a063b8727f8b0fbdb8628cf460d42ff64282a0ae",
+  "run": 40166642411,
+  "job": 121088950394,
+  "conclusion": "success",
+  "unitSummary": {
+    "tests": 102,
+    "pass": 102,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "javaBoundarySummaries": [
+    {
+      "format": "READER_PEER_REPLY_BUDGET_JVM_QA_V1",
+      "checks": 16,
+      "normalRequests": 4096,
+      "reservedFirstReleases": 64,
+      "noReplyEviction": true,
+      "realOidcOrFlowableTested": false
+    }
+  ],
+  "nativeStarts": [
+    {
+      "nonce": "c6642f77a36b",
+      "sourcePins": 1603,
+      "expectedChecks": 51
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "c6642f77a36b",
+      "check": 1,
+      "name": "independent own business/identity PG clusters and real current signed Keycloak authority"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 2,
+      "name": "full R4 factory with all real tenant/auth/queue/workflow schemas bootstrapped under provisional SQL guards"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 3,
+      "name": "original full R4 provisional installation registers fresh SELECT-only readers and authenticates actual own-database HBA restrictions before sealing"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 4,
+      "name": "actual complete business-cluster DB inventory matches sealed manifest; catalogs/ordinary-table coverage and minimal runtime roles verified, workflow restarted"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 5,
+      "name": "300 additional owned QA namespace entries extend the real map; the recovery graph must cover them without filtering"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 6,
+      "name": "actual authority site HTTP READY and shared auth session four-module context200; real reconciliation empty claim under sealed guards"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 7,
+      "name": "ordinary current predictive worker analysis and independent approval commit through sealed queues/StateMap and actual Flowable APP without table ownership or CREATE"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 8,
+      "name": "actual R4 HTTP ingress OPEN and reconciliation worker commit over real canceled native task after sealing"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 9,
+      "name": "persistent multi-DB DRAINING intent survives actual controller process exit77 after first SQL close; other DBs remain OPEN and conflicting operations refused"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 10,
+      "name": "fresh controller process resumes same per-DB operation IDs, closes all registered DBs, and repeated close returns identical receipt without revision advance"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 11,
+      "name": "both tenant unchanged SDK writes, shared-auth APP and both transferred Flowable APPs denied by CLOSED; retired legacy APP DML/LO denied by permanent privileges; SDK reads available"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 12,
+      "name": "actual original installer captures both readers within the full R4 source; all business and reader roles registered, real lease/JWT deadlines retained and legacy admission rejects V2"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 13,
+      "name": "full registered inventory freezes every role and database including readers; source normally stops and complete encrypted PGDATA archive authenticates on repeat"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 14,
+      "name": "actual distinct physical target starts with all old reader passwords and ordinary business logins still disabled while the full source remains offline"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 15,
+      "name": "a real unrelated SQL session refuses initial preparation without creating an intent or terminating the foreign session"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 16,
+      "name": "target HBA bytes and current independent Keycloak realm drift both reject before a durable intent or SQL grants"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 17,
+      "name": "original source evidence tampering and actual restored large-object byte changes reject before reader activation; restoring original evidence and bytes retains the same durable intent"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 18,
+      "name": "actual SQL connection loss before COMMIT leaves the complete strict profile and original durable preparation intent for the same recovery ID"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 19,
+      "name": "actual PostgreSQL COMMIT succeeds while its reply is withheld; fresh SQL proves original backend retirement and exact rotated verifiers before completing the same intent"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 20,
+      "name": "both original source passwords now fail actual authentication; new reader passwords remain SELECT-only even after disabling default read-only, and business logins stay disabled"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 21,
+      "name": "same original recovery revalidates unchanged credentials and result; a different recovery cannot take over and no SQL client is retained"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 22,
+      "name": "a fresh actual CLI process authenticates and reopens the original ready state without emitting reader credentials"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 23,
+      "name": "new independent read-only Flowable JVM returns every original full R4 case and command ledger after real physical restore; old and cross-enterprise HTTP tokens reject"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 24,
+      "name": "an actual original JVM probe is pending while strict bootstrap peer verification waits for its own queue, then matches all four original SQL backends; that original test lease releases and actual SQL observes retirement before the main session"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 25,
+      "name": "original READY intent derives the exact running-reader configuration and holds two original advisory guards plus four original reader transactions; forged and cross-recovery sessions reject"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 26,
+      "name": "all seven original SQL datasets and both complete original roots independently revalidate while the original Flowable JVM remains alive; both held engine snapshots match original complete HTTP captures without replacing the source baseline"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 27,
+      "name": "every original current domain work order and published policy binds to the full restored payload; all actual held Flowable cases, last commands, tasks, history and repair evidence match across both enterprises"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 28,
+      "name": "an actual unrelated SQL session refuses running-reader review and remains alive; original owned reader and advisory locks are retained"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 29,
+      "name": "original source evidence, actual restored large-object bytes and current independent authority drift refuse while the reader runs; restoring original material revalidates the same unchanged intent without approval"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 30,
+      "name": "actual current JWT signatures, users, complete wildcard scope, roles and online sessions for both authors, both declared contributors and independent reviewers agree before and after two original held-engine captures without approving recovery"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 31,
+      "name": "real unexpired signature is insufficient after reviewer or contributor revocation, user disable, scope narrowing or session deletion; expired and tampered tokens, cross-enterprise actors and contributor self-review reject with original intent unchanged"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 32,
+      "name": "an independent actual Keycloak role removal after the private identity window starts refuses the same in-flight observation; no caller callback or forged engine response is used"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 33,
+      "name": "fresh real sessions after restored permissions revalidate both complete original tenants and repeated engine states; the durable original READY intent and all business write restrictions remain unchanged"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 34,
+      "name": "the original held session reads an empty durable plan lineage after complete source and SQL verification without treating history reads as current authentication or approval"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 35,
+      "name": "actual current authors and contributors submit a signed durable plan inside the original coordinator transaction; fresh actual authentication replays the same plan and lifetime without a second revision"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 36,
+      "name": "a second actual author submission supersedes the first through head CAS and signed ancestry; every prior actual author and declared coauthor remains freshly verified and excluded from reviewing"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 37,
+      "name": "actual plan requests reject omitted ancestral contributors, stale CAS, a changed replay author, live ancestor-role revocation and a real control-store signature alteration without changing the durable head or original intent"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 38,
+      "name": "a fresh actual Node process authenticates the full durable plan history and final held-session read verifies the same head; historical lineage verification grants neither current identity nor human approval or activation"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 39,
+      "name": "the original held source supports approval history for a fresh exact signed plan head without treating a historical read as current reviewer authentication or business activation"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 40,
+      "name": "an actual WAL writer blocks the real coordinator before writing, then an actual SQLite trigger aborts its anchor save only after the matching real approval row exists; both failures leave no approval, the same id subsequently commits, and an application reply discard is recovered by an independent oracle and fresh replay (no TCP or SQLite commit-reply-loss claim)"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 41,
+      "name": "actual Keycloak authorization proves that a prior contributor cannot approve and that contributor revocation, reviewer revocation, online logout and a stale head defeat even a previously recorded approval id"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 42,
+      "name": "a separate actual Keycloak mutation after the approval window begins rejects the same in-flight replay through a fresh recorded-contributor permission check, with no injected callback or fabricated workflow response"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 43,
+      "name": "a second distinct enterprise reviewer explicitly records its own decision; the authenticated complete historical approval set still grants no all-reviewer current-authentication, business-write or ACTIVE capability"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 44,
+      "name": "a real superseding author submission invalidates the earlier plan approval set while retaining all signed history; both designated humans must explicitly approve the new exact head again"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 45,
+      "name": "a real persisted approval signature alteration is rejected rather than repaired or hidden, and the QA owner restores only its exact original signature before final verification"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 46,
+      "name": "a fresh actual process authenticates the complete four-plan and four-approval history, while final held-session history reads retain the distinction between past approval, current identity and formal activation"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 47,
+      "name": "both original advisory guards normally close and fresh bootstrap SQL observes all four original reader backends retired before the original JVM is stopped"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 48,
+      "name": "original owned reader JVM normally stops; every captured business table and sequence across all restored databases matches the source before preparation"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 49,
+      "name": "existing ready state still refuses modified private credentials and current external authority drift; restoring original material permits revalidation without approval"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 50,
+      "name": "all preparation SQL clients and owned transport sockets retire; real reader stop receipts prove two pool closures and business/approval gates remain closed"
+    },
+    {
+      "nonce": "c6642f77a36b",
+      "check": 51,
+      "name": "the actual V4 reader preserves more than512 original operation replies and normally releases the same held SQL lease after complete durable-plan verification; request and byte budgets retain separate first-release capacity"
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "c6642f77a36b",
+      "passed": true,
+      "checks": 51,
+      "cleanupErrorCount": 0
+    }
+  ],
+  "independentCleanup": [
+    {
+      "format": "COLD_PLAN_APPROVAL_INDEPENDENT_V1",
+      "nonce": "c6642f77a36b",
+      "nativeChecks": 51,
+      "approvalFullRootsIndependentlyRebuilt": 20,
+      "approvalActualEngineSnapshotsReverified": 34,
+      "approvalCurrentReviewerObservationsReverified": 5,
+      "additionalPlanCurrentActorObservationsReverified": 2,
+      "approvalSignedHistoryRecordsReverified": 4,
+      "actualCoordinatorWriterLockRejectionVerified": true,
+      "actualApplicationReplyDiscardRecoveryVerified": true,
+      "actualMidreadContributorRevocationVerified": true,
+      "actualApprovalProcessReopenVerified": true,
+      "actualAfterInsertBeforeAnchorSaveFaultVerified": true,
+      "actualSqliteCommitExecutionFailureVerified": false,
+      "tcpOrSqliteCommitReplyLossTested": false,
+      "allCurrentReviewersAuthenticated": false,
+      "reviewApproved": false,
+      "formalFieldActivationGranted": false,
+      "fullGoalComplete": false,
+      "sourcePinsVerified": 1603,
+      "fullArchiveAuthenticated": true,
+      "legacyArchiveReaderRejectsNewFormat": true,
+      "capturedReaderHbaBoundToArchive": true,
+      "strictInitialAndSelectiveReviewProfilesDistinct": true,
+      "originalIntentCredentialsAndTwoSqlWitnessesVerified": true,
+      "actualCommitFaultEventsRechecked": true,
+      "testTransportTcpNoDelayVerified": true,
+      "sourceAndTargetHbaBytesVerified": true,
+      "allCapturedSqlFingerprintsEqualityRechecked": true,
+      "sqlRelationRowsIndependentlyRecomputedOffline": false,
+      "originalSourceFullFactsBound": true,
+      "sourceAndTargetFullRootsIndependentlyRebuilt": true,
+      "originalSourceEvidenceTamperRejected": true,
+      "actualTargetLargeObjectDriftRejected": true,
+      "allRegisteredDatabaseSqlFactsBoundToOriginalSource": true,
+      "actualLargeObjectMetadataRows": 1,
+      "actualLargeObjectChunks": 6,
+      "workflowFactsComparedWithOriginalSqlCapture": true,
+      "closedMaintenanceReceiptVerified": true,
+      "databaseCount": 7,
+      "workflowJvmNormalStops": 4,
+      "workflowPoolClosures": 16,
+      "identityNormalStopVerified": true,
+      "bothClustersActuallyCleanOffline": true,
+      "targetControlState": "shut down",
+      "newColdCoordinatorIntegrated": true,
+      "ownedReaderPeerCapabilityIntegrated": true,
+      "originalMaintenanceGuardsComposed": true,
+      "runningReaderCompleteOriginalFactsVerified": true,
+      "independentlyRebuiltLiveRoots": 38,
+      "originalPeerEvidenceFilesReverified": 328,
+      "originalOwnedReaderBackendCount": 4,
+      "originalOwnedGuardBackendCount": 2,
+      "originalGuardsAndReaderBackendsActuallyRetired": true,
+      "workflowOrderInventoryVerified": true,
+      "independentReviewInputPayloadsRebuilt": 38,
+      "recoveryReviewIntegrationComplete": false,
+      "currentOidcReviewerVerified": true,
+      "rawJwtIndependentlyReverifiedOffline": false,
+      "currentActorObservationsReverified": 7,
+      "additionalActualEngineSnapshotsReverified": 58,
+      "actualMidreadExternalRevocationRechecked": true,
+      "actualOriginalPendingPeerQueueVerified": true,
+      "declaredCurrentCohortParticipants": 6,
+      "durablePlanContributorsVerified": true,
+      "durablePlanRevisionsVerified": 4,
+      "planCurrentActorObservationsReverified": 3,
+      "planFullRootsIndependentlyRebuilt": 10,
+      "planActualEngineSnapshotsReverified": 16,
+      "actualPlanProcessReopenVerified": true,
+      "actualAncestorRoleRevocationRejected": true,
+      "actualPersistedPlanSignatureTamperRejected": true,
+      "historyReadsDoNotClaimCurrentIdentity": true,
+      "composedOriginalJvmSqlWindowVerified": true,
+      "originalJvmProbesPerCompletePeerCheck": 2,
+      "completeSqlObservationsPerPeerCheck": 2,
+      "identityWindowMilliseconds": 30000,
+      "readerReplyBudgetVerified": true,
+      "actualMoreThan512OriginalRepliesVerified": true,
+      "originalReaderReleaseReceiptsVerified": 2,
+      "actualRequestBudgetExhaustionTested": false,
+      "fullMapTenants": [
+        {
+          "tenantId": "acme",
+          "nodes": 5035,
+          "leaves": 2518,
+          "receiptRows": 108,
+          "auditEvents": 92
+        },
+        {
+          "tenantId": "sandbox",
+          "nodes": 3555,
+          "leaves": 1778,
+          "receiptRows": 85,
+          "auditEvents": 57
+        }
+      ]
+    }
+  ],
+  "originalNativeExitReports": [
+    {
+      "nonce": "c6642f77a36b",
+      "checks": 51,
+      "actualZeroExit": true,
+      "originalChildAndBothStreamsClosed": true,
+      "entrySha256": "c4d4aeadc58e6b171c518652e2e437e9e272662da2ccdabb55ea21b938761311",
+      "entryUnchanged": true,
+      "observationFailed": false,
+      "rawBusinessOrCredentialsPrinted": false
+    }
+  ],
+  "sanitizedOriginalNativeProgress": [
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 0,
+      "lastNativeOutputAt": "2026-10-25T05:47:15.537Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 0,
+      "lastNativeOutputAt": "2026-10-25T05:47:38.404Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T05:48:13.291Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T05:48:43.886Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T05:49:14.045Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T05:49:45.585Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T05:50:17.878Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T05:50:47.882Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T05:51:18.065Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T05:51:48.167Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T05:52:09.661Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T05:52:39.661Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 2,
+      "lastNativeOutputAt": "2026-10-25T05:53:06.140Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 2,
+      "lastNativeOutputAt": "2026-10-25T05:53:06.140Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 2,
+      "lastNativeOutputAt": "2026-10-25T05:53:06.140Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 5,
+      "lastNativeOutputAt": "2026-10-25T05:54:47.495Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 6,
+      "lastNativeOutputAt": "2026-10-25T05:54:50.919Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 7,
+      "lastNativeOutputAt": "2026-10-25T05:55:28.100Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 11,
+      "lastNativeOutputAt": "2026-10-25T05:56:04.975Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 12,
+      "lastNativeOutputAt": "2026-10-25T05:56:35.049Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 15,
+      "lastNativeOutputAt": "2026-10-25T05:57:14.197Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 16,
+      "lastNativeOutputAt": "2026-10-25T05:57:29.868Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 17,
+      "lastNativeOutputAt": "2026-10-25T05:57:48.437Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 2,
+        "targetEvidenceBytes": 9167181,
+        "latestTargetEvidenceBytes": 3495757,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T05:58:18.271Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 18,
+      "lastNativeOutputAt": "2026-10-25T05:58:42.637Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 2,
+        "targetEvidenceBytes": 10173896,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T05:58:24.222Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 18,
+      "lastNativeOutputAt": "2026-10-25T05:58:42.637Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 4,
+        "targetEvidenceBytes": 20341413,
+        "latestTargetEvidenceBytes": 4496093,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T05:59:13.713Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 19,
+      "lastNativeOutputAt": "2026-10-25T05:59:44.644Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 4,
+        "targetEvidenceBytes": 20347792,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T05:59:18.361Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 19,
+      "lastNativeOutputAt": "2026-10-25T05:59:44.644Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 6,
+        "targetEvidenceBytes": 30515309,
+        "latestTargetEvidenceBytes": 4496093,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:00:15.906Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 20,
+      "lastNativeOutputAt": "2026-10-25T06:00:38.941Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 7,
+        "targetEvidenceBytes": 30795961,
+        "latestTargetEvidenceBytes": 274273,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:00:48.290Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 20,
+      "lastNativeOutputAt": "2026-10-25T06:00:38.941Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 8,
+        "targetEvidenceBytes": 40695584,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:01:14.823Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 20,
+      "lastNativeOutputAt": "2026-10-25T06:00:38.941Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 9,
+        "targetEvidenceBytes": 45477133,
+        "latestTargetEvidenceBytes": 4781549,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:01:48.297Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 20,
+      "lastNativeOutputAt": "2026-10-25T06:00:38.941Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 10,
+        "targetEvidenceBytes": 50869480,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:02:10.824Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 21,
+      "lastNativeOutputAt": "2026-10-25T06:02:29.619Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 11,
+        "targetEvidenceBytes": 56534529,
+        "latestTargetEvidenceBytes": 5665049,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:02:46.752Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 21,
+      "lastNativeOutputAt": "2026-10-25T06:02:29.619Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 12,
+        "targetEvidenceBytes": 61043376,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:03:07.497Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 24,
+      "lastNativeOutputAt": "2026-10-25T06:03:43.589Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 12,
+        "targetEvidenceBytes": 61043376,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:03:07.497Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 25,
+      "lastNativeOutputAt": "2026-10-25T06:03:48.980Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 13,
+        "targetEvidenceBytes": 66708425,
+        "latestTargetEvidenceBytes": 5665049,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:04:17.651Z",
+        "originalSessionPeerEvidenceFiles": 5
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 25,
+      "lastNativeOutputAt": "2026-10-25T06:03:48.980Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 14,
+        "targetEvidenceBytes": 71210893,
+        "latestTargetEvidenceBytes": 4496093,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:04:46.464Z",
+        "originalSessionPeerEvidenceFiles": 9
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 25,
+      "lastNativeOutputAt": "2026-10-25T06:03:48.980Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 14,
+        "targetEvidenceBytes": 71217272,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:04:51.716Z",
+        "originalSessionPeerEvidenceFiles": 16
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 25,
+      "lastNativeOutputAt": "2026-10-25T06:03:48.980Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 14,
+        "targetEvidenceBytes": 71217272,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:04:51.716Z",
+        "originalSessionPeerEvidenceFiles": 20
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 28,
+      "lastNativeOutputAt": "2026-10-25T06:05:58.505Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 14,
+        "targetEvidenceBytes": 71217272,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:04:51.716Z",
+        "originalSessionPeerEvidenceFiles": 25
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 28,
+      "lastNativeOutputAt": "2026-10-25T06:05:58.505Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 14,
+        "targetEvidenceBytes": 71217272,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:04:51.716Z",
+        "originalSessionPeerEvidenceFiles": 31
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 28,
+      "lastNativeOutputAt": "2026-10-25T06:05:58.505Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 15,
+        "targetEvidenceBytes": 76888696,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:07:02.260Z",
+        "originalSessionPeerEvidenceFiles": 34
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 28,
+      "lastNativeOutputAt": "2026-10-25T06:05:58.505Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 16,
+        "targetEvidenceBytes": 81391168,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:07:30.167Z",
+        "originalSessionPeerEvidenceFiles": 39
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 28,
+      "lastNativeOutputAt": "2026-10-25T06:05:58.505Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 16,
+        "targetEvidenceBytes": 81391168,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:07:30.167Z",
+        "originalSessionPeerEvidenceFiles": 44
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 29,
+      "lastNativeOutputAt": "2026-10-25T06:08:36.667Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 16,
+        "targetEvidenceBytes": 81391168,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:07:30.167Z",
+        "originalSessionPeerEvidenceFiles": 49
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 29,
+      "lastNativeOutputAt": "2026-10-25T06:08:36.667Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 17,
+        "targetEvidenceBytes": 87062592,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:09:15.420Z",
+        "originalSessionPeerEvidenceFiles": 52
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 29,
+      "lastNativeOutputAt": "2026-10-25T06:08:36.667Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 18,
+        "targetEvidenceBytes": 91565064,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:09:44.029Z",
+        "originalSessionPeerEvidenceFiles": 56
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 29,
+      "lastNativeOutputAt": "2026-10-25T06:08:36.667Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 18,
+        "targetEvidenceBytes": 91565064,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:09:44.029Z",
+        "originalSessionPeerEvidenceFiles": 64
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 29,
+      "lastNativeOutputAt": "2026-10-25T06:08:36.667Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 18,
+        "targetEvidenceBytes": 91565064,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:09:44.029Z",
+        "originalSessionPeerEvidenceFiles": 68
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 31,
+      "lastNativeOutputAt": "2026-10-25T06:11:02.841Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 18,
+        "targetEvidenceBytes": 91565064,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:09:44.029Z",
+        "originalSessionPeerEvidenceFiles": 72
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 31,
+      "lastNativeOutputAt": "2026-10-25T06:11:02.841Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 19,
+        "targetEvidenceBytes": 97236488,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:11:39.860Z",
+        "originalSessionPeerEvidenceFiles": 75
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 31,
+      "lastNativeOutputAt": "2026-10-25T06:11:02.841Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 20,
+        "targetEvidenceBytes": 101738960,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:12:07.643Z",
+        "originalSessionPeerEvidenceFiles": 80
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 31,
+      "lastNativeOutputAt": "2026-10-25T06:11:02.841Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 20,
+        "targetEvidenceBytes": 101738960,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:12:07.643Z",
+        "originalSessionPeerEvidenceFiles": 87
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 32,
+      "lastNativeOutputAt": "2026-10-25T06:13:15.871Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 20,
+        "targetEvidenceBytes": 101738960,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:12:07.643Z",
+        "originalSessionPeerEvidenceFiles": 91
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 32,
+      "lastNativeOutputAt": "2026-10-25T06:13:15.871Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 21,
+        "targetEvidenceBytes": 107404009,
+        "latestTargetEvidenceBytes": 5665049,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:13:44.854Z",
+        "originalSessionPeerEvidenceFiles": 95
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 32,
+      "lastNativeOutputAt": "2026-10-25T06:13:15.871Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 22,
+        "targetEvidenceBytes": 111912856,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:14:17.649Z",
+        "originalSessionPeerEvidenceFiles": 99
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 32,
+      "lastNativeOutputAt": "2026-10-25T06:13:15.871Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 22,
+        "targetEvidenceBytes": 111912856,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:14:17.649Z",
+        "originalSessionPeerEvidenceFiles": 107
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 32,
+      "lastNativeOutputAt": "2026-10-25T06:13:15.871Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 22,
+        "targetEvidenceBytes": 111912856,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:14:17.649Z",
+        "originalSessionPeerEvidenceFiles": 110
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 33,
+      "lastNativeOutputAt": "2026-10-25T06:15:30.965Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 22,
+        "targetEvidenceBytes": 111912856,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:14:17.649Z",
+        "originalSessionPeerEvidenceFiles": 115
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 33,
+      "lastNativeOutputAt": "2026-10-25T06:15:30.965Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 23,
+        "targetEvidenceBytes": 117584280,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:16:07.421Z",
+        "originalSessionPeerEvidenceFiles": 119
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 33,
+      "lastNativeOutputAt": "2026-10-25T06:15:30.965Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 24,
+        "targetEvidenceBytes": 122086752,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:16:35.758Z",
+        "originalSessionPeerEvidenceFiles": 124
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 33,
+      "lastNativeOutputAt": "2026-10-25T06:15:30.965Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 24,
+        "targetEvidenceBytes": 122086752,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:16:35.758Z",
+        "originalSessionPeerEvidenceFiles": 130
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T06:17:42.070Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 24,
+        "targetEvidenceBytes": 122086752,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:16:35.758Z",
+        "originalSessionPeerEvidenceFiles": 135
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T06:17:42.070Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 25,
+        "targetEvidenceBytes": 127751801,
+        "latestTargetEvidenceBytes": 5665049,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:18:13.033Z",
+        "originalSessionPeerEvidenceFiles": 138
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T06:17:42.070Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 26,
+        "targetEvidenceBytes": 132260648,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:18:47.704Z",
+        "originalSessionPeerEvidenceFiles": 142
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T06:17:42.070Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 26,
+        "targetEvidenceBytes": 132260648,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:18:47.704Z",
+        "originalSessionPeerEvidenceFiles": 150
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T06:17:42.070Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 26,
+        "targetEvidenceBytes": 132260648,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:18:47.704Z",
+        "originalSessionPeerEvidenceFiles": 153
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T06:17:42.070Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 26,
+        "targetEvidenceBytes": 132260648,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:18:47.704Z",
+        "originalSessionPeerEvidenceFiles": 158
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T06:17:42.070Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 27,
+        "targetEvidenceBytes": 137932072,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:20:39.211Z",
+        "originalSessionPeerEvidenceFiles": 161
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T06:17:42.070Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 28,
+        "targetEvidenceBytes": 142434544,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:21:07.397Z",
+        "originalSessionPeerEvidenceFiles": 166
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T06:17:42.070Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 28,
+        "targetEvidenceBytes": 142434544,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:21:07.397Z",
+        "originalSessionPeerEvidenceFiles": 173
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T06:17:42.070Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 28,
+        "targetEvidenceBytes": 142434544,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:21:07.397Z",
+        "originalSessionPeerEvidenceFiles": 177
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 35,
+      "lastNativeOutputAt": "2026-10-25T06:22:19.582Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 29,
+        "targetEvidenceBytes": 147796918,
+        "latestTargetEvidenceBytes": 5362374,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:22:48.454Z",
+        "originalSessionPeerEvidenceFiles": 182
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 35,
+      "lastNativeOutputAt": "2026-10-25T06:22:19.582Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 30,
+        "targetEvidenceBytes": 152602061,
+        "latestTargetEvidenceBytes": 4496093,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:23:18.106Z",
+        "originalSessionPeerEvidenceFiles": 186
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 35,
+      "lastNativeOutputAt": "2026-10-25T06:22:19.582Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 30,
+        "targetEvidenceBytes": 152608440,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:23:23.384Z",
+        "originalSessionPeerEvidenceFiles": 193
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 35,
+      "lastNativeOutputAt": "2026-10-25T06:22:19.582Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 30,
+        "targetEvidenceBytes": 152608440,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:23:23.384Z",
+        "originalSessionPeerEvidenceFiles": 196
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 30,
+        "targetEvidenceBytes": 152608440,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:23:23.384Z",
+        "originalSessionPeerEvidenceFiles": 201
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 31,
+        "targetEvidenceBytes": 158279864,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:25:12.241Z",
+        "originalSessionPeerEvidenceFiles": 204
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 32,
+        "targetEvidenceBytes": 162782336,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:25:39.761Z",
+        "originalSessionPeerEvidenceFiles": 210
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 32,
+        "targetEvidenceBytes": 162782336,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:25:39.761Z",
+        "originalSessionPeerEvidenceFiles": 216
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 32,
+        "targetEvidenceBytes": 162782336,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:25:39.761Z",
+        "originalSessionPeerEvidenceFiles": 221
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 33,
+        "targetEvidenceBytes": 167023608,
+        "latestTargetEvidenceBytes": 4241272,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:27:18.479Z",
+        "originalSessionPeerEvidenceFiles": 226
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 34,
+        "targetEvidenceBytes": 172551448,
+        "latestTargetEvidenceBytes": 4097688,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:27:48.494Z",
+        "originalSessionPeerEvidenceFiles": 230
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 34,
+        "targetEvidenceBytes": 172956232,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:27:54.724Z",
+        "originalSessionPeerEvidenceFiles": 236
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 34,
+        "targetEvidenceBytes": 172956232,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:27:54.724Z",
+        "originalSessionPeerEvidenceFiles": 240
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 34,
+        "targetEvidenceBytes": 172956232,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:27:54.724Z",
+        "originalSessionPeerEvidenceFiles": 245
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 35,
+        "targetEvidenceBytes": 178627656,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:29:43.950Z",
+        "originalSessionPeerEvidenceFiles": 248
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 36,
+        "targetEvidenceBytes": 183130128,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:30:12.517Z",
+        "originalSessionPeerEvidenceFiles": 253
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 36,
+        "targetEvidenceBytes": 183130128,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:30:12.517Z",
+        "originalSessionPeerEvidenceFiles": 260
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 36,
+        "targetEvidenceBytes": 183130128,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:30:12.517Z",
+        "originalSessionPeerEvidenceFiles": 264
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 36,
+        "targetEvidenceBytes": 183130128,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:30:12.517Z",
+        "originalSessionPeerEvidenceFiles": 269
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 37,
+        "targetEvidenceBytes": 188801552,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:32:03.520Z",
+        "originalSessionPeerEvidenceFiles": 273
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 38,
+        "targetEvidenceBytes": 193304024,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:32:30.769Z",
+        "originalSessionPeerEvidenceFiles": 278
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T06:24:35.897Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 38,
+        "targetEvidenceBytes": 193304024,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:32:30.769Z",
+        "originalSessionPeerEvidenceFiles": 283
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 37,
+      "lastNativeOutputAt": "2026-10-25T06:33:37.261Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 38,
+        "targetEvidenceBytes": 193304024,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:32:30.769Z",
+        "originalSessionPeerEvidenceFiles": 288
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 37,
+      "lastNativeOutputAt": "2026-10-25T06:33:37.261Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 39,
+        "targetEvidenceBytes": 198975448,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:34:14.098Z",
+        "originalSessionPeerEvidenceFiles": 291
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 37,
+      "lastNativeOutputAt": "2026-10-25T06:33:37.261Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 40,
+        "targetEvidenceBytes": 203477920,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:34:42.590Z",
+        "originalSessionPeerEvidenceFiles": 296
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 37,
+      "lastNativeOutputAt": "2026-10-25T06:33:37.261Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 40,
+        "targetEvidenceBytes": 203477920,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:34:42.590Z",
+        "originalSessionPeerEvidenceFiles": 303
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 37,
+      "lastNativeOutputAt": "2026-10-25T06:33:37.261Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 40,
+        "targetEvidenceBytes": 203477920,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:34:42.590Z",
+        "originalSessionPeerEvidenceFiles": 307
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 38,
+      "lastNativeOutputAt": "2026-10-25T06:35:49.061Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 41,
+        "targetEvidenceBytes": 208951552,
+        "latestTargetEvidenceBytes": 5473632,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:36:18.553Z",
+        "originalSessionPeerEvidenceFiles": 312
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 38,
+      "lastNativeOutputAt": "2026-10-25T06:35:49.061Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 42,
+        "targetEvidenceBytes": 213645437,
+        "latestTargetEvidenceBytes": 4496093,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:36:47.736Z",
+        "originalSessionPeerEvidenceFiles": 316
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 38,
+      "lastNativeOutputAt": "2026-10-25T06:35:49.061Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 42,
+        "targetEvidenceBytes": 213651816,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:36:52.881Z",
+        "originalSessionPeerEvidenceFiles": 323
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 38,
+      "lastNativeOutputAt": "2026-10-25T06:35:49.061Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 42,
+        "targetEvidenceBytes": 213651816,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:36:52.881Z",
+        "originalSessionPeerEvidenceFiles": 326
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 38,
+      "lastNativeOutputAt": "2026-10-25T06:35:49.061Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 42,
+        "targetEvidenceBytes": 213651816,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:36:52.881Z",
+        "originalSessionPeerEvidenceFiles": 332
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 38,
+      "lastNativeOutputAt": "2026-10-25T06:35:49.061Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 43,
+        "targetEvidenceBytes": 219323240,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:38:39.534Z",
+        "originalSessionPeerEvidenceFiles": 335
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 38,
+      "lastNativeOutputAt": "2026-10-25T06:35:49.061Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 44,
+        "targetEvidenceBytes": 223825712,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:39:07.830Z",
+        "originalSessionPeerEvidenceFiles": 340
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 38,
+      "lastNativeOutputAt": "2026-10-25T06:35:49.061Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 44,
+        "targetEvidenceBytes": 223825712,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:39:07.830Z",
+        "originalSessionPeerEvidenceFiles": 346
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 44,
+        "targetEvidenceBytes": 223825712,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:39:07.830Z",
+        "originalSessionPeerEvidenceFiles": 351
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 45,
+        "targetEvidenceBytes": 229490761,
+        "latestTargetEvidenceBytes": 5665049,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:40:46.680Z",
+        "originalSessionPeerEvidenceFiles": 355
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 46,
+        "targetEvidenceBytes": 233993229,
+        "latestTargetEvidenceBytes": 4496093,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:41:15.624Z",
+        "originalSessionPeerEvidenceFiles": 359
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 46,
+        "targetEvidenceBytes": 233999608,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:41:20.886Z",
+        "originalSessionPeerEvidenceFiles": 366
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 46,
+        "targetEvidenceBytes": 233999608,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:41:20.886Z",
+        "originalSessionPeerEvidenceFiles": 369
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 46,
+        "targetEvidenceBytes": 233999608,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:41:20.886Z",
+        "originalSessionPeerEvidenceFiles": 375
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 47,
+        "targetEvidenceBytes": 239671032,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:43:10.600Z",
+        "originalSessionPeerEvidenceFiles": 378
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 48,
+        "targetEvidenceBytes": 244173504,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:43:38.997Z",
+        "originalSessionPeerEvidenceFiles": 383
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 48,
+        "targetEvidenceBytes": 244173504,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:43:38.997Z",
+        "originalSessionPeerEvidenceFiles": 389
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 48,
+        "targetEvidenceBytes": 244173504,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:43:38.997Z",
+        "originalSessionPeerEvidenceFiles": 394
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 49,
+        "targetEvidenceBytes": 247656147,
+        "latestTargetEvidenceBytes": 3482643,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:45:18.620Z",
+        "originalSessionPeerEvidenceFiles": 399
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 50,
+        "targetEvidenceBytes": 252280720,
+        "latestTargetEvidenceBytes": 2435792,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:45:48.627Z",
+        "originalSessionPeerEvidenceFiles": 403
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 50,
+        "targetEvidenceBytes": 254347400,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:45:56.618Z",
+        "originalSessionPeerEvidenceFiles": 409
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T06:40:14.057Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 50,
+        "targetEvidenceBytes": 254347400,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:45:56.618Z",
+        "originalSessionPeerEvidenceFiles": 413
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 50,
+        "targetEvidenceBytes": 254347400,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:45:56.618Z",
+        "originalSessionPeerEvidenceFiles": 418
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 51,
+        "targetEvidenceBytes": 260018824,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:47:46.452Z",
+        "originalSessionPeerEvidenceFiles": 421
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 52,
+        "targetEvidenceBytes": 264521296,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:48:14.582Z",
+        "originalSessionPeerEvidenceFiles": 425
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 52,
+        "targetEvidenceBytes": 264521296,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:48:14.582Z",
+        "originalSessionPeerEvidenceFiles": 433
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 52,
+        "targetEvidenceBytes": 264521296,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:48:14.582Z",
+        "originalSessionPeerEvidenceFiles": 436
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 53,
+        "targetEvidenceBytes": 270192720,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:49:39.895Z",
+        "originalSessionPeerEvidenceFiles": 439
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 54,
+        "targetEvidenceBytes": 274695192,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:50:07.569Z",
+        "originalSessionPeerEvidenceFiles": 444
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 54,
+        "targetEvidenceBytes": 274695192,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:50:07.569Z",
+        "originalSessionPeerEvidenceFiles": 451
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 55,
+        "targetEvidenceBytes": 275305510,
+        "latestTargetEvidenceBytes": 610318,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:51:18.669Z",
+        "originalSessionPeerEvidenceFiles": 455
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 56,
+        "targetEvidenceBytes": 280735013,
+        "latestTargetEvidenceBytes": 368397,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:51:48.671Z",
+        "originalSessionPeerEvidenceFiles": 459
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 56,
+        "targetEvidenceBytes": 284869088,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:51:58.768Z",
+        "originalSessionPeerEvidenceFiles": 464
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 56,
+        "targetEvidenceBytes": 284869088,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:51:58.768Z",
+        "originalSessionPeerEvidenceFiles": 468
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 57,
+        "targetEvidenceBytes": 290534137,
+        "latestTargetEvidenceBytes": 5665049,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:53:16.749Z",
+        "originalSessionPeerEvidenceFiles": 472
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 58,
+        "targetEvidenceBytes": 295036605,
+        "latestTargetEvidenceBytes": 4496093,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:53:46.318Z",
+        "originalSessionPeerEvidenceFiles": 476
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 58,
+        "targetEvidenceBytes": 295042984,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:53:51.757Z",
+        "originalSessionPeerEvidenceFiles": 483
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 58,
+        "targetEvidenceBytes": 295042984,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:53:51.757Z",
+        "originalSessionPeerEvidenceFiles": 486
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 59,
+        "targetEvidenceBytes": 300714408,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:55:17.050Z",
+        "originalSessionPeerEvidenceFiles": 489
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 60,
+        "targetEvidenceBytes": 305216880,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:55:45.701Z",
+        "originalSessionPeerEvidenceFiles": 493
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T06:47:09.648Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 60,
+        "targetEvidenceBytes": 305216880,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:55:45.701Z",
+        "originalSessionPeerEvidenceFiles": 501
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 41,
+      "lastNativeOutputAt": "2026-10-25T06:56:36.215Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 60,
+        "targetEvidenceBytes": 305216880,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:55:45.701Z",
+        "originalSessionPeerEvidenceFiles": 503
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 41,
+      "lastNativeOutputAt": "2026-10-25T06:56:36.215Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 61,
+        "targetEvidenceBytes": 310888304,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:57:12.848Z",
+        "originalSessionPeerEvidenceFiles": 506
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 41,
+      "lastNativeOutputAt": "2026-10-25T06:56:36.215Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 62,
+        "targetEvidenceBytes": 315390776,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:57:41.139Z",
+        "originalSessionPeerEvidenceFiles": 511
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 41,
+      "lastNativeOutputAt": "2026-10-25T06:56:36.215Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 62,
+        "targetEvidenceBytes": 315390776,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:57:41.139Z",
+        "originalSessionPeerEvidenceFiles": 518
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 41,
+      "lastNativeOutputAt": "2026-10-25T06:56:36.215Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 62,
+        "targetEvidenceBytes": 315390776,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:57:41.139Z",
+        "originalSessionPeerEvidenceFiles": 522
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 42,
+      "lastNativeOutputAt": "2026-10-25T06:58:50.921Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 63,
+        "targetEvidenceBytes": 319861850,
+        "latestTargetEvidenceBytes": 4471074,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:59:18.733Z",
+        "originalSessionPeerEvidenceFiles": 527
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 42,
+      "lastNativeOutputAt": "2026-10-25T06:58:50.921Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 64,
+        "targetEvidenceBytes": 325427263,
+        "latestTargetEvidenceBytes": 4365063,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:59:48.734Z",
+        "originalSessionPeerEvidenceFiles": 531
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 42,
+      "lastNativeOutputAt": "2026-10-25T06:58:50.921Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 64,
+        "targetEvidenceBytes": 325564672,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:59:54.791Z",
+        "originalSessionPeerEvidenceFiles": 537
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 42,
+      "lastNativeOutputAt": "2026-10-25T06:58:50.921Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 64,
+        "targetEvidenceBytes": 325564672,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:59:54.791Z",
+        "originalSessionPeerEvidenceFiles": 541
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 64,
+        "targetEvidenceBytes": 325564672,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T06:59:54.791Z",
+        "originalSessionPeerEvidenceFiles": 546
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 65,
+        "targetEvidenceBytes": 331236096,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:01:44.550Z",
+        "originalSessionPeerEvidenceFiles": 549
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 66,
+        "targetEvidenceBytes": 335738568,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:02:12.778Z",
+        "originalSessionPeerEvidenceFiles": 554
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 66,
+        "targetEvidenceBytes": 335738568,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:02:12.778Z",
+        "originalSessionPeerEvidenceFiles": 561
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 66,
+        "targetEvidenceBytes": 335738568,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:02:12.778Z",
+        "originalSessionPeerEvidenceFiles": 565
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 67,
+        "targetEvidenceBytes": 336068029,
+        "latestTargetEvidenceBytes": 329461,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:03:48.761Z",
+        "originalSessionPeerEvidenceFiles": 571
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 67,
+        "targetEvidenceBytes": 341409992,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:04:02.046Z",
+        "originalSessionPeerEvidenceFiles": 575
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 68,
+        "targetEvidenceBytes": 345912464,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:04:29.232Z",
+        "originalSessionPeerEvidenceFiles": 580
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 68,
+        "targetEvidenceBytes": 345912464,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:04:29.232Z",
+        "originalSessionPeerEvidenceFiles": 584
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 68,
+        "targetEvidenceBytes": 345912464,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:04:29.232Z",
+        "originalSessionPeerEvidenceFiles": 589
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 69,
+        "targetEvidenceBytes": 351583888,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:06:11.925Z",
+        "originalSessionPeerEvidenceFiles": 593
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 70,
+        "targetEvidenceBytes": 356086360,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:06:40.412Z",
+        "originalSessionPeerEvidenceFiles": 597
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 70,
+        "targetEvidenceBytes": 356086360,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:06:40.412Z",
+        "originalSessionPeerEvidenceFiles": 604
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 70,
+        "targetEvidenceBytes": 356086360,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:06:40.412Z",
+        "originalSessionPeerEvidenceFiles": 608
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 71,
+        "targetEvidenceBytes": 357065609,
+        "latestTargetEvidenceBytes": 979249,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:08:18.792Z",
+        "originalSessionPeerEvidenceFiles": 614
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 72,
+        "targetEvidenceBytes": 361916969,
+        "latestTargetEvidenceBytes": 159185,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:08:48.792Z",
+        "originalSessionPeerEvidenceFiles": 618
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 72,
+        "targetEvidenceBytes": 366260256,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:08:59.037Z",
+        "originalSessionPeerEvidenceFiles": 623
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 43,
+      "lastNativeOutputAt": "2026-10-25T07:01:07.531Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 72,
+        "targetEvidenceBytes": 366260256,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:08:59.037Z",
+        "originalSessionPeerEvidenceFiles": 627
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 44,
+      "lastNativeOutputAt": "2026-10-25T07:10:11.883Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 72,
+        "targetEvidenceBytes": 366260256,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:08:59.037Z",
+        "originalSessionPeerEvidenceFiles": 633
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 44,
+      "lastNativeOutputAt": "2026-10-25T07:10:11.883Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 73,
+        "targetEvidenceBytes": 371931680,
+        "latestTargetEvidenceBytes": 5671424,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:10:48.233Z",
+        "originalSessionPeerEvidenceFiles": 636
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 44,
+      "lastNativeOutputAt": "2026-10-25T07:10:11.883Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 74,
+        "targetEvidenceBytes": 376434152,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:11:16.177Z",
+        "originalSessionPeerEvidenceFiles": 640
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 44,
+      "lastNativeOutputAt": "2026-10-25T07:10:11.883Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 74,
+        "targetEvidenceBytes": 376434152,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:11:16.177Z",
+        "originalSessionPeerEvidenceFiles": 648
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 44,
+      "lastNativeOutputAt": "2026-10-25T07:10:11.883Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 74,
+        "targetEvidenceBytes": 376434152,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:11:16.177Z",
+        "originalSessionPeerEvidenceFiles": 652
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 45,
+      "lastNativeOutputAt": "2026-10-25T07:12:23.561Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 75,
+        "targetEvidenceBytes": 379861064,
+        "latestTargetEvidenceBytes": 3426912,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:12:48.820Z",
+        "originalSessionPeerEvidenceFiles": 657
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 45,
+      "lastNativeOutputAt": "2026-10-25T07:12:23.561Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 76,
+        "targetEvidenceBytes": 384529881,
+        "latestTargetEvidenceBytes": 2424305,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:13:18.826Z",
+        "originalSessionPeerEvidenceFiles": 661
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 45,
+      "lastNativeOutputAt": "2026-10-25T07:12:23.561Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 76,
+        "targetEvidenceBytes": 386608048,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:13:26.807Z",
+        "originalSessionPeerEvidenceFiles": 667
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 45,
+      "lastNativeOutputAt": "2026-10-25T07:12:23.561Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 76,
+        "targetEvidenceBytes": 386608048,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:13:26.807Z",
+        "originalSessionPeerEvidenceFiles": 671
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 47,
+      "lastNativeOutputAt": "2026-10-25T07:14:35.400Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 77,
+        "targetEvidenceBytes": 389887431,
+        "latestTargetEvidenceBytes": 3279383,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:14:48.831Z",
+        "originalSessionPeerEvidenceFiles": 674
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 47,
+      "lastNativeOutputAt": "2026-10-25T07:14:35.400Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 78,
+        "targetEvidenceBytes": 396781944,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:15:13.605Z",
+        "originalSessionPeerEvidenceFiles": 674
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 48,
+      "lastNativeOutputAt": "2026-10-25T07:15:33.481Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 79,
+        "targetEvidenceBytes": 402161810,
+        "latestTargetEvidenceBytes": 5379866,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:15:48.844Z",
+        "originalSessionPeerEvidenceFiles": 674
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "c6642f77a36b",
+      "checks": 48,
+      "lastNativeOutputAt": "2026-10-25T07:15:33.481Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 80,
+        "targetEvidenceBytes": 406955840,
+        "latestTargetEvidenceBytes": 4502472,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T07:16:10.907Z",
+        "originalSessionPeerEvidenceFiles": 674
+      }
+    }
+  ],
+  "trackedSourceUnchanged": true,
+  "actualNativeWrapperStepSucceeded": true,
+  "jobStepMetadataMissing": false,
+  "executedPublicCommandGroups": [
+    "mkdir -p \"$RUNNER_TEMP/idms-reader-reply-budget\"",
+    "node scripts/verify-cold-plan-approval-observed-v1.mjs /usr/lib/postgresql/16/bin \"$JAVA_HOME_21_X64\" \"$IDMS_MAVEN_HOME\" \"$IDMS_KEYCLOAK_SOURCE\" \"$IDMS_SOURCE_BUNDLE\" \"$IDMS_SOURCE_SHA256\" \"\"",
+    "git diff --exit-code --no-ext-diff"
+  ],
+  "failedSteps": [],
+  "rawLogsOrCredentialsSaved": false,
+  "ownedReaderPeerCapabilityIntegrated": true,
+  "workflowOrderInventoryVerified": true,
+  "recoveryReviewIntegrationComplete": false,
+  "currentOidcReviewerVerified": true,
+  "currentOidcReviewerObservationVerified": true,
+  "durablePlanContributorsVerified": true,
+  "reviewApproved": false,
+  "formalFieldActivationGranted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false,
+  "currentExplicitReviewersVerified": true,
+  "recordedContributorsPermissionRechecked": true,
+  "contributorsFreshlyAuthenticated": false,
+  "allCurrentReviewersAuthenticated": false,
+  "actualAfterInsertBeforeAnchorSaveFaultVerified": true,
+  "tcpOrSqliteCommitReplyLossTested": false,
+  "actualSqliteCommitExecutionFailureVerified": false
+}

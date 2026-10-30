@@ -1,0 +1,31 @@
+import {canonical} from '../server/imports.ts';
+import {fieldDatabaseContext} from './field-capture-context.mjs';
+import {fieldFactSession} from './field-fact-session.mjs';
+import {workflowRequire as need} from './workflow-archive-facts.mjs';
+export const workflowArchiveLimits=Object.freeze({manifestBytes:1048576,dumpBytes:8*1024**3,chunkBytes:65536});
+export const workflowArchiveUuid=v=>typeof v==='string'&&/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(v)&&!/^0{8}-0{4}-0{4}-0{4}-0{12}$/.test(v);
+const object=(v,keys)=>{need(v&&Object.getPrototypeOf(v)===Object.prototype&&Object.keys(v).length===keys.length&&keys.every(k=>Object.hasOwn(v,k)),'WF_ARCHIVE_MANIFEST');return v;};
+const hash=v=>need(typeof v==='string'&&/^[a-f0-9]{64}$/.test(v),'WF_ARCHIVE_MANIFEST');
+const integer=(v,min=0,max=Number.MAX_SAFE_INTEGER)=>need(Number.isSafeInteger(v)&&v>=min&&v<=max,'WF_ARCHIVE_MANIFEST');
+const text=(v,max=4096)=>need(typeof v==='string'&&v.length>0&&Buffer.byteLength(v)<=max&&!v.includes('\0'),'WF_ARCHIVE_MANIFEST');
+export function workflowArchiveManifest(value,tenant){
+ let bytes=0,nodes=0;const pending=[{v:value,depth:0}];while(pending.length){const {v,depth}=pending.pop();need(++nodes<=65536&&depth<=24,'WF_ARCHIVE_MANIFEST_LIMIT');if(v===null||['string','boolean','number'].includes(typeof v)){need(typeof v!=='number'||Number.isFinite(v),'WF_ARCHIVE_MANIFEST');bytes+=Buffer.byteLength(JSON.stringify(v));}else{need(v&&typeof v==='object'&&(Array.isArray(v)||Object.getPrototypeOf(v)===Object.prototype),'WF_ARCHIVE_MANIFEST');const keys=Object.keys(v);need(keys.length<=8192&&(!Array.isArray(v)||keys.length===v.length),'WF_ARCHIVE_MANIFEST_LIMIT');bytes+=2+keys.length;for(const k of keys){bytes+=Buffer.byteLength(k)+3;pending.push({v:v[k],depth:depth+1});}}need(bytes<=workflowArchiveLimits.manifestBytes,'WF_ARCHIVE_MANIFEST_LIMIT');}
+ const m=object(value,['format','backupId','operationId','createdAt','tenantId','scope','restoreMode','authority','source','fence','context','facts','dump','privilegedAdministratorTrustRequired','automaticActivationApproved']);
+ need(m.format==='idms-workflow-formal-archive-v2'&&m.scope==='FROZEN_WORKFLOW_DATABASE'&&m.restoreMode==='ISOLATED_ONLY'&&m.privilegedAdministratorTrustRequired===true&&m.automaticActivationApproved===false,'WF_ARCHIVE_MANIFEST');
+ need(workflowArchiveUuid(m.backupId)&&workflowArchiveUuid(m.operationId)&&['acme','sandbox'].includes(m.tenantId)&&m.tenantId===tenant&&typeof m.createdAt==='string'&&new Date(m.createdAt).toISOString()===m.createdAt,'WF_ARCHIVE_MANIFEST');
+ object(m.authority,['systemIdentifier','controlDatabase','sourceDatabaseOid','sourceRoleOid']);need(/^[0-9]{10,25}$/.test(m.authority.systemIdentifier)&&/^idms_workflowcontrol_[a-f0-9]{12}$/.test(m.authority.controlDatabase),'WF_ARCHIVE_MANIFEST');
+ for(const k of ['sourceDatabaseOid','sourceRoleOid'])need(typeof m.authority[k]==='string'&&/^[1-9][0-9]{0,9}$/.test(m.authority[k]),'WF_ARCHIVE_MANIFEST');
+ object(m.source,['scope','tenantId','database','user']);need(m.source.tenantId===tenant&&m.source.database===m.source.user,'WF_ARCHIVE_MANIFEST');
+ need(m.source.scope==='QA'&&new RegExp('^idms_workflowupgradeqa_'+tenant+'_[a-f0-9]{10}$').test(m.source.database)||m.source.scope==='ORIGINAL_WORKFLOW'&&m.source.database==='idms_'+tenant+'_workflow','WF_ARCHIVE_MANIFEST');
+ const f=object(m.fence,['format','operationId','phase','databaseOid','sourceRoleOid','persistentAppLoginDisabled','persistentDatabaseConnectionLimitZero','recordedOldBackendDrainCount','drainedAt','baselineSha256','privilegedAdministratorOutsideApplicationFenceTrust','productionAcceptance']);
+ need(f.format==='idms-workflow-freeze-result-v1'&&f.operationId===m.operationId&&f.phase==='DRAINED'&&f.databaseOid===m.authority.sourceDatabaseOid&&f.sourceRoleOid===m.authority.sourceRoleOid&&f.persistentAppLoginDisabled===true&&f.persistentDatabaseConnectionLimitZero===true&&f.privilegedAdministratorOutsideApplicationFenceTrust===true&&f.productionAcceptance===false,'WF_ARCHIVE_MANIFEST');
+ integer(f.recordedOldBackendDrainCount);text(f.drainedAt,24);need(new Date(f.drainedAt).toISOString()===f.drainedAt&&Date.parse(m.createdAt)>=Date.parse(f.drainedAt),'WF_ARCHIVE_MANIFEST');hash(f.baselineSha256);
+ object(m.context,['format','database','session']);need(m.context.format==='idms-workflow-capture-context-v1','WF_ARCHIVE_MANIFEST');fieldDatabaseContext(m.context.database);fieldFactSession(m.context.session);
+ const facts=object(m.facts,['format','tables','indexes','constraints','views','routines','triggers','sequences']);need(facts.format==='idms-workflow-archive-facts-v2'&&Array.isArray(facts.tables)&&facts.tables.length===38&&Array.isArray(facts.sequences)&&facts.sequences.length===2,'WF_ARCHIVE_MANIFEST');
+ const names=new Set();for(const t of facts.tables){object(t,['table','columns','rows','sha256']);text(t.table,63);need(!names.has(t.table)&&/^(act_|flw_|idms_workflow_)[a-z_]+$/.test(t.table),'WF_ARCHIVE_MANIFEST');names.add(t.table);hash(t.sha256);integer(t.rows);need(Array.isArray(t.columns)&&t.columns.length>0&&t.columns.length<=128,'WF_ARCHIVE_MANIFEST');}
+ for(const k of ['indexes','constraints','views','routines','triggers'])need(Array.isArray(facts[k])&&facts[k].length<=4096,'WF_ARCHIVE_MANIFEST');
+ need(canonical(facts.sequences.map(s=>s.sequencename))===canonical(['act_evt_log_log_nr__seq','act_hi_tsk_log_id__seq']),'WF_ARCHIVE_MANIFEST');
+ for(const s of facts.sequences){object(s,['sequencename','start_value','min_value','max_value','increment_by','cycle','cache_size','last_value','is_called']);for(const k of ['start_value','min_value','max_value','increment_by','cache_size','last_value'])need(typeof s[k]==='string'&&/^-?[0-9]{1,19}$/.test(s[k]),'WF_ARCHIVE_MANIFEST');need(typeof s.cycle==='boolean'&&typeof s.is_called==='boolean','WF_ARCHIVE_MANIFEST');}
+ object(m.dump,['bytes','sha256','programVersion','programSha256']);integer(m.dump.bytes,5,workflowArchiveLimits.dumpBytes);hash(m.dump.sha256);hash(m.dump.programSha256);text(m.dump.programVersion,128);need(/^pg_dump \(PostgreSQL\) 16\./.test(m.dump.programVersion),'WF_ARCHIVE_MANIFEST');
+ const encoded=canonical(m);need(Buffer.byteLength(encoded)<=workflowArchiveLimits.manifestBytes,'WF_ARCHIVE_MANIFEST_LIMIT');return JSON.parse(encoded);
+}

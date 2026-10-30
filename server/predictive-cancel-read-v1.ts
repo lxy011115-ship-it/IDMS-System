@@ -1,0 +1,43 @@
+import {DomainMapSnapshot,domainMapAssert as need} from './domain-map-v4.ts';
+import {maintenanceMetadataV4,maintenanceEntityV4} from './maintenance-map-common-v4.ts';
+import {predictiveFormatV4,predictiveReadVersionV4,predictiveJobKeyV4,predictivePlanV4,type PredictiveJobV4,type PredictiveCreationPlanV4} from './predictive-state-v4.ts';
+import {verifyLocalDomainAudit,auditPositionKey} from './telemetry-map-v4.ts';
+import {readAssetKey} from './domain-read-catalog-v4.ts';
+import {decodeLegacyText} from './legacy-map-v4.ts';
+import {canonicalDigest,canonicalEqual} from './canonical-state.ts';
+import {requireAccess,scopeAllows,type AccessContext} from './access.ts';
+import {reconstructDomainPayload} from './domain-entities-v4.ts';
+import {revalidatePredictiveInputV4} from './predictive-input-v4.ts';
+import type {PublicGovernedSource} from './source-governance.ts';
+import {publicGovernedSource} from './source-governance.ts';
+import {modelVersion} from '../services/predictor/model.ts';
+import {DomainError} from './service.ts';
+import {cancelFailV1 as fail,cancelHashV1 as hash,cancelOrdinalV1 as ordinal,type CancelBusinessEvidenceV1} from './predictive-cancel-contract-v1.ts';
+export interface CancelReadOptionsV1 {predictorBinding:string;workflowBinding:string;sources:readonly PublicGovernedSource[]}
+export async function cancelAccessV1(s:DomainMapSnapshot,ctx:AccessContext,deviceCode?:string){
+ requireAccess(ctx,'predictive:approve');if(ctx.actorType!=='USER'||ctx.authMode!=='oidc'||ctx.tenantId!==s.tenantId)fail(403,'RECONCILIATION_CURRENT_ACTOR');const catalog=await maintenanceMetadataV4(s,ctx);
+ if(deviceCode){const key=readAssetKey(catalog.generation,deviceCode),p=await s.state('blob',key);if(!p.present)fail(404,'RECONCILIATION_DEVICE_NOT_FOUND');const asset=JSON.parse(await decodeLegacyText('blob',key,(ns,k)=>s.get(ns,k)));need(asset.tenantId===ctx.tenantId&&asset.deviceCode===deviceCode&&asset.scope.device_code===deviceCode,'RECONCILIATION_ASSET_BINDING');if(!scopeAllows(ctx,asset.scope))fail(403,'RECONCILIATION_DEVICE_SCOPE');}return catalog;
+}
+export async function cancelAuditReceiptV1(s:DomainMapSnapshot,r:any,actorId:string,action:string,metadata:Record<string,unknown>){
+ const a=verifyLocalDomainAudit(await s.get<any>('audit',r.auditEventId),s.tenantId),position=await s.get<any>('audit_order',auditPositionKey(r.auditPosition));need(a.hash===r.auditHash&&a.actorType==='USER'&&a.actorId===actorId&&a.action===action&&position.tenantId===s.tenantId&&position.position===r.auditPosition&&position.eventId===a.eventId&&Object.entries(metadata).every(([k,v])=>canonicalEqual(a.metadata[k],v)),'RECONCILIATION_AUDIT_PROOF');return a;
+}
+export async function cancelCandidateV1(s:DomainMapSnapshot,originalActorId:string,commandId:string,ctx:AccessContext,o:CancelReadOptionsV1){
+ await cancelAccessV1(s,ctx);const key=predictiveJobKeyV4(s.tenantId,originalActorId,commandId),state=await s.state('predictive_job',key);if(!state.present)fail(404,'RECONCILIATION_NATIVE_NOT_FOUND');const j=state.value as PredictiveJobV4;
+ need(j.format===predictiveFormatV4&&j.tenantId===s.tenantId&&j.key===key&&j.actorId===originalActorId&&j.commandId===commandId&&j.context.tenantId===s.tenantId&&j.context.actorId===j.actorId&&j.context.actorType==='USER'&&ordinal(j.grantRevision)&&j.predictorBinding===o.predictorBinding&&j.workflowBinding===o.workflowBinding,'RECONCILIATION_NATIVE_BINDING');if(j.status!=='CANCELLED'||j.action!=='REVIEW'||j.result!==undefined)fail(409,'RECONCILIATION_CANCELLED_CREATION_REQUIRED');
+ const plan=await predictivePlanV4(s,j);if(plan.kind!=='REVIEW'||!plan.order||!plan.envelope||plan.request.decision!=='APPROVED')return fail(409,'RECONCILIATION_CANCELLED_CREATION_REQUIRED');
+ need(plan.envelope.entityId===plan.order.id&&plan.envelope.actor.id===j.actorId&&plan.order.createdBy===j.actorId&&plan.order.tenantId===s.tenantId&&plan.order.version===1&&plan.order.state==='UNASSIGNED'&&plan.order.alertId===plan.request.alertId&&plan.beforeAlert.id===plan.afterAlert.id&&plan.afterAlert.workOrderId===plan.order.id&&plan.beforeRecommendation.id===plan.afterRecommendation.id&&plan.beforeRecommendation.alertId===plan.request.alertId&&plan.deviceCode===plan.order.deviceCode,'RECONCILIATION_PLAN_BINDING');await cancelAccessV1(s,ctx,plan.deviceCode);
+ const marker=await s.get<any>('domain_head','predictive'),sources=o.sources.map(publicGovernedSource),configuration=canonicalDigest({readIndexVersion:predictiveReadVersionV4,modelVersion,predictorBinding:o.predictorBinding,workflowBinding:o.workflowBinding,sources});need(marker.format===predictiveFormatV4&&marker.tenantId===s.tenantId&&marker.configuration===configuration&&marker.sourcesDigest===canonicalDigest(sources)&&marker.readIndexVersion===predictiveReadVersionV4,'RECONCILIATION_PREDICTIVE_DEPLOYMENT');
+ const saved=await s.state('receipt','predictive_cancel:'+key),r=saved.value as any;need(saved.present&&r.format===predictiveFormatV4&&r.tenantId===s.tenantId&&r.key===key&&r.commandId===commandId&&r.requestHash===j.requestHash&&r.planDigest===j.planDigest&&!(await s.state('receipt','predictive:'+key)).present,'RECONCILIATION_CANCEL_PROOF');await cancelAuditReceiptV1(s,r,j.actorId,'PREDICTIVE_COMMAND_CANCELLED',{commandId,jobKey:key,planDigest:j.planDigest});
+ return {job:j,plan:plan as PredictiveCreationPlanV4&{order:NonNullable<PredictiveCreationPlanV4['order']>;envelope:NonNullable<PredictiveCreationPlanV4['envelope']>},nativeHash:state.valueHash!,cancelReceiptHash:saved.valueHash!,key};
+}
+export async function cancelPayloadV1(s:DomainMapSnapshot){return reconstructDomainPayload(s.tenantId,async(ns,k)=>{const value=await s.get(ns,k);if(s.stats.keys>60000||s.stats.valueBytes>64*1024*1024)fail(503,'RECONCILIATION_READ_BUDGET');return value;});}
+export async function cancelBusinessV1(s:DomainMapSnapshot,c:Awaited<ReturnType<typeof cancelCandidateV1>>,ctx:AccessContext,o:CancelReadOptionsV1,caseId:string):Promise<CancelBusinessEvidenceV1>{
+ const p=c.plan,alert=await maintenanceEntityV4(s,'business/predictiveAlerts',p.beforeAlert.id,true),recommendation=await maintenanceEntityV4(s,'business/maintenanceRecommendations',p.beforeRecommendation.id,true),episode=await s.state('predictive_episode',p.episode.alertId),snapshot=await maintenanceEntityV4(s,'business/healthSnapshots',p.episode.snapshotId,true),intent=await s.state('predictive_intent',p.request.alertId),order=await maintenanceEntityV4(s,'business/workOrders',p.order.id,true);
+ const own=intent.present&&(intent.value as any).reconciliationId===caseId&&(intent.value as any).jobKey===c.key;let reason:string|null=null;
+ if(order)reason='ORDER_ALREADY_EXISTS';else if(!canonicalEqual(alert,p.beforeAlert)||!canonicalEqual(recommendation,p.beforeRecommendation)||!episode.present||!canonicalEqual(episode.value,p.episode))reason='BUSINESS_EVIDENCE_CHANGED';else if(intent.present&&!own)reason='ANOTHER_REVIEW_PENDING';
+ if(!reason){need(snapshot&&canonicalDigest({snapshot,alert,recommendation,requestedBy:p.episode.requestedBy,inputEvidenceDigest:p.episode.inputEvidenceDigest})===p.episode.evidenceDigest,'RECONCILIATION_EPISODE_PROOF');const analysis=await s.get<any>('predictive_job',p.episode.analysisJobKey),r=await s.get<any>('receipt','predictive:'+p.episode.analysisJobKey),analysisPlan=await predictivePlanV4(s,analysis);need(analysis.format===predictiveFormatV4&&analysis.status==='COMMITTED'&&analysis.actorId===p.episode.requestedBy&&analysisPlan.kind==='ANALYZE'&&r.planDigest===analysis.planDigest&&r.requestHash===analysis.requestHash&&canonicalEqual(r.result,analysis.result)&&canonicalEqual(r.result.snapshot,snapshot)&&canonicalDigest(analysisPlan.input)===p.episode.inputEvidenceDigest,'RECONCILIATION_ANALYSIS_PROOF');
+  const a=verifyLocalDomainAudit(await s.get<any>('audit',r.auditEventId),s.tenantId),at=await s.get<any>('audit_order',auditPositionKey(r.auditPosition));need(a.hash===r.auditHash&&at.tenantId===s.tenantId&&at.position===r.auditPosition&&at.eventId===a.eventId&&a.metadata.jobKey===analysis.key&&a.metadata.commandId===analysis.commandId&&(a.actorId===analysis.actorId||a.metadata.requestedBy===analysis.actorId),'RECONCILIATION_ANALYSIS_AUDIT');
+  try{await revalidatePredictiveInputV4(s,await cancelPayloadV1(s),analysisPlan.input,ctx,o.sources);}catch(e){if(e instanceof DomainError&&e.status===409&&['PREDICTIVE_INPUT_CHANGED','PREDICTIVE_SOURCE_CHANGED','PREDICTIVE_SOURCE_NOT_APPROVED'].includes(e.message))reason=e.message;else throw e;}
+ }
+ return {eligible:reason===null,reason,digest:canonicalDigest({alert,recommendation,episode:episode.present?episode.value:null,snapshot,foreignIntent:intent.present&&!own?intent.valueHash:null,order,reason})};
+}

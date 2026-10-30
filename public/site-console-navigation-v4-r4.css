@@ -1,0 +1,3 @@
+.site-shell-nav{display:flex;gap:6px;padding:10px 24px;background:#e8eef6;border-bottom:1px solid #d6e0ec;flex-wrap:wrap}.site-shell-nav a{font:500 13px/1.5 system-ui,"Microsoft YaHei",sans-serif;text-decoration:none;color:#294d75;padding:7px 12px;border-radius:6px;white-space:nowrap}.site-shell-nav a:hover{background:#d9e5f4}.site-shell-nav a:focus-visible{outline:2px solid #346caa;outline-offset:2px}@media(max-width:600px){.site-shell-nav{padding:8px 10px;gap:2px}.site-shell-nav a{font-size:12px;padding:7px 8px}}
+
+.site-shell-nav a[aria-current=page]{background:#d4e3f5;color:#123d70;font-weight:700}

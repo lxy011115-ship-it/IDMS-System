@@ -1,0 +1,12 @@
+import {resolve} from 'node:path';
+import {generateKeyPairSync,createHash} from 'node:crypto';
+import {reviewSourceHashV1 as hash} from '../../scripts/workflow-review-source-facts-v1.mjs';
+export const coldReviewUnitIdV3='12345678-1234-1234-1234-123456789abc';
+const publicKey=generateKeyPairSync('ed25519').publicKey.export({type:'spki',format:'pem'});
+export function coldReadonlyInputQaV3(){
+ const sourceDirectory=resolve('work/unit-cold-readonly/source'),id=coldReviewUnitIdV3,role=(oid,name,login,limit=-1)=>({oid,rolname:name,rolcanlogin:login,rolconnlimit:limit,rolsuper:false,rolcreatedb:false,rolcreaterole:false,rolinherit:false,rolreplication:false,rolbypassrls:false,rolconfig:null,rolvaliduntil:null});
+ const reader=role('102','idms_wr_unit_acme',true,2),inventory={identity:{system_id:'7000000000000000000',directory:sourceDirectory,control_oid:'10',standby:false},roles:[role('100','qa_owner',false),role('101','qa_app',true),reader],databases:[{oid:'201',datname:'workflow_db',datdba:'100',datallowconn:true,datconnlimit:-1,datacl:null},{oid:'202',datname:'other_db',datdba:'100',datallowconn:true,datconnlimit:-1,datacl:null}],memberships:[]};
+ const facts={format:'WORKFLOW_REVIEW_SOURCE_ROLE_FACTS_V1',tenantId:'acme',identity:{systemIdentifier:inventory.identity.system_id,directory:sourceDirectory,database:'workflow_db',database_oid:'201'},role:reader,authorityId:id,bpmnSha256:'b'.repeat(64)},body={format:'WORKFLOW_REVIEW_SOURCE_CONTRACT_V1',systemIdentifier:inventory.identity.system_id,sourceDirectory,hba:{sha256:'c'.repeat(64)},readers:[{facts:{...facts,sha256:hash(facts)}}]};
+ const source={format:'RUNTIME_COLD_REVIEW_SOURCE_V3',controlId:id,inventory,readerContract:{...body,sha256:hash(body)}},trust={format:'RUNTIME_COLD_REVIEW_TRUST_V3',controlId:id,sourceHash:'a'.repeat(64),storeFile:resolve('work/unit-cold-readonly/control.sqlite')};
+ const config={trust,account:{host:'127.0.0.1',port:25433,database:'postgres',user:'idms_bootstrap',password:'b'.repeat(43)},authority:{format:1,purpose:'IDENTITY_AUTHORITY_RUNTIME_V1',trust:{format:1,purpose:'IDENTITY_AUTHORITY_TRUST_V1',authorityId:id,databaseFile:resolve('work/unit-cold-readonly/authority.sqlite'),publicKey,publicKeySha256:createHash('sha256').update(publicKey).digest('hex')},issuer:'http://127.0.0.1:25434/realms/qa',reader:{clientId:'qa-reader',clientSecret:'c'.repeat(43)}},binDirectory:resolve('work/unit-cold-readonly/bin'),keyFile:resolve('work/unit-cold-readonly/key.json'),workDirectory:resolve('work/unit-cold-readonly/evidence')};return{source,trust,config};
+}

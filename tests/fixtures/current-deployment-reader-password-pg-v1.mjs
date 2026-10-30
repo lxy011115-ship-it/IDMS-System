@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {createServer} from 'node:net';
+import {mkdir,writeFile,realpath} from 'node:fs/promises';
+import {join,resolve} from 'node:path';
+import {randomBytes,randomUUID,createHash} from 'node:crypto';
+import pg from 'pg';
+import {privateDirectory,privateNewFile} from '../../scripts/backup-support.mjs';
+import {coldToolingV1,coldToolEnvV1} from '../../scripts/pg-cold-image-portable-tools-v1.mjs';
+import {workflowReaderHbaPrefixV1} from '../../scripts/workflow-review-source-hba-v1.mjs';
+import {launchPostgresLifecycleV2,bindPostgresLifecycleV2,stopPostgresLifecycleV2} from '../../scripts/postgres-lifecycle-v2.mjs';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+async function run(file,args,phase,tag){const child=spawn(file,args,{windowsHide:true,env:coldToolEnvV1(),stdio:['ignore','pipe','pipe']});let stdout='',stderr='',spawnFailed=false;child.on('error',()=>{spawnFailed=true;});child.stdout.on('data',b=>{stdout+=b;assert(Buffer.byteLength(stdout)<=1024**2);});child.stderr.on('data',b=>{stderr+=b;assert(Buffer.byteLength(stderr)<=1024**2);});const terminal=await new Promise(ok=>child.once('close',(code,signal)=>ok({code,signal,stdoutClosed:child.stdout.closed,stderrClosed:child.stderr.closed,spawnFailed})));await privateNewFile(join(phase,tag+'.private.json'),JSON.stringify({originalChildPid:child.pid,terminal,stdout,stderr}));assert.deepEqual(terminal,{code:0,signal:null,stdoutClosed:true,stderrClosed:true,spawnFailed:false});return stdout;}
+async function port(){for(let i=0;i<40;i++){const p=21000+randomBytes(2).readUInt16BE()%8000,s=createServer();try{await new Promise((ok,no)=>{s.once('error',no);s.listen({host:'127.0.0.1',port:p,exclusive:true},ok);});await new Promise((ok,no)=>s.close(e=>e?no(e):ok()));return p;}catch(e){if(!['EADDRINUSE','EACCES'].includes(e.code))throw e;}}throw Error('CURRENT_READER_QA_PORT');}
+export async function createCurrentDeploymentReaderPasswordPgQaV1(parent,binDirectory){
+  const work=join(resolve(parent),'pg-'+randomUUID());await mkdir(work,{recursive:false,mode:0o700});await privateDirectory(work);const data=join(work,'data'),processWork=join(work,'owned');await privateDirectory(processWork);const bin=await realpath(binDirectory),tooling=await coldToolingV1(bin),password=randomBytes(32).toString('base64url'),pwfile=join(work,'bootstrap.private.txt');await privateNewFile(pwfile,password);const suffix=process.platform==='win32'?'.exe':'';
+  await run(join(bin,'initdb'+suffix),['-D',data,'-U','idms_bootstrap','--pwfile='+pwfile,'-A','scram-sha-256','--encoding=UTF8','--locale=C'],work,'initdb');
+  const p=await port(),readerScopes=[{role:'idms_wr_acme',database:'qa_acme'},{role:'idms_wr_sandbox',database:'qa_sandbox'}],prefix=workflowReaderHbaPrefixV1(readerScopes),hba=prefix+'host all all 127.0.0.1/32 scram-sha-256\nhost all all ::1/128 scram-sha-256\nlocal all all scram-sha-256\n';
+  await writeFile(join(data,'postgresql.conf'),"listen_addresses = '127.0.0.1'\nport = "+p+"\nmax_connections = 40\nshared_buffers = '16MB'\nmax_wal_size = '128MB'\nmin_wal_size = '32MB'\npassword_encryption = 'scram-sha-256'\nfsync = on\nfull_page_writes = on\nsynchronous_commit = on\ntimezone = 'UTC'\n");await writeFile(join(data,'postgresql.auto.conf'),'');await writeFile(join(data,'pg_ident.conf'),'');await writeFile(join(data,'pg_hba.conf'),hba);
+  const output=await run(tooling.paths.control,['-D',data],work,'control'),systemIdentifier=output.split(/\r?\n/).find(v=>v.startsWith('Database system identifier:'))?.split(':')[1]?.trim();assert.match(systemIdentifier,/^[0-9]{16,20}$/);
+  const evidence={purpose:'PERSISTENT_R4_COLD_REVIEW_CONTROL_V2',coldControlId:randomUUID(),sourceHash:sha(randomBytes(32)),maintenanceOperationId:randomUUID(),readerHba:{format:'COLD_REVIEW_IMAGE_HBA_V2',sha256:sha(hba),prefixSha256:sha(prefix),readers:readerScopes}},account={host:'127.0.0.1',port:p,user:'idms_bootstrap',password,database:'postgres'},clients=new Set();
+  await privateNewFile(join(work,'fixture.private.json'),JSON.stringify({work,data,bin,account,systemIdentifier,evidence}));
+  const postgres=await launchPostgresLifecycleV2({binDirectory:bin,dataDirectory:data,workDirectory:processWork,expectedSystemIdentifier:systemIdentifier,port:p,account:{user:account.user,password,database:'postgres'},reviewEvidence:evidence});await bindPostgresLifecycleV2(postgres);
+  const end=async c=>{if(!c||!clients.has(c))return;const socket=c.connection?.stream,closed=!socket||socket.closed?Promise.resolve():new Promise(ok=>socket.once('close',ok));await c.end();await closed;clients.delete(c);};
+  const client=async extra=>{const c=new pg.Client({...account,...extra,connectionTimeoutMillis:3000,query_timeout:5000,application_name:'idms-current-reader-password-qa'});clients.add(c);c.on('error',()=>{});try{await c.connect();return c;}catch(e){await end(c);throw e;}};
+  return{work,data,account,systemIdentifier,postgres,client,end,async close(){for(const c of [...clients])await end(c);const terminal=await stopPostgresLifecycleV2(postgres);assert.equal(terminal.terminal.code,0);assert.equal(terminal.terminal.signal,null);assert(terminal.terminal.proofSaved&&!terminal.genericKillUsed);await privateNewFile(join(work,'fixture-terminal.private.json'),JSON.stringify({createdNewClusterOnly:true,originalPostgresHandle:postgres.binding,terminal,ownedClientCount:clients.size,allOriginalClientsAndPostmasterNormallyClosed:true}));account.password='';return terminal;}};
+}

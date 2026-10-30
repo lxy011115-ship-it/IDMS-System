@@ -1,0 +1,47 @@
+name: Frozen current-map recovery maintenance
+
+on:
+  push:
+    branches: [wip/field-map-frozen-maintenance-20261024]
+    paths: ['scripts/**', 'tests/**', 'docs/validation/**', '.github/workflows/field-map-frozen-maintenance-v1.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: field-map-frozen-maintenance-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  frozen-maintenance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Verify strict frozen profiles and reject ambient authority
+        run: node --test tests/field-map-frozen-profile-v3.test.mjs
+      - name: Verify actual restored map maintenance, savepoint rollback and frozen COMMIT
+        id: native
+        run: node scripts/verify-field-map-frozen-maintenance-v3.mjs /usr/lib/postgresql/16/bin
+      - name: Independently authenticate archive, source pins, receipt and physical retirement
+        if: always() && (steps.native.outcome == 'success' || steps.native.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const cases=(await readdir('work/field-map-frozen-maintenance-v3-20261024',{withFileTypes:true})).filter(e=>e.isDirectory()&&/^[a-f0-9]{12}$/.test(e.name));
+          assert.equal(cases.length,1);
+          execFileSync(process.execPath,['scripts/verify-field-map-frozen-cleanup-v1.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source unchanged
+        if: always()
+        run: git diff --exit-code --no-ext-diff

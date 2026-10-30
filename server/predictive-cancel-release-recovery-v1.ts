@@ -1,0 +1,24 @@
+import {randomUUID} from 'node:crypto';
+import type {ClientConfig} from 'pg';
+import type {StateMapBinding} from './state-map-sql-v1.ts';
+import {DomainMapSnapshot,domainMapAssert as need} from './domain-map-v4.ts';
+import {canonicalDigest,canonicalEqual} from './canonical-state.ts';
+import {predictiveAuditsV4,predictivePlanV4} from './predictive-state-v4.ts';
+import {cancelAuditReceiptV1} from './predictive-cancel-read-v1.ts';
+import {maintenanceMetadataV4} from './maintenance-map-common-v4.ts';
+import {WorkflowCancelReservationTransportV1} from './workflow-cancel-reservation-transport-v1.ts';
+import type {PredictiveCancelJobStoreV1,CancelQueueLeaseV1,CancelReleaseIntentV1} from './predictive-cancel-job-store-v1.ts';
+/** Completes an already authorized irreversible action. No new user approval or order publication. */
+export async function recoverCancelReleaseV1(o:{account:ClientConfig;binding:StateMapBinding;queue:PredictiveCancelJobStoreV1;lease:CancelQueueLeaseV1;intent:CancelReleaseIntentV1;transport:WorkflowCancelReservationTransportV1;assertLive:()=>void}){
+ const {lease,intent}=o;need(lease.action==='SETTLE'&&intent.job_id===lease.id&&intent.case_id===lease.caseId,'RECON_RELEASE_INTENT');
+ const snap=await DomainMapSnapshot.open(o.account,o.binding,{maintenance:true});let envelope;
+ try{await maintenanceMetadataV4(snap);const c=await snap.get<any>('predictive_cancel_case',lease.caseId);need(canonicalEqual(c,intent.case_snapshot)&&c.status==='RELEASE_PENDING','RECON_RELEASE_CASE_CHANGED');const native=await snap.state('predictive_job',c.jobKey),cancel=await snap.state('receipt','predictive_cancel:'+c.jobKey),j=native.value as any;need(native.valueHash===c.nativeHash&&cancel.valueHash===c.cancelReceiptHash&&j.status==='CANCELLED'&&j.planDigest===c.planDigest&&j.result===undefined,'RECON_RELEASE_NATIVE_CHANGED');const p=await predictivePlanV4(snap,j);need(p.kind==='REVIEW'&&p.order&&p.envelope&&p.order.id===c.orderId,'RECON_RELEASE_NATIVE_PLAN');envelope=p.envelope;const publication=await snap.get<any>('receipt','predictive_cancel_publish:'+lease.caseId);need(canonicalEqual(publication,intent.publication)&&publication.releaseDigest===c.releaseDigest,'RECON_RELEASE_PUBLICATION_CHANGED');await cancelAuditReceiptV1(snap,publication,c.originalActorId,'PREDICTIVE_CANCEL_CONFIRM',{caseId:c.id,operationId:publication.operationId,requestHash:publication.requestHash,caseHash:publication.caseHash,revision:publication.resultRevision});}finally{await snap.close();}
+ o.assertLive();await o.queue.renew(lease);let proof=await o.transport.read(lease.caseId,envelope!);need(proof,'RECON_RELEASE_EXTERNAL_UNKNOWN');let external=proof.forReconciliation(o.transport.binding,envelope!,lease.caseId);
+ if(external.phase==='HELD'){o.assertLive();await o.queue.renew(lease);proof=await o.transport.release(lease.caseId,envelope!,intent.case_snapshot.releaseDigest!);external=proof.forReconciliation(o.transport.binding,envelope!,lease.caseId);}
+ need(external.phase==='RELEASED'&&external.domainReceiptDigest===intent.case_snapshot.releaseDigest,'RECON_RELEASE_EXTERNAL_PROOF');
+ for(let attempt=0;;attempt++){
+  o.assertLive();const s=await DomainMapSnapshot.open(o.account,o.binding,{maintenance:true});let delta;
+  try{await maintenanceMetadataV4(s);const old=await s.get<any>('predictive_cancel_case',lease.caseId);need(canonicalEqual(old,intent.case_snapshot),'RECON_RELEASE_CASE_CHANGED');const c={...old,revision:String(BigInt(old.revision)+1n),status:'RESOLVED_LINKED'},caseHash=canonicalDigest(c),tip=await s.get<any>('domain_head','audit'),audit=await predictiveAuditsV4(s,[{tenantId:s.tenantId,objectType:'PREDICTIVE_RECONCILIATION',objectId:c.id,action:'PREDICTIVE_CANCEL_RELEASE_RECOVERY',actorType:'SYSTEM',actorId:'idms.reconciliation-worker-v1',correlationId:lease.id,metadata:{caseId:c.id,operationId:lease.operationId,requestHash:lease.domainHash,caseHash,revision:c.revision,originalActorId:c.originalActorId,originalReviewerId:old.review.actorId,releaseIntentJobId:intent.job_id,releaseIntentCreatedAt:intent.created_at,releaseDigest:c.releaseDigest}}]),last=audit.events[0],receipt={format:c.format,tenantId:s.tenantId,caseId:c.id,operationId:lease.operationId,kind:'RELEASE_RECOVERY',requestHash:lease.domainHash,actorId:'idms.reconciliation-worker-v1',resultRevision:c.revision,caseHash,auditEventId:last.eventId,auditPosition:String(BigInt(tip.count)+1n),auditHash:last.hash};delta={head:s.head,result:c,ops:[...audit.ops,await s.operation('predictive_cancel_case',c.id,c),await s.operation('receipt','predictive_cancel_recovered:'+c.id+':'+lease.operationId,receipt)]};}finally{await s.close();}
+  try{await o.queue.publish(lease,delta.head,randomUUID(),delta.ops,Date.now()-1,intent.auth_witness.sessionHash,true);return delta.result;}catch(e){if(attempt<7&&/STATE_MAP_(CAS|KEY)_CONFLICT/.test((e as Error).message))continue;throw e;}
+ }
+}

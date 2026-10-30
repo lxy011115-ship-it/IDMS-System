@@ -1,0 +1,4 @@
+import {readFile} from 'node:fs/promises';
+import {predictiveCancelJobsSchemaSqlV1} from './predictive-cancel-jobs-schema-v1.mjs';
+/** Fresh only: extending before DDL witnesses, never rebasing a running deployment. */
+export async function predictiveCancelUiSchemaSqlV1(options){let extra=await readFile(new URL('./predictive-cancel-ui-v1.sql',import.meta.url),'utf8');for(const kind of ['owner','worker','ingress']){if(!/^[a-z][a-z0-9_]{0,62}$/.test(options[kind]))throw Error('RECON_UI_INSTALL_ROLE');extra=extra.replaceAll('__'+kind.toUpperCase()+'__','"'+options[kind]+'"');}const marker='CREATE EVENT TRIGGER recon_queue_ddl_start_v1',parts=(await predictiveCancelJobsSchemaSqlV1(options)).split(marker);if(parts.length!==2)throw Error('RECON_UI_INSTALL_BOUNDARY');return parts[0]+extra+'\n'+marker+parts[1];}

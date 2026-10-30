@@ -1,0 +1,86 @@
+{
+  "stage": "IDENTITY_NORMAL_STOP_V1_ISOLATED_NEW_DEVELOPMENT_JVM_ONLY",
+  "passed": true,
+  "checks": 8,
+  "sourcePins": [
+    {
+      "path": "scripts/lifecycle-java/IdentityLifecycleWireV1.java",
+      "sha256": "d5123669aea5597d0205a46f5b43eac5c89865f32c36c3718a77f13db7ca6c1a"
+    },
+    {
+      "path": "scripts/lifecycle-java/OwnedIdentityAttachV1.java",
+      "sha256": "9f4577555ee5ebf3cd24f6d39056102cbe36db66e9459fb06e4d0d181cc47bc1"
+    },
+    {
+      "path": "scripts/lifecycle-java/OwnedIdentityShutdownAgentV1.java",
+      "sha256": "3c5f18a18992dba6f2b54c90f4e0a374874131ca8728fb37c41dce5f681cc001"
+    },
+    {
+      "path": "scripts/identity-lifecycle-tools-v1.mjs",
+      "sha256": "4ba3264960c1a81fb76e753a3be670e98c428f97c975ef72064cbf24af372107"
+    },
+    {
+      "path": "scripts/identity-lifecycle-v1.mjs",
+      "sha256": "f2e8dd0d2fe6339f4c9b210ac23440f28f9c2547c5a6c8d60b74c8d079fcf1cf"
+    },
+    {
+      "path": "scripts/fixtures/IdentityAgentGuardQaV1.java",
+      "sha256": "2938c3645aaa659b82b992b5dd0c24815b6ee49cf61c5c876ff5c2508680ad15"
+    },
+    {
+      "path": "scripts/fixtures/owned-cold-pg-v1-qa.mjs",
+      "sha256": "fe75da317b17586dd364c2befb77ad6fcc748e9b4a5fafd52d0ceafa8ff7bee8"
+    },
+    {
+      "path": "scripts/verify-identity-normal-stop-v1.mjs",
+      "sha256": "4e474dd2ca79eb0f2333f72fe450e3cf7822138140bce76c4da3e32ec5eb2ce1"
+    }
+  ],
+  "sourcePinsMatchedObservedVersion": 8,
+  "postQaSourcePatches": [],
+  "testedPlatform": "Windows",
+  "jdkMajor": 21,
+  "keycloakVersion": "26.8.1",
+  "quarkusVersion": "3.40.1",
+  "actualPrivateDistributions": 2,
+  "immutableRuntimeFilesPerDistribution": 503,
+  "actualPostgreSql": true,
+  "actualUserAndRefreshSession": true,
+  "actualNormalStops": 2,
+  "targetExitsZero": true,
+  "targetSignalsSent": 0,
+  "agentCallsSystemExit": false,
+  "frameworkMayCallSystemExit": true,
+  "helperRepliesConfirmed": 2,
+  "controllerReleaseAfterHelperTerminal": true,
+  "ownerDeploymentManifestAndStartMismatchRejected": true,
+  "agentInternalOwnerGuardTested": true,
+  "existingReceiptRefusedWithoutOverwrite": true,
+  "repeatedStopUsesOriginalOperation": true,
+  "proofDeeplyImmutable": true,
+  "sameDatabaseRealmAndUserUuidRetained": true,
+  "sameDatabaseRefreshTokenSurvivesNormalRestart": true,
+  "crossDatabaseMigrationTested": false,
+  "jwksContinuityAcrossMigrationTested": false,
+  "revocationLogoutScopeAcrossMigrationTested": false,
+  "helperReplyLossFaultInjected": false,
+  "controllerCrashReentryComplete": false,
+  "wholeJdkEnvironmentSupplyChainWitnessComplete": false,
+  "originalRuntimeChanged": false,
+  "originalKeycloakAdopted": false,
+  "historicalRuns": 3,
+  "historicalOwnedPgCleanShutdowns": 3,
+  "historicalRecordedIdentityJvmsRetired": 3,
+  "historicalFailedRunRequiredOwnedHelperTermination": true,
+  "failedRunArtifactsRetained": true,
+  "qaVerificationSha256": "7e2134a5525b8565066137c91a1850b634cc1073815fed24e90bdf8c12e82daf",
+  "cleanupVerificationSha256": "bcdd8f02474a336f5632f6ef7cf161f4e748975fe06211d86e571dbcf712e2ef",
+  "canonicalUnitTests": 615,
+  "repositoryUnitTests": 606,
+  "knownPreexistingTestDifference": 9,
+  "identityMigrationComplete": false,
+  "productionAcceptance": false,
+  "publicCutover": false,
+  "fullOriginalGoalComplete": false,
+  "finalUserMaterialsComplete": false
+}

@@ -1,0 +1,7 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {DatabaseSync} from 'node:sqlite';
+import {prepareColdCurrentDeploymentContextFileV1,recordColdCurrentDeploymentContextFileV1,closeColdCurrentDeploymentContextFileV1} from '../../scripts/cold-current-deployment-review-context-files-v5.mjs';
+import {readColdCurrentDeploymentReaderInstallationV1} from '../../scripts/cold-current-deployment-reader-install-journal-v1.mjs';
+const input=JSON.parse(await readFile(process.argv[2],'utf8')),owner=await prepareColdCurrentDeploymentContextFileV1({context:input.context,request:input.request,workDirectory:input.workDirectory,mode:'REOPEN_ONLY'}),db=new DatabaseSync(input.databaseFile,{allowExtension:false});
+try{db.exec('BEGIN');const d=JSON.parse(db.prepare('SELECT details FROM cold_control WHERE id=1').get().details);assert((await recordColdCurrentDeploymentContextFileV1(owner,{db,details:d})).alreadyRecorded);const value=await readColdCurrentDeploymentReaderInstallationV1(owner,{db,details:d});assert.equal(value.phase,'EMPTY');assert(value.historicalDataOnly&&!value.currentAuthorizationGranted&&!value.programStartupGranted&&!value.businessWritesEnabled);db.exec('ROLLBACK');console.log(JSON.stringify(value));}finally{if(db.isOpen){if(db.isTransaction)db.exec('ROLLBACK');db.close();}await closeColdCurrentDeploymentContextFileV1(owner);}

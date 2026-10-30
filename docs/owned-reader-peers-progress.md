@@ -1,0 +1,11 @@
+# 原只读工作流连接持有能力：阶段进展
+
+Windows有效实现：reader服务v3、生命周期v4、固定peer attach工具v1。原所有冻结版本保留。最新原生驱动verify-owned-reader-peers-v4.mjs通过15项真实检查；独立V6核验通过。仅新增组件，尚未接入C34恢复协调器、原维护advisory guard、真实审核者或正式激活。
+
+每租户两个原Hikari连接由各自原Spring只读REPEATABLE READ事务持有，HTTP快照排空后拒绝新请求；维护快照与HTTP共用完整Flowable、SQL工单与命令链算法，运行在原事务线程。Node能力仅从原生命周期创建的JVM及原复制配置铸造，bootstrap在两次原JVM实际SQL探测之间逐一比较后台身份，外来SQL连接拒绝且保持存活。正常释放检查原事务真实回滚、池归零及bootstrap再次观察原后台消失。
+
+实际覆盖：两企业、活跃和独立关闭工单、4个原连接、完整命令链、伪造能力/错误配置/配置字节漂移拒绝、不同物理根拒绝、实际外来SQL保持存活、真实连接限制导致的部分借用失败、重复释放及新租约、持有租约时原JVM正常关闭。两家企业各41表、2序列前后摘要一致；3个原JVM正常停止、10个池关闭、实际PG目录干净离线。
+
+保留的失败与修订：首轮inet::text返回含掩码地址，改为实际host(inet_server_addr())；第二轮夹具自身5个SQL会话触发严格拒绝，新夹具先正常关闭原连接；第三轮不同租约的持久请求序号文件冲突，加入原lease UUID。独立检查发现专用driverSha256仍记录历史baseline，未修改已冻结证据；新检查同时验证该历史字段和实际驱动完整源pin及原签名supervisor回执。第一失败轮的原JVM通过原持久启动身份、原工具/配置SHA、原正常关闭agent回执和实际exit完成关闭，原失败报告仍为失败；其余轮自动正常清理。
+
+未完成：未知attach回复/重复请求错配等更完整故障矩阵、reader能力与原advisory guard及C34当前根验证的组合；真实作者/贡献者/独立审核人当前授权与正式登记启用闭环；整站集成、现场/商业验收、最终云候选部署准备及同版本图文手册/实操视频。ownedReaderPeerCapabilityImplemented=true，ownedReaderPeerCapabilityIntegrated/recoveryReviewIntegrationComplete/formalFieldActivationGranted/fullGoalComplete=false。Linux结果须以本阶段确切提交的CI终态为准。

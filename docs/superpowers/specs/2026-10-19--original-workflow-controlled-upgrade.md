@@ -1,0 +1,11 @@
+# 原工作流受控升级
+
+沿用已授权完整方案A及前述工作流升级计划。当前旧Java9124/4016由原恢复launcher4500持有；该实际launcher不是默认start-platform，子进程退出仅记录失败，不联动终止其余依赖。core5356/5348、edge17428/27984及其余六兄弟保持，原target两个jar和旧runtime/client文件字节保持，新服务使用独立私密jar/config及协调器。
+
+现有core HTTP gate仅支持一次性开启，没有关闭接口。选择两原business DB workflow_outbox的SHARE事务锁阻止新入队/dispatcher UPDATE，不伪称全HTTP写入关闭；pending及live lease必须为0才退休旧Java。实际应用账号ROW EXCLUSIVE锁在门持有时超时、SELECT仍可用，释放后锁可获取，已有真实原库无DML探测通过。流程相关写入可能等待/事务超时，其他核心/采集进程继续。这个表锁是会话级维护门，不等同持久权限变更；源workflow NOLOGIN/DB connlimit0另用已验证持久围栏。
+
+升级先固定源facts/context/旧serviceToken/配置和jar SHA、进程创建身份与连接归属。保持outbox门并确认无待处理命令；只退休准确旧Java和listener，按两源持久DRAINED，使用新guarded入口正式归档。两档案完整认证后通过持久resumer还原到新隔离目标。仅测试目标短暂开放给随机本机端口的新Java，读取两tenant reader snapshot和旧serviceToken状态、双向凭据边界，停止测试Java并重新隔离/复核。原源保持冻结直到该验证完成。
+
+随后精确释放两原source fence恢复原LOGIN/connlimit，启动同serviceToken、同4016端口、增加独立reader/authority的新Java。读取原源全量38表/两序列/context与归档比较，reader完整快照与隔离验证一致，业务状态/旧client绑定正常，其他进程/原配置/两jar保持后才释放outbox维护门。新拓扑verifier排除已退休旧Java并验证新Java/协调器，不能修改旧edge verifier历史基线。
+
+每个有副作用的worker结果持久保存，原生退出与SQL后台实际退出分别确认。遇到超时先观察同一实际进程，不自动重启或回灌旧源；失败保留真实阶段和已取得围栏，避免默认launcher/Maven/setupWorkflow重写文件。新reader route不意味着FIELD签发/接收配置、跨服务原子灾备或整体验收。

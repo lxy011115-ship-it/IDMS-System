@@ -1,0 +1,129 @@
+{
+  "format": "WORKFLOW_SOURCE_READER_LINUX_TERMINAL_V1",
+  "at": "2026-10-24T13:35:29.989245+00:00",
+  "head": "6213054942fa3362c5703fb3bd20422612a30ef0",
+  "run": 40098270057,
+  "job": 120884978370,
+  "conclusion": "success",
+  "unitSummary": {
+    "tests": 6,
+    "pass": 6,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "nativeStarts": [
+    {
+      "nonce": "9aaf68ff369d",
+      "sourcePins": 1213,
+      "expectedChecks": 9
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "9aaf68ff369d",
+      "check": 1,
+      "name": "independent real identity authority and real unsealed provisioning create two nonempty Flowable enterprises with active and independently closed cases"
+    },
+    {
+      "nonce": "9aaf68ff369d",
+      "check": 2,
+      "name": "only the real original provision can mint two fresh registered readers; they initially remain NOLOGIN with no usable runtime configuration"
+    },
+    {
+      "nonce": "9aaf68ff369d",
+      "check": 3,
+      "name": "installed HBA rules actually allow only each own loopback workflow database and reject other enterprises, postgres, template1 and unrelated business access"
+    },
+    {
+      "nonce": "9aaf68ff369d",
+      "check": 4,
+      "name": "original seal produces a repeatable source contract; pre-seal capture, post-seal role installation and HBA material drift all refuse without adopting a new baseline"
+    },
+    {
+      "nonce": "9aaf68ff369d",
+      "check": 5,
+      "name": "real maintenance closes all three original fences; new projection freezes every business identity and unrelated database while preserving only the declared read-only workflow slots"
+    },
+    {
+      "nonce": "9aaf68ff369d",
+      "check": 6,
+      "name": "the actual independent Flowable reader returns complete original active and closed process facts after all business identities and fences are closed"
+    },
+    {
+      "nonce": "9aaf68ff369d",
+      "check": 7,
+      "name": "real ACLs deny SQL writes even after disabling the session read-only default; impersonation, cross-tenant tokens and ordinary write routes remain rejected"
+    },
+    {
+      "nonce": "9aaf68ff369d",
+      "check": 8,
+      "name": "a frozen source cannot be recaptured as an ordinary active catalog; original workflow data, sequences, unrelated data and captured HBA stay unchanged"
+    },
+    {
+      "nonce": "9aaf68ff369d",
+      "check": 9,
+      "name": "owned reader, both original workflow JVMs and independent identity JVM retire normally, all clients close and both original PostgreSQL directories stop cleanly"
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "9aaf68ff369d",
+      "passed": true,
+      "checks": 9,
+      "cleanupErrorCount": 0
+    }
+  ],
+  "independentCleanup": [
+    {
+      "format": "WORKFLOW_SOURCE_READER_INDEPENDENT_V2",
+      "nonce": "9aaf68ff369d",
+      "nativeChecks": 9,
+      "sourcePinsVerified": 1213,
+      "capturedSourceContractAuthenticated": true,
+      "capturedHbaFileAndPrefixVerified": true,
+      "sourceProjectedRoleAndDatabaseProfilesRechecked": true,
+      "threeOriginalFencesClosedReceiptVerified": true,
+      "businessFingerprintsRechecked": true,
+      "runtimeFenceControlRowsExcluded": true,
+      "rawSqlRowsIndependentlyRecomputedOffline": false,
+      "workflowJvmNormalStops": 3,
+      "workflowPoolClosures": 10,
+      "independentIdentityNormalStopVerified": true,
+      "bothActualPostgresDirectoriesCleanOffline": true,
+      "sourceInstallationAndCaptureVerified": true,
+      "projectedFreezeExecutedOnlyInQa": true,
+      "newColdCoordinatorIntegrated": false,
+      "ownedReaderPeerCapabilityIntegrated": false,
+      "recoveryReviewIntegrationComplete": false,
+      "currentOidcReviewerVerified": false,
+      "formalFieldActivationGranted": false,
+      "fullGoalComplete": false,
+      "tenants": [
+        {
+          "tenant": "acme",
+          "tables": 41,
+          "sequences": 2
+        },
+        {
+          "tenant": "sandbox",
+          "tables": 41,
+          "sequences": 2
+        }
+      ]
+    }
+  ],
+  "trackedSourceUnchanged": true,
+  "failedSteps": [],
+  "rawLogsOrCredentialsSaved": false,
+  "sourceInstallationAndCaptureVerified": true,
+  "projectedFreezeExecutedOnlyInQa": true,
+  "newColdCoordinatorIntegrated": false,
+  "ownedReaderPeerCapabilityIntegrated": false,
+  "recoveryReviewIntegrationComplete": false,
+  "currentOidcReviewerVerified": false,
+  "reviewApproved": false,
+  "formalFieldActivationGranted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false
+}

@@ -1,0 +1,101 @@
+{
+  "format": "WORKFLOW_RECOVERY_READER_LINUX_TERMINAL_V1",
+  "at": "2026-10-24T12:44:43.135193+00:00",
+  "head": "106663ca9b57c01d8da24060eaadbe3e2de6e7ec",
+  "run": 40094966942,
+  "job": 120875180084,
+  "conclusion": "success",
+  "separateUnitTestsExecuted": false,
+  "nativeStarts": [
+    {
+      "nonce": "61b7b98bac11",
+      "sourcePins": 1196,
+      "expectedChecks": 6
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "61b7b98bac11",
+      "check": 1,
+      "name": "real ordinary Flowable writes create an active case and a separately approved closed case with command history"
+    },
+    {
+      "nonce": "61b7b98bac11",
+      "check": 2,
+      "name": "separate Flowable reader starts with dedicated nonowner SQL roles while all original business roles remain NOLOGIN"
+    },
+    {
+      "nonce": "61b7b98bac11",
+      "check": 3,
+      "name": "actual read-only repeatable-read engine returns complete active and closed cases, history and original command ledger digests"
+    },
+    {
+      "nonce": "61b7b98bac11",
+      "check": 4,
+      "name": "cross-tenant and ordinary service tokens, write routes, actual SQL DML/DDL and bootstrap impersonation all reject"
+    },
+    {
+      "nonce": "61b7b98bac11",
+      "check": 5,
+      "name": "live privilege drift rejects the next snapshot; restored privileges revalidate and every user table/sequence stays byte-identical"
+    },
+    {
+      "nonce": "61b7b98bac11",
+      "check": 6,
+      "name": "owned reader JVM shuts down normally with original receipts, both pool callbacks and actual zero exit"
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "61b7b98bac11",
+      "passed": true,
+      "checks": 6,
+      "cleanupErrorCount": 0
+    }
+  ],
+  "independentCleanup": [
+    {
+      "format": "WORKFLOW_RECOVERY_READER_PORTABLE_INDEPENDENT_V1",
+      "nonce": "61b7b98bac11",
+      "sourcePinsVerified": 1196,
+      "nativeChecks": 6,
+      "originalManagedSourcesVerified": 1076,
+      "readerInputsVerified": 5,
+      "originalDriverAndLifecycleSourceVerified": true,
+      "completeUserTableAndSequenceFingerprintEqualityRechecked": true,
+      "rawSqlRowsIndependentlyRecomputedOffline": false,
+      "ownedJvmNormalStops": 3,
+      "expectedPoolClosures": 10,
+      "originalNormalStopReceiptsVerified": true,
+      "actualPostgresDirectoryCleanOffline": true,
+      "sourceReaderCaptureContractImplemented": false,
+      "recoveryReviewIntegrationComplete": false,
+      "currentOidcReviewerVerified": false,
+      "formalFieldActivationGranted": false,
+      "fullGoalComplete": false,
+      "tenants": [
+        {
+          "tenant": "acme",
+          "tables": 41,
+          "sequences": 2
+        },
+        {
+          "tenant": "sandbox",
+          "tables": 41,
+          "sequences": 2
+        }
+      ]
+    }
+  ],
+  "trackedSourceUnchanged": true,
+  "failedSteps": [],
+  "rawLogsOrCredentialsSaved": false,
+  "sourceReaderCaptureContractImplemented": false,
+  "ownedReaderPeerCapabilityIntegrated": false,
+  "recoveryReviewIntegrationComplete": false,
+  "currentOidcReviewerVerified": false,
+  "reviewApproved": false,
+  "formalFieldActivationGranted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false
+}

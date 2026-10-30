@@ -1,0 +1,45 @@
+openapi: 3.0.3
+info:
+  title: IDMS Enterprise API
+  version: 1.0.0
+  description: Versioned multi-tenant equipment management API. Manual file and JSON upload demo contracts are documented separately in docs/api/data-upload.openapi.json; production OIDC and persistence adapters remain future work.
+servers:
+  - url: http://localhost:4010/api/v1
+security:
+  - bearerAuth: []
+paths:
+  /health:
+    get: { security: [], responses: { '200': { description: Service health } } }
+  /overview:
+    get: { responses: { '200': { description: Tenant operations overview } } }
+  /devices:
+    get: { responses: { '200': { description: Device page } } }
+  /alarms:
+    get: { responses: { '200': { description: Alarm page } } }
+  /alarms/{alarmId}/ai-review:
+    post:
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }, { name: alarmId, in: path, required: true, schema: { type: string } }]
+      responses: { '200': { description: Structured AI review }, '409': { description: State conflict } }
+  /alarms/{alarmId}/approval:
+    post:
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }, { name: alarmId, in: path, required: true, schema: { type: string } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ApprovalRequest' } } } }
+      responses: { '200': { description: Human approval result }, '409': { description: Approval gate rejected } }
+  /integrations:
+    get: { responses: { '200': { description: Integration readiness matrix } } }
+  /audit:
+    get: { responses: { '200': { description: Tenant audit chain and verification status } } }
+  /demo/reset:
+    post:
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
+      responses: { '200': { description: Demo reset result } }
+components:
+  securitySchemes: { bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT } }
+  parameters: { IdempotencyKey: { name: Idempotency-Key, in: header, required: true, schema: { type: string, minLength: 8 } } }
+  schemas:
+    ApprovalRequest:
+      type: object
+      required: [decision, comment]
+      properties:
+        decision: { type: string, enum: [APPROVED, REJECTED, RETURNED] }
+        comment: { type: string, minLength: 2 }

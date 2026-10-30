@@ -1,0 +1,5 @@
+# Native24 完整Linux验证入口
+
+runner3和workflow4只将上一完整Linux候选的固定案例从Native23/1534切换为Native24/1536及owned-case5、checker21、CLI5。全文件逆归一化必须精确还原旧runner2。四个worker来源pin、原59项与新增完整证据25项共84项、完整66项及全部独立权限、身份、Source与目标原慢算法重建不减，原baseline8+103任务保持完全相同。
+
+继续使用实际Ubuntu24.04、Node24.20、原固定action提交、只读仓库权限、无持久checkout凭据、独立Maven缓存、180分钟、不取消前案，只上传四个固定白名单公开摘要。先完成Windows新案例和同案例独立，再按完整秘密检查、父树继承、非强推流程发布，实际运行同版Linux；此准备工作不证明Linux成功，不创建分支或网络操作。

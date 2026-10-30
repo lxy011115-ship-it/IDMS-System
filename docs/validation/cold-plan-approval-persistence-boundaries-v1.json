@@ -1,0 +1,23 @@
+{
+  "format": "COLD_PLAN_APPROVAL_PERSISTENCE_BOUNDARIES_V1",
+  "windowsActualExitCodes": {
+    "wal": 0,
+    "anchorAbort": 0,
+    "capacity": 0
+  },
+  "walWriterLockBeforeAnyApprovalWriteVerified": true,
+  "actualCoordinatorAfterInsertBeforeAnchorSaveRollbackVerified": true,
+  "actualSameIdAfterRollbackVerified": true,
+  "actualCommittedApplicationReplyDiscardRecoveryVerified": true,
+  "completeHistoryPositiveLimit": 2048,
+  "completePlanPositiveLimit": 64,
+  "capacitySyntheticTenantCount": 32,
+  "capacityBulkFixturePrefixRows": 2047,
+  "capacityActualModuleFinalAppendAndCompleteReadAndReplayAndNewProcessVerified": true,
+  "capacityRealHumanAuthenticationClaimed": false,
+  "actualSqliteCommitExecutionFailureVerified": false,
+  "tcpOrSqliteCommitReplyLossTested": false,
+  "reviewApproved": false,
+  "formalFieldActivationGranted": false,
+  "fullGoalComplete": false
+}

@@ -1,0 +1,85 @@
+{
+  "checks": [
+    "fresh predictive QI has no business read/write or worker claim; APP cannot use ingress enqueue and old publication entry point is revoked",
+    "durable unknown-acceptance tombstone blocks a late enqueue of that original actor and UUID",
+    "two concurrent real SQL claim transactions receive distinct specific jobs and native SDK preparation stays RUNNING; foreign actor and tenant cannot read the job",
+    "an actual SQL delta claiming SDK completion without its native receipt rolls back the whole state root and queue job",
+    "SQL independently rejects malformed SDK identity or null status, expired final authorization and an ANALYZE command claiming a Flowable dispatch boundary",
+    "real queue apply COMMIT reply loss resolves the actual write receipt; rule result and SQL COMMITTED are atomic, while insufficient input commits an explicit review result",
+    "durable external-start boundary refuses unsafe cancellation and preserves the original live claim; actual Flowable confirmation atomically commits the single created order and SQL job",
+    "explicit original-actor SQL reauthorization fences the actual old prepared SDK writer; a new lease and SDK revision recover the same command",
+    "native human-review and waiting-auth states persist in SQL and cannot silently retry or revive from the previous grant",
+    "another job proceeds past waiting/human jobs and an independent heartbeat thread preserves its real 30-second lease during a 32-second main-thread block",
+    "pre-SDK cancellation is explicit and durable; ALWAYS guards also refuse direct root writes with replication mode set to replica",
+    "the final reconstructed business audit chain remains valid across analysis, review, creation, human and authorization outcomes"
+  ],
+  "authorizationFixture": "trusted current-context callback; real OIDC/shared-session HTTP/worker is not implemented",
+  "realPostgres": true,
+  "realFlowable": true,
+  "realRuleHttp": true,
+  "actualQueueCommitReplyLoss": true,
+  "mainThreadBlockMilliseconds": 32000,
+  "independentLeaseHeartbeat": true,
+  "productHttpUiWiringComplete": false,
+  "productionAcceptance": false,
+  "originalRuntimeChanged": true,
+  "status": "ISOLATED_PREDICTIVE_QUEUE_PROTOCOL_VERIFIED",
+  "evidenceRun": "ea0654987fdf",
+  "rootSourcesFrozen": false,
+  "canonicalUnitTests": 567,
+  "branchUnitTests": 558,
+  "historicalReadOnlyChecks": 16,
+  "buildArtifacts": 268,
+  "qaCleanup": {
+    "at": "2026-10-20T14:08:09.620Z",
+    "runs": [
+      {
+        "nonce": "33cfe3e73feb",
+        "setupFailedBeforeResourceCreation": true,
+        "databasesRemoved": 0,
+        "rolesRemoved": 0
+      },
+      {
+        "nonce": "449166051ce2",
+        "databasesRemoved": 5,
+        "rolesRemoved": 17
+      },
+      {
+        "nonce": "ea0654987fdf",
+        "databasesRemoved": 5,
+        "rolesRemoved": 17
+      },
+      {
+        "nonce": "f5e92e234f03",
+        "databasesRemoved": 5,
+        "rolesRemoved": 17
+      },
+      {
+        "nonce": "fb5274fb3637",
+        "databasesRemoved": 5,
+        "rolesRemoved": 17
+      }
+    ],
+    "databasesRemoved": 20,
+    "rolesRemoved": 68,
+    "ownedDatabaseLeftovers": 0,
+    "ownedRoleLeftovers": 0,
+    "readOnlyInventory": true
+  },
+  "rebootRecovery": {
+    "machineRebootObserved": true,
+    "originalPhysicalPostgresRecovered": true,
+    "originalSystemAndDatabaseOwnerOidsVerified": true,
+    "fullLocalSiteRestored": false,
+    "localCore4010Listening": false,
+    "cloudDeploymentChanged": false
+  },
+  "pending": [
+    "Recover original frozen v2 local site after machine reboot with actual Cua session and archive verification",
+    "Real shared-session authorization, QI/READER HTTP, independent worker CLI and site UI",
+    "Cancellation after SDK preparation and independent human retry control",
+    "Database startup key witness and full key rotation",
+    "Legacy workflow outbox migration, full site controlled upgrade and production capacity/restore",
+    "Remaining field/HA/PITR/TLS/MFA/RUL/licensing/ICP requirements"
+  ]
+}

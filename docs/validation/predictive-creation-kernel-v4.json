@@ -1,0 +1,44 @@
+{
+  "checks": [
+    "actual independent private rule-service CLI analyzes eighteen approved input facts and one atomic health alert recommendation result is persisted without RUL or probability",
+    "same actor self-review, wrong evidence and stale version reject before any intent or business root change",
+    "independent approval freezes one creation intent with no published order; current permission denial stops dispatch and original actor regrant resumes the same request",
+    "real Flowable create commits then its reply is dropped; only one engine command exists and no local order advances; a fresh worker under a controlled clock respects the actual persisted retry deadline",
+    "a new grant revision after the actual engine replay fences the late prior worker response without publishing an order",
+    "post-response current authorization denial waits for original actor regrant; same create replay publishes one order with alert recommendation collection indexes and maintenance link",
+    "the actually created Flowable order completes claim start structured repair and independent close through the frozen maintenance kernel, closing its linked alert and recommendation",
+    "eighteen real signed receiver events are read through original receipt point and historical source-approval proofs into independent service analysis, preserving original event lineage",
+    "a changed reachable predictor response requires human review; explicit retry keeps the original actor and reuses the verified snapshot without duplicating it",
+    "mismatched real Flowable receipt cannot create a local order; a different authorized reviewer retries without replacing original creation actor or engine command",
+    "insufficient approved input becomes a persisted human-review result with no service call and no invented health score",
+    "actual business delta write COMMIT reply loss resolves its native receipt and leaves one predictive job completion and one audit",
+    "two actual workers may replay external analysis while CAS publishes one completion and one reuse event, preserving the full reconstructed audit chain"
+  ],
+  "authorizationFixture": "trusted current-context callback, not OIDC or shared-session product wiring",
+  "realIndependentRuleServiceCli": true,
+  "realFlowable": true,
+  "realSignedReceiverKernel": true,
+  "actualSqlCommitReplyLoss": true,
+  "productHttpUiWiringComplete": false,
+  "productionAcceptance": false,
+  "originalRuntimeChanged": false,
+  "status": "ISOLATED_PREDICTIVE_CREATION_KERNEL_VERIFIED",
+  "stage": "WIP SDK kernel, not product HTTP/UI",
+  "evidenceRun": "8667a1c750c3",
+  "canonicalUnitTests": 565,
+  "branchUnitTests": 556,
+  "buildArtifacts": 268,
+  "rootSourcesFrozen": false,
+  "qaResourcesRemoved": {
+    "databases": 17,
+    "roles": 65
+  },
+  "pending": [
+    "Real shared-session authorization and encrypted SQL lease queue",
+    "QI/READER product HTTP, independent worker, recovery and site UI with actual PKCE",
+    "Legacy workflow outbox migration and full site controlled upgrade",
+    "Production capacity, key rotation, backup restore, field/HA/PITR/TLS/MFA/RUL/licensing",
+    "ICP and public domain activation"
+  ],
+  "historicalReadOnlyChecks": 16
+}

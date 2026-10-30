@@ -1,0 +1,112 @@
+{
+  "stage": "IDENTITY_DATABASE_MIGRATION_V1_NEW_OWNED_ISOLATED_AUTHORITIES_ONLY",
+  "passed": true,
+  "checks": 10,
+  "sourcePins": [
+    {
+      "path": "scripts/lifecycle-java/IdentityLifecycleWireV1.java",
+      "sha256": "d5123669aea5597d0205a46f5b43eac5c89865f32c36c3718a77f13db7ca6c1a"
+    },
+    {
+      "path": "scripts/lifecycle-java/OwnedIdentityAttachV1.java",
+      "sha256": "9f4577555ee5ebf3cd24f6d39056102cbe36db66e9459fb06e4d0d181cc47bc1"
+    },
+    {
+      "path": "scripts/lifecycle-java/OwnedIdentityShutdownAgentV1.java",
+      "sha256": "3c5f18a18992dba6f2b54c90f4e0a374874131ca8728fb37c41dce5f681cc001"
+    },
+    {
+      "path": "scripts/identity-lifecycle-tools-v1.mjs",
+      "sha256": "4ba3264960c1a81fb76e753a3be670e98c428f97c975ef72064cbf24af372107"
+    },
+    {
+      "path": "scripts/identity-lifecycle-v1.mjs",
+      "sha256": "f2e8dd0d2fe6339f4c9b210ac23440f28f9c2547c5a6c8d60b74c8d079fcf1cf"
+    },
+    {
+      "path": "scripts/fixtures/owned-cold-pg-v1-qa.mjs",
+      "sha256": "fe75da317b17586dd364c2befb77ad6fcc748e9b4a5fafd52d0ceafa8ff7bee8"
+    },
+    {
+      "path": "scripts/identity-database-facts-v1.mjs",
+      "sha256": "057a3bdc52ad798e9823d59729c1b12689695502d2c24071f76394da8e1128db"
+    },
+    {
+      "path": "scripts/identity-database-envelope-v1.mjs",
+      "sha256": "c9edccaba6a998b8c6f92544fe16d862a96f66b7970382ca878fe7ab3214921a"
+    },
+    {
+      "path": "scripts/identity-database-migration-v1.mjs",
+      "sha256": "4aa13a0cabf1b981c9f922d733f26694bcdbf21d6583640331a139fe61d6f966"
+    },
+    {
+      "path": "scripts/verify-identity-database-migration-v1.mjs",
+      "sha256": "c00d9031745e8ab41a98ea0af2a78aea81489c5a323c40671e3e55a9057c6818"
+    }
+  ],
+  "sourcePinsMatchedObservedVersion": 10,
+  "postQaSourcePatches": [],
+  "actualIndependentPostgreSqlClusters": 2,
+  "actualPrivateKeycloakInstances": 2,
+  "keycloakVersion": "26.8.1",
+  "quarkusVersion": "3.40.1",
+  "actualNormalStops": 2,
+  "targetSignalsSent": 0,
+  "helperRepliesConfirmed": 2,
+  "wholeDatabaseCustomDump": true,
+  "roleGlobalObjectsManagedSeparately": true,
+  "dataFacts": {
+    "largeObjects": 1,
+    "routines": 1,
+    "schemas": 2,
+    "sequences": 1,
+    "sha256": "330b334798461b7311ad6fc5225e8429a06fb7432fa38c4a67f62558400ee208",
+    "tableRows": 1640,
+    "tables": 102
+  },
+  "dumpBytes": 266639,
+  "encryptedArchiveBytes": 587547,
+  "sourceTargetFactsMatchBeforeTargetStart": true,
+  "logicalSurvivingColumnOrderRetained": true,
+  "physicalAttributeNumbersRequiredEqual": false,
+  "tamperedCiphertextWrongKeyAndWrongIssuerRejectedBeforeTargetDatabaseCreation": true,
+  "realmAndUserUuidRetained": true,
+  "jwksRetainedExactly": true,
+  "oldAccessJwtStillCryptographicallyVerifies": true,
+  "immediateOfflineJwtRevocationClaimed": false,
+  "originalValidRefreshSurvivesMigration": true,
+  "revokedRoleRemainsAbsent": true,
+  "siteScopeActuallyReducedFromTwoToOne": true,
+  "loggedOutRefreshRejected": true,
+  "disabledRefreshAndPasswordLoginRejected": true,
+  "newTargetOnlyAuthorizationObserved": true,
+  "oldSourceApplicationAndAdminDatabaseConnectionsDenied": true,
+  "staleSourceEpochAndRestoreRejected": true,
+  "sequenceFunctionAndLargeObjectContentReadVerified": true,
+  "currentAuthorityEpochOutsidePgdata": 2,
+  "currentAuthorityRecordIntegratedIntoOriginalRuntime": false,
+  "controllerCrashReentryComplete": false,
+  "arbitraryExistingDatabaseOrJvmAdoption": false,
+  "testedPlatform": "Windows",
+  "productionLinuxMigrationTested": false,
+  "allExternalProvidersAndOfflineTransientSessionsCovered": false,
+  "originalRuntimeChanged": false,
+  "originalIdentityDatabaseMigrated": false,
+  "historicalRuns": 4,
+  "historicalPassedRuns": 2,
+  "historicalOwnedPgCleanShutdowns": 8,
+  "historicalIdentityJvmsRetired": 6,
+  "historicalCreatedDatabasesRemoved": 7,
+  "historicalOwnedRolesRemoved": 8,
+  "unsealedFirstAttemptDumpQuarantinedPrivately": true,
+  "failedRunArtifactsRetained": true,
+  "qaVerificationSha256": "a8843ac99d12874d72c09318f035f504179a263ecc16d656080437beac5bda3e",
+  "cleanupVerificationSha256": "07ccc882f4d914800706af5f75bcae41f9866808dc359635b9f02f0ccf08945d",
+  "canonicalUnitTests": 615,
+  "repositoryUnitTests": 606,
+  "knownPreexistingTestDifference": 9,
+  "productionAcceptance": false,
+  "publicCutover": false,
+  "fullOriginalGoalComplete": false,
+  "finalUserMaterialsComplete": false
+}

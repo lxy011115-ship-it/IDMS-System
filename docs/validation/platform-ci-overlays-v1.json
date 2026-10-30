@@ -1,0 +1,28 @@
+{
+  "format": "IDMS_PLATFORM_CI_OVERLAYS_V1",
+  "parent": "3666870e72e2539c7c3cc7d92a4b6de7a6c3fcf1",
+  "previousPublishedCommit": "bbe3a8f7d66579836f393c65b9b7e68cb69dc9ff",
+  "overlays": [
+    {
+      "path": ".github/workflows/application-lifecycle-verification.yml",
+      "beforeSha256": "bc4f2cf68bad931a0152d1890accd03493ff63feb0e66529993928ca9c2bb93c",
+      "afterSha256": "a6c395344b58b00dcd840fc21b18d4321dcd7a8b844444b2e5b2da62217e3291"
+    },
+    {
+      "path": ".github/workflows/application-registry-checkpoint-verification.yml",
+      "beforeSha256": "85a66b13c1983391ed99713504cad5fea98c04f78d15cbaeea6a80f358195517",
+      "afterSha256": "f82cbd7abc8f670d25f78b4dd188768a91d0b24ad558590390692d63eb0c6e97"
+    },
+    {
+      "path": ".github/workflows/platform-core-lifecycle-verification.yml",
+      "beforeSha256": "6aa51791636346bed7307e8ea5d6e10ce23b1ccc0f201f39b444cbb8aff14754",
+      "afterSha256": "3652ef9e3058c3bbb73c6abf751a345d83e2a649cbefdfb0499e65dfe6490ff2"
+    }
+  ],
+  "ownWorkflow": {
+    "path": ".github/workflows/platform-predictor-lifecycle-verification.yml",
+    "beforeSha256": "c1dfb0ec882fcf004a39754e503600f12aa310f68882062d1d55ea379fdd373d",
+    "afterSha256": "6f2f53971478d641ee09265f99caf2c99c145a9722f0e41cbe299a3abdfc7ee7"
+  },
+  "runtimeChanges": []
+}

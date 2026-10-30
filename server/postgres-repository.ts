@@ -22,7 +22,7 @@ async function loadTenantDatabases<T>(tenants:Store['tenants'],read:(client:pg.P
  const config=validateRuntimeConfig(JSON.parse(await readFile(resolve(process.env.IDMS_POSTGRES_CONFIG||'.local/postgres-business.json'),'utf8')));
  for(const tenant of tenants){
   const account=config.tenants[tenant.id];if(!account)throw Error('Missing independent database configuration for tenant '+tenant.id);
-  const pool=new pg.Pool({...connectionFor(config,account),max:4,application_name:'idms-business',idle_in_transaction_session_timeout:20000,query_timeout:20000});pool.on('connect',client=>client.on('error',()=>console.error('[IDMS database] checked-out connection failed; current transaction must abort')));pool.on('error',()=>console.error('[IDMS database] tenant '+tenant.id+' idle connection failed'));
+  const pool=new pg.Pool({...connectionFor(config,account),max:4,application_name:'idms-business',connectionTimeoutMillis:3000,idle_in_transaction_session_timeout:20000,query_timeout:20000});pool.on('connect',client=>client.on('error',()=>console.error('[IDMS database] checked-out connection failed; current transaction must abort')));pool.on('error',()=>console.error('[IDMS database] tenant '+tenant.id+' idle connection failed'));
   const load=async()=>{
    let client:pg.PoolClient;try{client=await pool.connect();}catch(e){await pool.end();await closePostgres();throw e;}
    try{for(let attempt=0;;attempt++){let locked=false;try{

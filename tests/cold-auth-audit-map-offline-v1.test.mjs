@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile,writeFile,appendFile,readdir,link} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import {canonical} from '../server/imports.ts';
+import {coldAuthAuditMapOfflineInputV1 as fixture} from './fixtures/cold-auth-audit-map-offline-input-v1.mjs';
+import {verifyColdAuthAuditMapOfflineQaV1 as verify} from '../scripts/fixtures/cold-auth-audit-map-offline-v1-qa.mjs';
+const work=process.env.IDMS_AUTH_MAP_OFFLINE_UNIT_WORK;assert.equal(typeof work,'string');assert.equal(resolve(work),work);
+async function retired(directory){assert(!(await readdir(directory)).some(n=>n.startsWith('auth-map-offline-')||n.startsWith('field-full-verify-')));}
+test('independent raw witness reader decrypts two nonempty tenant chains and matches all receipts including unacknowledged commits',async()=>{const f=await fixture(work),before=await readFile(f.file),v=await verify(f.input);assert.equal(v.events,4);assert.equal(v.mapped,4);assert.equal(v.unacknowledged,2);assert.equal(v.legacyAuthenticationAuditLeaves,2);assert(v.rawNamespaceRowsIndependentlyRehashed&&v.rawNamespaceCiphertextsIndependentlyDecrypted&&v.allBusinessReceiptsCursorsAndV4AuditsBidirectionallyMatched&&v.sourceRowsOwnerTokenFenceAndLeasePreserved&&v.privateIndexNormallyRetired);assert.deepEqual(await readFile(f.file),before);await retired(f.input.workDirectory);});
+test('a wrong but valid master key cannot use hash-matching ciphertext as decryption proof',async()=>{const f=await fixture(work);f.input.ring.keys[0].key=Buffer.alloc(32,73).toString('base64url');await assert.rejects(verify(f.input));await retired(f.input.workDirectory);});
+test('raw witness byte drift is refused even while all declared namespace table hashes remain unchanged',async()=>{const f=await fixture(work);await appendFile(f.file,' ');await assert.rejects(verify(f.input));await retired(f.input.workDirectory);});
+test('a self-consistently rehashed completion cannot inflate the count of mapped business receipts',async()=>{const f=await fixture(work);f.records.at(-1).mapped=5;const text=f.records.map(r=>canonical(r)+'\n').join('');await writeFile(f.file,text);Object.assign(f.input.sqlEvidence.rawCiphertextNamespaceWitness,{sha256:f.sha(text),bytes:Buffer.byteLength(text)});await assert.rejects(verify(f.input));await retired(f.input.workDirectory);});
+test('a valid full root containing an orphan authentication audit is refused by the separate chain enumeration',async()=>{const f=await fixture(work,{orphanAudit:true});await assert.rejects(verify(f.input));await retired(f.input.workDirectory);});
+test('a changed captured lease cannot be accepted as the original child claim even with identical event and business bytes',async()=>{const f=await fixture(work);f.input.seed.tenants.acme.originalClaim.leaseUntil='2026-10-26T00:00:00.000Z';await assert.rejects(verify(f.input));await retired(f.input.workDirectory);});
+test('hard-linked raw SQL witnesses are refused without leaving a verification index',async()=>{const f=await fixture(work);await link(f.file,join(f.input.workDirectory,'witness-link.private.jsonl'));await assert.rejects(verify(f.input));await retired(f.input.workDirectory);});

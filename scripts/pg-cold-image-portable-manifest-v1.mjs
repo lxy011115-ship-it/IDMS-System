@@ -1,0 +1,26 @@
+import {isPostgres16ToolVersionV1} from './pg-tool-version-v1.mjs';
+import {canonical} from '../server/imports.ts';
+import {win32,posix} from 'node:path';
+export const coldImageLimitsV1=Object.freeze({manifestBytes:8*1024**2,evidenceBytes:1024**2,files:50000,directories:10000,fileBytes:2*1024**3,totalBytes:32*1024**3});
+export const coldNeedV1=(ok,code)=>{if(!ok)throw Object.assign(Error(code),{code});};
+export const coldUuidV1=v=>typeof v==='string'&&/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(v)&&!/^0{8}(?:-0{4}){3}-0{12}$/.test(v);
+export const coldHashV1=v=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
+export function coldExactV1(v,keys){return !!v&&Object.getPrototypeOf(v)===Object.prototype&&Object.keys(v).length===keys.length&&keys.every(k=>Object.hasOwn(v,k));}
+export function coldPathV1(v){return typeof v==='string'&&v.length<=1024&&v.length>0&&/^[A-Za-z0-9_.\/-]+$/.test(v)&&v.split('/').every(p=>p&&p!=='.'&&p!=='..'&&!/[. ]$/.test(p)&&!/^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(p));}
+export function coldEvidenceV1(v){let count=0;const pending=[{v,d:0}];while(pending.length){const {v:x,d}=pending.pop();coldNeedV1(++count<=100000&&d<=24,'COLD_IMAGE_EVIDENCE_LIMIT');if(x===null||typeof x==='string'||typeof x==='boolean')continue;if(typeof x==='number'){coldNeedV1(Number.isFinite(x),'COLD_IMAGE_EVIDENCE');continue;}coldNeedV1(Array.isArray(x)||x&&Object.getPrototypeOf(x)===Object.prototype,'COLD_IMAGE_EVIDENCE');for(const k of Object.keys(x))pending.push({v:x[k],d:d+1});}coldNeedV1(Buffer.byteLength(canonical(v))<=coldImageLimitsV1.evidenceBytes,'COLD_IMAGE_EVIDENCE_LIMIT');return v;}
+export function coldManifestV1(v){
+ const need=coldNeedV1,l=coldImageLimitsV1;need(coldExactV1(v,['format','backupId','createdAt','scope','restoreMode','sourceDirectory','platform','arch','tooling','control','evidence','tree','totalBytes','automaticActivationApproved','privilegedAdministratorTrustRequired']),'COLD_IMAGE_MANIFEST');
+ need(v.format==='IDMS_PG_COLD_IMAGE_V1'&&coldUuidV1(v.backupId)&&v.scope==='ENTIRE_SHUT_DOWN_PG16_CLUSTER'&&v.restoreMode==='NEW_ISOLATED_DIRECTORY_ONLY'&&v.automaticActivationApproved===false&&v.privilegedAdministratorTrustRequired===true,'COLD_IMAGE_MANIFEST');
+ need(typeof v.createdAt==='string'&&Number.isFinite(Date.parse(v.createdAt))&&new Date(v.createdAt).toISOString()===v.createdAt&&typeof v.sourceDirectory==='string'&&v.sourceDirectory.length<=4096&&!/[\u0000-\u001f]/.test(v.sourceDirectory),'COLD_IMAGE_MANIFEST');
+ need(['win32','linux','darwin'].includes(v.platform)&&['x64','arm64'].includes(v.arch)&&coldExactV1(v.tooling,['version','postgresSha256','pgCtlSha256','controlSha256'])&&isPostgres16ToolVersionV1(v.tooling.version)&&['postgresSha256','pgCtlSha256','controlSha256'].every(k=>coldHashV1(v.tooling[k])),'COLD_IMAGE_PROGRAM');
+ need(v.platform==='win32'?/^[A-Za-z]:\\/.test(v.sourceDirectory)&&win32.normalize(v.sourceDirectory)===v.sourceDirectory:posix.isAbsolute(v.sourceDirectory)&&posix.normalize(v.sourceDirectory)===v.sourceDirectory,'COLD_IMAGE_SOURCE_PATH');
+ need(coldExactV1(v.control,['systemIdentifier','controlVersion','catalogVersion','state','checkpoint','sha256'])&&/^\d{10,25}$/.test(v.control.systemIdentifier)&&/^\d{3,12}$/.test(v.control.controlVersion)&&/^\d{6,12}$/.test(v.control.catalogVersion)&&v.control.state==='shut down'&&/^[0-9A-F]+\/[0-9A-F]+$/.test(v.control.checkpoint)&&coldHashV1(v.control.sha256),'COLD_IMAGE_CONTROL');coldEvidenceV1(v.evidence);
+ need(coldExactV1(v.tree,['directories','files'])&&Array.isArray(v.tree.directories)&&v.tree.directories.length<=l.directories&&Array.isArray(v.tree.files)&&v.tree.files.length>0&&v.tree.files.length<=l.files,'COLD_IMAGE_TREE');
+ const all=new Map(),dirs=new Set(),files=new Map();let prior='',bytes=0;for(const p of v.tree.directories){need(coldPathV1(p)&&p>prior,'COLD_IMAGE_PATH');prior=p;need(!all.has(p.toLowerCase()),'COLD_IMAGE_DUPLICATE_PATH');all.set(p.toLowerCase(),'D');dirs.add(p);}
+ prior='';for(const f of v.tree.files){need(coldExactV1(f,['path','bytes','sha256'])&&coldPathV1(f.path)&&f.path>prior&&Number.isSafeInteger(f.bytes)&&f.bytes>=0&&f.bytes<=l.fileBytes&&coldHashV1(f.sha256),'COLD_IMAGE_FILE');prior=f.path;need(!all.has(f.path.toLowerCase()),'COLD_IMAGE_DUPLICATE_PATH');all.set(f.path.toLowerCase(),'F');files.set(f.path,f);bytes+=f.bytes;need(bytes<=l.totalBytes,'COLD_IMAGE_LIMIT');}
+ for(const p of [...dirs,...files.keys()]){const parent=p.includes('/')?p.slice(0,p.lastIndexOf('/')):'';need(!parent||dirs.has(parent),'COLD_IMAGE_PARENT');}
+ for(const p of ['base','global','pg_wal','pg_xact','pg_tblspc'])need(dirs.has(p),'COLD_IMAGE_LAYOUT');for(const p of ['PG_VERSION','global/pg_control','postgresql.conf','pg_hba.conf','pg_ident.conf'])need(files.has(p),'COLD_IMAGE_LAYOUT');
+ need(files.get('global/pg_control').sha256===v.control.sha256&&Number.isSafeInteger(v.totalBytes)&&v.totalBytes===bytes,'COLD_IMAGE_CONTROL');
+ need(!all.has('postmaster.pid')&&!all.has('standby.signal')&&!all.has('recovery.signal')&&!all.has('backup_label')&&![...all.keys()].some(p=>p.startsWith('pg_tblspc/')),'COLD_IMAGE_EXTERNAL_OR_RUNNING');
+ need(Buffer.byteLength(canonical(v))<=l.manifestBytes,'COLD_IMAGE_MANIFEST_LIMIT');return v;
+}

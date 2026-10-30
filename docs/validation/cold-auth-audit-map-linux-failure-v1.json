@@ -1,0 +1,41 @@
+{
+  "format": "COLD_AUTH_AUDIT_MAP_LINUX_FAILURE_PUBLIC_V1",
+  "at": "2026-10-25T17:44:57.256Z",
+  "head": "de9c90fe06b7804480e56b5a0cecc675b915759c",
+  "run": 40214918577,
+  "job": 121233859099,
+  "conclusion": "failure",
+  "nativeNonce": "ce12adb8bae0",
+  "nativeChecksCompleted": 24,
+  "nativeReportedCleanupErrorCount": 0,
+  "lastCompletedCheck": "new independent read-only Flowable JVM returns every original full R4 case and command ledger after real physical restore; old and cross-enterprise HTTP tokens reject",
+  "parentUnitSummary": {
+    "tests": 152,
+    "pass": 152,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "componentUnitSummary": {
+    "tests": 39,
+    "pass": 39,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "jvmBoundaryChecks": 16,
+  "outerFailureCode": "READER_PEER_OPERATION_UNCONFIRMED",
+  "messageSha256": "62b457d5738ea4a7b24afa1e666e8a3f5c7b09b549f7e36663df07610450847b",
+  "activePinnedSource": {
+    "path": "scripts/workflow-review-reader-lifecycle-v7.mjs",
+    "sha256": "acaa73f25019edffd229db7eb1c468941e103062f5ab322b43bbd2c5a4e0bcdc",
+    "line": 99
+  },
+  "actualDeeperCauseConfirmed": false,
+  "helperErrorOccurredInThisRunProven": false,
+  "implementationDiscardsHelperErrorsBeforeReadingOriginalReply": true,
+  "terminalLogConsumedOnce": true,
+  "rawLogsOrCredentialsSaved": false,
+  "linuxNativeAndIndependentPassed": false,
+  "fullGoalComplete": false
+}

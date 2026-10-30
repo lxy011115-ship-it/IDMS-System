@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {readFile,realpath} from 'node:fs/promises';
+import {resolve,join,relative} from 'node:path';
+import {createHash} from 'node:crypto';
+import {coldToolingV1,coldStoppedV1} from './pg-cold-image-portable-tools-v1.mjs';
+import {authenticateColdImageV1} from './pg-cold-image-portable-v1.mjs';
+import {stateReceiptHash} from '../server/state-map-v1.ts';
+import {fieldMapFrozenProfileV2,frozenMapHashV1} from './field-map-frozen-profile-v2.mjs';
+import {canonical} from '../server/imports.ts';
+assert.equal(process.argv.length,3);const nonce=process.argv[2];assert.match(nonce,/^[a-f0-9]{12}$/);
+const work=resolve('work/field-map-frozen-maintenance-v3-20261024',nonce),read=async p=>JSON.parse(await readFile(p,'utf8')),report=await read(join(work,'verification.json')),pins=await read(join(work,'native-input-pins.json'));
+assert.equal(report.nonce,nonce);assert(report.passed&&report.checks.length===9&&report.cleanupErrors.length===0&&report.allSqlConnectionsClosed&&report.allOriginalProcessesTerminal);assert.deepEqual(report.sourcePins,pins.sourcePins);
+for(const pin of pins.sourcePins)assert.equal(createHash('sha256').update(await readFile(pin.path)).digest('hex'),pin.sha256);
+const source=resolve(report.clusterWork),parent=resolve('work/pg-physical-platform-v1-20261022');assert.match(relative(parent,source),/^[a-f0-9]{12}$/);assert.equal(await realpath(source),source);
+const owned=await read(join(source,'cluster.private.json'));assert.equal(owned.format,'OWNED_PLATFORM_PG_QA_V1');assert.equal(owned.work,source);assert.equal(owned.source,join(source,'source'));assert.equal(owned.target,join(source,'restored'));assert.notEqual(owned.authority.port,45432);
+const tooling=await coldToolingV1(owned.bin),stop=report.postgresStop;assert.match(relative(work,report.lifecycleDirectory),/^postgres-process-[a-f0-9-]{36}$/);
+assert.deepEqual(stop,await read(join(report.lifecycleDirectory,'normal-stop-proof.json')));assert.equal(stop.terminal.code,0);assert.equal(stop.terminal.signal,null);assert(stop.helperReplyConfirmed&&!stop.genericKillUsed&&stop.mode==='smart'&&stop.otherClientsBefore===0&&stop.preparedTransactionsBefore===0);assert.equal(stop.binding.dataDirectory,owned.target);
+const sourceOffline=await coldStoppedV1(owned.source,tooling,stop.binding.systemIdentifier),targetOffline=await coldStoppedV1(owned.target,tooling,stop.binding.systemIdentifier);assert.deepEqual(sourceOffline,report.sourceOfflineControl);assert.deepEqual(sourceOffline,report.coldArchive.sourceControl);assert.deepEqual(targetOffline,report.targetOfflineControl);assert.deepEqual(targetOffline,stop.control);
+const backupFile=join(work,'archive',report.coldArchive.backupId+'.idmspgcold'),keyFile=join(work,'cold-key.private.json');assert.equal(createHash('sha256').update(await readFile(backupFile)).digest('hex'),report.coldArchive.sha256);
+const checked=await authenticateColdImageV1({backupFile,keyFile,workDirectory:join(work,'scratch')});try{assert.equal(checked.manifest.backupId,report.coldArchive.backupId);assert.equal(checked.manifest.control.systemIdentifier,stop.binding.systemIdentifier);assert.equal(checked.manifest.evidence.purpose,'FIELD_MAP_FROZEN_MAINTENANCE_QA_V1');}finally{await checked.dispose();}
+const original=fieldMapFrozenProfileV2(await read(join(work,'profile.private.json'))),final=fieldMapFrozenProfileV2(report.finalProfile);assert.equal(frozenMapHashV1(original),report.profileSha256);assert.equal(canonical({...final,closed:original.closed}),canonical(original));
+const p=report.committedPrepared,r=p.receipt;assert.equal(r.receiptHash,stateReceiptHash(r));assert.equal(r.beforeRoot,p.beforeHead.rootHash);assert.equal(r.beforeReceiptHash,p.beforeHead.receiptHash);assert.equal(r.beforeRevision,'1');assert.equal(r.revision,'2');assert.equal(report.finalHead.revision,r.revision);assert.equal(report.finalHead.rootHash,r.rootHash);assert.equal(report.finalHead.rootId,r.rootId);assert.equal(report.finalHead.receiptHash,r.receiptHash);assert.equal(report.finalHead.count,r.count);
+assert.equal(p.beforeFence.state,'CLOSED');assert.equal(p.afterFence.state,'CLOSED');assert.equal(p.afterFence.operation,final.closed.operationId);assert.equal(String(p.afterFence.revision),final.closed.revision);assert.equal(BigInt(p.afterFence.revision),BigInt(p.beforeFence.revision)+2n);
+assert.equal(report.actualSqlReceiptRows,2);assert.equal(report.finalAuditEvents,1);assert.deepEqual(report.expectedSqlFault,{code:'P0001',originalImmutableKeyErrorRetained:true});assert(report.inventoryPathEvidence.canonicalFilesystemDirectoryVerified);
+assert(!report.currentOidcApprovalVerified&&!report.formalFieldActivationGranted&&!report.fullGoalComplete);
+console.log(JSON.stringify({format:'FIELD_MAP_FROZEN_INDEPENDENT_CLEANUP_V1',nonce,nativeChecks:9,sourcePinsVerified:pins.sourcePins.length,fullColdArchiveAuthenticated:true,bothActualPostgresDirectoriesCleanOffline:true,originalPostgresNormalSmartStopVerified:true,receiptHashRecomputed:true,preparedAndFinalRootAgree:true,frozenOriginalInventoryPreserved:true,actualSqlReceiptRows:2,nativeVerifiedAuditRows:1,primarySqlErrorRetained:true,rawCredentialsPrinted:false,independentRootMembershipDatasetRecomputed:false,currentOidcApprovalVerified:false,formalFieldActivationGranted:false,fullGoalComplete:false}));

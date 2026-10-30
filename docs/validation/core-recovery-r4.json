@@ -1,0 +1,26 @@
+{
+  "verifiedAt": "2026-10-20T23:42:37.269197+00:00",
+  "stage": "original-v2-local-reboot-recovery-r4",
+  "canonicalUnitTests": 571,
+  "historicalReadOnlyPreservationChecks": 16,
+  "frozenSourceFilesPreserved": 913,
+  "twoTenantsBeforeAfterActualIsolatedRestoreArchives": 4,
+  "retainedAuthenticatedAbortedAttemptArchives": 7,
+  "actualCuaPkceNewSessionsVerified": 2,
+  "preRebootSessionContinuityClaimed": false,
+  "nineOwnedServiceIdentitiesVerified": true,
+  "newSignedBusinessAcknowledgementsIndividuallyMatched": 24,
+  "ownedRestoreDatabaseRoleAndCredentialInventoryClean": true,
+  "browserQaUsersSessionsCookiesTabsCleaned": true,
+  "sourceDatabaseRestoredInPlace": false,
+  "cloudDeploymentChanged": false,
+  "publicDomainEnabled": false,
+  "fullCommercialGoalComplete": false,
+  "productionAcceptance": false,
+  "knownLimits": [
+    "R4 capture cleanup exceptions can skip admin.end; requires independent R5 revision",
+    "Legacy 320px root scrollbar gutter horizontal overflow: 15px",
+    "Three limited Chrome exceptions remain to classify",
+    "Prediction real authentication/HTTP/CLI/UI wiring and full-site cutover remain pending"
+  ]
+}

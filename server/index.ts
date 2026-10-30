@@ -1,4 +1,10 @@
+import {readSparesHistoryCurrent} from './spares-history-db.ts';
+import {applicationVersion} from './version.ts';
+import {readSparesQuery} from './spares-query-db.ts';
+import type {SpareEndpoint} from './spares-query-plan.ts';
+import {beginHttpResponse,publicFailure,failureDiagnostic,readPublicAsset} from './http-boundary.ts';
 import {FieldIntakeService} from './field-intake.ts';
+import {readSpares,commandSparesCurrent} from './spares-db.ts';
 import {fieldGovernanceSqlRead} from './field-governance-sql.ts';
 import {FieldPlatformService} from './field-platform.ts';
 import {telemetryCoverageSqlRead} from './plan-coverage-sql.ts';
@@ -24,13 +30,11 @@ import {CapacityError,workScheduler,sqlScheduler,accountValue} from './capacity.
 import type {Workspace} from './tenant-workspace.ts';
 import {workerInstanceId} from './outbox-worker.ts';
 import {createRuntimeAuthStore} from './auth-store.ts';
-import {verifySqlRead} from './read-integrity.ts';
+import {verifySqlRead,verifiedReadStamp} from './read-integrity.ts';
 import {commandAccess} from './command-access.ts';
 import {equipmentBindingForDevice,profilePoints} from './equipment-profiles.ts';
 import {dataScope} from './data-scope.ts';
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
-import { readFile } from "node:fs/promises";
-import { extname, join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { appendAudit } from "./audit.ts";
 import { authConfigFromEnv, createAuth } from './auth.ts';
@@ -89,17 +93,15 @@ async function context(req: IncomingMessage) {
 function page<T>(items: T[]) { return { items, total: items.length, page: 1, pageSize: 100 }; }
 
 export async function handler(req: IncomingMessage, res: ServerResponse) {
+  const requestId=beginHttpResponse(res);
   try {
     const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
-    if (url.pathname === "/api/v1/health") return json(res, 200, { status: "UP", version: "0.5.0", mode: "predictive-maintenance-development", receiptIdentity:'persisted-uuid-receipt-binding-2.0.0',fieldTransactionalIntake:fieldIntake.state(),fieldChannelGovernance:storageMode==='postgres-tenant-databases'?'scoped-field-channel-view-v1':'disabled',fieldLeaseCurrentCheck:fieldPlatform.configured?'signed-read-only-field-check-v1':'disabled',fieldLeaseIssuance:fieldPlatform.configured?'approved-audited-field-lease-v1':'disabled',sourceGovernance:'approved-source-binding-v1',operationalMetrics:'approved-frozen-operational-v1', qualityPolicyGovernance:'approved-effective-quality-rules-v1',coverageReplay:'asof-all-inputs-v1',frozenCoverageReports:'append-only-independent-report-v1',configurationHistory:'observed-registry-chain-v1',calendarHistory:'effective-and-known-at-v1',calendarRecurrence:'frozen-weekly-exceptions-v1',plannedCoverage:'approved-operation-calendar-v1',coverageDefinitionNormalization:'approved-point-values-v1',telemetryQuality:'scoped-snapshot-quality-v1',coldInputProof:storageMode==='postgres-tenant-databases'?'dual-stream-input-proof-v1':'full-file-snapshot',coldImportProof:storageMode==='postgres-tenant-databases'?'batchwise-input-fact-proof-v1':'full-file-snapshot',batchReads:storageMode==='postgres-tenant-databases'?'verified-input-fact-pages-v1':'bounded-file-array-pages-v1', coldReadVerification:storageMode==='postgres-tenant-databases'?'segmented-canonical-proof-v1':'full-file-snapshot', csvExport:storageMode==='postgres-tenant-databases'?'verified-two-pass-cursor-v1':'bounded-file-array-v1', writePostImage:storageMode==='postgres-tenant-databases'?'single-statement-row-compare-v1':'atomic-file-snapshot', auditPagination:storageMode==='postgres-tenant-databases'?'verified-window-keyset-v1':'file-demo-window-keyset-v1', readBodies:storageMode==='postgres-tenant-databases'?'scoped-original-and-audit-v1':'file-demo-snapshot',runtimeBootstrap:storageMode==='postgres-tenant-databases'?'verified-bindings-only-v1':'full-file-demo', resourceAdmission:storageMode==='postgres-tenant-databases'?'bounded-resource-admission-v1':'bounded-http-demo-v1',stateReconstruction:storageMode==='postgres-tenant-databases'?'single-statement-row-stream-v1':'atomic-local-snapshot',commandWorkspaces:storageMode==='postgres-tenant-databases'?'explicit-tenant-workspace-v1':'serialized-file-snapshot',backgroundDispatch:storageMode==='postgres-tenant-databases'?'leased-fenced-outbox-v1':'disabled',dispatcherInstanceId:workerInstanceId,authentication: auth.mode,sessionStorage:auth.storage, storage: storageMode, dataReadIsolation:storageMode==='postgres-tenant-databases'?'verified-mvcc-repeatable-read-v1':'serialized-file-snapshot',dataManagementQueries:storageMode==='postgres-tenant-databases'?'typed-sql-read-model':'file-snapshot', dataImportMappings:'published-file-mapping-v1',equipmentProfiles:'frozen-inherited-equipment-profile-v1',businessPersistence:storageMode==='postgres-tenant-databases'?'normalized-entities-v3':'atomic-local-snapshot',crossInstanceTransactions:storageMode==='postgres-tenant-databases',time: new Date().toISOString() });
+    if (url.pathname === "/api/v1/health") return json(res, 200, { status: "UP", version: applicationVersion, mode: "predictive-maintenance-development", receiptIdentity:'persisted-uuid-receipt-binding-2.0.0',fieldTransactionalIntake:fieldIntake.state(),fieldChannelGovernance:storageMode==='postgres-tenant-databases'?'scoped-field-channel-view-v1':'disabled',fieldLeaseCurrentCheck:fieldPlatform.configured?'signed-read-only-field-check-v1':'disabled',fieldLeaseIssuance:fieldPlatform.configured?'approved-audited-field-lease-v1':'disabled',sourceGovernance:'approved-source-binding-v1',operationalMetrics:'approved-frozen-operational-v1', qualityPolicyGovernance:'approved-effective-quality-rules-v1',coverageReplay:'asof-all-inputs-v1',frozenCoverageReports:'append-only-independent-report-v1',configurationHistory:'observed-registry-chain-v1',calendarHistory:'effective-and-known-at-v1',calendarRecurrence:'frozen-weekly-exceptions-v1',plannedCoverage:'approved-operation-calendar-v1',coverageDefinitionNormalization:'approved-point-values-v1',telemetryQuality:'scoped-snapshot-quality-v1',coldInputProof:storageMode==='postgres-tenant-databases'?'dual-stream-input-proof-v1':'full-file-snapshot',coldImportProof:storageMode==='postgres-tenant-databases'?'batchwise-input-fact-proof-v1':'full-file-snapshot',batchReads:storageMode==='postgres-tenant-databases'?'verified-input-fact-pages-v1':'bounded-file-array-pages-v1', coldReadVerification:storageMode==='postgres-tenant-databases'?'segmented-canonical-proof-v1':'full-file-snapshot', csvExport:storageMode==='postgres-tenant-databases'?'verified-two-pass-cursor-v1':'bounded-file-array-v1', writePostImage:storageMode==='postgres-tenant-databases'?'single-statement-row-compare-v1':'atomic-file-snapshot', auditPagination:storageMode==='postgres-tenant-databases'?'verified-window-keyset-v1':'file-demo-window-keyset-v1', readBodies:storageMode==='postgres-tenant-databases'?'scoped-original-and-audit-v1':'file-demo-snapshot',runtimeBootstrap:storageMode==='postgres-tenant-databases'?'verified-bindings-only-v1':'full-file-demo', resourceAdmission:storageMode==='postgres-tenant-databases'?'bounded-resource-admission-v1':'bounded-http-demo-v1',stateReconstruction:storageMode==='postgres-tenant-databases'?'single-statement-row-stream-v1':'atomic-local-snapshot',commandWorkspaces:storageMode==='postgres-tenant-databases'?'explicit-tenant-workspace-v1':'serialized-file-snapshot',backgroundDispatch:storageMode==='postgres-tenant-databases'?'leased-fenced-outbox-v1':'disabled',dispatcherInstanceId:workerInstanceId,authentication: auth.mode,sessionStorage:auth.storage, storage: storageMode, dataReadIsolation:storageMode==='postgres-tenant-databases'?'verified-mvcc-repeatable-read-v1':'serialized-file-snapshot',dataManagementQueries:storageMode==='postgres-tenant-databases'?'typed-sql-read-model':'file-snapshot', dataImportMappings:'published-file-mapping-v1',equipmentProfiles:'frozen-inherited-equipment-profile-v1',businessPersistence:storageMode==='postgres-tenant-databases'?'normalized-entities-v3':'atomic-local-snapshot',crossInstanceTransactions:storageMode==='postgres-tenant-databases',time: new Date().toISOString() });
     return await withRequestCapacity(req,res,async()=>{
     if (!url.pathname.startsWith("/api/")) {
-      const requested = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
-      if (requested.includes("..")) throw new DomainError(400, "非法路径");
-      const filePath = requested === "styles.css" ? join(process.cwd(), "src", "styles.css") : join(process.cwd(), "public", requested);
-      const file = await readFile(filePath);
-      const mime: Record<string,string> = { ".html":"text/html; charset=utf-8", ".js":"text/javascript; charset=utf-8", ".css":"text/css; charset=utf-8", ".svg":"image/svg+xml" };
-      reserveResponse(file.length);res.writeHead(200, { "content-type": mime[extname(requested)] || "application/octet-stream" }); res.end(file); return;
+      if(!['GET','HEAD'].includes(req.method||'')){res.setHeader('Allow','GET, HEAD');throw new DomainError(405,'页面资源仅支持GET和HEAD');}
+      const {file,contentType}=await readPublicAsset(url.pathname);
+      reserveResponse(file.length);res.writeHead(200,{'content-type':contentType,'content-length':file.length,'cache-control':'no-cache'});res.end(req.method==='HEAD'?undefined:file);return;
     }
     if(['/api/v1/field-channel/lease','/api/v1/field-channel/lease/check'].includes(url.pathname)){
       if(req.method!=='POST')throw new DomainError(404,'现场签发接口不存在');if(url.search)throw new DomainError(400,'现场签发不接受查询参数');if(req.headers.origin!==undefined||req.headers.cookie!==undefined)throw new DomainError(401,'现场签发仅接受来源机器认证');if(req.headers['content-type']?.split(';')[0].trim().toLowerCase()!=='application/json')throw new DomainError(415,'现场签发需要JSON请求');return json(res,200,await (url.pathname.endsWith('/check')?fieldPlatform.checkCurrent(rootStore,await body(req,4096)):fieldPlatform.issue(rootStore,await body(req,4096))));
@@ -108,6 +110,21 @@ export async function handler(req: IncomingMessage, res: ServerResponse) {
 
     const ctx = await context(req);
     authorize(ctx, "read");bindRequestTenant(ctx.tenantId);
+    if(['/api/v1/spares/summary','/api/v1/spares/list','/api/v1/spares/detail','/api/v1/spares/options','/api/v1/spares/workorder-usage'].includes(url.pathname)){
+      if(storageMode!=='postgres-tenant-databases')throw new DomainError(503,'备件采购模块需要企业PostgreSQL数据库');
+      if(req.method!=='GET'){res.setHeader('Allow','GET');throw new DomainError(405,'备件查询仅支持GET');}const pool=tenantPool(ctx.tenantId),endpoint=url.pathname.slice('/api/v1/spares/'.length) as SpareEndpoint;
+      return json(res,200,await readSparesQuery(pool,ctx,endpoint,url.searchParams,c=>verifySqlRead(pool,c,ctx.tenantId)));
+    }
+    if(['/api/v1/spares','/api/v1/spares/commands','/api/v1/spares/history'].includes(url.pathname)){
+      if(storageMode!=='postgres-tenant-databases')throw new DomainError(503,'备件采购模块需要企业PostgreSQL数据库');
+      const write=url.pathname.endsWith('/commands'),history=url.pathname.endsWith('/history');if(req.method!==(write?'POST':'GET')||!history&&url.search)throw new DomainError(400,'备件接口方法或参数无效');
+      const payload=write?await body(req):{};if(write&&(typeof payload.action!=='string'||!payload.input||typeof payload.input!=='object'||Array.isArray(payload.input)||Object.keys(payload).some(k=>!['action','input'].includes(k))))throw new DomainError(400,'备件请求须包含action和input');
+      const pool=tenantPool(ctx.tenantId);
+      if(write)return json(res,200,await commandSparesCurrent(pool,ctx,payload.action as string,payload.input as Record<string,unknown>,String(req.headers['idempotency-key']||''),async c=>{await verifiedReadStamp(pool,c,ctx.tenantId,undefined,true);}));
+      if(history)return json(res,200,await readSparesHistoryCurrent(pool,ctx,url.searchParams,c=>verifySqlRead(pool,c,ctx.tenantId)));
+      // Explicit legacy full-state compatibility entrance; current UI never uses it.
+      return json(res,200,await consistentRead(rootStore,ctx.tenantId,async workspace=>{const view=dataScope(workspace.imports,ctx,workspace.store),refs={devices:[...view.assets].filter(([code])=>view.device(code)).map(([code,a])=>({code,name:String(a.device_name),siteCode:String(a.site_code)})),orders:workspace.store.workOrders.filter(o=>view.order(o)).map(o=>({id:o.id,deviceCode:o.deviceCode,assignee:o.assignee,state:o.state}))};return readSpares(pool,ctx,refs);}));
+    }
     if(['/api/v1/field-channel/governance','/api/v1/field-channel/governance/export'].includes(url.pathname)){
       if(req.method!=='GET')throw new DomainError(404,'现场治理视图仅支持读取');if(storageMode!=='postgres-tenant-databases')throw new DomainError(503,'现场治理视图需要独立企业PostgreSQL');const pool=tenantPool(ctx.tenantId),exporting=url.pathname.endsWith('/export'),result=await fieldGovernanceSqlRead(pool,ctx,url.searchParams,fieldPlatform.publicSnapshot(ctx.tenantId),exporting,c=>verifySqlRead(pool,c,ctx.tenantId));await fieldPlatform.verifyRecoveryCurrent(ctx.tenantId);if(exporting)res.setHeader('Content-Disposition','attachment; filename="idms-field-governance-view.json"');return json(res,200,result);
     }
@@ -248,8 +265,8 @@ else throw new DomainError(404, "接口不存在");    return result;
     if(error instanceof CsvExportError)return json(res,error.status,{error:error.message,code:error.code});
     if(error instanceof AuditPageError)return json(res,error.status,{error:error.message,code:error.code});
     if(error instanceof CapacityError){res.setHeader('Retry-After',String(error.retryAfter));if(!req.complete)res.setHeader('Connection','close');return json(res,error.status,{error:error.message,code:error.code,retryAfterSeconds:error.retryAfter});}
-    const e = error instanceof DomainError ? error : new DomainError(500, error instanceof Error ? error.message : "未知错误");
-    return json(res, e.status, { error: e.message.slice(0,4096) });
+    const failure=publicFailure(error,requestId);if(!(error instanceof DomainError))console.error('[IDMS request]',JSON.stringify(failureDiagnostic(error,requestId)));
+    return json(res,failure.status,failure.body);
   }
 }
 

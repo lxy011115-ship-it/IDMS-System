@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import type {ReadWorkspace} from './read-model.ts';
 import type {AccessContext} from './access.ts';
-import {rolePermissions} from './access.ts';
+import {rolePermissions,sparesPermissionLabels,permissionsFor} from './access.ts';
 import type {AuthConfig} from './auth.ts';
 import type {TelemetryService} from './telemetry.ts';
 import type {WorkflowService} from './workflow.ts';
@@ -49,7 +49,7 @@ else if (/^\/api\/v1\/templates\/[^/]+\/export$/.test(url.pathname)) result = ex
 else if (url.pathname === "/api/v1/plugins") {const trust=await loadPluginTrust();result=page(store.plugins.filter(x=>x.tenantId===ctx.tenantId).map(x=>({...x,signed:pluginMetadataStatus(x,trust).valid,verification:pluginMetadataStatus(x,trust),artifactVerified:false,runtimeEnabled:false})));}
 else if (url.pathname === "/api/v1/roles") {
       const raw = await readFile(join(process.cwd(), "docs", "role-permissions.json"), "utf8");
-      result = { ...(JSON.parse(raw) as Record<string, unknown>), tenantId: ctx.tenantId, runtimeRolePermissions: rolePermissions, runtimeAuthMode: authMode, currentScope: ctx.scope||{provided:false,sites:[],lines:[],devices:[]}, scopeNotice: '当前执行企业级与管理员分配的工厂/产线/设备数据范围；缺少范围声明的受限角色拒绝登录或返回空数据。权限包中仍有部分目标模块尚未上线。' };
+      result = { ...(JSON.parse(raw) as Record<string, unknown>), tenantId: ctx.tenantId, runtimeRolePermissions: rolePermissions, runtimePermissionLabels:sparesPermissionLabels, currentPermissions:permissionsFor(ctx.roles||[]), runtimeAuthMode: authMode, currentScope: ctx.scope||{provided:false,sites:[],lines:[],devices:[]}, scopeNotice: '当前执行企业级与管理员分配的工厂/产线/设备数据范围；缺少范围声明的受限角色拒绝登录或返回空数据。权限包中仍有部分目标模块尚未上线。' };
     }
 else if (url.pathname === '/api/v1/ai/status') result=await ai.status(ctx.tenantId);
 else if (url.pathname === "/api/v1/integrations") {const aiStatus=await ai.status(ctx.tenantId);result = { items: [

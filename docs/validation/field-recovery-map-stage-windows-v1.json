@@ -1,0 +1,128 @@
+{
+  "format": "IDMS_FIELD_RECOVERY_MAP_STAGE_WINDOWS_V1",
+  "at": "2026-10-24T10:22:37.275Z",
+  "platform": "win32",
+  "scope": "Isolated PostgreSQL transaction mechanism only; no formal field recovery or production activation",
+  "cases": [
+    {
+      "version": 2,
+      "nonce": "dc846d93c1c5",
+      "nativeChecks": 5,
+      "actualExitCode": 0,
+      "authenticatedOriginalNativeExit": true,
+      "originalSupervisorHandleExitCode": 0,
+      "entrySha256": "bd9164c69fb215f5727f2cd1105c1559bc14203c816f042eb54890b8b678e14e",
+      "checks": [
+        "actual independent application and reader connections denied while frozen",
+        "impersonation without staged runtime profile is rejected and rollback restores session",
+        "staged LOGIN fence and actual state delta stay invisible and all roll back together",
+        "one real COMMIT opens original roles and publishes the verified state root",
+        "same command replays once and exact original SQL catalog and NOLOGIN owner remain"
+      ],
+      "sourcePins": [
+        {
+          "path": "scripts/state-map-v1.sql",
+          "sha256": "477f37e8c5aa00a965ea8958b331dda7d93e71a305703737621db720ac2a05d0"
+        },
+        {
+          "path": "scripts/state-map-schema-v1.mjs",
+          "sha256": "8d9b398c1563145bc401e46c83f2feb9786e56a2cf7b1959f26e1ee6d944ac17"
+        },
+        {
+          "path": "scripts/runtime-write-fence-v1.sql",
+          "sha256": "10e51a6a04078966e1cab17a0587037c33af56adae5edb98e1f3375c209bcde4"
+        },
+        {
+          "path": "scripts/runtime-write-fence-schema-v1.mjs",
+          "sha256": "cf3391c2d5e8b9d23ab685e856a4fe1781fd640b3bebb59d84c24bb07a04e09c"
+        },
+        {
+          "path": "scripts/runtime-write-fence-control-v1.mjs",
+          "sha256": "3652a3cbcf0618ccec28e309d9978e879c41e5ffb8e18143e9e1001293fc83fc"
+        },
+        {
+          "path": "server/state-map-catalog-v1.ts",
+          "sha256": "e53ab2d29cf59accdf20e779d83cf2c584c86f69daf27a6a59d19659fd1aaf28"
+        },
+        {
+          "path": "server/state-map-v1.ts",
+          "sha256": "e429c413ecab8693ddab955ca40e801288e7dd745a42832535268c157218382b"
+        }
+      ],
+      "sourcePinsUnchanged": true,
+      "actualPostgresCleanOffline": true,
+      "postgresNormalSmartStop": true,
+      "postgresHelperReplyConfirmed": true,
+      "allOriginalSqlConnectionsClosed": true,
+      "cleanupErrorCount": 0,
+      "genericKillUsed": false
+    },
+    {
+      "version": 3,
+      "nonce": "f9c6cad90e8b",
+      "nativeChecks": 6,
+      "actualExitCode": 0,
+      "authenticatedOriginalNativeExit": true,
+      "originalSupervisorHandleExitCode": 0,
+      "entrySha256": "d6008980c1df19db68834494a7ec65d4db4643ee1e957f963961bba1bf001306",
+      "checks": [
+        "actual independent application and reader connections denied while frozen",
+        "impersonation without staged runtime profile is rejected and rollback restores session",
+        "staged LOGIN fence and actual state delta stay invisible and all roll back together",
+        "maintenance delta persists while committed roles remain NOLOGIN and fence remains CLOSED",
+        "one real COMMIT opens original roles and publishes the verified state root",
+        "same command replays once and exact original SQL catalog and NOLOGIN owner remain"
+      ],
+      "sourcePins": [
+        {
+          "path": "scripts/state-map-v1.sql",
+          "sha256": "477f37e8c5aa00a965ea8958b331dda7d93e71a305703737621db720ac2a05d0"
+        },
+        {
+          "path": "scripts/state-map-schema-v1.mjs",
+          "sha256": "8d9b398c1563145bc401e46c83f2feb9786e56a2cf7b1959f26e1ee6d944ac17"
+        },
+        {
+          "path": "scripts/runtime-write-fence-v1.sql",
+          "sha256": "10e51a6a04078966e1cab17a0587037c33af56adae5edb98e1f3375c209bcde4"
+        },
+        {
+          "path": "scripts/runtime-write-fence-schema-v1.mjs",
+          "sha256": "cf3391c2d5e8b9d23ab685e856a4fe1781fd640b3bebb59d84c24bb07a04e09c"
+        },
+        {
+          "path": "scripts/runtime-write-fence-control-v1.mjs",
+          "sha256": "3652a3cbcf0618ccec28e309d9978e879c41e5ffb8e18143e9e1001293fc83fc"
+        },
+        {
+          "path": "server/state-map-catalog-v1.ts",
+          "sha256": "e53ab2d29cf59accdf20e779d83cf2c584c86f69daf27a6a59d19659fd1aaf28"
+        },
+        {
+          "path": "server/state-map-v1.ts",
+          "sha256": "e429c413ecab8693ddab955ca40e801288e7dd745a42832535268c157218382b"
+        }
+      ],
+      "sourcePinsUnchanged": true,
+      "actualPostgresCleanOffline": true,
+      "postgresNormalSmartStop": true,
+      "postgresHelperReplyConfirmed": true,
+      "allOriginalSqlConnectionsClosed": true,
+      "cleanupErrorCount": 0,
+      "genericKillUsed": false
+    }
+  ],
+  "maintenanceDeltaCommittedWhileExternallyFrozen": true,
+  "stagedRuntimeProfileHiddenUntilCommit": true,
+  "rollbackRestoresSqlGateRolesAndRoot": true,
+  "originalCatalogRebaselinePerformed": false,
+  "newRuntimePermissionsOrRolesAddedAfterSeal": false,
+  "currentOidcApprovalVerified": false,
+  "formalFieldActivationGranted": false,
+  "fieldActivationExecuted": false,
+  "commitLostReplyVerified": false,
+  "allProductionDependenciesRegistered": false,
+  "cloudRuntimeSwitched": false,
+  "rawCredentialsOrLogsSavedInPublicEvidence": false,
+  "fullGoalComplete": false
+}

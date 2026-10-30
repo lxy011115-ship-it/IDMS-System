@@ -1,0 +1,1233 @@
+{
+  "format": "COLD_PLAN_JOURNAL_LINUX_TERMINAL_V3",
+  "at": "2026-10-25T04:56:01.595283+00:00",
+  "head": "0dd5bf21d0fd4a86a530cc24dc0228073b947df8",
+  "run": 40161634096,
+  "job": 121074245038,
+  "conclusion": "success",
+  "unitSummary": {
+    "tests": 74,
+    "pass": 74,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "javaBoundarySummaries": [
+    {
+      "format": "READER_PEER_REPLY_BUDGET_JVM_QA_V1",
+      "checks": 16,
+      "normalRequests": 4096,
+      "reservedFirstReleases": 64,
+      "noReplyEviction": true,
+      "realOidcOrFlowableTested": false
+    }
+  ],
+  "nativeStarts": [
+    {
+      "nonce": "bdeab32fa98d",
+      "sourcePins": 1570,
+      "expectedChecks": 43
+    }
+  ],
+  "nativeChecks": [
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 1,
+      "name": "independent own business/identity PG clusters and real current signed Keycloak authority"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 2,
+      "name": "full R4 factory with all real tenant/auth/queue/workflow schemas bootstrapped under provisional SQL guards"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 3,
+      "name": "original full R4 provisional installation registers fresh SELECT-only readers and authenticates actual own-database HBA restrictions before sealing"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 4,
+      "name": "actual complete business-cluster DB inventory matches sealed manifest; catalogs/ordinary-table coverage and minimal runtime roles verified, workflow restarted"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 5,
+      "name": "300 additional owned QA namespace entries extend the real map; the recovery graph must cover them without filtering"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 6,
+      "name": "actual authority site HTTP READY and shared auth session four-module context200; real reconciliation empty claim under sealed guards"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 7,
+      "name": "ordinary current predictive worker analysis and independent approval commit through sealed queues/StateMap and actual Flowable APP without table ownership or CREATE"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 8,
+      "name": "actual R4 HTTP ingress OPEN and reconciliation worker commit over real canceled native task after sealing"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 9,
+      "name": "persistent multi-DB DRAINING intent survives actual controller process exit77 after first SQL close; other DBs remain OPEN and conflicting operations refused"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 10,
+      "name": "fresh controller process resumes same per-DB operation IDs, closes all registered DBs, and repeated close returns identical receipt without revision advance"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 11,
+      "name": "both tenant unchanged SDK writes, shared-auth APP and both transferred Flowable APPs denied by CLOSED; retired legacy APP DML/LO denied by permanent privileges; SDK reads available"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 12,
+      "name": "actual original installer captures both readers within the full R4 source; all business and reader roles registered, real lease/JWT deadlines retained and legacy admission rejects V2"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 13,
+      "name": "full registered inventory freezes every role and database including readers; source normally stops and complete encrypted PGDATA archive authenticates on repeat"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 14,
+      "name": "actual distinct physical target starts with all old reader passwords and ordinary business logins still disabled while the full source remains offline"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 15,
+      "name": "a real unrelated SQL session refuses initial preparation without creating an intent or terminating the foreign session"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 16,
+      "name": "target HBA bytes and current independent Keycloak realm drift both reject before a durable intent or SQL grants"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 17,
+      "name": "original source evidence tampering and actual restored large-object byte changes reject before reader activation; restoring original evidence and bytes retains the same durable intent"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 18,
+      "name": "actual SQL connection loss before COMMIT leaves the complete strict profile and original durable preparation intent for the same recovery ID"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 19,
+      "name": "actual PostgreSQL COMMIT succeeds while its reply is withheld; fresh SQL proves original backend retirement and exact rotated verifiers before completing the same intent"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 20,
+      "name": "both original source passwords now fail actual authentication; new reader passwords remain SELECT-only even after disabling default read-only, and business logins stay disabled"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 21,
+      "name": "same original recovery revalidates unchanged credentials and result; a different recovery cannot take over and no SQL client is retained"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 22,
+      "name": "a fresh actual CLI process authenticates and reopens the original ready state without emitting reader credentials"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 23,
+      "name": "new independent read-only Flowable JVM returns every original full R4 case and command ledger after real physical restore; old and cross-enterprise HTTP tokens reject"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 24,
+      "name": "an actual original JVM probe is pending while strict bootstrap peer verification waits for its own queue, then matches all four original SQL backends; that original test lease releases and actual SQL observes retirement before the main session"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 25,
+      "name": "original READY intent derives the exact running-reader configuration and holds two original advisory guards plus four original reader transactions; forged and cross-recovery sessions reject"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 26,
+      "name": "all seven original SQL datasets and both complete original roots independently revalidate while the original Flowable JVM remains alive; both held engine snapshots match original complete HTTP captures without replacing the source baseline"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 27,
+      "name": "every original current domain work order and published policy binds to the full restored payload; all actual held Flowable cases, last commands, tasks, history and repair evidence match across both enterprises"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 28,
+      "name": "an actual unrelated SQL session refuses running-reader review and remains alive; original owned reader and advisory locks are retained"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 29,
+      "name": "original source evidence, actual restored large-object bytes and current independent authority drift refuse while the reader runs; restoring original material revalidates the same unchanged intent without approval"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 30,
+      "name": "actual current JWT signatures, users, complete wildcard scope, roles and online sessions for both authors, both declared contributors and independent reviewers agree before and after two original held-engine captures without approving recovery"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 31,
+      "name": "real unexpired signature is insufficient after reviewer or contributor revocation, user disable, scope narrowing or session deletion; expired and tampered tokens, cross-enterprise actors and contributor self-review reject with original intent unchanged"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 32,
+      "name": "an independent actual Keycloak role removal after the private identity window starts refuses the same in-flight observation; no caller callback or forged engine response is used"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 33,
+      "name": "fresh real sessions after restored permissions revalidate both complete original tenants and repeated engine states; the durable original READY intent and all business write restrictions remain unchanged"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 34,
+      "name": "the original held session reads an empty durable plan lineage after complete source and SQL verification without treating history reads as current authentication or approval"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 35,
+      "name": "actual current authors and contributors submit a signed durable plan inside the original coordinator transaction; fresh actual authentication replays the same plan and lifetime without a second revision"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 36,
+      "name": "a second actual author submission supersedes the first through head CAS and signed ancestry; every prior actual author and declared coauthor remains freshly verified and excluded from reviewing"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 37,
+      "name": "actual plan requests reject omitted ancestral contributors, stale CAS, a changed replay author, live ancestor-role revocation and a real control-store signature alteration without changing the durable head or original intent"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 38,
+      "name": "a fresh actual Node process authenticates the full durable plan history and final held-session read verifies the same head; historical lineage verification grants neither current identity nor human approval or activation"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 39,
+      "name": "both original advisory guards normally close and fresh bootstrap SQL observes all four original reader backends retired before the original JVM is stopped"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 40,
+      "name": "original owned reader JVM normally stops; every captured business table and sequence across all restored databases matches the source before preparation"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 41,
+      "name": "existing ready state still refuses modified private credentials and current external authority drift; restoring original material permits revalidation without approval"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 42,
+      "name": "all preparation SQL clients and owned transport sockets retire; real reader stop receipts prove two pool closures and business/approval gates remain closed"
+    },
+    {
+      "nonce": "bdeab32fa98d",
+      "check": 43,
+      "name": "the actual V4 reader preserves more than512 original operation replies and normally releases the same held SQL lease after complete durable-plan verification; request and byte budgets retain separate first-release capacity"
+    }
+  ],
+  "nativeFinals": [
+    {
+      "nonce": "bdeab32fa98d",
+      "passed": true,
+      "checks": 43,
+      "cleanupErrorCount": 0
+    }
+  ],
+  "independentCleanup": [
+    {
+      "format": "COLD_PLAN_JOURNAL_INDEPENDENT_V3",
+      "nonce": "bdeab32fa98d",
+      "nativeChecks": 43,
+      "sourcePinsVerified": 1570,
+      "fullArchiveAuthenticated": true,
+      "legacyArchiveReaderRejectsNewFormat": true,
+      "capturedReaderHbaBoundToArchive": true,
+      "strictInitialAndSelectiveReviewProfilesDistinct": true,
+      "originalIntentCredentialsAndTwoSqlWitnessesVerified": true,
+      "actualCommitFaultEventsRechecked": true,
+      "testTransportTcpNoDelayVerified": true,
+      "sourceAndTargetHbaBytesVerified": true,
+      "allCapturedSqlFingerprintsEqualityRechecked": true,
+      "sqlRelationRowsIndependentlyRecomputedOffline": false,
+      "originalSourceFullFactsBound": true,
+      "sourceAndTargetFullRootsIndependentlyRebuilt": true,
+      "originalSourceEvidenceTamperRejected": true,
+      "actualTargetLargeObjectDriftRejected": true,
+      "allRegisteredDatabaseSqlFactsBoundToOriginalSource": true,
+      "actualLargeObjectMetadataRows": 1,
+      "actualLargeObjectChunks": 6,
+      "workflowFactsComparedWithOriginalSqlCapture": true,
+      "closedMaintenanceReceiptVerified": true,
+      "databaseCount": 7,
+      "workflowJvmNormalStops": 4,
+      "workflowPoolClosures": 16,
+      "identityNormalStopVerified": true,
+      "bothClustersActuallyCleanOffline": true,
+      "targetControlState": "shut down",
+      "newColdCoordinatorIntegrated": true,
+      "ownedReaderPeerCapabilityIntegrated": true,
+      "originalMaintenanceGuardsComposed": true,
+      "runningReaderCompleteOriginalFactsVerified": true,
+      "independentlyRebuiltLiveRoots": 18,
+      "originalPeerEvidenceFilesReverified": 154,
+      "originalOwnedReaderBackendCount": 4,
+      "originalOwnedGuardBackendCount": 2,
+      "originalGuardsAndReaderBackendsActuallyRetired": true,
+      "workflowOrderInventoryVerified": true,
+      "independentReviewInputPayloadsRebuilt": 18,
+      "recoveryReviewIntegrationComplete": false,
+      "currentOidcReviewerVerified": true,
+      "rawJwtIndependentlyReverifiedOffline": false,
+      "currentActorObservationsReverified": 5,
+      "additionalActualEngineSnapshotsReverified": 24,
+      "actualMidreadExternalRevocationRechecked": true,
+      "actualOriginalPendingPeerQueueVerified": true,
+      "declaredCurrentCohortParticipants": 6,
+      "durablePlanContributorsVerified": true,
+      "durablePlanRevisionsVerified": 2,
+      "planCurrentActorObservationsReverified": 3,
+      "planFullRootsIndependentlyRebuilt": 10,
+      "planActualEngineSnapshotsReverified": 16,
+      "actualPlanProcessReopenVerified": true,
+      "actualAncestorRoleRevocationRejected": true,
+      "actualPersistedPlanSignatureTamperRejected": true,
+      "historyReadsDoNotClaimCurrentIdentity": true,
+      "composedOriginalJvmSqlWindowVerified": true,
+      "originalJvmProbesPerCompletePeerCheck": 2,
+      "completeSqlObservationsPerPeerCheck": 2,
+      "identityWindowMilliseconds": 30000,
+      "readerReplyBudgetVerified": true,
+      "actualMoreThan512OriginalRepliesVerified": true,
+      "originalReaderReleaseReceiptsVerified": 2,
+      "actualRequestBudgetExhaustionTested": false,
+      "reviewApproved": false,
+      "formalFieldActivationGranted": false,
+      "fullGoalComplete": false,
+      "fullMapTenants": [
+        {
+          "tenantId": "acme",
+          "nodes": 5035,
+          "leaves": 2518,
+          "receiptRows": 108,
+          "auditEvents": 92
+        },
+        {
+          "tenantId": "sandbox",
+          "nodes": 3555,
+          "leaves": 1778,
+          "receiptRows": 85,
+          "auditEvents": 57
+        }
+      ]
+    }
+  ],
+  "originalNativeExitReports": [
+    {
+      "nonce": "bdeab32fa98d",
+      "checks": 43,
+      "actualZeroExit": true,
+      "originalChildAndBothStreamsClosed": true,
+      "entrySha256": "83277985aad37f6a77097688c47ef73026e2f8cec5979f6800d7024c552a7e51",
+      "entryUnchanged": true,
+      "observationFailed": false,
+      "rawBusinessOrCredentialsPrinted": false
+    }
+  ],
+  "sanitizedOriginalNativeProgress": [
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 0,
+      "lastNativeOutputAt": "2026-10-25T04:23:02.981Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 0,
+      "lastNativeOutputAt": "2026-10-25T04:23:36.740Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T04:24:05.180Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T04:24:35.880Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T04:25:06.688Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T04:25:37.465Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 1,
+      "lastNativeOutputAt": "2026-10-25T04:26:08.652Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 2,
+      "lastNativeOutputAt": "2026-10-25T04:26:25.716Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 2,
+      "lastNativeOutputAt": "2026-10-25T04:26:25.716Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 6,
+      "lastNativeOutputAt": "2026-10-25T04:27:23.885Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 11,
+      "lastNativeOutputAt": "2026-10-25T04:28:04.910Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 13,
+      "lastNativeOutputAt": "2026-10-25T04:28:33.286Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 16,
+      "lastNativeOutputAt": "2026-10-25T04:28:59.783Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 0,
+        "targetEvidenceBytes": 0,
+        "latestTargetEvidenceBytes": 0,
+        "latestTargetEvidenceModifiedAt": null,
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 17,
+      "lastNativeOutputAt": "2026-10-25T04:29:13.015Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 2,
+        "targetEvidenceBytes": 10173884,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:29:34.304Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 18,
+      "lastNativeOutputAt": "2026-10-25T04:29:47.034Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 4,
+        "targetEvidenceBytes": 20347768,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:30:08.655Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 19,
+      "lastNativeOutputAt": "2026-10-25T04:30:25.961Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 5,
+        "targetEvidenceBytes": 26019187,
+        "latestTargetEvidenceBytes": 5671419,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:30:38.955Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 20,
+      "lastNativeOutputAt": "2026-10-25T04:30:59.148Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 7,
+        "targetEvidenceBytes": 36186696,
+        "latestTargetEvidenceBytes": 5665044,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:31:08.853Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 20,
+      "lastNativeOutputAt": "2026-10-25T04:30:59.148Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 9,
+        "targetEvidenceBytes": 42975411,
+        "latestTargetEvidenceBytes": 2279875,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:31:41.226Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 21,
+      "lastNativeOutputAt": "2026-10-25T04:32:07.476Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 10,
+        "targetEvidenceBytes": 50869420,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:31:54.961Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 21,
+      "lastNativeOutputAt": "2026-10-25T04:32:07.476Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 12,
+        "targetEvidenceBytes": 61043304,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:32:30.285Z",
+        "originalSessionPeerEvidenceFiles": 0
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 25,
+      "lastNativeOutputAt": "2026-10-25T04:32:58.169Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 12,
+        "targetEvidenceBytes": 61043304,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:32:30.285Z",
+        "originalSessionPeerEvidenceFiles": 4
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 25,
+      "lastNativeOutputAt": "2026-10-25T04:32:58.169Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 14,
+        "targetEvidenceBytes": 71217188,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:33:35.997Z",
+        "originalSessionPeerEvidenceFiles": 10
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 25,
+      "lastNativeOutputAt": "2026-10-25T04:32:58.169Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 14,
+        "targetEvidenceBytes": 71217188,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:33:35.997Z",
+        "originalSessionPeerEvidenceFiles": 20
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 28,
+      "lastNativeOutputAt": "2026-10-25T04:34:16.948Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 14,
+        "targetEvidenceBytes": 71217188,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:33:35.997Z",
+        "originalSessionPeerEvidenceFiles": 28
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 28,
+      "lastNativeOutputAt": "2026-10-25T04:34:16.948Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 16,
+        "targetEvidenceBytes": 81384693,
+        "latestTargetEvidenceBytes": 4496086,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:35:09.073Z",
+        "originalSessionPeerEvidenceFiles": 35
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 28,
+      "lastNativeOutputAt": "2026-10-25T04:34:16.948Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 16,
+        "targetEvidenceBytes": 81391072,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:35:11.562Z",
+        "originalSessionPeerEvidenceFiles": 44
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 29,
+      "lastNativeOutputAt": "2026-10-25T04:35:50.649Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 17,
+        "targetEvidenceBytes": 87056116,
+        "latestTargetEvidenceBytes": 5665044,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:36:10.069Z",
+        "originalSessionPeerEvidenceFiles": 52
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 29,
+      "lastNativeOutputAt": "2026-10-25T04:35:50.649Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 18,
+        "targetEvidenceBytes": 91564956,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:36:28.442Z",
+        "originalSessionPeerEvidenceFiles": 61
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 29,
+      "lastNativeOutputAt": "2026-10-25T04:35:50.649Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 18,
+        "targetEvidenceBytes": 91564956,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:36:28.442Z",
+        "originalSessionPeerEvidenceFiles": 68
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 31,
+      "lastNativeOutputAt": "2026-10-25T04:37:16.537Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 19,
+        "targetEvidenceBytes": 97236375,
+        "latestTargetEvidenceBytes": 5671419,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:37:38.489Z",
+        "originalSessionPeerEvidenceFiles": 74
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 31,
+      "lastNativeOutputAt": "2026-10-25T04:37:16.537Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 20,
+        "targetEvidenceBytes": 101738840,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:37:54.291Z",
+        "originalSessionPeerEvidenceFiles": 85
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 32,
+      "lastNativeOutputAt": "2026-10-25T04:38:38.950Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 20,
+        "targetEvidenceBytes": 101738840,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:37:54.291Z",
+        "originalSessionPeerEvidenceFiles": 92
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 32,
+      "lastNativeOutputAt": "2026-10-25T04:38:38.950Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 22,
+        "targetEvidenceBytes": 107460331,
+        "latestTargetEvidenceBytes": 50072,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:39:11.281Z",
+        "originalSessionPeerEvidenceFiles": 99
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 32,
+      "lastNativeOutputAt": "2026-10-25T04:38:38.950Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 22,
+        "targetEvidenceBytes": 111912724,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:39:16.684Z",
+        "originalSessionPeerEvidenceFiles": 107
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 33,
+      "lastNativeOutputAt": "2026-10-25T04:40:03.150Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 22,
+        "targetEvidenceBytes": 111912724,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:39:16.684Z",
+        "originalSessionPeerEvidenceFiles": 114
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 33,
+      "lastNativeOutputAt": "2026-10-25T04:40:03.150Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 24,
+        "targetEvidenceBytes": 122086608,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:40:40.725Z",
+        "originalSessionPeerEvidenceFiles": 121
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 33,
+      "lastNativeOutputAt": "2026-10-25T04:40:03.150Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 24,
+        "targetEvidenceBytes": 122086608,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:40:40.725Z",
+        "originalSessionPeerEvidenceFiles": 130
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T04:41:21.526Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 25,
+        "targetEvidenceBytes": 127751652,
+        "latestTargetEvidenceBytes": 5665044,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:41:40.663Z",
+        "originalSessionPeerEvidenceFiles": 138
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T04:41:21.526Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 26,
+        "targetEvidenceBytes": 132260492,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:42:00.430Z",
+        "originalSessionPeerEvidenceFiles": 146
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T04:41:21.526Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 26,
+        "targetEvidenceBytes": 132260492,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:42:00.430Z",
+        "originalSessionPeerEvidenceFiles": 154
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T04:41:21.526Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 27,
+        "targetEvidenceBytes": 137931911,
+        "latestTargetEvidenceBytes": 5671419,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:43:08.793Z",
+        "originalSessionPeerEvidenceFiles": 160
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 34,
+      "lastNativeOutputAt": "2026-10-25T04:41:21.526Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 28,
+        "targetEvidenceBytes": 142434376,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:43:24.530Z",
+        "originalSessionPeerEvidenceFiles": 171
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 35,
+      "lastNativeOutputAt": "2026-10-25T04:44:10.487Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 28,
+        "targetEvidenceBytes": 142434376,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:43:24.530Z",
+        "originalSessionPeerEvidenceFiles": 178
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 35,
+      "lastNativeOutputAt": "2026-10-25T04:44:10.487Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 29,
+        "targetEvidenceBytes": 148105795,
+        "latestTargetEvidenceBytes": 5671419,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:44:32.173Z",
+        "originalSessionPeerEvidenceFiles": 185
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 35,
+      "lastNativeOutputAt": "2026-10-25T04:44:10.487Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 30,
+        "targetEvidenceBytes": 152608260,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:44:47.953Z",
+        "originalSessionPeerEvidenceFiles": 194
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 30,
+        "targetEvidenceBytes": 152608260,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:44:47.953Z",
+        "originalSessionPeerEvidenceFiles": 201
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 32,
+        "targetEvidenceBytes": 162775765,
+        "latestTargetEvidenceBytes": 4496086,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:46:09.440Z",
+        "originalSessionPeerEvidenceFiles": 208
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 32,
+        "targetEvidenceBytes": 162782144,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:46:12.042Z",
+        "originalSessionPeerEvidenceFiles": 217
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 33,
+        "targetEvidenceBytes": 162860513,
+        "latestTargetEvidenceBytes": 78369,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:47:11.338Z",
+        "originalSessionPeerEvidenceFiles": 226
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 34,
+        "targetEvidenceBytes": 172956028,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:47:33.926Z",
+        "originalSessionPeerEvidenceFiles": 233
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 34,
+        "targetEvidenceBytes": 172956028,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:47:33.926Z",
+        "originalSessionPeerEvidenceFiles": 242
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 35,
+        "targetEvidenceBytes": 178627447,
+        "latestTargetEvidenceBytes": 5671419,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:48:38.631Z",
+        "originalSessionPeerEvidenceFiles": 248
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 36,
+        "targetEvidenceBytes": 183129912,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:48:53.687Z",
+        "originalSessionPeerEvidenceFiles": 259
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 36,
+        "targetEvidenceBytes": 183129912,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:48:53.687Z",
+        "originalSessionPeerEvidenceFiles": 267
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 38,
+        "targetEvidenceBytes": 193296894,
+        "latestTargetEvidenceBytes": 4495563,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:50:11.326Z",
+        "originalSessionPeerEvidenceFiles": 274
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 36,
+      "lastNativeOutputAt": "2026-10-25T04:45:34.158Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 38,
+        "targetEvidenceBytes": 193303796,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:50:14.032Z",
+        "originalSessionPeerEvidenceFiles": 283
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 37,
+      "lastNativeOutputAt": "2026-10-25T04:50:53.368Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 39,
+        "targetEvidenceBytes": 198968492,
+        "latestTargetEvidenceBytes": 5664696,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:51:11.048Z",
+        "originalSessionPeerEvidenceFiles": 291
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 37,
+      "lastNativeOutputAt": "2026-10-25T04:50:53.368Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 40,
+        "targetEvidenceBytes": 203477680,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:51:30.144Z",
+        "originalSessionPeerEvidenceFiles": 300
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 38,
+      "lastNativeOutputAt": "2026-10-25T04:52:10.641Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 40,
+        "targetEvidenceBytes": 203477680,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:51:30.144Z",
+        "originalSessionPeerEvidenceFiles": 308
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 39,
+      "lastNativeOutputAt": "2026-10-25T04:52:11.719Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 42,
+        "targetEvidenceBytes": 213651564,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:52:32.376Z",
+        "originalSessionPeerEvidenceFiles": 308
+      }
+    },
+    {
+      "phase": "RUNNING",
+      "nonce": "bdeab32fa98d",
+      "checks": 40,
+      "lastNativeOutputAt": "2026-10-25T04:52:44.582Z",
+      "originalNativeHandleHeld": true,
+      "files": {
+        "targetEvidenceFiles": 44,
+        "targetEvidenceBytes": 223825448,
+        "latestTargetEvidenceBytes": 4502465,
+        "latestTargetEvidenceModifiedAt": "2026-10-25T04:53:05.078Z",
+        "originalSessionPeerEvidenceFiles": 308
+      }
+    }
+  ],
+  "trackedSourceUnchanged": true,
+  "actualNativeWrapperStepSucceeded": true,
+  "jobStepMetadataMissing": false,
+  "executedPublicCommandGroups": [
+    "mkdir -p \"$RUNNER_TEMP/idms-reader-reply-budget\"",
+    "node scripts/verify-cold-plan-journal-observed-v3.mjs /usr/lib/postgresql/16/bin \"$JAVA_HOME_21_X64\" \"$IDMS_MAVEN_HOME\" \"$IDMS_KEYCLOAK_SOURCE\" \"$IDMS_SOURCE_BUNDLE\" \"$IDMS_SOURCE_SHA256\" \"\"",
+    "git diff --exit-code --no-ext-diff"
+  ],
+  "failedSteps": [],
+  "rawLogsOrCredentialsSaved": false,
+  "ownedReaderPeerCapabilityIntegrated": true,
+  "workflowOrderInventoryVerified": true,
+  "recoveryReviewIntegrationComplete": false,
+  "currentOidcReviewerVerified": true,
+  "currentOidcReviewerObservationVerified": true,
+  "durablePlanContributorsVerified": true,
+  "reviewApproved": false,
+  "formalFieldActivationGranted": false,
+  "allProductionDependenciesRegistered": false,
+  "fullGoalComplete": false
+}

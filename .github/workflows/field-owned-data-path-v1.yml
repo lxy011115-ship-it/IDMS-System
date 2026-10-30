@@ -1,0 +1,64 @@
+name: Field edge committed data path
+
+on:
+  push:
+    branches: [wip/field-owned-data-path-20261024]
+    paths: ['scripts/**', 'tests/**', 'services/**', 'server/**', 'integrations/**', 'package*.json', 'docs/validation/field-owned-data-parent-v1.json', '.github/workflows/field-owned-data-path-v1.yml']
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'tests/**', 'services/field/**', 'docs/validation/field-owned-data-parent-v1.json', '.github/workflows/field-owned-data-path-v1.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: field-owned-data-path-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  field-data-path:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Authenticate frozen source profiles
+        run: node scripts/verify-ci-source-policy-v2.mjs
+      - name: Typecheck production field runner
+        run: node node_modules/typescript/bin/tsc -p server/tsconfig.json --noEmit --allowImportingTsExtensions
+      - name: Verify lifecycle cancellation and credential binding
+        run: node --test --test-concurrency=1 tests/field-edge-runner-v3.test.mjs tests/field-edge-lifecycle-v2.test.mjs
+      - name: Install broker libraries without installing a daemon
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends libcjson1 libdlt2 libwrap0 libwebsockets19t64 libmosquitto1
+      - name: Authenticate and extract the broker package
+        id: broker
+        run: python3 scripts/fetch-mosquitto-package-v2.py "$RUNNER_TEMP" --github-output "$GITHUB_OUTPUT"
+      - name: Verify actual OPC UA, mTLS, committed receipts, replay and held SQL drain
+        id: native
+        env:
+          IDMS_QA_MOSQUITTO_BIN: ${{ steps.broker.outputs.directory }}
+        run: node scripts/verify-field-owned-data-path-v1.mjs /usr/lib/postgresql/16/bin "$IDMS_QA_MOSQUITTO_BIN"
+      - name: Independently inspect actual terminal records and retained signed spool
+        if: always() && (steps.native.outcome == 'success' || steps.native.outcome == 'failure')
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {readdir} from 'node:fs/promises';
+          import {execFileSync} from 'node:child_process';
+          const root='work/field-owned-data-path-v1-20261024';
+          const cases=(await readdir(root,{withFileTypes:true})).filter(p=>p.isDirectory()&&/^[a-f0-9]{12}$/.test(p.name));
+          assert.equal(cases.length,1);
+          execFileSync(process.execPath,['scripts/verify-field-owned-data-cleanup-v1.mjs',cases[0].name],{stdio:'inherit'});
+          JS
+      - name: Confirm tracked source unchanged
+        if: always()
+        run: git diff --exit-code --no-ext-diff

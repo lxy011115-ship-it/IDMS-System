@@ -1,0 +1,35 @@
+name: Actual PostgreSQL proxy latency and commit fault comparison
+
+on:
+  push:
+    branches: [wip/pg-proxy-latency-20261025]
+    paths: ['scripts/**', '.github/workflows/pg-proxy-latency-v1.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pg-proxy-latency-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  actual-pg-proxy-comparison:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.20.0
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Authenticate existing source profiles
+        run: node scripts/verify-ci-source-policy-v2.mjs
+      - name: Measure three real PG ABBA rounds and verify both actual COMMIT losses
+        run: node scripts/verify-pg-proxy-latency-v1.mjs /usr/lib/postgresql/16/bin
+      - name: Confirm tracked source unchanged
+        if: always()
+        run: git diff --exit-code --no-ext-diff

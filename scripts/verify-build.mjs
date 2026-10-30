@@ -2,6 +2,7 @@ import { access, readFile, readdir } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 const files=["public/index.html","public/manual.js","public/ai-ui.js","public/identity-ui.js","public/maintenance-ui.js","public/telemetry-ui.js","public/manual.css","src/styles.css","server/index.ts","server/auth.ts","server/access.ts","server/maintenance.ts","server/workflow.ts","server/postgres-repository.ts","server/predictive-analysis.ts","server/predictive.ts","server/service.ts","server/imports.ts","server/import-api.ts","server/ai-import-review.ts","server/telemetry.ts","server/audit.ts","integrations/ai.ts","integrations/telemetry.ts","services/ai-gateway/index.ts","services/edge/index.ts","services/edge/spool.ts","services/edge/simulator.ts","services/predictor/model.ts","services/predictor/index.ts"];
 files.push('server/catalog.ts','server/template-schema.ts','public/catalog-ui.js');
+files.push('public/import-assistance-ui.js');
 files.push('server/point-definitions.ts','server/data-management.ts','public/data-center-ui.js');
 files.push('server/data-scope.ts','server/data-quality.ts','public/data-quality-ui.js');
 files.push('server/data-projection.ts','server/data-management-sql.ts','server/data-export.ts','server/import-revisions.ts','server/revision-projection.ts','server/correction-review.ts','public/revision-ui.js');
@@ -49,6 +50,17 @@ files.push('scripts/field-recovery-external-config.mjs','scripts/field-recovery-
 files.push('scripts/field-recovery-live-identity.mjs','scripts/field-recovery-review-record.mjs','scripts/field-recovery-review-files.mjs','scripts/field-recovery-review-context.mjs','scripts/field-recovery-review-audit.mjs','scripts/field-recovery-review.mjs','scripts/field-recovery-review-sessions.mjs');
 if(process.platform==='win32')execFileSync('powershell.exe',['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-Command',"$syntaxTokens=$null;$syntaxErrors=$null;[System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path -LiteralPath 'scripts/field-recovery-file.ps1'),[ref]$syntaxTokens,[ref]$syntaxErrors)|Out-Null;if($syntaxErrors.Count){$syntaxErrors|ForEach-Object{Write-Error $_.Message};exit 1}"],{stdio:'inherit',windowsHide:true});
 if(process.platform==='win32')execFileSync('powershell.exe',['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-Command',"$syntaxTokens=$null;$syntaxErrors=$null;[System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path -LiteralPath 'scripts/field-archive-process.ps1'),[ref]$syntaxTokens,[ref]$syntaxErrors)|Out-Null;if($syntaxErrors.Count){$syntaxErrors|ForEach-Object{Write-Error $_.Message};exit 1}"],{stdio:'inherit',windowsHide:true});
+files.push('server/http-boundary.ts','public/roadshow-ui.js');
+files.push('server/version.ts');
+files.push('server/spares-facts.ts','server/spares-audit.ts','server/spares-workset.ts','server/spares-capacity-schema.ts');
+files.push('server/spares-query-plan.ts','server/spares-query-scope.ts','server/spares-query-db.ts');
+files.push('server/spares-transaction.ts','server/spares-current-refs.ts');
+files.push('server/spares-cancel.ts');
+files.push('server/spares-audit-chain.ts','server/spares-audit-proof.ts','server/spares-proof-scope.ts');
+files.push('server/spares-history-cursor.ts');
+files.push('public/spares-ui-base.js','public/spares-options-ui.js','public/spares-editor-ui.js','public/spares-paged-controller.js','public/spares-paged-ui.js');
+files.push('server/spares-history.ts','server/spares-history-db.ts','public/spares-history-ui.js');
+files.push('server/spares.ts','server/spares-db.ts','public/spares-ui.js','public/workspace-navigation.js','public/workspace.css','scripts/setup-spares.mjs');
 for(const file of files){await access(file);const text=await readFile(file,"utf8");if(!text.trim())throw new Error(`${file} is empty`);if(/\.(ts|js)$/.test(file))execFileSync(process.execPath,['--check',file],{stdio:'inherit',windowsHide:true});}
 for(const file of await readdir('scripts'))if(file.endsWith('.mjs'))execFileSync(process.execPath,['--check','scripts/'+file],{stdio:'inherit',windowsHide:true});
 for(const file of await readdir('scripts/fixtures'))if(/\.(mjs|ts)$/.test(file))execFileSync(process.execPath,['--check','scripts/fixtures/'+file],{stdio:'inherit',windowsHide:true});

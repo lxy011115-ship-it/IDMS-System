@@ -1,0 +1,20 @@
+{
+  "format": "CURRENT_READER_INSTALL_NATIVE20_VERIFIED_WAIT_WINDOWS_V1",
+  "at": "2026-10-27T01:19:20.337Z",
+  "status": "ORIGINAL_JOB_RUNNING_UNACCEPTED",
+  "expectedChecks": 66,
+  "expectedSourcePins": 1510,
+  "actualInputPinsProtected": 1510,
+  "completedChecksAtObservation": 23,
+  "stageAtObservation": "FIELD_MANAGED_RUNTIME",
+  "sameOriginalNativeAndSupervisorHandlesObserved": true,
+  "originalExitStillNull": true,
+  "initialPolicyFutureBoundaryMinimumMs": 180000,
+  "threeRotationFutureBoundaryMsEach": 240000,
+  "originalPolicyBoundariesShortened": false,
+  "originalThirtySecondUserInstallationWindowChanged": false,
+  "newSameCaseIndependentScopeSpecified": true,
+  "completeInstallationOrSameCaseIndependentAccepted": false,
+  "newProgramHeldMqttOrBusinessAuthorityGranted": false,
+  "fullGoalComplete": false
+}

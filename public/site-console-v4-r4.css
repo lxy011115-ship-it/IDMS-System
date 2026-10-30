@@ -1,0 +1,2 @@
+@import url('/site/console-r3.css');
+.modules{grid-template-columns:repeat(2,minmax(0,1fr))}.module h2{font-size:24px}@media(max-width:680px){.modules{grid-template-columns:minmax(0,1fr)}}

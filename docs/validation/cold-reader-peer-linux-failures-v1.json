@@ -1,0 +1,357 @@
+{
+  "format": "ORIGINAL_READER_PEER_LINUX_FAILURES_V1",
+  "runs": [
+    {
+      "head": "f3343253224019c6b8eef251fe9eb494dec60fa3",
+      "run": 40118508403,
+      "job": 120944786020,
+      "conclusion": "failure",
+      "expectedNativeChecks": 31,
+      "expectedSourcePins": 1438,
+      "nativeStarts": [
+        {
+          "nonce": "4e64db3ef92a",
+          "sourcePins": 1438,
+          "expectedChecks": 31
+        }
+      ],
+      "nativeChecks": [
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 1,
+          "name": "independent own business/identity PG clusters and real current signed Keycloak authority"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 2,
+          "name": "full R4 factory with all real tenant/auth/queue/workflow schemas bootstrapped under provisional SQL guards"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 3,
+          "name": "original full R4 provisional installation registers fresh SELECT-only readers and authenticates actual own-database HBA restrictions before sealing"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 4,
+          "name": "actual complete business-cluster DB inventory matches sealed manifest; catalogs/ordinary-table coverage and minimal runtime roles verified, workflow restarted"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 5,
+          "name": "300 additional owned QA namespace entries extend the real map; the recovery graph must cover them without filtering"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 6,
+          "name": "actual authority site HTTP READY and shared auth session four-module context200; real reconciliation empty claim under sealed guards"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 7,
+          "name": "ordinary current predictive worker analysis and independent approval commit through sealed queues/StateMap and actual Flowable APP without table ownership or CREATE"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 8,
+          "name": "actual R4 HTTP ingress OPEN and reconciliation worker commit over real canceled native task after sealing"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 9,
+          "name": "persistent multi-DB DRAINING intent survives actual controller process exit77 after first SQL close; other DBs remain OPEN and conflicting operations refused"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 10,
+          "name": "fresh controller process resumes same per-DB operation IDs, closes all registered DBs, and repeated close returns identical receipt without revision advance"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 11,
+          "name": "both tenant unchanged SDK writes, shared-auth APP and both transferred Flowable APPs denied by CLOSED; retired legacy APP DML/LO denied by permanent privileges; SDK reads available"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 12,
+          "name": "actual original installer captures both readers within the full R4 source; all business and reader roles registered, real lease/JWT deadlines retained and legacy admission rejects V2"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 13,
+          "name": "full registered inventory freezes every role and database including readers; source normally stops and complete encrypted PGDATA archive authenticates on repeat"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 14,
+          "name": "actual distinct physical target starts with all old reader passwords and ordinary business logins still disabled while the full source remains offline"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 15,
+          "name": "a real unrelated SQL session refuses initial preparation without creating an intent or terminating the foreign session"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 16,
+          "name": "target HBA bytes and current independent Keycloak realm drift both reject before a durable intent or SQL grants"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 17,
+          "name": "original source evidence tampering and actual restored large-object byte changes reject before reader activation; restoring original evidence and bytes retains the same durable intent"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 18,
+          "name": "actual SQL connection loss before COMMIT leaves the complete strict profile and original durable preparation intent for the same recovery ID"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 19,
+          "name": "actual PostgreSQL COMMIT succeeds while its reply is withheld; fresh SQL proves original backend retirement and exact rotated verifiers before completing the same intent"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 20,
+          "name": "both original source passwords now fail actual authentication; new reader passwords remain SELECT-only even after disabling default read-only, and business logins stay disabled"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 21,
+          "name": "same original recovery revalidates unchanged credentials and result; a different recovery cannot take over and no SQL client is retained"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 22,
+          "name": "a fresh actual CLI process authenticates and reopens the original ready state without emitting reader credentials"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 23,
+          "name": "new independent read-only Flowable JVM returns every original full R4 case and command ledger after real physical restore; old and cross-enterprise HTTP tokens reject"
+        },
+        {
+          "nonce": "4e64db3ef92a",
+          "check": 24,
+          "name": "original READY intent derives the exact running-reader configuration and holds two original advisory guards plus four original reader transactions; forged and cross-recovery sessions reject"
+        }
+      ],
+      "nativeFinals": [
+        {
+          "nonce": "4e64db3ef92a",
+          "passed": false,
+          "checks": 24,
+          "cleanupErrorCount": 0
+        }
+      ],
+      "safeFailures": [
+        {
+          "format": "IDMS_CONTROLLED_COLD_SAFE_FAILURE_V2",
+          "nonce": "4e64db3ef92a",
+          "stage": "SITE_SEAL",
+          "failure": {
+            "errorKind": "Error",
+            "errorCode": null,
+            "sqlState": null,
+            "causeSqlState": null,
+            "messageSha256": "60d21f638d2ff905322e409d7c94e9157c7294b6ffdd1f7e426946c914135a02",
+            "childExecFailure": false,
+            "childExitCode": null,
+            "childSignal": null,
+            "childCommandSha256": null,
+            "childStdoutBytes": 0,
+            "childStderrBytes": 0,
+            "childStdoutSha256": null,
+            "childStderrSha256": null,
+            "knownChildFailureCodes": [],
+            "rawFailureOrCredentialsPrinted": false
+          }
+        }
+      ],
+      "trackedSourceUnchangedStepSucceeded": true,
+      "explicitJobTimeoutMessageObserved": false,
+      "rawLogsOrCredentialsSaved": false,
+      "nativeOrIndependentSuccessClaimed": false,
+      "fullGoalComplete": false
+    },
+    {
+      "head": "a5c2781331946f34a062f868d49b097caae5e16a",
+      "run": 40121737880,
+      "job": 120954597612,
+      "conclusion": "failure",
+      "expectedNativeChecks": 32,
+      "expectedSourcePins": 1465,
+      "nativeStarts": [
+        {
+          "nonce": "5bd0d7389726",
+          "sourcePins": 1465,
+          "expectedChecks": 32
+        }
+      ],
+      "nativeChecks": [
+        {
+          "nonce": "5bd0d7389726",
+          "check": 1,
+          "name": "independent own business/identity PG clusters and real current signed Keycloak authority"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 2,
+          "name": "full R4 factory with all real tenant/auth/queue/workflow schemas bootstrapped under provisional SQL guards"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 3,
+          "name": "original full R4 provisional installation registers fresh SELECT-only readers and authenticates actual own-database HBA restrictions before sealing"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 4,
+          "name": "actual complete business-cluster DB inventory matches sealed manifest; catalogs/ordinary-table coverage and minimal runtime roles verified, workflow restarted"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 5,
+          "name": "300 additional owned QA namespace entries extend the real map; the recovery graph must cover them without filtering"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 6,
+          "name": "actual authority site HTTP READY and shared auth session four-module context200; real reconciliation empty claim under sealed guards"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 7,
+          "name": "ordinary current predictive worker analysis and independent approval commit through sealed queues/StateMap and actual Flowable APP without table ownership or CREATE"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 8,
+          "name": "actual R4 HTTP ingress OPEN and reconciliation worker commit over real canceled native task after sealing"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 9,
+          "name": "persistent multi-DB DRAINING intent survives actual controller process exit77 after first SQL close; other DBs remain OPEN and conflicting operations refused"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 10,
+          "name": "fresh controller process resumes same per-DB operation IDs, closes all registered DBs, and repeated close returns identical receipt without revision advance"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 11,
+          "name": "both tenant unchanged SDK writes, shared-auth APP and both transferred Flowable APPs denied by CLOSED; retired legacy APP DML/LO denied by permanent privileges; SDK reads available"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 12,
+          "name": "actual original installer captures both readers within the full R4 source; all business and reader roles registered, real lease/JWT deadlines retained and legacy admission rejects V2"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 13,
+          "name": "full registered inventory freezes every role and database including readers; source normally stops and complete encrypted PGDATA archive authenticates on repeat"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 14,
+          "name": "actual distinct physical target starts with all old reader passwords and ordinary business logins still disabled while the full source remains offline"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 15,
+          "name": "a real unrelated SQL session refuses initial preparation without creating an intent or terminating the foreign session"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 16,
+          "name": "target HBA bytes and current independent Keycloak realm drift both reject before a durable intent or SQL grants"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 17,
+          "name": "original source evidence tampering and actual restored large-object byte changes reject before reader activation; restoring original evidence and bytes retains the same durable intent"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 18,
+          "name": "actual SQL connection loss before COMMIT leaves the complete strict profile and original durable preparation intent for the same recovery ID"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 19,
+          "name": "actual PostgreSQL COMMIT succeeds while its reply is withheld; fresh SQL proves original backend retirement and exact rotated verifiers before completing the same intent"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 20,
+          "name": "both original source passwords now fail actual authentication; new reader passwords remain SELECT-only even after disabling default read-only, and business logins stay disabled"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 21,
+          "name": "same original recovery revalidates unchanged credentials and result; a different recovery cannot take over and no SQL client is retained"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 22,
+          "name": "a fresh actual CLI process authenticates and reopens the original ready state without emitting reader credentials"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 23,
+          "name": "new independent read-only Flowable JVM returns every original full R4 case and command ledger after real physical restore; old and cross-enterprise HTTP tokens reject"
+        },
+        {
+          "nonce": "5bd0d7389726",
+          "check": 24,
+          "name": "original READY intent derives the exact running-reader configuration and holds two original advisory guards plus four original reader transactions; forged and cross-recovery sessions reject"
+        }
+      ],
+      "nativeFinals": [
+        {
+          "nonce": "5bd0d7389726",
+          "passed": false,
+          "checks": 24,
+          "cleanupErrorCount": 0
+        }
+      ],
+      "safeFailures": [
+        {
+          "format": "IDMS_CONTROLLED_COLD_SAFE_FAILURE_V2",
+          "nonce": "5bd0d7389726",
+          "stage": "SITE_SEAL",
+          "failure": {
+            "errorKind": "Error",
+            "errorCode": null,
+            "sqlState": null,
+            "causeSqlState": null,
+            "messageSha256": "60d21f638d2ff905322e409d7c94e9157c7294b6ffdd1f7e426946c914135a02",
+            "childExecFailure": false,
+            "childExitCode": null,
+            "childSignal": null,
+            "childCommandSha256": null,
+            "childStdoutBytes": 0,
+            "childStderrBytes": 0,
+            "childStdoutSha256": null,
+            "childStderrSha256": null,
+            "knownChildFailureCodes": [],
+            "rawFailureOrCredentialsPrinted": false
+          }
+        }
+      ],
+      "trackedSourceUnchangedStepSucceeded": true,
+      "explicitJobTimeoutMessageObserved": false,
+      "rawLogsOrCredentialsSaved": false,
+      "nativeOrIndependentSuccessClaimed": false,
+      "fullGoalComplete": false
+    }
+  ],
+  "matchingMessageLiteral": "READER_PEER_NOT_MINTED",
+  "literalMessageSha256": "60d21f638d2ff905322e409d7c94e9157c7294b6ffdd1f7e426946c914135a02",
+  "historicalConcurrencyRootCauseProven": false,
+  "fullGoalComplete": false
+}
