@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-30T13:46:50.017Z",
+  "createdAt": "2026-10-30T14:18:55.338Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -4350,6 +4350,12 @@
       "name": "docs/superpowers/specs/2026-10-29--upload-approval-experience.md",
       "bytes": 1801,
       "sha256": "bf28672228b31b9b0375b4052941ff0e9c4a5d15df2adbdb7c93983fd3d0fd79",
+      "mode": 438
+    },
+    {
+      "name": "docs/superpowers/specs/2026-10-30--runtime-and-backup-inspection.md",
+      "bytes": 7915,
+      "sha256": "c2275ef0a4c066c73d083647f5c70b228dadf844896cbdbe37161d601bbfdcc1",
       "mode": 438
     },
     {
