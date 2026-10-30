@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-30T07:19:14.502Z",
+  "createdAt": "2026-10-30T11:19:08.113Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -2308,8 +2308,8 @@
     },
     {
       "name": "docs/source-release-guide.md",
-      "bytes": 3420,
-      "sha256": "0418dd2ca3203406cf9c2d5741b316814cb119b55e2af931396be371f9af5e0f",
+      "bytes": 4452,
+      "sha256": "545b58dfddb99d1a7bd3fe326ced7c35399c8c1a25921304cbd62ea733a6781b",
       "mode": 438
     },
     {
@@ -3228,6 +3228,12 @@
       "name": "docs/superpowers/plans/2026-10-30--spares-capacity-and-verifiable-history.md",
       "bytes": 12025,
       "sha256": "f6515b19bc4990de38fde0481876a623212c380c7923c2da8ef84e14cd6465d5",
+      "mode": 438
+    },
+    {
+      "name": "docs/superpowers/plans/2026-10-30--spares-demand-and-explainable-insights.md",
+      "bytes": 3858,
+      "sha256": "f45c7880a7a86c91f9a085c8c5bcb2d31f78c2edbeb4857f582f0b25e2482a73",
       "mode": 438
     },
     {
@@ -4348,8 +4354,8 @@
     },
     {
       "name": "docs/superpowers/specs/2026-10-30--spares-demand-and-explainable-insights.md",
-      "bytes": 9142,
-      "sha256": "2926df14f863e3c0abd2a766e45ccbd874901359afd887eb6819f34768ee53a2",
+      "bytes": 9176,
+      "sha256": "a34f595abe02f599ea9230c092546fe18791c589d54a8a55f233779826a8b397",
       "mode": 438
     },
     {
@@ -14026,8 +14032,8 @@
     },
     {
       "name": "scripts/verify-build.mjs",
-      "bytes": 12233,
-      "sha256": "718c4d07e9cca54467ec0432f71018c7928612c660c507c80d4d42b9193dcd76",
+      "bytes": 12315,
+      "sha256": "e8cd40fd4032e9f2f354ce1f8cc0f44b731afe673fa2a391c9962d0f1aa22753",
       "mode": 438
     },
     {
@@ -20080,8 +20086,8 @@
     },
     {
       "name": "server/spares-audit-chain.ts",
-      "bytes": 1509,
-      "sha256": "781d9587943af56d0639f1fb72a1ed05592f8253ca9e98a4dd85c4fe67ae0e6a",
+      "bytes": 1807,
+      "sha256": "1036f6b0b0d508d79fd9f511b3b1eaa2d494e3d115bd17e49ebccf6678542a73",
       "mode": 438
     },
     {
@@ -20122,14 +20128,14 @@
     },
     {
       "name": "server/spares-current-refs.ts",
-      "bytes": 2621,
-      "sha256": "8d30ac23f3893c8180327986835b5d2ac06a40f45a3ffa5fe4db0a39605506cd",
+      "bytes": 3009,
+      "sha256": "e16f4ca18d4c38af5970582ae32f985d498072d6aacaf3f109e976ff2ee89966",
       "mode": 438
     },
     {
       "name": "server/spares-db.ts",
-      "bytes": 8528,
-      "sha256": "2b7fb3cead443cfd141f9b649ec99c7a5bfafbbf7eef819e4cc725c6ed69345c",
+      "bytes": 9055,
+      "sha256": "b16d688960da681a3a529c3f77ff9b4f3a6d99bc00170f3b672427b1b7e544e6",
       "mode": 438
     },
     {
@@ -20140,8 +20146,8 @@
     },
     {
       "name": "server/spares-facts.ts",
-      "bytes": 1618,
-      "sha256": "381b585179ea6d755a188e9a682cdf7c71a552ce39afc7ea22724710a2a40d69",
+      "bytes": 1650,
+      "sha256": "deebe55e1e467554639504240711dc2ff3bf926a167950680d4ee44845428983",
       "mode": 438
     },
     {
@@ -20170,8 +20176,26 @@
     },
     {
       "name": "server/spares-history.ts",
-      "bytes": 8058,
-      "sha256": "b1892f0af6bf8e1b306ad4432f12740f324dba17bce5ef85d4e0c1e0396de7a3",
+      "bytes": 8370,
+      "sha256": "82084df2b9896113af9b99fb4ece4729d2813b03819d2ababbdf45df49a00c65",
+      "mode": 438
+    },
+    {
+      "name": "server/spares-insights-schema.ts",
+      "bytes": 1085,
+      "sha256": "58d7252df29075e0487cefd8f8de5ef79ac306236bf3c02277e884ce23252d76",
+      "mode": 438
+    },
+    {
+      "name": "server/spares-material-plan.test.ts",
+      "bytes": 6538,
+      "sha256": "c7fd0c8627adf967e0fc4861526edfeab612ece5060580169bd2c1a7c60d4f0d",
+      "mode": 438
+    },
+    {
+      "name": "server/spares-material-plan.ts",
+      "bytes": 5659,
+      "sha256": "72abaab1505fbd3d9fef570ec11036ce2f12d948b8c53228fb99114fb6338b13",
       "mode": 438
     },
     {
@@ -20188,8 +20212,8 @@
     },
     {
       "name": "server/spares-query-db.ts",
-      "bytes": 14275,
-      "sha256": "c669ce95425391ffa13463f54159515dd552556b23173a135be8c97c733c9ad7",
+      "bytes": 14598,
+      "sha256": "06b62df0b7251234069ccf54af4aba63113f83eb681b9a7030877524e1f1c21e",
       "mode": 438
     },
     {
@@ -20218,8 +20242,8 @@
     },
     {
       "name": "server/spares-workset.ts",
-      "bytes": 8704,
-      "sha256": "76c9cb2cf604673b819c4b6156cf2d5bffbbcedfb1b4f322f9737ee430713dd7",
+      "bytes": 9559,
+      "sha256": "bb6e03cb9c7892c1825af3319327910f0b2892f8fd27fde565cd9762e269c415",
       "mode": 438
     },
     {
@@ -20230,8 +20254,8 @@
     },
     {
       "name": "server/spares.ts",
-      "bytes": 22499,
-      "sha256": "c2b4c5562d22e03bf64c0ed187350c2fdabf7ff1c116cecde464238dd52f874b",
+      "bytes": 22927,
+      "sha256": "91b0093ff37a5c39538bcc0dc3b4e434c89de5aa21c36bd9ed89f579fcce0f66",
       "mode": 438
     },
     {

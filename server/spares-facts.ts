@@ -12,6 +12,7 @@ export interface SparesFacts {
  codeConflict:boolean;
  documentConflict:boolean;
  linkConflict:boolean;
+ materialPlanConflict?:boolean;
 }
 export const factKey=(...values:string[])=>JSON.stringify(values);
 export function exactFact(value:unknown,nonnegative=true){

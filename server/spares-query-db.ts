@@ -38,7 +38,10 @@ export async function readSparesQuery(pool:pg.Pool,ctx:AccessContext,endpoint:Sp
  requireAccess(ctx,'spares:read');const plan=spareQueryPlan(endpoint,params);
  return spareTransaction(pool,ctx,{},async c=>{
    if(!(await c.query("SELECT to_regclass('idms_spares.state') AS relation")).rows[0]?.relation)return {available:false,notice:'备件采购模块待初始化'};
-   if(!(await c.query("SELECT to_regclass('idms_spares.migrations') AS relation")).rows[0]?.relation||(await c.query("SELECT version FROM idms_spares.migrations WHERE name='capacity'")).rows[0]?.version!==1)throw new DomainError(503,'请先完成备件容量索引迁移');
+   if(!(await c.query("SELECT to_regclass('idms_spares.migrations') AS relation")).rows[0]?.relation)throw new DomainError(503,'请先完成备件容量索引迁移');
+   const capability=(await c.query("SELECT version FROM idms_spares.migrations WHERE name='capacity'")).rows[0]?.version;
+   if(![1,2].includes(capability))throw new DomainError(503,'备件数据库能力与当前代码不兼容');
+   if(capability===2&&(await c.query("SELECT version FROM idms_spares.migrations WHERE name='insights'")).rows[0]?.version!==1)throw new DomainError(503,'备件用料计划能力标记不完整');
    // Verification belongs to the caller's established current-business proof.
    // It must run on this connection, never through a second pool acquisition.
    await verifyCurrent(c);checkSparesRead();

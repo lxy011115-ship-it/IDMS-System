@@ -8,7 +8,8 @@ import {holdValue} from './capacity.ts';
 export const sparesActionLabels:Record<string,string>={
  'part.create':'建立备件','part.update':'修改备件','supplier.create':'建立供应商','supplier.update':'修改供应商','warehouse.create':'建立仓库','warehouse.update':'修改仓库',
  'purchase.create':'编制采购单','purchase.edit':'修订采购单','purchase.submit':'提交采购审批','purchase.approve':'采购独立审批','purchase.order':'登记已下单','purchase.receive':'分批收货','purchase.close':'关闭采购单','purchase.cancel':'取消采购草稿',
- 'stock.issue':'设备领料','stock.return':'未用退料','stock.supplier-return':'供应商退货','stock.transfer':'仓库调拨','adjustment.create':'提交期初/盘点/报损','adjustment.approve':'库存调整独立审批','link.create':'关联设备备件','replacement.create':'登记实际更换','document.create':'登记票款凭证'
+ 'stock.issue':'设备领料','stock.return':'未用退料','stock.supplier-return':'供应商退货','stock.transfer':'仓库调拨','adjustment.create':'提交期初/盘点/报损','adjustment.approve':'库存调整独立审批','link.create':'关联设备备件','replacement.create':'登记实际更换','document.create':'登记票款凭证',
+ 'material-plan.create':'登记工单用料计划','material-plan.edit':'修订工单用料计划','material-plan.close':'关闭工单用料计划','material-plan.cancel':'取消工单用料计划','material-plan.reopen':'人工恢复工单用料计划'
 };
 export interface SparesHistoryPlan {limit:number;before:bigint|null;q:string;action:string;entityId:string;from:string;to:string;start:number|null;end:number|null}
 const invalid=()=>new DomainError(400,'业务历史筛选或分页参数无效');
@@ -24,9 +25,9 @@ export function sparesHistoryPlan(params:URLSearchParams):SparesHistoryPlan{
  const start=from?day(from):null,end=to?day(to)+86400000:null;if(start!==null&&end!==null&&start>=end)throw invalid();
  return {limit:Number(raw),before:anchor?BigInt(anchor):null,q:text('q',160).toLocaleLowerCase(),action,entityId:entityId.toLowerCase(),from,to,start,end};
 }
-const statuses:Record<string,string>={DRAFT:'草稿',SUBMITTED:'待独立审批',APPROVED:'已批准',ORDERED:'已下单',PART_RECEIVED:'部分到货',RECEIVED:'已收齐',CLOSED:'已关闭',CANCELLED:'已取消',RETURNED:'已退回',REJECTED:'已驳回'};
+const statuses:Record<string,string>={ACTIVE:'进行中',DRAFT:'草稿',SUBMITTED:'待独立审批',APPROVED:'已批准',ORDERED:'已下单',PART_RECEIVED:'部分到货',RECEIVED:'已收齐',CLOSED:'已关闭',CANCELLED:'已取消',RETURNED:'已退回',REJECTED:'已驳回'};
 const fields:Record<string,string>={name:'名称',model:'规格型号',brand:'品牌',category:'分类',active:'启用状态',safetyMilli:'安全库存',location:'库位',status:'状态',dueDate:'需求日期',totalCents:'采购金额',deltaMilli:'库存变化',quantityMilli:'数量',amountCents:'凭证金额',date:'实际日期',lastDate:'最近更换日',cycleDays:'更换周期（天）',reason:'业务依据',closeReason:'关闭依据'};
-const kindLabels:Record<string,string>={warehouse:'仓库',supplier:'供应商',part:'备件',purchase:'采购单',receipt:'收货记录',movement:'库存流水',link:'适用备件',replacement:'实际更换',adjustment:'库存调整',document:'票款凭证'};
+const kindLabels:Record<string,string>={warehouse:'仓库',supplier:'供应商',part:'备件',purchase:'采购单',receipt:'收货记录',movement:'库存流水',link:'适用备件',replacement:'实际更换',adjustment:'库存调整',document:'票款凭证','material-plan':'工单用料计划'};
 function value(key:string,v:unknown){if(v===undefined||v===null)return '—';if(key==='active')return v?'启用':'停用';if(key==='status')return statuses[String(v)]||String(v);if(key.endsWith('Milli'))return String(Number(v)/1000)+'（按备件档案单位）';if(key.endsWith('Cents'))return '¥'+(Number(v)/100).toFixed(2);return String(v).length>500?String(v).slice(0,500)+'…':String(v);}
 function references(e:SpareEntity){return [...new Set([e.id,e.partId,e.warehouseId,e.purchaseId,e.receiptId,e.issueId,e.linkId,e.adjustmentId,e.supplierId,e.workOrderId,...(Array.isArray(e.lines)?e.lines.map((l:any)=>l.partId):[])].filter(v=>typeof v==='string'&&v))] as string[];}
 export function historySummary(row:{sequence:string;site_code:string;body:any}){

@@ -2,6 +2,7 @@ import {randomUUID} from 'node:crypto';
 import {DomainError} from './service.ts';
 import {scopeFilter,hasAccess,type AccessContext} from './access.ts';
 import {factKey,localEntities,relatedTotal,type SparesFacts} from './spares-facts.ts';
+import {materialPlanPermission,applyMaterialPlan} from './spares-material-plan.ts';
 export type SpareEntity={id:string;kind:string;tenantId:string;siteCode:string;createdBy:string;createdAt:string;version:number;[key:string]:any};
 export type SparesState={entities:SpareEntity[];facts?:SparesFacts};
 export type SpareReferences={devices:{code:string;siteCode:string;name:string}[];orders:{id:string;deviceCode:string;assignee:string;state:string}[]};
@@ -18,7 +19,8 @@ export function sparesCapabilities(ctx:AccessContext){return {manage:hasAccess(c
 export function spareVisible(e:SpareEntity,ctx:AccessContext,refs:SpareReferences){const s=scopeFilter(ctx);return e.tenantId===ctx.tenantId&&(s.sites===null||s.sites.includes(e.siteCode))&&(!e.deviceCode||refs.devices.some(d=>d.code===e.deviceCode))&&(!e.workOrderId||refs.orders.some(o=>o.id===e.workOrderId));}
 export function authorizeSpare(state:SparesState,action:string,input:Record<string,any>,ctx:AccessContext,refs:SpareReferences){
  const c=sparesCapabilities(ctx),right=action.endsWith('.approve')?'approve':action.startsWith('purchase.')&&['purchase.create','purchase.edit','purchase.submit','purchase.cancel'].includes(action)?'request':action.startsWith('stock.')||action==='replacement.create'?'move':action==='document.create'?'finance':'manage';
- if(!c[right as keyof typeof c])fail('当前账户没有此项备件采购权限',403);
+ if(action.startsWith('material-plan.')){const orderId=input.workOrderId||state.entities.find(e=>e.id===input.id)?.workOrderId;if(!materialPlanPermission(ctx,refs,orderId))fail('当前账户没有此工单用料计划权限',403);}
+ else if(!c[right as keyof typeof c])fail('当前账户没有此项备件采购权限',403);
  const s=scopeFilter(ctx);if(input.siteCode&&(s.sites!==null&&!s.sites.includes(input.siteCode)))fail('工厂不在当前授权范围',403);
  if(input.id){const target=state.entities.find(e=>e.id===input.id&&spareVisible(e,ctx,refs));if(!target)fail('单据不存在或不在授权范围',404);}
  for(const id of [input.partId,input.warehouseId,input.targetWarehouseId,input.supplierId,input.linkId,...(Array.isArray(input.lines)?input.lines.map((l:any)=>l?.partId):[])].filter(Boolean))if(!state.entities.some(e=>e.id===id&&spareVisible(e,ctx,refs)))fail('关联资料不在当前范围',403);
@@ -28,6 +30,7 @@ export function authorizeSpare(state:SparesState,action:string,input:Record<stri
 export function stock(state:SparesState,partId:string,warehouseId:string){const moves=localEntities(state).filter(e=>e.kind==='movement'&&e.partId===partId&&e.warehouseId===warehouseId),base=state.facts?.stocks.get(factKey(partId,warehouseId));if(state.facts&&!base)fail('备件命令缺少库存事实',503);return {quantityMilli:(base?.quantityMilli||0)+moves.reduce((n,e)=>n+e.deltaMilli,0),revision:(base?.revision||0)+moves.length};}
 export function spareCommand(state:SparesState,action:string,input:Record<string,any>,ctx:AccessContext,refs:SpareReferences){
  authorizeSpare(state,action,input,ctx,refs);const all=state.entities,now=new Date().toISOString(),caps=sparesCapabilities(ctx);
+ if(action.startsWith('material-plan.'))return applyMaterialPlan(state,ctx,refs,action,input,quantity);
  const find=(id:unknown,kind:string)=>{const e=all.find(e=>e.id===id&&e.kind===kind&&spareVisible(e,ctx,refs));if(!e)fail('关联'+kind+'不存在或不在当前范围',404);return e!;};
  const active=(e:SpareEntity)=>{if(e.active===false)fail('已停用档案不能用于新业务');return e;};
  const version=(e:SpareEntity)=>{if(input.expectedVersion!==e.version)fail('单据版本已变化，请刷新后重试',409);};

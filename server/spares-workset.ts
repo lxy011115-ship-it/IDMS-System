@@ -8,7 +8,7 @@ import {checkSparesRead} from './spares-audit.ts';
 
 const bad=()=>new DomainError(503,'备件命令资料边界暂无法核验');
 const uuid=/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
-const kinds=new Set(['warehouse','supplier','part','purchase','receipt','movement','link','replacement','adjustment','document']);
+const kinds=new Set(['warehouse','supplier','part','purchase','receipt','movement','link','replacement','adjustment','document','material-plan']);
 export function validateSpareRow(row:any,tenant:string):SpareEntity{
  const e=row?.body;if(!e||row.tenant_id!==tenant||e.tenantId!==tenant||e.id!==row.id||e.kind!==row.kind||e.siteCode!==row.site_code||typeof e.id!=='string'||!uuid.test(e.id)||!kinds.has(e.kind)||typeof e.siteCode!=='string'||!Number.isSafeInteger(e.version)||e.version<1)throw bad();return e;
 }
@@ -20,7 +20,10 @@ export async function prepareSpareCommand(client:pg.PoolClient,ctx:AccessContext
  authorizeSpare({entities:[]},action,{siteCode:input.siteCode,deviceCode:input.deviceCode,workOrderId:input.workOrderId},ctx,refs);
  if(Array.isArray(input.lines)&&input.lines.length>50)throw new DomainError(400,'采购明细须为1至50项');
  const ready=(await client.query("SELECT to_regclass('idms_spares.migrations') AS relation")).rows[0]?.relation;
- if(!ready||(await client.query("SELECT version FROM idms_spares.migrations WHERE name='capacity'")).rows[0]?.version!==1)throw new DomainError(503,'请先完成备件容量索引迁移');
+ const capability=ready?(await client.query("SELECT version FROM idms_spares.migrations WHERE name='capacity'")).rows[0]?.version:undefined;
+ if(![1,2].includes(capability))throw new DomainError(503,'请先完成兼容的备件容量索引迁移');
+ if(capability===2&&(await client.query("SELECT version FROM idms_spares.migrations WHERE name='insights'")).rows[0]?.version!==1)throw new DomainError(503,'备件用料计划能力标记不完整');
+ if(action.startsWith('material-plan.')&&capability!==2)throw new DomainError(503,'请先完成工单用料计划专用迁移');
  const pending=new Set<string>(),seen=new Set<string>(),entities:SpareEntity[]=[];
  const enqueue=(value:unknown,stored=false)=>{if(typeof value!=='string'||!uuid.test(value))throw stored?bad():new DomainError(400,'备件关联标识无效');const id=value.toLowerCase();if(!seen.has(id))pending.add(id);};
  for(const id of idsOf(input))enqueue(id);
@@ -29,11 +32,12 @@ export async function prepareSpareCommand(client:pg.PoolClient,ctx:AccessContext
   const rows=(await client.query('/* IDMS_SPARES_COMMAND_ENTITIES */ SELECT tenant_id,id::text,kind,site_code,body FROM idms_spares.entities WHERE tenant_id=$1 AND id=ANY($2::uuid[]) ORDER BY id,kind',[ctx.tenantId,ids])).rows;
   const returned=new Set<string>();for(const row of rows){const e=validateSpareRow(row,ctx.tenantId);if(returned.has(e.id)||!ids.includes(e.id))throw bad();returned.add(e.id);entities.push(e);for(const id of idsOf(e))enqueue(id,true);}
  }
- const facts:SparesFacts={persistedIds:new Set(entities.map(e=>e.id)),stocks:new Map(),supplierReturns:new Map(),issueReturns:new Map(),issueInstalled:new Map(),documents:new Map(),codeConflict:false,documentConflict:false,linkConflict:false};
+ const facts:SparesFacts={persistedIds:new Set(entities.map(e=>e.id)),stocks:new Map(),supplierReturns:new Map(),issueReturns:new Map(),issueInstalled:new Map(),documents:new Map(),codeConflict:false,documentConflict:false,linkConflict:false,materialPlanConflict:false};
  const state={entities,facts};if(typeof source==='function')refs=await source(entities);authorizeSpare(state,action,input,ctx,refs);
  if(['part.create','supplier.create','warehouse.create'].includes(action)&&typeof input.code==='string')facts.codeConflict=(await client.query("/* IDMS_SPARES_CODE_CONFLICT */ SELECT EXISTS(SELECT 1 FROM idms_spares.entities WHERE tenant_id=$1 AND kind=$2 AND lower(body->>'code')=lower($3)) AS conflict",[ctx.tenantId,action.split('.')[0],input.code.trim()])).rows[0].conflict;
  if(action==='document.create'&&typeof input.type==='string'&&typeof input.number==='string')facts.documentConflict=(await client.query("/* IDMS_SPARES_DOCUMENT_CONFLICT */ SELECT EXISTS(SELECT 1 FROM idms_spares.entities WHERE kind='document' AND tenant_id=$1 AND body->>'type'=$2 AND body->>'number'=$3) AS conflict",[ctx.tenantId,input.type,input.number.trim()])).rows[0].conflict;
  if(action==='link.create'&&typeof input.position==='string')facts.linkConflict=(await client.query("/* IDMS_SPARES_LINK_CONFLICT */ SELECT EXISTS(SELECT 1 FROM idms_spares.entities WHERE kind='link' AND tenant_id=$1 AND body->>'partId'=$2 AND body->>'deviceCode'=$3 AND body->>'position'=$4) AS conflict",[ctx.tenantId,input.partId,input.deviceCode,input.position.trim()])).rows[0].conflict;
+ if(action==='material-plan.create')facts.materialPlanConflict=(await client.query("/* IDMS_SPARES_MATERIAL_PLAN_CONFLICT */ SELECT EXISTS(SELECT 1 FROM idms_spares.material_plan_records WHERE tenant_id=$1 AND body->>'workOrderId'=$2 AND body->>'partId'=$3 AND body->>'warehouseId'=$4) AS conflict",[ctx.tenantId,input.workOrderId,input.partId,input.warehouseId])).rows[0].conflict;
  const affectsStock=['purchase.receive','stock.issue','stock.return','stock.supplier-return','stock.transfer','adjustment.create','adjustment.approve'].includes(action);
  if(affectsStock){
   const pairs=entities.filter(e=>e.kind==='part').flatMap(p=>entities.filter(w=>w.kind==='warehouse'&&w.siteCode===p.siteCode).map(w=>({part:p.id,warehouse:w.id})));if(pairs.length>256)throw bad();
@@ -51,6 +55,6 @@ export async function prepareSpareCommand(client:pg.PoolClient,ctx:AccessContext
  }
  const purchases=entities.filter(e=>e.kind==='purchase').map(e=>e.id);for(const id of purchases)for(const type of ['INVOICE','PAYMENT'])facts.documents.set(factKey(id,type),0);
  if(purchases.length){const rows=(await client.query("/* IDMS_SPARES_PURCHASE_DOCUMENT_TOTAL */ SELECT body->>'purchaseId' AS id,body->>'type' AS type,sum((body->>'amountCents')::numeric)::text AS total FROM idms_spares.entities WHERE kind='document' AND tenant_id=$1 AND body->>'purchaseId'=ANY($2::text[]) GROUP BY body->>'purchaseId',body->>'type'",[ctx.tenantId,purchases])).rows;for(const row of rows){const key=factKey(row.id,row.type);if(!facts.documents.has(key))throw bad();facts.documents.set(key,exactFact(row.total));}}
- checkSparesRead();return {state,refs};
+ checkSparesRead();return {state,refs,eventWireVersion:capability===2?2:1};
 }
 export async function loadSpareWorkset(client:pg.PoolClient,ctx:AccessContext,refs:SpareReferences,action:string,input:Record<string,any>):Promise<SparesState>{return (await prepareSpareCommand(client,ctx,refs,action,input)).state;}
