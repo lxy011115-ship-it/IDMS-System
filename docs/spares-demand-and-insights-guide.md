@@ -1,6 +1,6 @@
 # 工单用料计划与备件计算依据
 
-更新：2026-10-30。依据已批准的[方案B](superpowers/specs/2026-10-30--spares-demand-and-explainable-insights.md)。服务端、专用迁移工具及页面接入已实现；完整业务加密恢复和实际企业切换仍按[实施计划](superpowers/plans/2026-10-30--spares-demand-and-explainable-insights.md)继续。源码提交不等于主站已启用新能力。
+更新：2026-10-30。依据已批准的[方案B](superpowers/specs/2026-10-30--spares-demand-and-explainable-insights.md)。服务端、页面、专用迁移CLI和完整业务加密恢复已实现并验证；两本地企业已完成备份、隔离恢复验证及能力迁移。真实登录页面与企业岗位验收仍按[实施计划](superpowers/plans/2026-10-30--spares-demand-and-explainable-insights.md)继续，源码提交和本地技术验证不等于生产上线。
 
 ## 业务口径
 
@@ -63,4 +63,4 @@ node scripts/setup-spares-insights.mjs --tenant TENANT --backup PRIVATE_ARCHIVE 
 
 `npm run spares:insights:archive:verify` 使用单独随机QA库，复用完整归档流程：实际API上传与独立审批设备原文、批准已标明的样例告警生成规范工单，实际备份与迁移CLI验证认证、过期拒绝及幂等安装。在超过10000实体/20000事件后验证并发唯一计划、版本/原键冲突、完整规范工作区的任务交接、独立批准的设备更正及当前范围撤权。任务交接为QA模拟外部派工，身份服务不变。完整加密pg_dump/pg_restore核对48张表、新分区与索引/能力标记、三个查询、计划历史和原键重放，保留原归档损坏/跨租户/现有目标拒绝等检查。专用数据库、角色、临时档案和凭据连接释放后正常清理，不强制断连。此命令需要已准备的本机PostgreSQL及私密备份密钥，不能作为无数据库的源码CI运行。
 
-当前企业库不写测试业务、不调整账号；备份迁移及真实只读复核按实施计划另行进行，不启用公网或解除生产门禁。
+当前企业库不写测试业务、不调整账号；实际本地切换已取得私密技术记录，真实只读登录和企业签收继续，不启用公网或解除生产门禁。

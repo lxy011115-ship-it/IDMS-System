@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-30T12:51:24.237Z",
+  "createdAt": "2026-10-30T12:59:21.675Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -778,8 +778,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 10398,
-      "sha256": "0201790ad43327cdd746aa741e8513efa11d1d5d9f61aa2f614ad5fb41e0750d",
+      "bytes": 10506,
+      "sha256": "6d4f89b77c51b115c5799f9b35d74861e812f40507f604ffa0e67b7b190dc537",
       "mode": 438
     },
     {
@@ -2326,8 +2326,8 @@
     },
     {
       "name": "docs/spares-demand-and-insights-guide.md",
-      "bytes": 8463,
-      "sha256": "f4ebf124134a572cbc20a28f2121e868a82058cfb4d73c7602030910ea5ff97c",
+      "bytes": 8589,
+      "sha256": "97bca55649c118f1c631364aade70a4538c30584aad8b7ed04494844e589998a",
       "mode": 438
     },
     {
@@ -3238,8 +3238,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-10-30--spares-demand-and-explainable-insights.md",
-      "bytes": 6684,
-      "sha256": "8f31c4a136040d32b89fa40164bbca665e0614d12a12bde234976438fc6a15ac",
+      "bytes": 7609,
+      "sha256": "837a03af40c8b72e126b04a81a864e64944fd3fea33bba8b7f55c30edfbcb1f5",
       "mode": 438
     },
     {
