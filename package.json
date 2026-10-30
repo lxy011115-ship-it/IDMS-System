@@ -86,7 +86,8 @@
     "spares:setup": "node scripts/setup-spares.mjs",
     "spares:verify": "node scripts/verify-spares.mjs",
     "spares:insights:setup": "node scripts/setup-spares-insights.mjs",
-    "spares:insights:verify": "node scripts/verify-spares-insights.mjs"
+    "spares:insights:verify": "node scripts/verify-spares-insights.mjs",
+    "spares:insights:archive:verify": "node scripts/verify-spares-archive.mjs --insights"
   },
   "dependencies": {
     "@js-temporal/polyfill": "0.5.1",

@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-30T12:31:34.565Z",
+  "createdAt": "2026-10-30T12:51:24.237Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -778,8 +778,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 10353,
-      "sha256": "c5325b112ad80089539986ed1e502437fd0fa45a07803ba0294c38b2545b08a0",
+      "bytes": 10398,
+      "sha256": "0201790ad43327cdd746aa741e8513efa11d1d5d9f61aa2f614ad5fb41e0750d",
       "mode": 438
     },
     {
@@ -2326,8 +2326,8 @@
     },
     {
       "name": "docs/spares-demand-and-insights-guide.md",
-      "bytes": 7491,
-      "sha256": "bbd5915037d267984ca221a28a100bea8658509f0064df11c039da3b8b27a844",
+      "bytes": 8463,
+      "sha256": "f4ebf124134a572cbc20a28f2121e868a82058cfb4d73c7602030910ea5ff97c",
       "mode": 438
     },
     {
@@ -3238,8 +3238,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-10-30--spares-demand-and-explainable-insights.md",
-      "bytes": 5497,
-      "sha256": "7fa6631cdf3a02155531eed0611c8710343b890b4590b85cc6fb1462e09ac878",
+      "bytes": 6684,
+      "sha256": "8f31c4a136040d32b89fa40164bbca665e0614d12a12bde234976438fc6a15ac",
       "mode": 438
     },
     {
@@ -5878,8 +5878,8 @@
     },
     {
       "name": "package.json",
-      "bytes": 6045,
-      "sha256": "9607e8e4b9ec6165db41328482171889ce3a02438c071a5b55bd6d9b6998f1b6",
+      "bytes": 6137,
+      "sha256": "9e801c99f3d4a13184d6b2a8cbec10a0e9f8d214201699837305926f20822380",
       "mode": 438
     },
     {
@@ -11925,6 +11925,12 @@
       "mode": 438
     },
     {
+      "name": "scripts/fixtures/spares-insights-archive.mjs",
+      "bytes": 13726,
+      "sha256": "51d370fb5265e816ae4b112b72b0cefd52770ec98c092c6034a54739568a726c",
+      "mode": 438
+    },
+    {
       "name": "scripts/fixtures/spares-insights-fixture.mjs",
       "bytes": 8833,
       "sha256": "34186e7ea4c85a42d87993037c535871e4c93fa22e76ed02c05632b69c4e056b",
@@ -17128,8 +17134,8 @@
     },
     {
       "name": "scripts/verify-spares-archive.mjs",
-      "bytes": 24474,
-      "sha256": "9bd88b6bdc8e7d9ddb1692ec248077d976d4e8da01a5f2b032389da757a3596a",
+      "bytes": 26010,
+      "sha256": "fa4a4b4f0183e3304e89cc340402ca4f32b5a17b65a3feb66ee7e0d68fccc752",
       "mode": 438
     },
     {
