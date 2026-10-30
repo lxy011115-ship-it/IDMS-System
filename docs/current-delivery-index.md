@@ -48,7 +48,7 @@
 
 本地首批优化标记：`prelaunch-20261029-b`，仅用于整理本轮材料，不是Git标签或正式发布版本。
 
-当前正整理基于远端main的独立发布候选`release/prelaunch-20261030`，见[源码发布说明](source-release-guide.md)。`package.json`的0.1.0现为唯一软件版本来源，健康接口源码已移除独立的0.5.0固定字符串；644项服务端检查、9项打包/隔离HTTP检查及300份资产语法和TS检查通过。旧主站进程仍可能返回重启前版本；磁盘修复不能当作运行切换成功。Git远端提交、Linux检查和服务器运行须分别取得实际证据，不能只看版本字符串认定同版。
+根目录已纳入基于远端main的独立发布候选`release/prelaunch-20261030`并推送GitHub，见[源码发布说明](source-release-guide.md)。`package.json`的0.1.0现为唯一软件版本来源，健康接口源码已移除独立的0.5.0固定字符串；本机644项服务端检查、9项打包/隔离HTTP检查及300份资产语法和TS检查通过。备份单元检查使用独立系统临时目录，不要求机器已有`.local`。旧主站进程仍可能返回重启前版本；磁盘修复不能当作运行切换成功。Git远端提交、Linux检查和服务器运行须分别取得实际证据，不能只看版本字符串认定同版；当前分支的Linux结果见[工作流](https://github.com/lxy011115-ship-it/IDMS-System/actions/workflows/linux-verification.yml)。
 
 ## 哪些资料是当前入口
 

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {randomBytes,randomUUID,createHash} from 'node:crypto';
 import {mkdtemp,readFile,unlink,rmdir} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
+import {tmpdir} from 'node:os';
 import {sealBackup,openBackup,generateKey,readKey,flags,restoreTenantBackup} from '../scripts/backup-support.mjs';
 
 function fixture(){
@@ -27,12 +28,12 @@ test('wrong key, tenant, tampering and truncation fail authentication or binding
   assert.throws(()=>openBackup(sealBackup({...f.manifest,dumpSha256:'0'.repeat(64)},f.dump,f.key),f.key,'acme'),/dump/);
 });
 test('backup keys are exclusive files and invalid CLI/restore targets are refused',async()=>{
-  const directory=await mkdtemp(resolve('.local/backup-unit-')),file=join(directory,'key.json');
+  const directory=await mkdtemp(join(tmpdir(),'idms-backup-unit-')),file=join(directory,'key.json');
   try{
     const generated=await generateKey(file),before=await readFile(file);assert.equal((await readKey(file)).keyId,generated.keyId);
     await assert.rejects(generateKey(file),/EEXIST/);assert.deepEqual(await readFile(file),before);
     assert.throws(()=>flags(['--tenant','acme','--tenant','sandbox'],['--tenant']),/duplicate/);
     assert.throws(()=>flags(['--unknown','x'],['--tenant']),/Invalid/);
     await assert.rejects(restoreTenantBackup({tenantId:'acme',targetDatabase:'idms_acme'}),/isolated/);
-  }finally{await unlink(file);await rmdir(directory);}
+  }finally{try{await unlink(file);}catch(error){if(error.code!=='ENOENT')throw error;}await rmdir(directory);}
 });

@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-30T07:09:08.659Z",
+  "createdAt": "2026-10-30T07:19:14.502Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -778,8 +778,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 9585,
-      "sha256": "e097c7825e74a6fde2cacc52b939f4bc2ccb76cb9e2022663ad93ebaa1437972",
+      "bytes": 9826,
+      "sha256": "d9197a8747349b6d7f3f853ab3102896216d417759b641c0c90e8466b2aa90cd",
       "mode": 438
     },
     {
@@ -17938,8 +17938,8 @@
     },
     {
       "name": "server/backup.test.ts",
-      "bytes": 2818,
-      "sha256": "1855a018076b6718f5984f853c6f0cf897801489e29a09b9ce2631aa73b678e2",
+      "bytes": 2910,
+      "sha256": "3005f2ee13ed7cc53fd4b45f34b49e8f5318c9f1c3645de59e9c738ad764aec0",
       "mode": 438
     },
     {
