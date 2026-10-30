@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-30T12:59:21.675Z",
+  "createdAt": "2026-10-30T13:36:51.320Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -2308,8 +2308,8 @@
     },
     {
       "name": "docs/source-release-guide.md",
-      "bytes": 4617,
-      "sha256": "f8707738665b22e267d80939a296c93403cef25a17684f89f1c430378f8b77b1",
+      "bytes": 5069,
+      "sha256": "d8655bb06d752a6b468e194e2eaebedeb9162ad3be68090a03a393a64822393d",
       "mode": 438
     },
     {
@@ -11979,6 +11979,12 @@
       "mode": 438
     },
     {
+      "name": "scripts/fixtures/spares-roadshow-preview.mjs",
+      "bytes": 5839,
+      "sha256": "3d0c926897351d5e3facc024fa81db516b30331829ece43ea5538dd7172c9225",
+      "mode": 438
+    },
+    {
       "name": "scripts/fixtures/spares-workset-reference.mjs",
       "bytes": 9411,
       "sha256": "a92d3fa1fd4f46b1912a5feef47d15cd6264fdeb6be55ee56788bdfce62d8e65",
@@ -17134,8 +17140,8 @@
     },
     {
       "name": "scripts/verify-spares-archive.mjs",
-      "bytes": 26010,
-      "sha256": "fa4a4b4f0183e3304e89cc340402ca4f32b5a17b65a3feb66ee7e0d68fccc752",
+      "bytes": 26358,
+      "sha256": "a2d9570ae61a671383ba5f847f189fbe32c1c778d7db59b3c35af2f30d84c977",
       "mode": 438
     },
     {
