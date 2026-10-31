@@ -1,0 +1,10 @@
+{
+  "format": 1,
+  "enabled": true,
+  "required": ["business", "sessions", "identity", "workflow", "predictor", "ai", "telemetry"],
+  "optional": [],
+  "intervalMs": 10000,
+  "budgetMs": 8000,
+  "probeMs": 3000,
+  "maxAgeMs": 30000
+}

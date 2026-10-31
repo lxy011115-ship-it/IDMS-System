@@ -1,3 +1,8 @@
+import {loadReadinessPolicy,RuntimeReadiness} from './runtime-readiness.ts';
+import {runtimeDependencyTasks} from './runtime-adapters.ts';
+import {runtimeResources} from './runtime-resources.ts';
+import {runtimeStatusRoutes} from './runtime-status-route.ts';
+import {PostgresAuthStore} from './auth-store.ts';
 import {readSparesHistoryCurrent} from './spares-history-db.ts';
 import {applicationVersion} from './version.ts';
 import {readSparesQuery} from './spares-query-db.ts';
@@ -44,7 +49,7 @@ import { approvePredictiveAlert } from "./predictive.ts";
 import { seedStore } from "./store.ts";
 import { clearImports, importApi, importWriteApi, importData as rootImportData, loadRuntimeImports, mutate, transactionalRequest, waitForWrites,consistentRead,clearWorkspaceCache } from "./import-api.ts";
 import { canonical, digest, authorize,createBatch,present } from "./imports.ts";
-import { closePostgres, storageMode,tenantPool } from "./postgres-repository.ts";
+import { closePostgres, storageMode,tenantPool,runtimeDatabaseBindings } from "./postgres-repository.ts";
 import { analyzeDevice } from "./predictive-analysis.ts";
 import { TelemetryService } from './telemetry.ts';
 import { WorkflowService } from './workflow.ts';
@@ -70,6 +75,16 @@ const fieldIntake=new FieldIntakeService(fieldPlatform);await fieldIntake.start(
 const workflow = new WorkflowService();
 await workflow.start(store,runtimeHistory);
 const ai=new AiImportService();await ai.start(store,runtimeHistory);
+const readinessConfiguration=await loadReadinessPolicy(process.env.IDMS_READINESS_CONFIG);
+const readiness=new RuntimeReadiness(readinessConfiguration.policy,runtimeDependencyTasks({
+  databases:runtimeDatabaseBindings(),authConfig,authState,workflow,ai,telemetry,predictorUrl:process.env.IDMS_PREDICTOR_URL
+}),{code:readinessConfiguration.code,enterprise:storageMode==='postgres-tenant-databases' && authConfig.mode==='oidc'});
+const handleRuntimeStatus=runtimeStatusRoutes(readiness,()=>{
+  const pools=runtimeDatabaseBindings().flatMap(b=>[b.pool,...(b.workerPool?[b.workerPool]:[])]);
+  if(authState instanceof PostgresAuthStore)pools.push(authState.pool);
+  return runtimeResources(pools);
+},process.env.IDMS_SERVICE_TOKEN);
+readiness.start();
 const PORT = Number(process.env.PORT || 4010);
 const MAX_BODY_BYTES = 1024 * 1024;
 
@@ -96,6 +111,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse) {
   const requestId=beginHttpResponse(res);
   try {
     const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`);
+    if (handleRuntimeStatus(req,res,url)) return;
     if (url.pathname === "/api/v1/health") return json(res, 200, { status: "UP", version: applicationVersion, mode: "predictive-maintenance-development", receiptIdentity:'persisted-uuid-receipt-binding-2.0.0',fieldTransactionalIntake:fieldIntake.state(),fieldChannelGovernance:storageMode==='postgres-tenant-databases'?'scoped-field-channel-view-v1':'disabled',fieldLeaseCurrentCheck:fieldPlatform.configured?'signed-read-only-field-check-v1':'disabled',fieldLeaseIssuance:fieldPlatform.configured?'approved-audited-field-lease-v1':'disabled',sourceGovernance:'approved-source-binding-v1',operationalMetrics:'approved-frozen-operational-v1', qualityPolicyGovernance:'approved-effective-quality-rules-v1',coverageReplay:'asof-all-inputs-v1',frozenCoverageReports:'append-only-independent-report-v1',configurationHistory:'observed-registry-chain-v1',calendarHistory:'effective-and-known-at-v1',calendarRecurrence:'frozen-weekly-exceptions-v1',plannedCoverage:'approved-operation-calendar-v1',coverageDefinitionNormalization:'approved-point-values-v1',telemetryQuality:'scoped-snapshot-quality-v1',coldInputProof:storageMode==='postgres-tenant-databases'?'dual-stream-input-proof-v1':'full-file-snapshot',coldImportProof:storageMode==='postgres-tenant-databases'?'batchwise-input-fact-proof-v1':'full-file-snapshot',batchReads:storageMode==='postgres-tenant-databases'?'verified-input-fact-pages-v1':'bounded-file-array-pages-v1', coldReadVerification:storageMode==='postgres-tenant-databases'?'segmented-canonical-proof-v1':'full-file-snapshot', csvExport:storageMode==='postgres-tenant-databases'?'verified-two-pass-cursor-v1':'bounded-file-array-v1', writePostImage:storageMode==='postgres-tenant-databases'?'single-statement-row-compare-v1':'atomic-file-snapshot', auditPagination:storageMode==='postgres-tenant-databases'?'verified-window-keyset-v1':'file-demo-window-keyset-v1', readBodies:storageMode==='postgres-tenant-databases'?'scoped-original-and-audit-v1':'file-demo-snapshot',runtimeBootstrap:storageMode==='postgres-tenant-databases'?'verified-bindings-only-v1':'full-file-demo', resourceAdmission:storageMode==='postgres-tenant-databases'?'bounded-resource-admission-v1':'bounded-http-demo-v1',stateReconstruction:storageMode==='postgres-tenant-databases'?'single-statement-row-stream-v1':'atomic-local-snapshot',commandWorkspaces:storageMode==='postgres-tenant-databases'?'explicit-tenant-workspace-v1':'serialized-file-snapshot',backgroundDispatch:storageMode==='postgres-tenant-databases'?'leased-fenced-outbox-v1':'disabled',dispatcherInstanceId:workerInstanceId,authentication: auth.mode,sessionStorage:auth.storage, storage: storageMode, dataReadIsolation:storageMode==='postgres-tenant-databases'?'verified-mvcc-repeatable-read-v1':'serialized-file-snapshot',dataManagementQueries:storageMode==='postgres-tenant-databases'?'typed-sql-read-model':'file-snapshot', dataImportMappings:'published-file-mapping-v1',equipmentProfiles:'frozen-inherited-equipment-profile-v1',businessPersistence:storageMode==='postgres-tenant-databases'?'normalized-entities-v3':'atomic-local-snapshot',crossInstanceTransactions:storageMode==='postgres-tenant-databases',time: new Date().toISOString() });
     return await withRequestCapacity(req,res,async()=>{
     if (!url.pathname.startsWith("/api/")) {
@@ -270,7 +286,7 @@ else throw new DomainError(404, "接口不存在");    return result;
   }
 }
 
-export async function closeRuntime(){stopHttpAdmission();await fieldIntake.close();await fieldPlatform.close();await telemetry.close();await workflow.close();await ai.close();await closeCsvExports();await Promise.all([workScheduler.close(),sqlScheduler.close()]);await waitForWrites();clearWorkspaceCache();await auth.close();await closePostgres();}
+export async function closeRuntime(){readiness.beginClose();stopHttpAdmission();await readiness.close();await fieldIntake.close();await fieldPlatform.close();await telemetry.close();await workflow.close();await ai.close();await closeCsvExports();await Promise.all([workScheduler.close(),sqlScheduler.close()]);await waitForWrites();clearWorkspaceCache();await auth.close();await closePostgres();}
 
 if (process.env.NODE_ENV !== "test") {
   const server = createServer({headersTimeout:15000,requestTimeout:20000,maxHeaderSize:16384},handler);
@@ -280,7 +296,7 @@ if (process.env.NODE_ENV !== "test") {
     process.exitCode = 1;
   });
   server.listen(PORT, "127.0.0.1", () => console.log(`IDMS API http://127.0.0.1:${PORT}`));
-  for (const signal of ["SIGINT", "SIGTERM"] as const) process.once(signal, () => {stopHttpAdmission();server.close(async () => {await closeRuntime(); process.exit(0);});});
+  for (const signal of ["SIGINT", "SIGTERM"] as const) process.once(signal, () => {readiness.beginClose();stopHttpAdmission();server.close(async () => {await closeRuntime(); process.exit(0);});});
 }
 import {qualityPolicySqlRead} from './quality-policy-sql.ts';
 

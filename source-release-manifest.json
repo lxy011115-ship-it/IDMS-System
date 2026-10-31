@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-31T02:49:49.962Z",
+  "createdAt": "2026-10-31T03:39:15.384Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -22,8 +22,8 @@
     },
     {
       "name": ".env.example",
-      "bytes": 1045,
-      "sha256": "faa41c16e36674150d0e773c6907de444e809775b474a91c1579962584fe70a8",
+      "bytes": 1231,
+      "sha256": "4806ff77ea1f02a5b3544e48c3f57bf870c4e275933eea09eb577b66b0278c94",
       "mode": 438
     },
     {
@@ -286,8 +286,8 @@
     },
     {
       "name": ".github/workflows/linux-verification.yml",
-      "bytes": 2811,
-      "sha256": "d18ad5ad195daa10b562e80b40318f43ee2322b84611004e31190b221e41d4ba",
+      "bytes": 2951,
+      "sha256": "f0792fc29f28eabf54b41adcf72caed6c610733d3870a6d44e1c9cb6c42338fa",
       "mode": 438
     },
     {
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 11178,
-      "sha256": "8517e96320a7cae89b56d7ae77345c7da6e717e83889558151ac3a0e9577544e",
+      "bytes": 11451,
+      "sha256": "52ab56ed5bd72d0f4c15d7b7fc0ab524a7fb58259370e030300d1069b52b70f2",
       "mode": 438
     },
     {
@@ -2092,8 +2092,8 @@
     },
     {
       "name": "docs/production-readiness.md",
-      "bytes": 8731,
-      "sha256": "05dd9d6cd066ea448d9936111fe33981a00c6607e3dad3c264c1b74a9092b0c5",
+      "bytes": 9076,
+      "sha256": "13ec1bb9aa9803c2bbcf6a31651d9834d7eb3929fc667b3727fd5867b12331a5",
       "mode": 438
     },
     {
@@ -2248,8 +2248,14 @@
     },
     {
       "name": "docs/runtime-inspection-guide.md",
-      "bytes": 9347,
-      "sha256": "2c43569727504e18a5d4f30068970cc70c9b0c0247c81f822c370dd9f1276204",
+      "bytes": 9782,
+      "sha256": "32c9e51354f8fc677498adf768724eebb1d4c59cad975dfcead85d450ac5f79a",
+      "mode": 438
+    },
+    {
+      "name": "docs/runtime-readiness-guide.md",
+      "bytes": 8294,
+      "sha256": "21f8fa9857048a426407160f342a90d1652fe9527d12fa3269ee48535313986b",
       "mode": 438
     },
     {
@@ -3258,6 +3264,12 @@
       "name": "docs/superpowers/plans/2026-10-31--runtime-and-backup-inspection.md",
       "bytes": 2342,
       "sha256": "376d3f88de0d7fb74f4ba48500a642465ddd0898a941ef8ca29134edcaedebda",
+      "mode": 438
+    },
+    {
+      "name": "docs/superpowers/plans/2026-10-31--runtime-readiness-and-capacity.md",
+      "bytes": 1768,
+      "sha256": "77e3fbf2f46f2450a0e47c7ea327b03cb0852b4f87987929e938264134f0d28d",
       "mode": 438
     },
     {
@@ -4390,8 +4402,8 @@
     },
     {
       "name": "docs/superpowers/specs/2026-10-31--runtime-readiness-and-capacity.md",
-      "bytes": 15302,
-      "sha256": "d7dd8966deeb594247588d16fcc87c78e74581eb1dadb6dfae1d7901b003168f",
+      "bytes": 15360,
+      "sha256": "ba1689b7c5ecd2c28a26fb8d1901cf8e20fa4f43efaecfb5b26244388bd3687c",
       "mode": 438
     },
     {
@@ -5836,8 +5848,14 @@
     },
     {
       "name": "infra/runtime-inspection.example.json",
-      "bytes": 1121,
-      "sha256": "b4b826483d4066cad9beb181c6472d1638bfb324b892dc7491159e250b070ad5",
+      "bytes": 1196,
+      "sha256": "a6cbb323a980798e67e480342f9ea1d6c1f12510e62372a2a5324946e3ee99e9",
+      "mode": 438
+    },
+    {
+      "name": "infra/runtime-readiness.example.json",
+      "bytes": 234,
+      "sha256": "96103b6135fc7ef0e346b736a9c4a672c6acf6d47bc8aa3295d9b9c6f37d20f4",
       "mode": 438
     },
     {
@@ -6424,8 +6442,8 @@
     },
     {
       "name": "README.md",
-      "bytes": 3219,
-      "sha256": "0376c723cc6ae9b1686e050ff8ea98421b77acf61a3afd483bfc68c7e49e5f63",
+      "bytes": 3415,
+      "sha256": "cabf9246d0d352fbeb34e2f9f7f8296e3f9acae42e4099f8fdc62dac7db29ea6",
       "mode": 438
     },
     {
@@ -13804,26 +13822,26 @@
     },
     {
       "name": "scripts/runtime-inspection-input.mjs",
-      "bytes": 6254,
-      "sha256": "75df20d1c2ea1f7622edc5eabce4fbec6eeaec7cf03b1d7d3bd11ca90be66d6a",
+      "bytes": 5162,
+      "sha256": "08100f690e6f334fce6bc3b75b56fceb23fcacaac0c739c2ceb28296a2345203",
       "mode": 438
     },
     {
       "name": "scripts/runtime-inspection-probes.mjs",
-      "bytes": 5464,
-      "sha256": "e69c37a93b194e1ecde1c8678e413bfa3fd96b63ae9ad21c278b35f02539b5fc",
+      "bytes": 3427,
+      "sha256": "eccf0f1ad151e6973ad93fcadcf89e9d0129c4f2d7f4d69b1fd379cf627b075c",
       "mode": 438
     },
     {
       "name": "scripts/runtime-inspection-report.mjs",
-      "bytes": 10566,
-      "sha256": "3c7787dce5e867a910bb18d9870639722fb9811ca5b295b1c10a22094cd988fe",
+      "bytes": 10919,
+      "sha256": "70dea08d36a07ab1ab2fe15cd0a7d3c4b598925de3a533bb14ed409b7827014e",
       "mode": 438
     },
     {
       "name": "scripts/runtime-inspection-tasks.mjs",
-      "bytes": 10426,
-      "sha256": "66f43f46c2e6eb162d11d4e6f46b5dca984f5a999d1c1b25ac05b507e399cdf6",
+      "bytes": 11483,
+      "sha256": "4a4329fbc203eb034ac71d6aab0f6d0868ae885f548aebf1c61691ada7562eb1",
       "mode": 438
     },
     {
@@ -14176,8 +14194,8 @@
     },
     {
       "name": "scripts/verify-build.mjs",
-      "bytes": 12559,
-      "sha256": "02de58dfdd6cd7149071244760b6599c9425f581dbff2ba11a64805114dacb4d",
+      "bytes": 12844,
+      "sha256": "80dd08166085f2fdd86d85283dd45e1d57ba72d80081cfdc8576d85744efcc79",
       "mode": 438
     },
     {
@@ -17127,6 +17145,12 @@
       "mode": 438
     },
     {
+      "name": "scripts/verify-runtime-readiness.mjs",
+      "bytes": 11555,
+      "sha256": "48b9163dda10ba3466dbbadd8033657f1dbb017e19c17b99a668b6a64b567e47",
+      "mode": 438
+    },
+    {
       "name": "scripts/verify-runtime-write-fence-cleanup-v1.mjs",
       "bytes": 2452,
       "sha256": "6793f2db56544e409c608e1d58e7813749027f5724c1fd68156e549cb361cae5",
@@ -19258,8 +19282,8 @@
     },
     {
       "name": "server/index.ts",
-      "bytes": 32322,
-      "sha256": "a043125e3e791418b225184bcdd2bb8e667933129293b41307c46c4fb331ffef",
+      "bytes": 33541,
+      "sha256": "3b719d385715471fb7aef348c9a4869b821546e5b0f7d08f74c78d6e2dc59215",
       "mode": 438
     },
     {
@@ -19546,8 +19570,8 @@
     },
     {
       "name": "server/postgres-repository.ts",
-      "bytes": 8463,
-      "sha256": "7dc177f3f5a27f0cc213e2618ec939d0a4fb81ccf62f6b874b7c3c96d8d51630",
+      "bytes": 8904,
+      "sha256": "d959bf03b724ee98a1cf09264307711fcd46edd9e1432f5d4d944cd57a005497",
       "mode": 438
     },
     {
@@ -20055,6 +20079,12 @@
       "mode": 438
     },
     {
+      "name": "server/runtime-adapters.ts",
+      "bytes": 8905,
+      "sha256": "6b65ec533638ac5a57764c28c2f379b1f5dc3b0914f627fa09ccf225f6295e30",
+      "mode": 438
+    },
+    {
       "name": "server/runtime-bootstrap.test.ts",
       "bytes": 4564,
       "sha256": "a046fc925c6076fa5360afb088acff304d034396c84404eb1a265a9b47a5259c",
@@ -20064,6 +20094,54 @@
       "name": "server/runtime-bootstrap.ts",
       "bytes": 3976,
       "sha256": "0926d54442a1b1b383af5f163963de3805cf2235b3624bc67f4d2374fd9cd382",
+      "mode": 438
+    },
+    {
+      "name": "server/runtime-db-probe.ts",
+      "bytes": 2525,
+      "sha256": "92792836924a754b21bc4a4b8cf0cf2fd7afc9d4a1f0aa0475d6bd97355a76eb",
+      "mode": 438
+    },
+    {
+      "name": "server/runtime-file.ts",
+      "bytes": 1591,
+      "sha256": "d60d56bd727386ce38de9e57b168da01a25a4fc2b25e1e7b4648c4f2903d5667",
+      "mode": 438
+    },
+    {
+      "name": "server/runtime-http.ts",
+      "bytes": 1856,
+      "sha256": "ecf8df29fca41062ee1511dabc17f887f7a891ecd493e0dbae64bdac5c362dd4",
+      "mode": 438
+    },
+    {
+      "name": "server/runtime-probe-error.ts",
+      "bytes": 1013,
+      "sha256": "7c4cb332d682d5da7f1da6f065f5e66ad3a33af724254b1cbcc14a547f080ad2",
+      "mode": 438
+    },
+    {
+      "name": "server/runtime-readiness.ts",
+      "bytes": 9684,
+      "sha256": "318cf57f7209fbed4d347a8a5fa6a94678cf018dfdd20fc487972ed3062dfca9",
+      "mode": 438
+    },
+    {
+      "name": "server/runtime-resource-contract.ts",
+      "bytes": 3301,
+      "sha256": "3a8b7b8a1ead405e380d09e3563f9449c2f9a74438eb30068ec79c84703d16f0",
+      "mode": 438
+    },
+    {
+      "name": "server/runtime-resources.ts",
+      "bytes": 2222,
+      "sha256": "b30e24e317d7a40ff0e0505a0b3b56a106a40ec3baff1cfff000e05ea52ff256",
+      "mode": 438
+    },
+    {
+      "name": "server/runtime-status-route.ts",
+      "bytes": 3739,
+      "sha256": "1ef0053fcb37df6a2adb903b1ab43fc2a2f9eae605d53faa64668e4c7af1cf71",
       "mode": 438
     },
     {
@@ -22504,8 +22582,8 @@
     },
     {
       "name": "tests/health-version.test.mjs",
-      "bytes": 2678,
-      "sha256": "efa34fc141727e8a9a79599961014137fcde1ae26f3007d586de56b3bded3966",
+      "bytes": 3124,
+      "sha256": "8e32861fbf22df1d311c67489970175be79b0180cd106ce29c986453b1349586",
       "mode": 438
     },
     {
@@ -22725,6 +22803,12 @@
       "mode": 438
     },
     {
+      "name": "tests/runtime-adapters.test.mjs",
+      "bytes": 8024,
+      "sha256": "c76dd9f52faabeb9f33df15ba0978248f82a177c03ab1149db4c3696f1d455bd",
+      "mode": 438
+    },
+    {
       "name": "tests/runtime-application-config-v2.test.mjs",
       "bytes": 2024,
       "sha256": "75e6925d1f9d381efc5a991f0fd03e69bfbda56bc509225bb1010d6ea0f90035",
@@ -22758,6 +22842,12 @@
       "name": "tests/runtime-inspection.test.mjs",
       "bytes": 13532,
       "sha256": "9c46c5ff8dba4c4ebca2905c14fe8c9405d7e5f67a15fa410f73c7bdea0dc33b",
+      "mode": 438
+    },
+    {
+      "name": "tests/runtime-readiness.test.mjs",
+      "bytes": 9019,
+      "sha256": "a586d15e0b7cd9442ddb37cc6386c3ddcb7e9463bfd4d7171c1980c3665eb31a",
       "mode": 438
     },
     {

@@ -1,6 +1,6 @@
 # 主站就绪接口与受限运行资源设计
 
-日期：2026-10-31。状态：待用户审阅，尚未实施。上一批[手动巡检方案A](2026-10-30--runtime-and-backup-inspection.md)已交付；本文件是生产准备中下一批独立设计，不将上一批批准扩大为新增接口的批准。
+日期：2026-10-31。状态：用户已明确批准方案A，进入实施。上一批[手动巡检方案A](2026-10-30--runtime-and-backup-inspection.md)已交付；本文件是生产准备中下一批独立设计，本次新增接口已有单独批准。
 
 ## 1. 要解决的问题及现有证据
 
@@ -114,4 +114,4 @@
 
 存活、就绪与启动检查分工参考[Kubernetes官方探针说明](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)，这里只借鉴语义，不引入Kubernetes部署。单调计时依据[Node.js performance.now文档](https://nodejs.org/api/perf_hooks.html#performancenow)。当前工程依据为server/index.ts、postgres-repository.ts、auth-store.ts、telemetry.ts、workflow.ts、ai-import-review.ts、request-capacity.ts、capacity.ts及上一批巡检报告。
 
-设计自查：范围为A的接口/缓存/实际主站资源一条链路；未包含外部通知或自愈。未将另一份文件/一次UP/端口可达/预算计量当作当前依赖就绪或生产容量。公开与维护响应、缓存年龄、必需项、过期/失败以及原任务收尾均已明确；不新增账号、写设备、业务数据、真实支付或公网变更。实现及同版运行证据尚不存在，须用户审阅后进入实施计划。
+设计自查：范围为A的接口/缓存/实际主站资源一条链路；未包含外部通知或自愈。未将另一份文件/一次UP/端口可达/预算计量当作当前依赖就绪或生产容量。公开与维护响应、缓存年龄、必需项、过期/失败以及原任务收尾均已明确；不新增账号、写设备、业务数据、真实支付或公网变更。用户已批准进入实施；本批源码及隔离验证进度见对应计划，同版本机运行切换和生产证据仍需分别取得。

@@ -1,9 +1,10 @@
+import {validateRuntimeResources} from '../server/runtime-resource-contract.ts';
 import {resolve,join} from 'node:path';
 import {statfs} from 'node:fs/promises';
 import {validateRuntimeConfig} from '../server/postgres-security.ts';
 import {businessBinding,validateAuthRuntime} from '../server/auth-store.ts';
 import {authSchemaChecksum} from '../server/auth-store-schema.ts';
-import {InspectionError,need,keys,privateJson,checkedPath,localUrl} from './runtime-inspection-input.mjs';
+import {InspectionError,need,keys,privateJson,boundedFile,checkedPath,localUrl} from './runtime-inspection-input.mjs';
 import {httpJson,tcpReachable,readOnlyDatabase,checkSignal} from './runtime-inspection-probes.mjs';
 import {inspectBackups} from './runtime-inspection-backups.mjs';
 
@@ -42,7 +43,17 @@ export function inspectionTasks(root,p,{verifyBackups=false,version}={}){
   },
   mqtt:async ctx=>{const c=await telemetryConfig();need(c.mqtt&&typeof c.mqtt.url==='string','TELEMETRY_CONFIG_INVALID');const u=localUrl(c.mqtt.url,{protocol:'mqtt:'});need(!u.pathname||u.pathname==='/','LOCAL_ENDPOINT_REQUIRED');await tcpReachable(u.hostname,Number(u.port||1883),{signal:ctx.signal,timeoutMs:p.tcpMs});const rows=await edgeStates(c,ctx);need(rows.every(r=>r.mqttConnected===true),'MQTT_EDGE_CONNECTION_FAILED');return pass('TCP_AND_EDGE_REPORTED_SESSION',{deviceOnlineVerified:false,messagesPublished:0});},
   disk:async()=>{const volumes=[];for(const d of p.disks){try{const f=await statfs(await checkedPath(resolve(root,d.path)),{bigint:true});const free=Number(f.bavail*f.bsize);need(Number.isSafeInteger(free),'DISK_UNAVAILABLE');volumes.push({freeBytes:free,minFreeBytes:d.minFreeBytes});}catch(e){if(e instanceof InspectionError)throw e;throw new InspectionError('DISK_UNAVAILABLE','UNKNOWN');}}if(volumes.some(v=>v.minFreeBytes!==null&&v.freeBytes<v.minFreeBytes))return {status:'FAIL',code:'DISK_BELOW_THRESHOLD',evidence:'FILESYSTEM_FREE_BYTES',data:{volumes}};if(volumes.some(v=>v.minFreeBytes===null))return {status:'UNKNOWN',code:'DISK_THRESHOLD_UNSET',evidence:'FILESYSTEM_FREE_BYTES',data:{volumes}};return pass('CONFIGURED_FREE_SPACE_THRESHOLD',{volumes});},
-  resources:async()=>({status:'UNKNOWN',code:'LIVE_BUDGET_UNAVAILABLE',evidence:'NO_RUNTIME_CAPACITY_ENDPOINT',data:{inspectorMemoryIsNotServerMemory:true}}),
+  resources:async ctx=>{
+   if(!p.resources?.tokenFile)return {status:'NOT_CONFIGURED',code:'LIVE_BUDGET_UNAVAILABLE',evidence:'NO_MAINTENANCE_TOKEN_REFERENCE',data:{inspectorMemoryIsNotServerMemory:true}};
+   const token=(await boundedFile(resolve(root,p.resources.tokenFile),4097)).toString('utf8').trim();
+   need(Buffer.byteLength(token)>=32&&token.length<=4096&&!/[\r\n]/.test(token),'SERVICE_CREDENTIAL_INVALID');
+   const s=await httpJson(p.core.url+'/api/v1/runtime/status',{...options(ctx),headers:{Authorization:'Bearer '+token},maxBytes:16384});
+   need(s?.format===1&&s.productionApproved===false&&s.resourceCode==='CHECK_PASSED','RESOURCE_CONTRACT_INVALID');
+   const measured=validateRuntimeResources(s.resources),data={...measured,inspectorMemoryIsNotServerMemory:true};
+   if(measured.state==='CLOSING')return {status:'FAIL',code:'RESOURCE_CLOSING',evidence:'MAIN_PROCESS_MEASUREMENTS',data};
+   if(measured.state==='SATURATED')return {status:'UNKNOWN',code:'RESOURCE_SATURATED',evidence:'MAIN_PROCESS_MEASUREMENTS',data};
+   return pass('MAIN_PROCESS_MEASUREMENTS_NOT_OS_ACCEPTANCE',data);
+  },
   backups:async ctx=>inspectBackups(root,p.backups,await business(),{verify:verifyBackups,signal:ctx.signal,deadline:ctx.deadline})
  };
 }

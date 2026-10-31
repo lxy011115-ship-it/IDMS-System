@@ -1,10 +1,10 @@
-import {lstat,open,realpath} from 'node:fs/promises';
-import {resolve,dirname,join} from 'node:path';
+import {runtimeCheckedPath as checkedPath,runtimeBoundedFile as boundedFile} from '../server/runtime-file.ts';
+export {checkedPath,boundedFile};
+import {join} from 'node:path';
 import {createHash} from 'node:crypto';
 
-export class InspectionError extends Error {
- constructor(code,status='FAIL'){super(code);this.code=code;this.status=status;}
-}
+import {RuntimeProbeError as InspectionError} from '../server/runtime-probe-error.ts';
+export {InspectionError};
 export const need=(condition,code='CONFIG_INVALID')=>{if(!condition)throw new InspectionError(code);};
 export const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 export function keys(value,allowed){need(value&&typeof value==='object'&&!Array.isArray(value));need(Object.keys(value).every(k=>allowed.includes(k)));}
@@ -14,20 +14,10 @@ export function localUrl(value,{origin=false,protocol='http:'}={}){
  need(u.protocol===protocol&&['127.0.0.1','[::1]'].includes(u.hostname)&&!u.username&&!u.password&&!u.search&&!u.hash,'LOCAL_ENDPOINT_REQUIRED');
  if(origin)need(u.pathname==='/','LOCAL_ENDPOINT_REQUIRED');return u;
 }
-export async function checkedPath(path){
- path=resolve(path);for(let p=path;;p=dirname(p)){const s=await lstat(p);need(!s.isSymbolicLink(),'LINKED_INPUT_REFUSED');if(p===dirname(p))break;}
- need(await realpath(path)===path,'LINKED_INPUT_REFUSED');return path;
-}
-export async function boundedFile(path,max){
- try{
-  path=await checkedPath(path);const before=await lstat(path);need(before.isFile()&&before.nlink===1&&before.size<=max,'INPUT_SIZE_OR_TYPE');
-  const f=await open(path,'r');try{const s=await f.stat();need(s.ino===before.ino&&s.size===before.size&&s.mtimeMs===before.mtimeMs,'INPUT_CHANGED');const buffer=Buffer.alloc(before.size+1);let count=0;while(count<buffer.length){const {bytesRead}=await f.read(buffer,count,buffer.length-count,null);if(!bytesRead)break;count+=bytesRead;}const after=await f.stat(),current=await lstat(await checkedPath(path));need(count===before.size&&after.ino===before.ino&&after.size===before.size&&after.mtimeMs===before.mtimeMs&&current.ino===before.ino&&current.size===before.size&&current.mtimeMs===before.mtimeMs,'INPUT_CHANGED');return buffer.subarray(0,count);}finally{await f.close();}
- }catch(e){if(e instanceof InspectionError)throw e;if(e.code==='ENOENT')throw new InspectionError('INPUT_MISSING','NOT_CONFIGURED');throw new InspectionError('INPUT_UNREADABLE','UNKNOWN');}
-}
 export async function privateJson(path,max=256*1024){const raw=await boundedFile(path,max);try{const value=JSON.parse(raw.toString('utf8').replace(/^\uFEFF/,''));need(value&&typeof value==='object'&&!Array.isArray(value));return {value,sha256:hash(raw)};}catch(e){if(e instanceof InspectionError)throw e;throw new InspectionError('CONFIG_INVALID');}}
 export const components=['core','business','sessions','identity','workflow','predictor','ai','model','telemetry','mqtt','disk','resources','backups'];
 export function validateProfile(p){
- keys(p,['format','required','budgetMs','concurrency','httpMs','tcpMs','databaseMs','core','business','sessions','identity','workflow','predictor','ai','model','telemetry','disks','backups']);need(p.format===1);
+ keys(p,['format','required','budgetMs','concurrency','httpMs','tcpMs','databaseMs','core','business','sessions','identity','workflow','predictor','ai','model','telemetry','resources','disks','backups']);need(p.format===1);
  need(Array.isArray(p.required)&&p.required.includes('core')&&new Set(p.required).size===p.required.length&&p.required.every(k=>components.includes(k)));
  for(const [key,min,max,fallback]of [['budgetMs',100,120000,30000],['concurrency',1,2,2],['httpMs',50,3000,3000],['tcpMs',50,2000,2000],['databaseMs',50,3000,3000]]){p[key]??=fallback;need(Number.isSafeInteger(p[key])&&p[key]>=min&&p[key]<=max);}
  const path=v=>need(typeof v==='string'&&v.length>0&&v.length<=2048&&!v.includes('\0'));
@@ -38,6 +28,7 @@ export function validateProfile(p){
  keys(p.predictor,['url']);p.predictor.url=localUrl(p.predictor.url,{origin:true}).origin;keys(p.model,['url','version']);p.model.url=localUrl(p.model.url,{origin:true}).origin;need(typeof p.model.version==='string'&&/^\d+\.\d+\.\d+$/.test(p.model.version));
  keys(p.telemetry,['config','statusOrigins']);path(p.telemetry.config);need(Array.isArray(p.telemetry.statusOrigins)&&p.telemetry.statusOrigins.length>=1&&p.telemetry.statusOrigins.length<=16);for(const u of p.telemetry.statusOrigins)localUrl(u,{origin:true});
  need(Array.isArray(p.disks)&&p.disks.length>=1&&p.disks.length<=8);for(const d of p.disks){keys(d,['path','minFreeBytes']);path(d.path);need(d.minFreeBytes===null||Number.isSafeInteger(d.minFreeBytes)&&d.minFreeBytes>=0);}
+ p.resources??={tokenFile:null};keys(p.resources,['tokenFile']);if(p.resources.tokenFile!==null)path(p.resources.tokenFile);
  keys(p.backups,['directories','keyFile','maxAgeHours']);need(Array.isArray(p.backups.directories)&&p.backups.directories.length>=1&&p.backups.directories.length<=8);for(const d of p.backups.directories)path(d);path(p.backups.keyFile);need(p.backups.maxAgeHours===null||Number.isFinite(p.backups.maxAgeHours)&&p.backups.maxAgeHours>0&&p.backups.maxAgeHours<=175200);return p;
 }
 export async function sourceMetadata(root){

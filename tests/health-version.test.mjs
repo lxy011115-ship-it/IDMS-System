@@ -26,6 +26,8 @@ test('HTTP health uses the package version when started outside the source direc
   }
   assert.ok(health,'Isolated HTTP health did not become ready');
   assert.equal(health.status,'UP');assert.equal(health.version,metadata.version);assert.notEqual(health.storage,'postgres-tenant-databases');assert.equal(health.authentication,'demo');
+  const ready=await fetch(`http://127.0.0.1:${port}/api/v1/ready`);assert.equal(ready.status,503);const readiness=await ready.json();assert.equal(readiness.status,'NOT_READY');assert.equal(readiness.productionApproved,false);
+  const details=await fetch(`http://127.0.0.1:${port}/api/v1/runtime/status`);assert.equal(details.status,503);assert.equal((await details.json()).code,'MAINTENANCE_NOT_CONFIGURED');
  }finally{
   if(!exited)child.kill();
   await Promise.race([stopped,delay(5000,undefined,{ref:false}).then(()=>{throw Error('Owned HTTP process termination unconfirmed; fixture retained');})]);

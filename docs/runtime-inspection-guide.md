@@ -49,6 +49,7 @@ node scripts/inspect-platform.mjs --profile .local/runtime-inspection.json --ver
 | `identity` | 现有身份origin/realm配置或显式issuer；同时指定时必须匹配 |
 | `workflow` / `ai` | 既有客户端文件及明确的本机服务地址，企业集合须匹配业务配置 |
 | `telemetry` | 现有采集文件和允许的状态接口origin；当前适配明确标记SIMULATOR的来源 |
+| `resources.tokenFile` | 可选的既有维护令牌文件引用；旧配置省略时资源项未配置，不猜测文件 |
 | `disks[].minFreeBytes` | 经运行负责人确定的最低可用字节数；null表示尚未设阈值 |
 | `backups.directories` | 明确的既有备份目录。优先选择本次需要核对的完整备份批次目录 |
 | `backups.keyFile` | 现有档案密钥文件；仅显式认证时读取 |
@@ -68,7 +69,7 @@ node scripts/inspect-platform.mjs --profile .local/runtime-inspection.json --ver
 | 采集 | 状态身份、模拟只读模式、连接、样本、缓存计数 | 现场设备接入或样本时效SLA |
 | MQTT | 端口及已有边缘报告的MQTT会话 | 端口可达不证明消息已入库、已确认或设备在线 |
 | 磁盘 | 目标卷可用空间及显式阈值 | 无阈值时不能判容量正常 |
-| 资源 | 当前明确报告UNKNOWN | 尚无主站实时资源预算接口，不以巡检进程内存代替 |
+| 资源 | 可选维护令牌引用读取被访问主站的实时计量；旧配置保持未配置 | 应用预算/进程RSS不代表操作系统生产容量，见[就绪与资源说明](runtime-readiness-guide.md) |
 | 备份 | 有界候选元数据；显式选择时认证清单及dump | 已实际恢复、异地保留、调度或跨服务灾备 |
 
 采集状态即使MQTT/OPC均连接，只要报告 `SPOOL_CAPACITY_REACHED`、`capacityBlocked`，或待确认加拒绝记录达到明确容量，也会返回 `TELEMETRY_BUFFER_FULL`。报告保留数量和容量，不输出原始样本或任意错误正文。应核对主站接收及确认链路并保留未确认资料；不能通过删除缓存把状态变绿。没有有效样本或存在其他未确认错误时为UNKNOWN。
@@ -95,6 +96,6 @@ HTTP每响应上限64KiB；数据库使用现有应用身份、只读事务、�
 
 09:01本机只读观察取得9项PASS，模拟采集缓存10000、确认0且无新样本；此为当时状态，不能代表持续健康。最终10:35复测时，主站、数据库及身份等预期端口没有监听，当前报告为FAIL，10项依赖不可达；工具没有启动或重启它们。9份私密配置摘要前后相同。因当前数据库不可连接，本次业务版本前后核对未取得证据，不能沿用早先的“不变”结论。
 
-备份总目录超过候选预算仍为UNKNOWN；磁盘未设阈值及主站资源接口缺口仍保留。详细私密证据位于 `work/runtime-inspection-20261031/`，最终报告位于 `.local/inspection-reports/20261031-b01455cb-a90f-4e81-976c-706494f6f376/`。这些运行报告不上传公开仓库。
+备份总目录超过候选预算仍为UNKNOWN，磁盘未设阈值。当时主站资源接口尚未提供；后续已实现[受限主站资源接口与CLI适配](runtime-readiness-guide.md)，实际运行切换后才能取得新主站计量。详细私密证据位于 `work/runtime-inspection-20261031/`，最终报告位于 `.local/inspection-reports/20261031-b01455cb-a90f-4e81-976c-706494f6f376/`。这些运行报告不上传公开仓库。
 
-手动巡检完成后，HTTP就绪接口、持续监测与告警责任、实际冷启动、跨服务恢复、云端同版部署、真实岗位UAT及备案/TLS仍需分别完成。完整范围见[生产准备状态](production-readiness.md)。
+HTTP就绪及主站资源接口已完成后续源码和隔离验证，见专门指南；本机运行切换、持续监测与告警责任、实际冷启动、跨服务恢复、云端同版部署、真实岗位UAT及备案/TLS仍需分别完成。完整范围见[生产准备状态](production-readiness.md)。

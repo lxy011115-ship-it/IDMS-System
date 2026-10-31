@@ -43,7 +43,7 @@ jobs:
         run: node --test tests/spares-paged-ui.test.mjs tests/spares-insights-ui.test.mjs
 
       - name: Check bounded read-only runtime inspection and archive authentication
-        run: node --test tests/runtime-inspection.test.mjs
+        run: node --test tests/runtime-inspection.test.mjs tests/runtime-readiness.test.mjs tests/runtime-adapters.test.mjs
 
       - name: Check package boundaries and the actual HTTP version
         run: node --test tests/package-guard.test.mjs tests/package-verify.test.mjs tests/health-version.test.mjs

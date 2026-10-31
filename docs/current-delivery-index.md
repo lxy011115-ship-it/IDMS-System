@@ -2,7 +2,9 @@
 
 更新：2026-10-31。当前范围为本地开发版及受控企业试点准备；正式生产门禁仍开启。
 
-手动运行巡检方案A已实现，功能提交[a260198](https://github.com/lxy011115-ship-it/IDMS-System/commit/a2601986c4e48d0539f8706f85bc40a25cb572e0)的[Linux CI41161099239](https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/41161099239)成功：[入口、配置与报告说明](runtime-inspection-guide.md)。2026-10-31最终复测发现主站/数据库等依赖未监听，报告FAIL；没有自动启动或重启。磁盘阈值、资源预算接口和备份扫描范围仍有待处理，不能将CLI交付当作整个平台健康或生产放行。
+手动运行巡检方案A已实现，功能提交[a260198](https://github.com/lxy011115-ship-it/IDMS-System/commit/a2601986c4e48d0539f8706f85bc40a25cb572e0)的[Linux CI41161099239](https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/41161099239)成功：[入口、配置与报告说明](runtime-inspection-guide.md)。2026-10-31最终复测发现主站/数据库等依赖未监听，报告FAIL；没有自动启动或重启。磁盘阈值、实际运行资源核对和备份扫描范围仍有待处理，不能将CLI交付当作整个平台健康或生产放行。
+
+新增[主站就绪与资源能力](runtime-readiness-guide.md)已完成源码和隔离验证：最小200/503就绪、受限运行详情及CLI读取主站计量。后台检查需显式配置，本地完整平台未切换，不能声称4010已提供新版接口。
 
 ## 使用入口
 

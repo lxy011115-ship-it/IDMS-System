@@ -61,7 +61,7 @@ export async function savePostgres(payload:TenantPayload,tx?:TenantTransaction){
  if(result.rowCount!==1)throw new DomainError(409,'Business revision changed during locked transaction');
 }
 async function stateTransaction<T>(tenantId:string,write:boolean,task:(tx:TenantTransaction)=>Promise<T>){
- const db=databases.get(tenantId);if(!db)throw new DomainError(503,'企业数据库未配置');const client=await db.pool.connect();
+ const db=databases.get(tenantId);if(!db)throw new DomainError(503,'浼佷笟鏁版嵁搴撴湭閰嶇疆');const client=await db.pool.connect();
  try{
   // READ COMMITTED takes the lock before loading, so a waiter sees the winner's commit.
   await client.query('BEGIN');await client.query(`SELECT revision FROM business_state WHERE tenant_id=$1 FOR ${write?'UPDATE':'SHARE'}`,[tenantId]);
@@ -74,13 +74,16 @@ export function tenantRead<T>(tenantId:string,task:(tx:TenantTransaction)=>Promi
 // Legacy handlers can query service projections on another connection. Preserve
 // their business SHARE lock while avoiding repeated workspace reconstruction.
 export async function tenantLockedRead<T>(tenantId:string,task:(client:pg.PoolClient,pool:pg.Pool)=>Promise<T>){
- const db=databases.get(tenantId);if(!db)throw new DomainError(503,'企业数据库未配置');
+ const db=databases.get(tenantId);if(!db)throw new DomainError(503,'浼佷笟鏁版嵁搴撴湭閰嶇疆');
  for(let attempt=0;;attempt++){
   const client=await db.pool.connect();let taskStarted=false;
   try{await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ');await client.query('SELECT revision FROM business_state WHERE tenant_id=$1 FOR SHARE',[tenantId]);taskStarted=true;const value=await task(client,db.pool);await client.query('COMMIT');return value;}
   catch(e){await client.query('ROLLBACK').catch(()=>{});if(!taskStarted&&(e as any).code==='40001'&&attempt<2)continue;throw e;}finally{client.release();}
  }
 }
-export function tenantPool(tenantId:string){const db=databases.get(tenantId);if(!db)throw new DomainError(503,'企业数据库未配置');return db.pool;}
-export function tenantWorkerPool(tenantId:string){const db=databases.get(tenantId);if(!db)throw new DomainError(503,'企业后台数据库未配置');if(!db.workerPool){db.workerPool=new pg.Pool({...db.connection,max:2,application_name:'idms-dispatcher',connectionTimeoutMillis:1500,statement_timeout:3000,query_timeout:4000,idle_in_transaction_session_timeout:5000} as pg.PoolConfig);db.workerPool.on('connect',client=>client.on('error',()=>console.error('[IDMS dispatcher] connection failed; lease cannot be trusted')));db.workerPool.on('error',()=>console.error('[IDMS dispatcher] idle database connection failed'));}return db.workerPool;}
+export function tenantPool(tenantId:string){const db=databases.get(tenantId);if(!db)throw new DomainError(503,'浼佷笟鏁版嵁搴撴湭閰嶇疆');return db.pool;}
+// Internal readiness adapter: actual initialized pools and startup bindings only.
+// Never serialize this descriptor or read a second credential file for a probe.
+export function runtimeDatabaseBindings(){return Object.freeze([...databases].map(([tenantId,db])=>Object.freeze({tenantId,pool:db.pool,workerPool:db.workerPool,database:db.connection.database,user:db.connection.user})));}
+export function tenantWorkerPool(tenantId:string){const db=databases.get(tenantId);if(!db)throw new DomainError(503,'浼佷笟鍚庡彴鏁版嵁搴撴湭閰嶇疆');if(!db.workerPool){db.workerPool=new pg.Pool({...db.connection,max:2,application_name:'idms-dispatcher',connectionTimeoutMillis:1500,statement_timeout:3000,query_timeout:4000,idle_in_transaction_session_timeout:5000} as pg.PoolConfig);db.workerPool.on('connect',client=>client.on('error',()=>console.error('[IDMS dispatcher] connection failed; lease cannot be trusted')));db.workerPool.on('error',()=>console.error('[IDMS dispatcher] idle database connection failed'));}return db.workerPool;}
 export async function closePostgres(){await Promise.all([...databases.values()].flatMap(d=>[d.pool.end(),...(d.workerPool?[d.workerPool.end()]:[])]));databases.clear();}

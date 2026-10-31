@@ -15,6 +15,7 @@
   "ai": {"config": ".local/ai/client.json", "url": "http://127.0.0.1:4018"},
   "model": {"url": "http://127.0.0.1:11435", "version": "0.40.4"},
   "telemetry": {"config": ".local/mqtt/telemetry-runtime.json", "statusOrigins": ["http://127.0.0.1:4014"]},
+  "resources": {"tokenFile": ".local/service-token"},
   "disks": [{"path": ".", "minFreeBytes": null}],
   "backups": {"directories": [".local/backups"], "keyFile": ".local/backup-keys/tenant-business-v1.json", "maxAgeHours": null}
 }
