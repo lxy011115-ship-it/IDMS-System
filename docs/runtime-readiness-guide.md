@@ -82,4 +82,4 @@ node scripts/verify-runtime-readiness.mjs
 
 后一个命令仅为隔离研发核验，需已有PostgreSQL 16工具，Windows默认使用现有本机工具目录；Linux可通过`IDMS_PG_BIN`指向已有16工具并以非root账号运行。它建立自己的小型临时实例，不连接实际企业库，完成后保留验证JSON并清理自身实例和凭据，不应在生产维护流程中自动执行。
 
-本批源码/隔离验证不等于本机4010运行切换或云端部署。持续监测/外部通知、支持责任、完整平台冷启动、跨服务恢复、生产容量及真实岗位UAT、备案/TLS仍待各自完成；完整状态见[生产准备](production-readiness.md)。
+后续用户单独批准的[普通启动改造](existing-platform-startup-guide.md)已将本能力接入本机4010：实际维护资源契约和9项前端资源通过，原有满采集缓存使整体就绪503。该本机恢复不等于云端部署。持续监测/外部通知、支持责任、跨服务恢复、生产容量及真实岗位UAT、备案/TLS仍待各自完成；完整状态见[生产准备](production-readiness.md)。

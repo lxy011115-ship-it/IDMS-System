@@ -34,6 +34,7 @@ public class WorkflowController {
     record Tenant(ProcessEngine engine,JdbcTemplate sql,TransactionTemplate tx,HikariDataSource source,byte[] token,String definitionId,byte[] recoveryToken,String recoveryAuthorityId) {}
     private final Map<String,Tenant> tenants=new HashMap<>();
     private final ObjectMapper json;
+    private final String startupMode=WorkflowStartup.mode(System.getenv("IDMS_WORKFLOW_STARTUP_MODE"));
     WorkflowController(ObjectMapper json) throws Exception {
         this.json=json;
         String configPath=System.getenv("IDMS_WORKFLOW_CONFIG");
@@ -45,13 +46,23 @@ public class WorkflowController {
             if((a.recoveryReadToken()==null)!=(a.recoveryAuthorityId()==null)||a.recoveryReadToken()!=null&&(a.recoveryReadToken().length()<32||a.recoveryReadToken().length()>256||a.recoveryReadToken().equals(a.serviceToken())||!a.recoveryAuthorityId().matches("[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}")))throw new IllegalStateException("Invalid recovery reader binding");
             HikariDataSource source=new HikariDataSource();source.setJdbcUrl(a.jdbcUrl());source.setUsername(a.user());source.setPassword(a.password());source.setMaximumPoolSize(3);source.setPoolName("workflow-"+tenantId);
             var tm=new DataSourceTransactionManager(source);var sql=new JdbcTemplate(source);
-            sql.execute("CREATE TABLE IF NOT EXISTS idms_workflow_cases (entity_id text PRIMARY KEY,process_id text UNIQUE,version integer NOT NULL,state text NOT NULL,assignee text NOT NULL,evidence_digest text,submitted_by text)");
-            sql.execute("CREATE TABLE IF NOT EXISTS idms_workflow_commands (command_id uuid PRIMARY KEY,request_digest text NOT NULL,response jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT now())");
-            var c=new SpringProcessEngineConfiguration();c.setDataSource(source);c.setTransactionManager(tm);c.setDatabaseSchemaUpdate("true");c.setAsyncExecutorActivate(false);c.setHistory("full");c.setEngineName("idms-"+tenantId);c.setDisableIdmEngine(true);
-            ProcessEngine engine=c.buildProcessEngine();
-            engine.getRepositoryService().createDeployment().tenantId(tenantId).name("idms-maintenance-1.0.0").enableDuplicateFiltering().addClasspathResource("maintenance-v1.bpmn20.xml").deploy();
-            ProcessDefinition definition=engine.getRepositoryService().createProcessDefinitionQuery().processDefinitionKey("idmsMaintenanceV1").processDefinitionTenantId(tenantId).latestVersion().singleResult();
+            ProcessEngine engine=null;
+            try {
+            boolean initialize=startupMode.equals("initialize");
+            if(initialize){
+                sql.execute("CREATE TABLE IF NOT EXISTS idms_workflow_cases (entity_id text PRIMARY KEY,process_id text UNIQUE,version integer NOT NULL,state text NOT NULL,assignee text NOT NULL,evidence_digest text,submitted_by text)");
+                sql.execute("CREATE TABLE IF NOT EXISTS idms_workflow_commands (command_id uuid PRIMARY KEY,request_digest text NOT NULL,response jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT now())");
+            }
+            WorkflowStartup.validateTables(sql);
+            var c=new SpringProcessEngineConfiguration();c.setDataSource(source);c.setTransactionManager(tm);c.setDatabaseSchemaUpdate(initialize?"true":"false");c.setAsyncExecutorActivate(false);c.setHistory("full");c.setEngineName("idms-"+tenantId);c.setDisableIdmEngine(true);
+            engine=c.buildProcessEngine();
+            if(initialize)engine.getRepositoryService().createDeployment().tenantId(tenantId).name("idms-maintenance-1.0.0").enableDuplicateFiltering().addClasspathResource("maintenance-v1.bpmn20.xml").deploy();
+            ProcessDefinition definition=WorkflowStartup.definition(engine,tenantId);
             tenants.put(tenantId,new Tenant(engine,sql,new TransactionTemplate(tm),source,("Bearer "+a.serviceToken()).getBytes(StandardCharsets.UTF_8),definition.getId(),a.recoveryReadToken()==null?null:("Bearer "+a.recoveryReadToken()).getBytes(StandardCharsets.UTF_8),a.recoveryAuthorityId()));
+            } catch(Exception failure) {
+                if(engine!=null)engine.close();source.close();close();
+                throw new IllegalStateException("WORKFLOW_EXISTING_DEPLOYMENT_REJECTED");
+            }
         }
     }
     private Tenant authenticate(HttpServletRequest request){
@@ -67,7 +78,7 @@ public class WorkflowController {
     }
     Map<String,Object> recoveryView(Tenant t,String id){return view(t,id);}
     @GetMapping("/health") Map<String,Object> health(){return Map.of("status","UP","engine","Flowable","version","7.2.0","process","idmsMaintenanceV1","tenantCount",tenants.size());}
-    @GetMapping("/v1/status") Map<String,Object> status(HttpServletRequest request){Tenant t=authenticate(request);return Map.of("status","UP","engine","Flowable","version","7.2.0","definitionId",t.definitionId(),"activeProcesses",t.engine().getRuntimeService().createProcessInstanceQuery().count());}
+    @GetMapping("/v1/status") Map<String,Object> status(HttpServletRequest request) throws Exception {Tenant t=authenticate(request);return Map.of("status","UP","engine","Flowable","version","7.2.0","definitionId",t.definitionId(),"activeProcesses",t.engine().getRuntimeService().createProcessInstanceQuery().count(),"startupContract",WorkflowStartup.CONTRACT,"startupMode",startupMode,"definitionVersion",WorkflowStartup.VERSION,"definitionDigest",WorkflowStartup.digest(WorkflowStartup.reviewedResource()));}
     @GetMapping("/v1/cases/{entityId}") Map<String,Object> details(HttpServletRequest request,@PathVariable String entityId){Tenant t=authenticate(request);return t.tx().execute(s->view(t,entityId));}
     @PostMapping("/v1/commands") Map<String,Object> command(HttpServletRequest request,@RequestBody JsonNode payload){
         Tenant t=authenticate(request);Command command=decode(payload);validate(command);

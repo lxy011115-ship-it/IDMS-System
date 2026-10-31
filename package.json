@@ -36,6 +36,8 @@
     "backup:live:verify": "node scripts/verify-live-backup.mjs",
     "database:roles:live:verify": "node scripts/verify-live-database-roles.mjs",
     "platform:start": "node scripts/start-platform.mjs",
+    "platform:adopt": "node scripts/adopt-existing-platform.mjs",
+    "workflow:build:existing": "node scripts/build-existing-workflow.mjs",
     "platform:inspect": "node scripts/inspect-platform.mjs",
     "demo:package": "node scripts/package-demo.mjs",
     "data:export:verify": "node scripts/verify-data-export.mjs",

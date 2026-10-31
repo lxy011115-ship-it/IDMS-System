@@ -13,7 +13,7 @@
 - 已配置的本机平台：运行根目录“启动IDMS本地网站.cmd”，打开 http://127.0.0.1:4010/ ，从企业登录入口使用已有账号。
 - [主站就绪与资源接口](docs/runtime-readiness-guide.md)：缓存式200/503探测、受限运行详情及真实主站计量；需显式启用，源码验证不代表实际运行切换。
 - 运行与备份巡检：双击“检查IDMS本地运行.cmd”或执行 `npm run platform:inspect`；[使用说明](docs/runtime-inspection-guide.md)区分存活、依赖、备份认证及未知项。
-- 普通启动和账号初始化分离。账号、数据库、密钥及原生依赖的首次配置另见[认证说明](docs/authentication-guide.md)及[本地启动说明](docs/local-startup-and-package-guide.md)。不要通过重复初始化恢复旧权限。
+- [普通启动与初始化分离](docs/existing-platform-startup-guide.md)：先核对既有部署，日常入口不建库、迁移、重写秘密、下载或构建；缺失时分阶段拒绝。2026-10-31本机网站及身份已恢复，采集缓存满仍使整体就绪返回503。首次配置另见[认证说明](docs/authentication-guide.md)及[本地启动说明](docs/local-startup-and-package-guide.md)。
 - [备件采购操作指南](docs/spares-procurement-guide.md)、[岗位权限与操作历史](docs/spares-history-and-permissions-guide.md)、[上传审批指南](docs/upload-approval-experience-guide.md)。
 - [备件分页接口](docs/spares-paged-query-guide.md)、[同连接事务与取消](docs/spares-transactions-and-cancellation-guide.md)、[审计证明](docs/spares-audit-proof-guide.md)、[归档恢复](docs/spares-archive-recovery-guide.md)。
 

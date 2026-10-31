@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-31T04:03:07.067Z",
+  "createdAt": "2026-10-31T04:43:19.242Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -286,8 +286,8 @@
     },
     {
       "name": ".github/workflows/linux-verification.yml",
-      "bytes": 2951,
-      "sha256": "f0792fc29f28eabf54b41adcf72caed6c610733d3870a6d44e1c9cb6c42338fa",
+      "bytes": 3129,
+      "sha256": "e2d23e0321a39c61ec312bfc8ffaa5152087e631363c3a260d47e45d49616413",
       "mode": 438
     },
     {
@@ -406,8 +406,8 @@
     },
     {
       "name": "启动IDMS本地网站.cmd",
-      "bytes": 1288,
-      "sha256": "3de5d21dbd510daabdbe3c7b0c6ec7061ac5b36d675b49b3f26e1b9cfd3702cb",
+      "bytes": 118,
+      "sha256": "40a7331554924fd607d91d8851eceaaaebaedfde4b088e7a386d702e09e59b7c",
       "mode": 438
     },
     {
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 11693,
-      "sha256": "b0f0753df4167ab39d6bc452c606056ab3031dffe16a7c6a630c65b18ed9569e",
+      "bytes": 12031,
+      "sha256": "eefc7be314a6065c7237c6990f676faf29335333b0dd1174c0319909c0943e5a",
       "mode": 438
     },
     {
@@ -1248,6 +1248,12 @@
       "name": "docs/equipment-profiles-guide.md",
       "bytes": 6629,
       "sha256": "d5ae4137fa28e213d97c0b9b63c464b4ed13352b2e26e0a0e4ce05b9db17d627",
+      "mode": 438
+    },
+    {
+      "name": "docs/existing-platform-startup-guide.md",
+      "bytes": 7214,
+      "sha256": "c68fb86d231729cc0fcd77ab2159b0033d71e9ffc7d293fd553d78edbfd44100",
       "mode": 438
     },
     {
@@ -1774,8 +1780,8 @@
     },
     {
       "name": "docs/local-startup-and-package-guide.md",
-      "bytes": 5478,
-      "sha256": "d346283a6c967f5035aff3d64e89628f3a747a539944ce5e977469727d4e0ece",
+      "bytes": 5795,
+      "sha256": "b679bbeeff3f832a6b2cc4af9f096a4eaad0f95598431a6e709c7827653a6f64",
       "mode": 438
     },
     {
@@ -2092,8 +2098,8 @@
     },
     {
       "name": "docs/production-readiness.md",
-      "bytes": 9210,
-      "sha256": "cad49efb5a99a7b4caf2b1720c797302b248aa056ace04e31524619ed8d8bdeb",
+      "bytes": 9325,
+      "sha256": "577b383f855f3f7805e6d459ab84c90941ab07c73d192cc5cc57d3e1344c96f8",
       "mode": 438
     },
     {
@@ -2254,8 +2260,8 @@
     },
     {
       "name": "docs/runtime-readiness-guide.md",
-      "bytes": 8491,
-      "sha256": "5b344ed7765223109018df988cd933db31ed6a3bebf00a27db93902be3478b2e",
+      "bytes": 8643,
+      "sha256": "54a758889fe1f9225bc7aaecb475b72bcad77c6419dc168fc723f2ec1f726aa3",
       "mode": 438
     },
     {
@@ -3258,6 +3264,12 @@
       "name": "docs/superpowers/plans/2026-10-30--spares-demand-and-explainable-insights.md",
       "bytes": 8196,
       "sha256": "98770b0399b14f854fcd744f9f13ac0ac9aa4e656f03f767a607d3d86f1e4944",
+      "mode": 438
+    },
+    {
+      "name": "docs/superpowers/plans/2026-10-31--existing-platform-startup.md",
+      "bytes": 1693,
+      "sha256": "f0973afa60cc19f58ad759cbbc82cb077402a6b50eb38f6b3a7f029b3a5e6834",
       "mode": 438
     },
     {
@@ -4402,8 +4414,8 @@
     },
     {
       "name": "docs/superpowers/specs/2026-10-31--existing-platform-startup.md",
-      "bytes": 13662,
-      "sha256": "b9e3f9c738dcdd7b2054c67ce85128ddda9b062f4b627b3da5fbf3cea9091587",
+      "bytes": 14067,
+      "sha256": "f3c56d4492503f2a6578ecf8d3859c816eb4435f3f64a2cf4c3ccfe8b006f1ab",
       "mode": 438
     },
     {
@@ -5944,8 +5956,8 @@
     },
     {
       "name": "package.json",
-      "bytes": 6199,
-      "sha256": "590b563a2a6eef77c9787273f0f90d57702d1b38a21cbe5efef93217186f0a2e",
+      "bytes": 6342,
+      "sha256": "e0800a89581b3c083194f4ca26a3833f47ce9cacf85adacbd01b4f1a7b61e947",
       "mode": 438
     },
     {
@@ -6448,14 +6460,20 @@
     },
     {
       "name": "README.md",
-      "bytes": 3415,
-      "sha256": "cabf9246d0d352fbeb34e2f9f7f8296e3f9acae42e4099f8fdc62dac7db29ea6",
+      "bytes": 3567,
+      "sha256": "1c59a884fe739adc3c9eaaf3fbe15b291b0017c227c11ed5eb2ded3e04f39965",
       "mode": 438
     },
     {
       "name": "scripts/add-canonical-v2-core-extra-tests.mjs",
       "bytes": 1094,
       "sha256": "7df5390933715a06d89545438aada3a57d0ad3e0ee36e284f845fb6cdc3703b6",
+      "mode": 438
+    },
+    {
+      "name": "scripts/adopt-existing-platform.mjs",
+      "bytes": 1633,
+      "sha256": "2ed6e5a148d69dd336e8d0073ca16f3ec8095169ca4a2b528bd1b646b3d94134",
       "mode": 438
     },
     {
@@ -6564,6 +6582,12 @@
       "name": "scripts/build-demo-fixtures.mjs",
       "bytes": 1779,
       "sha256": "eedbed83871e1b59123f8d151f83511e35e7871fe19238bb52be3c1fdebb2301",
+      "mode": 438
+    },
+    {
+      "name": "scripts/build-existing-workflow.mjs",
+      "bytes": 1152,
+      "sha256": "abb4f423abd0758c7db0cf9083a3bdd7ed5e16586ee833605ea17cde5ac8cb4d",
       "mode": 438
     },
     {
@@ -7836,6 +7860,60 @@
       "name": "scripts/domain-read-activation-v4.mjs",
       "bytes": 2765,
       "sha256": "40808a24dab2f8a622dac119b6b60ee57339a6ad8f0ab1fd61665eece56f4792",
+      "mode": 438
+    },
+    {
+      "name": "scripts/existing-identity-contract.mjs",
+      "bytes": 1718,
+      "sha256": "af0f98a196dde443c99a8fbcf3a988e9ee60c62242a2ed05cfeb8ecd7cb60b91",
+      "mode": 438
+    },
+    {
+      "name": "scripts/existing-platform-binding.mjs",
+      "bytes": 11485,
+      "sha256": "2cb5702b5106e32dddb7b4a88a20c47fe9abdc7cca9000b95caf2ff2e8323146",
+      "mode": 438
+    },
+    {
+      "name": "scripts/existing-platform-child.mjs",
+      "bytes": 4393,
+      "sha256": "c1ef5a3bc972411f1003833fbc47c0954d67e709c198a6f8ca0899e5e35ae87b",
+      "mode": 438
+    },
+    {
+      "name": "scripts/existing-platform-evidence.mjs",
+      "bytes": 4013,
+      "sha256": "1f6af8e6fbd8d8d26917acb33a3c54ef7a523ecc6e794638fe7ea0f185bc4a71",
+      "mode": 438
+    },
+    {
+      "name": "scripts/existing-platform-probes.mjs",
+      "bytes": 5509,
+      "sha256": "66e2562e891518f4a3513884d3155a214dfe863a0c229dd57e639e65822f0b06",
+      "mode": 438
+    },
+    {
+      "name": "scripts/existing-platform-process.mjs",
+      "bytes": 3999,
+      "sha256": "159865606ff787f576a5e8ff82595c876bf6165fcef77da5d61a478504b56e87",
+      "mode": 438
+    },
+    {
+      "name": "scripts/existing-platform-services.mjs",
+      "bytes": 2871,
+      "sha256": "14964c341c20edafe00ade5c6bd103011ec310dad11e11a844a0583a8c7eb9ff",
+      "mode": 438
+    },
+    {
+      "name": "scripts/existing-platform-startup.mjs",
+      "bytes": 7443,
+      "sha256": "3d8c8b482dfa00aea63961720ba35c3bc41143271be7814976d7df8539efb980",
+      "mode": 438
+    },
+    {
+      "name": "scripts/existing-postgres-launch.mjs",
+      "bytes": 408,
+      "sha256": "739c25c45a060ebde1135df1caf4ec5ccee05947d2bbd8ecacd5aab44b931c0e",
       "mode": 438
     },
     {
@@ -10911,6 +10989,12 @@
       "mode": 438
     },
     {
+      "name": "scripts/fixtures/OwnedStartupJvm.java",
+      "bytes": 904,
+      "sha256": "32ddae9ef0feff7e2d27683d5934a989d5a650942f6fa2166919171ab00e2ca3",
+      "mode": 438
+    },
+    {
       "name": "scripts/fixtures/pg-migrator-observation-v1-qa.mjs",
       "bytes": 3984,
       "sha256": "5fd41398a80b80665c91cfabf9c34f43fc6075857a0a360f9415615027ba6c77",
@@ -12436,8 +12520,8 @@
     },
     {
       "name": "scripts/keycloak-runtime.mjs",
-      "bytes": 7293,
-      "sha256": "1e5fbf59c9d15ab25bb2c64a27bc5bdc11076d07f75fb9f76cf814ddc94bf197",
+      "bytes": 10820,
+      "sha256": "548c2d664bad290a1ad1fd956534270e5f672d6383c9132bb08a9fba588b9c99",
       "mode": 438
     },
     {
@@ -13996,26 +14080,26 @@
     },
     {
       "name": "scripts/start-platform-v2.mjs",
-      "bytes": 6551,
-      "sha256": "37b457e2c583a49127206187bf0d3a935ef89a6448987bbd0727ed5c08d0d788",
+      "bytes": 6655,
+      "sha256": "b0590c7993d147dbcb211529aaaffd53f4995e9a718b4877f56a6e3c93feff32",
       "mode": 438
     },
     {
       "name": "scripts/start-platform-v3.mjs",
-      "bytes": 6551,
-      "sha256": "9d42b9e2126f902a557fea29452bab328830d1517f0cdf9587724cb4aa0fbce1",
+      "bytes": 6655,
+      "sha256": "adbca8be8e1668927b73fee42a5f5960acec4fcfbffc3106c9b77c6b248b3656",
       "mode": 438
     },
     {
       "name": "scripts/start-platform-v4.mjs",
-      "bytes": 6551,
-      "sha256": "67e70e31c69415cb731311db56a6b2a75d7a9ee06783d00cb5f58e7a17dcd877",
+      "bytes": 154,
+      "sha256": "b718be90924ba2a76417414f372bc9495d9e5d15bd953d6cdb82b044dda61961",
       "mode": 438
     },
     {
       "name": "scripts/start-platform.mjs",
-      "bytes": 6548,
-      "sha256": "07bbac5f2012446b5a697d21edd2ea0dd6d94333741cb4776a06459269d7d7a9",
+      "bytes": 154,
+      "sha256": "ddb7310b7c942b26eddfae093ec9eb6b30803080cb99221c4fb55fb454b34715",
       "mode": 438
     },
     {
@@ -14200,8 +14284,8 @@
     },
     {
       "name": "scripts/verify-build.mjs",
-      "bytes": 12844,
-      "sha256": "80dd08166085f2fdd86d85283dd45e1d57ba72d80081cfdc8576d85744efcc79",
+      "bytes": 12874,
+      "sha256": "2c561d305322b0d29c633a10363393b264b652d441f7fb78a532698680b83f0c",
       "mode": 438
     },
     {
@@ -15192,6 +15276,18 @@
       "name": "scripts/verify-equipment-profiles.mjs",
       "bytes": 29649,
       "sha256": "29be5103d2899c39eb2da7976f535de5623cd87102f73e82657f3f8939018228",
+      "mode": 438
+    },
+    {
+      "name": "scripts/verify-existing-platform-local.mjs",
+      "bytes": 3343,
+      "sha256": "e434eef891c6b5c81141fa044fad47cd26a017879861eda34962e66c9a2a5b29",
+      "mode": 438
+    },
+    {
+      "name": "scripts/verify-existing-platform-native.mjs",
+      "bytes": 14053,
+      "sha256": "d9a8d0161362b26ef36852e4546aab8965d7ef56176db0af01fe0d86f7c6cae2",
       "mode": 438
     },
     {
@@ -19288,8 +19384,8 @@
     },
     {
       "name": "server/index.ts",
-      "bytes": 33541,
-      "sha256": "3b719d385715471fb7aef348c9a4869b821546e5b0f7d08f74c78d6e2dc59215",
+      "bytes": 33697,
+      "sha256": "1cbebe7fbd015ba25681541bc54a6c7823a8d35ba64a4c80a4ead36cbb792916",
       "mode": 438
     },
     {
@@ -20146,8 +20242,8 @@
     },
     {
       "name": "server/runtime-status-route.ts",
-      "bytes": 3739,
-      "sha256": "1ef0053fcb37df6a2adb903b1ab43fc2a2f9eae605d53faa64668e4c7af1cf71",
+      "bytes": 3886,
+      "sha256": "95678d4238bc9f0a21744c19cca7d570ff88bdfe0d6880df4f43e5c62a7d2b54",
       "mode": 438
     },
     {
@@ -20740,8 +20836,8 @@
     },
     {
       "name": "services/ai-gateway/index.ts",
-      "bytes": 10320,
-      "sha256": "00c3ff9b019848533324ccc41679ae64ca9f631365bd7122a5ce775d25b5634e",
+      "bytes": 10579,
+      "sha256": "946bd9586e08b0b567563427220fc08382759b4825ab6d7443c76d31af5dfe72",
       "mode": 438
     },
     {
@@ -20758,8 +20854,8 @@
     },
     {
       "name": "services/edge/index.ts",
-      "bytes": 5688,
-      "sha256": "cb641eb1af15cb275e3722a431e7994d35b0f546ba62bf54bbb7d745306f1ab9",
+      "bytes": 5777,
+      "sha256": "b8d847609f6a0800cb1d7f7762a52fd2bb9d30e22ccb0230737a60cb7fcb0514",
       "mode": 438
     },
     {
@@ -20770,8 +20866,14 @@
     },
     {
       "name": "services/edge/spool.ts",
-      "bytes": 4427,
-      "sha256": "5c1d6aa253915398e2f13c1394e5684f903bb03ed66ebfe70cc70963d63a6d76",
+      "bytes": 4657,
+      "sha256": "e1caed7a9b4dd06ad40999967ba41d27502711ae1a0aecf9af3fd4e4c469808a",
+      "mode": 438
+    },
+    {
+      "name": "services/existing-sqlite.ts",
+      "bytes": 2500,
+      "sha256": "6335a6248fece76dffb0a7f8ed66658918e9da025018ace8fc34a5fabaf1779d",
       "mode": 438
     },
     {
@@ -21142,8 +21244,14 @@
     },
     {
       "name": "services/workflow/src/main/java/com/idms/workflow/WorkflowController.java",
-      "bytes": 16898,
-      "sha256": "828b272ec1b4b52fbc593a01b59a98d160135dedfcf144ece3cd2f9294c3a694",
+      "bytes": 17541,
+      "sha256": "869b14b9e8761229c409bf3223cde8dbc5c41bc321a6c455c20b7f3ffefcb4a3",
+      "mode": 438
+    },
+    {
+      "name": "services/workflow/src/main/java/com/idms/workflow/WorkflowStartup.java",
+      "bytes": 4318,
+      "sha256": "01b0514ed1dd0e2080b30b95abd1f297a78210f512269b697e125f05d7de6de1",
       "mode": 438
     },
     {
@@ -22131,6 +22239,12 @@
       "mode": 438
     },
     {
+      "name": "tests/existing-platform-startup.test.mjs",
+      "bytes": 9943,
+      "sha256": "69eef8b036653447334e4d671903810760a34794d13c7a1eb8975bb72babd0da",
+      "mode": 438
+    },
+    {
       "name": "tests/field-admission-map-v1.test.mjs",
       "bytes": 8303,
       "sha256": "a9268c2a458589dd680adb7ff13cf5c80135ca9dcff4ffd2552ac766b7343a58",
@@ -22594,8 +22708,8 @@
     },
     {
       "name": "tests/identity-startup.test.mjs",
-      "bytes": 5767,
-      "sha256": "e7d41bc8ae7151c1d8cfa5070cda16faaab9b54f479ddbc0941011cc4cef4ce6",
+      "bytes": 5899,
+      "sha256": "b3f0e2d213325a69681f3c20eb9243dba3318848ac6def4d062808bb43e38acf",
       "mode": 438
     },
     {

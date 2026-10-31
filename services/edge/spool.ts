@@ -1,10 +1,13 @@
 import { DatabaseSync } from 'node:sqlite';
 import { randomUUID } from 'node:crypto';
+import {openExistingSqlite} from '../existing-sqlite.ts';
 import { authenticAck, sha, signEvent, type EdgeSource, type TelemetryEvent, type TelemetryAck } from '../../integrations/telemetry.ts';
 export class EdgeSpool {
   db:DatabaseSync; source:EdgeSource; capacity:number;
-  constructor(path:string,source:EdgeSource,capacity=10000){
-    this.source=source;this.capacity=capacity;this.db=new DatabaseSync(path);
+  constructor(path:string,source:EdgeSource,capacity=10000,{existingOnly=false}={}){
+    this.source=source;this.capacity=capacity;
+    if(existingOnly){this.db=openExistingSqlite(path,'edge',source);this.db.exec('PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000');return;}
+    this.db=new DatabaseSync(path);
     this.db.exec(`PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000;
       CREATE TABLE IF NOT EXISTS metadata (name TEXT PRIMARY KEY,value TEXT NOT NULL);
       INSERT OR IGNORE INTO metadata VALUES('sequence','0');

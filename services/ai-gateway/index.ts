@@ -3,6 +3,7 @@ import {readFile,mkdir} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import {randomUUID,timingSafeEqual} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
+import {openExistingSqlite} from '../existing-sqlite.ts';
 import {AiError,validateRequest,validateModelOutput,readLimited,sha,stable,signReceipt,suspiciousInstruction,outputSchema,promptVersion,policyVersion} from '../../integrations/ai.ts';
 import type {ReviewRequest,ReviewReceipt} from '../../integrations/ai.ts';
 
@@ -13,8 +14,10 @@ if(origin.protocol!=='http:'||origin.hostname!=='127.0.0.1'||origin.pathname!=='
 const dbs=new Map<string,DatabaseSync>(),inflight=new Map<string,Promise<ReviewReceipt>>();
 for(const [tenantId,account] of Object.entries(config.tenants)){
   if(!/^[a-zA-Z0-9_-]{1,64}$/.test(tenantId)||typeof account.serviceToken!=='string'||account.serviceToken.length<32)throw Error('Invalid AI tenant binding');
-  const directory=join(resolve(config.dataDirectory),tenantId);await mkdir(directory,{recursive:true,mode:0o700});
-  const db=new DatabaseSync(join(directory,'receipts.sqlite'));db.exec("PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; CREATE TABLE IF NOT EXISTS reviews (request_id TEXT PRIMARY KEY,request_digest TEXT NOT NULL,input TEXT NOT NULL,response TEXT,raw_output TEXT,created_at TEXT NOT NULL)");
+  const directory=join(resolve(config.dataDirectory),tenantId),existingOnly=process.env.IDMS_EXISTING_ONLY==='1';
+  if(!existingOnly)await mkdir(directory,{recursive:true,mode:0o700});
+  const db=existingOnly?openExistingSqlite(join(directory,'receipts.sqlite'),'ai'):new DatabaseSync(join(directory,'receipts.sqlite'));
+  if(existingOnly)db.exec('PRAGMA synchronous=FULL');else db.exec("PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; CREATE TABLE IF NOT EXISTS reviews (request_id TEXT PRIMARY KEY,request_digest TEXT NOT NULL,input TEXT NOT NULL,response TEXT,raw_output TEXT,created_at TEXT NOT NULL)");
   // A process died after accepting work: never silently pretend that inference completed.
   const interrupted=db.prepare('SELECT request_id,input FROM reviews WHERE response IS NULL').all();
   for(const row of interrupted){const request=JSON.parse(String(row.input)) as ReviewRequest;const receipt=fallback(request,'GATEWAY_RESTART_INTERRUPTED');db.prepare('UPDATE reviews SET response=? WHERE request_id=?').run(JSON.stringify(receipt),String(row.request_id));}

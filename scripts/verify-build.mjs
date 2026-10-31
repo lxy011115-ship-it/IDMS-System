@@ -50,7 +50,7 @@ files.push('scripts/field-recovery-external-config.mjs','scripts/field-recovery-
 files.push('scripts/field-recovery-live-identity.mjs','scripts/field-recovery-review-record.mjs','scripts/field-recovery-review-files.mjs','scripts/field-recovery-review-context.mjs','scripts/field-recovery-review-audit.mjs','scripts/field-recovery-review.mjs','scripts/field-recovery-review-sessions.mjs');
 if(process.platform==='win32')execFileSync('powershell.exe',['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-Command',"$syntaxTokens=$null;$syntaxErrors=$null;[System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path -LiteralPath 'scripts/field-recovery-file.ps1'),[ref]$syntaxTokens,[ref]$syntaxErrors)|Out-Null;if($syntaxErrors.Count){$syntaxErrors|ForEach-Object{Write-Error $_.Message};exit 1}"],{stdio:'inherit',windowsHide:true});
 if(process.platform==='win32')execFileSync('powershell.exe',['-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-Command',"$syntaxTokens=$null;$syntaxErrors=$null;[System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path -LiteralPath 'scripts/field-archive-process.ps1'),[ref]$syntaxTokens,[ref]$syntaxErrors)|Out-Null;if($syntaxErrors.Count){$syntaxErrors|ForEach-Object{Write-Error $_.Message};exit 1}"],{stdio:'inherit',windowsHide:true});
-files.push('server/http-boundary.ts','public/roadshow-ui.js');
+files.push('server/http-boundary.ts','public/roadshow-ui.js','services/existing-sqlite.ts');
 files.push('server/version.ts');
 files.push('server/spares-facts.ts','server/spares-audit.ts','server/spares-workset.ts','server/spares-capacity-schema.ts');
 files.push('server/spares-query-plan.ts','server/spares-query-scope.ts','server/spares-query-db.ts');

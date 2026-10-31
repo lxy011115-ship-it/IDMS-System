@@ -14,8 +14,9 @@ if(source.origin!=='SIMULATOR'||!local||edge.securityMode!=='None')throw Error('
 if(!['mqtt:','mqtts:'].includes(new URL(config.mqtt.url).protocol))throw Error('Invalid MQTT transport');
 if(new URL(config.mqtt.url).protocol!=='mqtts:'&&!['127.0.0.1','localhost','[::1]'].includes(new URL(config.mqtt.url).hostname))throw Error('Remote MQTT requires TLS');
 const statusUrl=new URL(source.statusUrl);if(statusUrl.hostname!=='127.0.0.1'||statusUrl.protocol!=='http:')throw Error('Edge status must use loopback');
-await mkdir(dirname(edge.spool),{recursive:true});
-const spool=new EdgeSpool(edge.spool,source,edge.capacity);
+const existingOnly=process.env.IDMS_EXISTING_ONLY==='1';
+if(!existingOnly)await mkdir(dirname(edge.spool),{recursive:true});
+const spool=new EdgeSpool(edge.spool,source,edge.capacity,{existingOnly});
 let mqttConnected=false,opcConnected=false,capturing=false,lastSample:string|null=null,lastError:string|null=null,gaps=0,closing=false,session:ClientSession|undefined;
 // Status listener doubles as a single-instance guard before any broker/OPC side effects.
 const status=createServer((req,res)=>{

@@ -2,14 +2,14 @@
 
 更新：2026-10-31。当前范围为本地开发版及受控企业试点准备；正式生产门禁仍开启。
 
-手动运行巡检方案A已实现，功能提交[a260198](https://github.com/lxy011115-ship-it/IDMS-System/commit/a2601986c4e48d0539f8706f85bc40a25cb572e0)的[Linux CI41161099239](https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/41161099239)成功：[入口、配置与报告说明](runtime-inspection-guide.md)。2026-10-31最终复测发现主站/数据库等依赖未监听，报告FAIL；没有自动启动或重启。磁盘阈值、实际运行资源核对和备份扫描范围仍有待处理，不能将CLI交付当作整个平台健康或生产放行。
+手动运行巡检方案A已实现，功能提交[a260198](https://github.com/lxy011115-ship-it/IDMS-System/commit/a2601986c4e48d0539f8706f85bc40a25cb572e0)的[Linux CI41161099239](https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/41161099239)成功：[入口、配置与报告说明](runtime-inspection-guide.md)。2026-10-31早期复测主站/数据库等依赖未监听，报告FAIL；巡检自身没有自动启动或重启。后续普通启动恢复见下一段；磁盘阈值、备份扫描范围及生产容量仍需处理，不能将CLI交付当作整个平台健康或生产放行。
 
-新增[主站就绪与资源能力](runtime-readiness-guide.md)已完成源码和隔离验证，功能补强提交[93e2512](https://github.com/lxy011115-ship-it/IDMS-System/commit/93e2512e20bc78d664f4c40648aeee3e455e61b7)的[同提交Linux CI41165698586](https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/41165698586)成功：最小200/503就绪、受限运行详情及CLI读取主站计量。后台检查需显式配置，本地完整平台未切换，不能声称4010已提供新版接口。
+新增[主站就绪与资源能力](runtime-readiness-guide.md)已完成源码和隔离验证，功能补强提交[93e2512](https://github.com/lxy011115-ship-it/IDMS-System/commit/93e2512e20bc78d664f4c40648aeee3e455e61b7)的[同提交Linux CI41165698586](https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/41165698586)成功。后续用户单独批准的[已有平台普通启动](existing-platform-startup-guide.md)已恢复本机10个服务，启用明确就绪策略；HTML、OIDC发行者、维护资源及9项前端字节核对通过，现有采集缓存10000条/确认0条使整体就绪503，未清空或放宽规则。结构、配置、权限、流程定义保持；真实岗位UAT和云端同版部署继续。
 
 ## 使用入口
 
 - 实际代码：`D:\IDMS-System`；`D:\Codex\IDMS系统`为迁移指引目录。
-- 启动：项目根目录“启动IDMS本地网站.cmd”；它使用`scripts/start-platform-v4.mjs`，不是根Compose。
+- 启动：项目根目录“启动IDMS本地网站.cmd”或“启动IDMS.cmd”，均使用同一个普通启动协调器；[一次性登记、预检与异常处理](existing-platform-startup-guide.md)。
 - 网站：http://127.0.0.1:4010/ ；备件：http://127.0.0.1:4010/?view=spares 。
 - 登录：从网站“使用企业账号登录”进入现有OIDC服务。账户与私密配置不属于公开交付文件，不复制进仓库、镜像或说明书。
 - 操作指南：[备件采购](spares-procurement-guide.md)、[操作历史与岗位权限](spares-history-and-permissions-guide.md)、[上传审批](upload-approval-experience-guide.md)、[本地启动与演示候选包](local-startup-and-package-guide.md)。[新版图文手册、PPT与操作视频](training-delivery-guide.md)已完成：37页PDF、16页可编辑PPT及约2分8秒中文字幕实操视频，实际文件保留于本机outputs。

@@ -45,6 +45,9 @@ jobs:
       - name: Check bounded read-only runtime inspection and archive authentication
         run: node --test tests/runtime-inspection.test.mjs tests/runtime-readiness.test.mjs tests/runtime-adapters.test.mjs
 
+      - name: Check ordinary startup boundaries without enterprise services
+        run: node --test tests/existing-platform-startup.test.mjs tests/identity-startup.test.mjs
+
       - name: Check package boundaries and the actual HTTP version
         run: node --test tests/package-guard.test.mjs tests/package-verify.test.mjs tests/health-version.test.mjs
 

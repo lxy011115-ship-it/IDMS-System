@@ -5,7 +5,7 @@ import {resident} from './capacity.ts';
 import {validateRuntimeResources,type RuntimeResources} from './runtime-resource-contract.ts';
 
 /** Cached/memory-only route. No downstream I/O or refresh method is reachable here. */
-export function runtimeStatusRoutes(monitor:RuntimeReadiness,resources:()=>RuntimeResources,token?:string) {
+export function runtimeStatusRoutes(monitor:RuntimeReadiness,resources:()=>RuntimeResources,token?:string,startup?:()=>{contract:string;telemetryConnected:boolean;telemetrySubscribed:boolean;telemetryClosing:boolean}) {
   const validToken=typeof token==='string' && Buffer.byteLength(token)>=32 && token.length<=4096 && !/[\r\n]/.test(token);
   const expected=validToken?createHash('sha256').update(token!).digest():Buffer.alloc(32);
   let active=0;
@@ -41,7 +41,7 @@ export function runtimeStatusRoutes(monitor:RuntimeReadiness,resources:()=>Runti
         if(!authorized(req)){send(req,res,401,{code:'MAINTENANCE_UNAUTHORIZED'});return true;}
         let measured:RuntimeResources|undefined;
         try {measured=validateRuntimeResources(resources());} catch {}
-        send(req,res,200,{...monitor.view().detail,resources:measured||null,resourceCode:measured?'CHECK_PASSED':'RESOURCE_CONTRACT_INVALID'});
+        send(req,res,200,{...monitor.view().detail,resources:measured||null,resourceCode:measured?'CHECK_PASSED':'RESOURCE_CONTRACT_INVALID',...(startup?{startup:startup()}:{})});
       } else {const view=monitor.view();send(req,res,view.ready?200:503,view.publicResult);}
     } catch {
       if(!res.headersSent){res.setHeader('Retry-After','1');send(req,res,503,unavailable);}

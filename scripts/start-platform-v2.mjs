@@ -1,3 +1,4 @@
+// HISTORICAL development initializer. Not a supported ordinary startup entry; use start-platform.mjs.
 import { spawn,execFile } from 'node:child_process';
 import { readFile,writeFile,mkdir } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
