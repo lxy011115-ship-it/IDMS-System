@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-31T03:48:35.727Z",
+  "createdAt": "2026-10-31T04:03:07.067Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -4398,6 +4398,12 @@
       "name": "docs/superpowers/specs/2026-10-30--spares-demand-and-explainable-insights.md",
       "bytes": 9176,
       "sha256": "a34f595abe02f599ea9230c092546fe18791c589d54a8a55f233779826a8b397",
+      "mode": 438
+    },
+    {
+      "name": "docs/superpowers/specs/2026-10-31--existing-platform-startup.md",
+      "bytes": 13662,
+      "sha256": "b9e3f9c738dcdd7b2054c67ce85128ddda9b062f4b627b3da5fbf3cea9091587",
       "mode": 438
     },
     {
