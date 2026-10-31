@@ -78,3 +78,5 @@ npm run platform:adopt -- --readiness .local/runtime-readiness.json --write
 实际本机恢复后核对配置、数据库结构、角色权限、流程定义，未发生初始化或人工企业测试写入；正常业务修订和队列变化单独保留。再运行一次普通入口，10个阶段全部复用，未重新启动服务。浏览器已到达真实OIDC登录页；本次没有使用失效初始密码或修改账号，真实岗位UAT未替代完成。
 
 生产仍需云端同版/资源/回退验证、服务监督、容量网络、外部告警责任、跨服务恢复及异地保留、备案/TLS与真实岗位签收。以上验证不开放公网。
+
+源码交付：[功能提交57b8937](https://github.com/lxy011115-ship-it/IDMS-System/commit/57b8937c397e5a7b22b7ce4994549ff593639c05)的[同提交Linux CI41169780129](https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/41169780129)成功。维护分支为`release/prelaunch-20261030`；main未合并。源码CI不启动真实企业依赖或放行生产。

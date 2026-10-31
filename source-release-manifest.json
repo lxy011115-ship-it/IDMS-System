@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-31T04:43:19.242Z",
+  "createdAt": "2026-10-31T04:48:39.522Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -1252,8 +1252,8 @@
     },
     {
       "name": "docs/existing-platform-startup-guide.md",
-      "bytes": 7214,
-      "sha256": "c68fb86d231729cc0fcd77ab2159b0033d71e9ffc7d293fd553d78edbfd44100",
+      "bytes": 7582,
+      "sha256": "6f69f0c5a8bef197ad03cd02a384b45206bb0fed3be49426d8851fdc607a2438",
       "mode": 438
     },
     {
@@ -3268,8 +3268,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-10-31--existing-platform-startup.md",
-      "bytes": 1693,
-      "sha256": "f0973afa60cc19f58ad759cbbc82cb077402a6b50eb38f6b3a7f029b3a5e6834",
+      "bytes": 1954,
+      "sha256": "96689abbb9eaed1a8ffbbf26ea6907dbe5e8bc18c46eaf6d1116004c38346ddf",
       "mode": 438
     },
     {
