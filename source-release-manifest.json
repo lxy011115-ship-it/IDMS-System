@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-31T03:39:15.384Z",
+  "createdAt": "2026-10-31T03:44:45.793Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -2254,8 +2254,8 @@
     },
     {
       "name": "docs/runtime-readiness-guide.md",
-      "bytes": 8294,
-      "sha256": "21f8fa9857048a426407160f342a90d1652fe9527d12fa3269ee48535313986b",
+      "bytes": 8491,
+      "sha256": "5b344ed7765223109018df988cd933db31ed6a3bebf00a27db93902be3478b2e",
       "mode": 438
     },
     {
@@ -13828,8 +13828,8 @@
     },
     {
       "name": "scripts/runtime-inspection-probes.mjs",
-      "bytes": 3427,
-      "sha256": "eccf0f1ad151e6973ad93fcadcf89e9d0129c4f2d7f4d69b1fd379cf627b075c",
+      "bytes": 3558,
+      "sha256": "cf7fb61fc32bff18729e90b609caf2c45b6848638248ef10d53a8e1249d7bf40",
       "mode": 438
     },
     {
@@ -17146,8 +17146,8 @@
     },
     {
       "name": "scripts/verify-runtime-readiness.mjs",
-      "bytes": 11555,
-      "sha256": "48b9163dda10ba3466dbbadd8033657f1dbb017e19c17b99a668b6a64b567e47",
+      "bytes": 11905,
+      "sha256": "beb95c9104c74b27e5f0d53952ee66ebed2ca54e7fa009b5179af0a428c4f64f",
       "mode": 438
     },
     {
@@ -20080,8 +20080,8 @@
     },
     {
       "name": "server/runtime-adapters.ts",
-      "bytes": 8905,
-      "sha256": "6b65ec533638ac5a57764c28c2f379b1f5dc3b0914f627fa09ccf225f6295e30",
+      "bytes": 9142,
+      "sha256": "f312d7de56034eea2ed88fd62967f4c0d075bd8f45df66c61549453a3b04483a",
       "mode": 438
     },
     {
@@ -20098,8 +20098,8 @@
     },
     {
       "name": "server/runtime-db-probe.ts",
-      "bytes": 2525,
-      "sha256": "92792836924a754b21bc4a4b8cf0cf2fd7afc9d4a1f0aa0475d6bd97355a76eb",
+      "bytes": 3239,
+      "sha256": "df32631a3bfef0cfe7f4cd5fdc2033675d11ab24691b34d0dab7f002db9e4c39",
       "mode": 438
     },
     {

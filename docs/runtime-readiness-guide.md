@@ -45,7 +45,7 @@ $env:IDMS_READINESS_CONFIG = (Resolve-Path -LiteralPath .local/runtime-readiness
 - 预测：工程规则健康契约；不承诺现场准确率或RUL。
 - 采集：主站自己的MQTT连接与订阅、边缘状态及缓存均核对。边缘连接不能替代主站订阅；缓存满/阻塞失败，没有有效样本或未分类采集错误未知。此证据仅限模拟只读链路，现场和时效SLA未签收。
 
-探测借用现有池，不另建一套健康池绕过饱和，也不结束共享池。到期时只取消本轮准确借出的backend；等待原借出/查询、回滚及连接收尾，再开始新轮。未启动和迟到成功不能变绿。主站开始关闭时先同步NOT_READY，再取消并等待本轮，最后才关闭原有共享依赖。
+探测借用现有池，不另建一套健康池绕过饱和，也不结束共享池。BEGIN期间发现服务端遗留事务提示时拒绝该连接，并另查实际transaction_read_only模式；观察过期后不继续启动下一条探测SQL。到期时只取消本轮准确借出的backend；等待原借出/查询、回滚及连接收尾，再开始新轮。未启动和迟到成功不能变绿。主站开始关闭时先同步NOT_READY，再取消并等待本轮，最后才关闭原有共享依赖。
 
 备份解密、全量审计、磁盘保留策略或恢复不会进入周期。继续用[手动巡检](runtime-inspection-guide.md)和专用恢复工具分别核对。
 
@@ -71,9 +71,9 @@ npm run platform:inspect
 
 ## 本地验证与部署边界
 
-本批31项定向检查通过，涵盖缓存/失败/关闭、实际HTTP方法和维护认证、MQTT/模型契约、跨进程CLI资源、旧配置、打包与完整主站隔离进程；650项服务端回归通过。小型独立PostgreSQL 16.10实例的5项真实SQL检查通过：只读写入拒绝、企业/会话及密钥见证、池饱和迟到借出、准确取消和后台收尾、共享池20轮复用无监听器增长。实例和临时数据/凭据已普通关闭清理；没有停止或写入真实企业依赖。
+本批31项定向检查通过，涵盖缓存/失败/关闭、实际HTTP方法和维护认证、MQTT/模型契约、跨进程CLI资源、旧配置、打包与完整主站隔离进程；650项服务端回归通过。小型独立PostgreSQL 16.10实例的5项真实SQL检查通过：只读有效模式及遗留事务拒绝、写入拒绝、企业/会话及密钥见证、池饱和迟到借出、准确取消和后台收尾、共享池20轮复用无监听器增长。实例和临时数据/凭据已普通关闭清理；没有停止或写入真实企业依赖。
 
-SQL证据：`work/runtime-readiness-20261031/0a0e550fb713/verification.json`。测试命令：
+SQL证据：`work/runtime-readiness-20261031/3412b17278ec/verification.json`。测试命令：
 
 ```sh
 node --test tests/runtime-readiness.test.mjs tests/runtime-adapters.test.mjs tests/runtime-inspection.test.mjs tests/health-version.test.mjs

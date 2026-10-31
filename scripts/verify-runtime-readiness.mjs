@@ -52,9 +52,11 @@ try {
  pool=new pg.Pool({...config,user:'idms_probe_app',password:appPassword,max:1,connectionTimeoutMillis:400,statement_timeout:5000});pool.on('error',()=>{});
  result.phase='READ_ONLY';await assert.rejects(runtimeReadOnly(pool,c=>c.query('UPDATE business_state SET value=2')),e=>e.code==='DATABASE_UNAVAILABLE');
  assert.equal((await admin.query('SELECT value FROM business_state')).rows[0].value,1);
+ const dirty=await pool.connect();await dirty.query('BEGIN');await dirty.query('SELECT 1');dirty.release();let dirtyCallback=false;
+ await assert.rejects(runtimeReadOnly(pool,async()=>{dirtyCallback=true;}),e=>e.code==='DATABASE_UNAVAILABLE');assert.equal(dirtyCallback,false);
  let cliPid;await readOnlyDatabase({host:config.host,port},{user:'idms_probe_app',database:'postgres',password:appPassword},async c=>{cliPid=c.processID;assert.equal((await c.query('SELECT value FROM business_state')).rows[0].value,1);});
  let cliActive=1;for(let i=0;i<50&&cliActive;i++){cliActive=(await admin.query('SELECT count(*)::int AS n FROM pg_stat_activity WHERE pid=$1',[cliPid])).rows[0].n;if(cliActive)await new Promise(r=>setTimeout(r,20));}assert.equal(cliActive,0);
- result.checks.push('real READ ONLY rejects fixture write; CLI role-checked owned pool also reads successfully and closes backend; fixture unchanged');
+ result.checks.push('effective READ ONLY confirmed, dirty inherited transaction refused before callback, fixture write rejected; CLI role-checked owned pool also reads successfully and closes backend; fixture unchanged');
  const runtime={format:1,purpose:'AUTH_SESSION_RUNTIME',host:config.host,port,deploymentDigest:deployment,account:{user:'idms_probe_app',database:'postgres',password:appPassword,ownerRole:'idms_runtime_qa',backupRole:'unused_qa_backup'},keyFile:'unused-qa-file'};
  const authState=new PostgresAuthStore(pool,runtime,ring,'qa-scope');
  const tasks=runtimeDependencyTasks({databases:[{tenantId:'qa',pool,database:'postgres',user:'idms_probe_app'}],authState,authConfig:{mode:'oidc'},workflow:{},ai:{},telemetry:{connected:false,subscribed:false,closing:false}});

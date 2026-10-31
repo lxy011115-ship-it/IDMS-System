@@ -48,8 +48,10 @@ export function runtimeDependencyTasks(d:RuntimeDependencies):Record<ReadinessCo
       count();
       for(const b of bindings) {
         probeSignal(ctx.signal,ctx.deadline);
-        await runtimeReadOnly(b.pool,async client=>{
+        await runtimeReadOnly(b.pool,async (client,signal)=>{
+          probeSignal(signal,ctx.deadline);
           const actual=(await client.query('SELECT current_database() AS database,current_user AS role')).rows[0];
+          probeSignal(signal,ctx.deadline);
           const rows=(await client.query('SELECT tenant_id=$1 AS tenant_matches FROM public.business_state LIMIT 2',[b.tenantId])).rows;
           probeNeed(actual?.database===b.database && actual?.role===b.user && rows.length===1 && rows[0].tenant_matches===true,'DATABASE_BINDING_MISMATCH');
         },{signal:ctx.signal,timeoutMs:ctx.timeoutMs});
@@ -58,10 +60,13 @@ export function runtimeDependencyTasks(d:RuntimeDependencies):Record<ReadinessCo
     },
     sessions:async ctx=>{
       if(!(d.authState instanceof PostgresAuthStore)) missing(); const a=d.authState;
-      await runtimeReadOnly(a.pool,async client=>{
+      await runtimeReadOnly(a.pool,async (client,signal)=>{
+        probeSignal(signal,ctx.deadline);
         const actual=(await client.query('SELECT current_database() AS database,current_user AS role')).rows[0];
         probeNeed(actual?.database===a.runtime.account.database && actual?.role===a.runtime.account.user,'SESSION_BINDING_MISMATCH');
+        probeSignal(signal,ctx.deadline);
         const rows=(await client.query('SELECT deployment_digest=$1 AS deployment_matches,CASE WHEN pg_column_size(key_check)<=8192 THEN key_check ELSE NULL END AS key_check FROM public.auth_store_meta LIMIT 2',[a.runtime.deploymentDigest])).rows;
+        probeSignal(signal,ctx.deadline);
         const migrations=(await client.query('SELECT version=1 AND checksum=$1 AND deployment_digest=$2 AS migration_matches FROM public.auth_schema_migrations ORDER BY version LIMIT 2',[authSchemaChecksum,a.runtime.deploymentDigest])).rows;
         probeNeed(rows.length===1 && rows[0].deployment_matches===true && migrations.length===1 && migrations[0].migration_matches===true,'SESSION_BINDING_MISMATCH');
         let witness:any;

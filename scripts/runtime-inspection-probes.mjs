@@ -21,10 +21,13 @@ export async function readOnlyDatabase(config,account,check,{signal,timeoutMs=30
  const host=localHost(config.host);need(Number.isInteger(config.port)&&config.port>=1&&config.port<=65535,'DATABASE_CONFIG_INVALID');
  need(account&&[account.user,account.database].every(x=>typeof x==='string'&&/^[a-z_][a-z0-9_]{0,62}$/.test(x))&&typeof account.password==='string'&&account.password.length>0,'DATABASE_CONFIG_INVALID');
  const pool=new Pool({host,port:config.port,user:account.user,password:account.password,database:account.database,max:1,connectionTimeoutMillis:timeoutMs,statement_timeout:timeoutMs,lock_timeout:timeoutMs,idle_in_transaction_session_timeout:10000,application_name:'idms-readonly-inspection'});pool.on('error',()=>{});
- try{return await runtimeReadOnly(pool,async client=>{
+ try{return await runtimeReadOnly(pool,async (client,activeSignal)=>{
+  checkSignal(activeSignal);
   const r=(await client.query('SELECT current_database() AS database,current_user AS role')).rows[0];need(r?.database===account.database&&r?.role===account.user,'DATABASE_BINDING_MISMATCH');
+  checkSignal(activeSignal);
   const role=(await client.query('SELECT rolsuper,rolcreatedb,rolcreaterole,rolbypassrls,rolreplication,rolinherit FROM pg_roles WHERE rolname=current_user')).rows[0];need(role&&!Object.values(role).some(Boolean),'DATABASE_ROLE_UNSAFE');
+  checkSignal(activeSignal);
   const rights=(await client.query("SELECT has_database_privilege(current_user,current_database(),'CREATE') AS create_db,has_database_privilege(current_user,current_database(),'TEMP') AS temp,has_schema_privilege(current_user,'public','CREATE') AS create_schema,EXISTS(SELECT 1 FROM pg_auth_members WHERE member=(SELECT oid FROM pg_roles WHERE rolname=current_user)) AS memberships")).rows[0];need(rights&&!Object.values(rights).some(Boolean),'DATABASE_ROLE_UNSAFE');
-  await check(client);return true;
+  checkSignal(activeSignal);await check(client);return true;
  },{signal,timeoutMs,cancel});}finally{await pool.end();}
 }
