@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-31T04:48:39.522Z",
+  "createdAt": "2026-10-31T05:11:00.743Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -4422,6 +4422,12 @@
       "name": "docs/superpowers/specs/2026-10-31--runtime-readiness-and-capacity.md",
       "bytes": 15360,
       "sha256": "ba1689b7c5ecd2c28a26fb8d1901cf8e20fa4f43efaecfb5b26244388bd3687c",
+      "mode": 438
+    },
+    {
+      "name": "docs/superpowers/specs/2026-10-31--telemetry-budget-and-spool-recovery.md",
+      "bytes": 10922,
+      "sha256": "3b809bf16fa6ff963bdcdcee016619b97d7184d435b4781c6fc708459683eace",
       "mode": 438
     },
     {
