@@ -2,7 +2,7 @@ import {readdir,lstat,readFile} from 'node:fs/promises';
 import {resolve,join,posix,relative,isAbsolute} from 'node:path';
 
 export const packageSourceRoots=['server','services','public','src','scripts','docs','integrations','infra','tests'];
-export const packageRootFiles=['package.json','package-lock.json','README.md','openapi.yaml','docker-compose.yml','.env.example','.gitignore','.dockerignore','tsconfig.json','vite.config.ts','index.html','启动演示.cmd','启动IDMS.cmd','启动IDMS本地网站.cmd'];
+export const packageRootFiles=['package.json','package-lock.json','README.md','openapi.yaml','docker-compose.yml','.env.example','.gitignore','.dockerignore','tsconfig.json','vite.config.ts','index.html','启动演示.cmd','启动IDMS.cmd','启动IDMS本地网站.cmd','检查IDMS本地运行.cmd'];
 const privateDirs=new Set(['.local','.git','.hg','.svn','work','outputs','.demo-data','.npm-cache','.cache','历史工作目录','迁移记录','__pycache__','.pytest_cache','test-results','playwright-report','coverage']);
 const buildDirs=new Set(['target','dist','server-dist','build','.idea','.vscode']);
 const dependencyExtras=new Set(['node_modules','.bin','test','tests','test_helpers','test_helpers_end_to_end','example','examples','benchmark','benchmarks','.github']);

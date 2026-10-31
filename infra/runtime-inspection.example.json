@@ -1,0 +1,20 @@
+{
+  "format": 1,
+  "required": ["core", "business", "sessions", "identity", "workflow", "predictor", "ai", "model", "telemetry", "mqtt"],
+  "budgetMs": 30000,
+  "concurrency": 2,
+  "httpMs": 3000,
+  "tcpMs": 2000,
+  "databaseMs": 3000,
+  "core": {"url": "http://127.0.0.1:4010", "authentication": "oidc", "storage": "postgres-tenant-databases", "sessionStorage": "POSTGRES_ENCRYPTED"},
+  "business": {"config": ".local/postgres-business.json"},
+  "sessions": {"config": null},
+  "identity": {"config": ".local/keycloak-runtime.json", "issuer": null},
+  "workflow": {"config": ".local/workflow/client.json", "url": "http://127.0.0.1:4016"},
+  "predictor": {"url": "http://127.0.0.1:4012"},
+  "ai": {"config": ".local/ai/client.json", "url": "http://127.0.0.1:4018"},
+  "model": {"url": "http://127.0.0.1:11435", "version": "0.40.4"},
+  "telemetry": {"config": ".local/mqtt/telemetry-runtime.json", "statusOrigins": ["http://127.0.0.1:4014"]},
+  "disks": [{"path": ".", "minFreeBytes": null}],
+  "backups": {"directories": [".local/backups"], "keyFile": ".local/backup-keys/tenant-business-v1.json", "maxAgeHours": null}
+}

@@ -59,14 +59,18 @@ export function openBackup(archive,key,tenantId){
   if(!validTenant(tenantId)||archive.length<61||archive.length>maxArchive||!archive.subarray(0,8).equals(magic))throw Error('Unsupported backup format, tenant or size');
   const header=archive.subarray(0,36);
   if(header.subarray(8,24).toString('hex')!==key.keyId.replaceAll('-',''))throw Error('Backup key does not match');
-  let plaintext;
-  try{const cipher=createDecipheriv('aes-256-gcm',key.bytes,header.subarray(24));cipher.setAAD(header);cipher.setAuthTag(archive.subarray(-16));plaintext=Buffer.concat([cipher.update(archive.subarray(36,-16)),cipher.final()]);}
+  let plaintext,decrypted;
+  try{const cipher=createDecipheriv('aes-256-gcm',key.bytes,header.subarray(24));cipher.setAAD(header);cipher.setAuthTag(archive.subarray(-16));decrypted=cipher.update(archive.subarray(36,-16));plaintext=Buffer.concat([decrypted,cipher.final()]);}
   catch{throw Error('Backup authentication failed; no database restore was attempted');}
-  const length=plaintext.readUInt32BE(0);if(length<2||length>maxManifest||length>plaintext.length-9)throw Error('Invalid authenticated backup manifest');
-  let manifest;try{manifest=JSON.parse(plaintext.subarray(4,4+length).toString('utf8'));}catch{throw Error('Invalid authenticated backup manifest');}const dump=plaintext.subarray(4+length);
-  if(!manifest||![1,2].includes(manifest.format)||manifest.scope!=='TENANT_BUSINESS_DATABASE'||manifest.recoveryMode!=='ISOLATED_BUSINESS_ONLY'||manifest.tenantId!==tenantId||manifest.schemaVersion!==2||!Array.isArray(manifest.facts)||manifest.facts.length>1000||dump.length>maxDump||dump.subarray(0,5).toString()!=='PGDMP'||digest(dump)!==manifest.dumpSha256)throw Error('Backup tenant, manifest or dump does not match');
-  if(manifest.format===2)validateBusinessBackupManifest(manifest);
-  return {manifest,dump};
+  finally{decrypted?.fill(0);}
+  try{
+    const length=plaintext.readUInt32BE(0);if(length<2||length>maxManifest||length>plaintext.length-9)throw Error('Invalid authenticated backup manifest');
+    let manifest;try{manifest=JSON.parse(plaintext.subarray(4,4+length).toString('utf8'));}catch{throw Error('Invalid authenticated backup manifest');}const dump=plaintext.subarray(4+length);
+    if(!manifest||![1,2].includes(manifest.format)||manifest.scope!=='TENANT_BUSINESS_DATABASE'||manifest.recoveryMode!=='ISOLATED_BUSINESS_ONLY'||manifest.tenantId!==tenantId||manifest.schemaVersion!==2||!Array.isArray(manifest.facts)||manifest.facts.length>1000||dump.length>maxDump||dump.subarray(0,5).toString()!=='PGDMP'||digest(dump)!==manifest.dumpSha256)throw Error('Backup tenant, manifest or dump does not match');
+    if(manifest.format===2)validateBusinessBackupManifest(manifest);
+    plaintext.fill(0,0,4+length);
+    return {manifest,dump};
+  }catch(error){plaintext.fill(0);throw error;}
 }
 async function command(program,args,account,config,input){
   return new Promise((ok,fail)=>{
