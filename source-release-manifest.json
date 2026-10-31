@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-31T02:37:03.263Z",
+  "createdAt": "2026-10-31T02:43:21.090Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 10951,
-      "sha256": "6f5081110398e2e4c7b60bf2cfc1e16ae71413f41df46af580f9a896d62dfe62",
+      "bytes": 11178,
+      "sha256": "8517e96320a7cae89b56d7ae77345c7da6e717e83889558151ac3a0e9577544e",
       "mode": 438
     },
     {
@@ -2092,8 +2092,8 @@
     },
     {
       "name": "docs/production-readiness.md",
-      "bytes": 8677,
-      "sha256": "9bac7802363dfc29916d7da5bc6717241c45c3c4957d09a99261365072aa8253",
+      "bytes": 8731,
+      "sha256": "05dd9d6cd066ea448d9936111fe33981a00c6607e3dad3c264c1b74a9092b0c5",
       "mode": 438
     },
     {
@@ -3256,8 +3256,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-10-31--runtime-and-backup-inspection.md",
-      "bytes": 2070,
-      "sha256": "646aae0e62edfa709ce4e0df7e6654ed9660987eb4414718dab863f3d4962b6c",
+      "bytes": 2342,
+      "sha256": "376d3f88de0d7fb74f4ba48500a642465ddd0898a941ef8ca29134edcaedebda",
       "mode": 438
     },
     {
@@ -6418,8 +6418,8 @@
     },
     {
       "name": "README.md",
-      "bytes": 3149,
-      "sha256": "29b34f85cb8d1af1934cb56e34994a5d726b133d34d01dcb5bf6c4e1c884e26a",
+      "bytes": 3219,
+      "sha256": "0376c723cc6ae9b1686e050ff8ea98421b77acf61a3afd483bfc68c7e49e5f63",
       "mode": 438
     },
     {

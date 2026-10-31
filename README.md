@@ -29,7 +29,7 @@ node --test tests/package-guard.test.mjs tests/package-verify.test.mjs
 
 ## 发布边界
 
-本仓库管理公开源码，不包含本机账号、企业数据、密钥、数据库档案、运行依赖和本地交付截图。发布清单和敏感内容检查范围见[源码发布说明](docs/source-release-guide.md)。真实多岗位验收、同版 Linux/服务器验证和完整培训媒体继续推进。
+本仓库管理公开源码，不包含本机账号、企业数据、密钥、数据库档案、运行依赖和本地交付截图。发布清单和敏感内容检查范围见[源码发布说明](docs/source-release-guide.md)。真实多岗位验收和同版服务器验证继续推进；新版图文手册、PPT及隔离操作视频见[培训资料](docs/training-delivery-guide.md)。
 
 idms.xin 尚未确认完成备案；本轮不启用公网服务。根 Compose 及 deploy/ 内的 2026-10-20 记录是历史部署资料，不能当作当前安装或上线成功证明。生产拓扑、TLS、受管密钥、告警、跨服务恢复及支持责任见[生产准备状态](docs/production-readiness.md)。
 
