@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-31T03:44:45.793Z",
+  "createdAt": "2026-10-31T03:48:35.727Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 11451,
-      "sha256": "52ab56ed5bd72d0f4c15d7b7fc0ab524a7fb58259370e030300d1069b52b70f2",
+      "bytes": 11693,
+      "sha256": "b0f0753df4167ab39d6bc452c606056ab3031dffe16a7c6a630c65b18ed9569e",
       "mode": 438
     },
     {
@@ -2092,8 +2092,8 @@
     },
     {
       "name": "docs/production-readiness.md",
-      "bytes": 9076,
-      "sha256": "13ec1bb9aa9803c2bbcf6a31651d9834d7eb3929fc667b3727fd5867b12331a5",
+      "bytes": 9210,
+      "sha256": "cad49efb5a99a7b4caf2b1720c797302b248aa056ace04e31524619ed8d8bdeb",
       "mode": 438
     },
     {
@@ -3268,8 +3268,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-10-31--runtime-readiness-and-capacity.md",
-      "bytes": 1768,
-      "sha256": "77e3fbf2f46f2450a0e47c7ea327b03cb0852b4f87987929e938264134f0d28d",
+      "bytes": 2352,
+      "sha256": "3ac882c9d5caebd941922a65566e1cc4080eb0f6ca40c888df8a0328b96eb462",
       "mode": 438
     },
     {
