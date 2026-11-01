@@ -23,7 +23,13 @@ export class MemoryLedger {
   if(!Object.hasOwn(this.categories,category)||!Number.isSafeInteger(maximum)||maximum<1)throw Error('Unknown resource category');
   let amount=0,released=false;const ledger=this;
   const grow=(bytes:number)=>{if(released||!Number.isSafeInteger(bytes)||bytes<0)throw Error('Invalid resource accounting');if(amount+bytes>maximum||ledger.total+bytes>ledger.cap||(ledger.used.get(category)||0)+bytes>ledger.categories[category])throw new CapacityError(503,'当前工作区或解析预算不足，请稍后重试或联系管理员调整容量','MEMORY_BUDGET');amount+=bytes;ledger.total+=bytes;ledger.used.set(category,(ledger.used.get(category)||0)+bytes);ledger.peak=Math.max(ledger.peak,ledger.total);ledger.peaks.set(category,Math.max(ledger.peaks.get(category)||0,ledger.used.get(category)||0));};
-  return {grow,hold(bytes:number){grow(bytes);let held=true;return ()=>{if(!held)return;held=false;if(released)return;amount-=bytes;ledger.total-=bytes;ledger.used.set(category,(ledger.used.get(category)||0)-bytes);};},release(){if(released)return;released=true;ledger.total-=amount;ledger.used.set(category,(ledger.used.get(category)||0)-amount);amount=0;},get bytes(){return amount;}};
+  const shrink=(bytes:number)=>{if(released)return;amount-=bytes;ledger.total-=bytes;ledger.used.set(category,(ledger.used.get(category)||0)-bytes);};
+  return {grow,hold(bytes:number){grow(bytes);let held=true;return ()=>{if(!held)return;held=false;shrink(bytes);};},lease(){
+   // One aggregate lease avoids a retained closure for every SQL row. Transfer
+   // changes only this owner's charge, synchronously, into task-owned memory.
+   let bytes=0,active=true;
+   return {grow(n:number){if(!active)throw Error('Memory lease is closed');grow(n);bytes+=n;},transfer(n:number){if(!active||released||!Number.isSafeInteger(n)||n<0)throw Error('Invalid memory lease transfer');if(n>bytes)grow(n-bytes);else shrink(bytes-n);bytes=0;active=false;},release(){if(!active)return;active=false;shrink(bytes);bytes=0;}};
+  },release(){if(released)return;released=true;ledger.total-=amount;ledger.used.set(category,(ledger.used.get(category)||0)-amount);amount=0;},get bytes(){return amount;}};
 
  }
  snapshot(){return {total:this.total,categories:Object.fromEntries(this.used)};}
@@ -40,6 +46,7 @@ export function estimatedBytes(value:unknown):number{
 }
 export function holdValue(value:unknown):()=>void{const account=memoryContext.getStore();return account?account.hold(estimatedBytes(value)):()=>{};}
 export function holdAllocation(bytes:number):()=>void{return memoryContext.getStore()?.hold(bytes)||(()=>{});}
+export function temporaryAllocation(){return memoryContext.getStore()?.lease()||{grow(_bytes:number){},transfer(_bytes:number){},release(){}};}
 export function accountAllocation(bytes:number){memoryContext.getStore()?.grow(bytes);}
 export function accountValue(value:unknown){const account=memoryContext.getStore();if(account)account.grow(estimatedBytes(value));}
 export async function memoryTask<T>(task:()=>Promise<T>,independent=false):Promise<T>{if(!independent&&memoryContext.getStore())return task();const account=resident.account('task',limits.taskBytes);try{account.grow(65536);return await memoryContext.run(account,task);}finally{account.release();}}

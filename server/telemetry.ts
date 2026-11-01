@@ -18,9 +18,11 @@ import { appendAudit } from './audit.ts';
 import type { Store } from './store.ts';
 import { DomainError } from './service.ts';
 import {verifyModule} from './postgres-security.ts';
+import {TelemetryIntakeDiagnostics} from './telemetry-intake-diagnostics.ts';
 
 interface Config {version:1;mqtt:{url:string;username:string;password:string};sources:EdgeSource[]}
 export class TelemetryService {
+  readonly intake=new TelemetryIntakeDiagnostics();
   config?:Config;client?:MqttClient;connected=false;subscribed=false;lastReceivedAt:string|null=null;lastError:string|null=null;closing=false;
   scopeStore?:Store;
   readonly registryInstanceId='registry-'+randomUUID();
@@ -52,19 +54,21 @@ export class TelemetryService {
     client.on('close',()=>{this.connected=false;this.subscribed=false;});client.on('error',()=>{this.lastError='MQTT_CONNECTION_ERROR';});
     // MQTT stream back-pressure: do not accept an unbounded async queue of broker messages.
     client.handleMessage=(packet,done)=>{
-      void this.receive(store,packet.topic,Buffer.from(packet.payload)).catch(()=>{this.lastError='TELEMETRY_TRANSACTION_FAILED';}).finally(()=>done());
+      void this.receive(store,packet.topic,Buffer.from(packet.payload)).catch(()=>{}).finally(()=>done());
     };
   }
   async receive(store:Store,topic:string,bytes:Buffer){
-    if(this.closing||!this.config||bytes.length>8192)return;
-    const source=this.config.sources.find(s=>topicFor(s,'telemetry')===topic);if(!source)return;
-    let event:unknown;try{event=JSON.parse(bytes.toString('utf8'));}catch{this.lastError='INVALID_JSON';return;}
-    if(!authenticEvent(event,source.signingKey)){this.lastError='INVALID_SIGNATURE';return;}
+    const observation=this.intake.begin();try{
+    if(this.closing||!this.config||bytes.length>8192){observation.protocolRejected();return;}
+    const source=this.config.sources.find(s=>topicFor(s,'telemetry')===topic);if(!source){observation.protocolRejected();return;}
+    let event:unknown;try{event=JSON.parse(bytes.toString('utf8'));}catch{this.lastError='INVALID_JSON';observation.protocolRejected();return;}
+    if(!authenticEvent(event,source.signingKey)){this.lastError='INVALID_SIGNATURE';observation.protocolRejected();return;}
     const authenticated=event;let reason:string|undefined;
     try{validateEvent(authenticated,source,measurementSchema);}catch(e){reason=e instanceof Error?e.message:'INVALID_EVENT';}
     // Limit attacker-controlled IDs even for signed invalid envelopes.
-    if(typeof authenticated.eventId!=='string'||authenticated.eventId.length>100){this.lastError='INVALID_EVENT_ID';return;}
+    if(typeof authenticated.eventId!=='string'||authenticated.eventId.length>100){this.lastError='INVALID_EVENT_ID';observation.protocolRejected();return;}
     const digest=sha(authenticated);
+    observation.stage('TRANSACTION');
     const result=await mutate(store,async (client,workspace)=>{
       const {store,imports}=workspace,registry=await assertRegistryCurrent(client!,source.tenantId,publicRegistry(this.config!.sources,source.tenantId)),decision=sourceGovernanceDecision(store,imports,source,Date.now(),typeof authenticated.tagCode==='string'?authenticated.tagCode:null);
       if(decision.enforced)return receiveGovernedTelemetry(client!,workspace,source,authenticated,digest,decision,registry);
@@ -94,10 +98,13 @@ export class TelemetryService {
       appendAudit(store,{tenantId:source.tenantId,objectType:'TELEMETRY_EVENT',objectId:authenticated.eventId,action:'TELEMETRY_'+status,actorType:'INTERFACE',actorId:source.edgeId,correlationId:authenticated.eventId,metadata:{inputDigest:digest,origin:source.origin,deviceCode:source.deviceCode,mapVersion:source.mapVersion,pointId,reason:rejection}});
       return {status:status as 'STORED'|'REJECTED',reason:rejection};
     },source.tenantId);
+    observation.committed(result.status);
     // Both telemetry SQL and append-only business audit have committed before this acknowledgement.
     const ack:TelemetryAck=signAck({version:1,eventId:authenticated.eventId,tenantId:source.tenantId,edgeId:source.edgeId,digest,status:result.status,...(result.reason?{reason:result.reason}:{})},source.acknowledgementKey);
-    if(this.client?.connected)this.client.publish(topicFor(source,'ack'),JSON.stringify(ack),{qos:1,retain:false});
-    this.lastReceivedAt=new Date().toISOString();this.lastError=null;
+    if(this.client?.connected){this.lastError=null;observation.ackQueued();this.client.publish(topicFor(source,'ack'),JSON.stringify(ack),{qos:1,retain:false},error=>{observation.acknowledged(!error);if(error)this.lastError='TELEMETRY_ACK_UNCONFIRMED';});}
+    else{observation.acknowledged(false);this.lastError='TELEMETRY_ACK_UNCONFIRMED';}
+    this.lastReceivedAt=new Date().toISOString();
+    }catch(error){this.lastError='TELEMETRY_'+observation.failed(error);throw error;}
   }
   sourcesFor(tenantId:string){return this.config?.sources.filter(s=>s.tenantId===tenantId)||[];}
   async overview(tenantId:string,ctx?:AccessContext,workspace?:ReadWorkspace){

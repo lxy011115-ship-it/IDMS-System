@@ -40,6 +40,8 @@ const advice={
  TELEMETRY_CONTRACT_MISMATCH:'采集状态身份或模式不符，核对当前来源绑定。',
  TELEMETRY_CONNECTION_FAILED:'采集报告的MQTT或OPC只读连接不可用；核对现有服务。',
  TELEMETRY_BUFFER_FULL:'采集缓存已满或已阻塞；核对主站接收及确认链路，保留未确认资料，不以删除缓存或重复采集绕过。',
+ TELEMETRY_STORAGE_LIMIT:'边缘数据库或WAL达到观察限额，保全原记录并通过维护流程核对空间。',
+ TELEMETRY_QUARANTINE_PENDING:'原消息和已提交拒绝ACK仍在隔离区待处置；移出待确认队列不代表错误已解决。',
  TELEMETRY_SAMPLE_UNCONFIRMED:'样本或采集错误状态尚不能确认，不能显示为设备在线。',
  TCP_UNAVAILABLE:'MQTT监听不可达；仅连通端口也不能证明消息或设备状态。',
  MQTT_EDGE_CONNECTION_FAILED:'端口可达但已有边缘未报告MQTT会话连接。',

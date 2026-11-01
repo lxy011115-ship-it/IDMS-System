@@ -85,5 +85,7 @@ test('connected MQTT does not hide a full collection spool, while safe queue cou
   state={...state,pending:0,rejected:0,acknowledged:10};assert.equal((await task(ctx)).status,'PASS');
   state={...state,mqttConnected:false};await assert.rejects(task(ctx),e=>e.code==='TELEMETRY_CONNECTION_FAILED');
   state={...state,mqttConnected:true,pending:-1};await assert.rejects(task(ctx),e=>e.code==='TELEMETRY_CONTRACT_MISMATCH');
+  state={...state,pending:0,spoolVersion:2,records:10000,logicalBytes:100000,databaseBytes:200000,walBytes:0,storageBlocked:false};const quarantined=await task(ctx);assert.equal(quarantined.code,'TELEMETRY_QUARANTINE_PENDING');assert.equal(quarantined.data.queues[0].quarantined,10000);
+  state={...state,records:0,storageBlocked:true};assert.equal((await task(ctx)).code,'TELEMETRY_STORAGE_LIMIT');
  });
 }));

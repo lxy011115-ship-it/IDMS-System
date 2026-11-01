@@ -83,7 +83,7 @@ const handleRuntimeStatus=runtimeStatusRoutes(readiness,()=>{
   const pools=runtimeDatabaseBindings().flatMap(b=>[b.pool,...(b.workerPool?[b.workerPool]:[])]);
   if(authState instanceof PostgresAuthStore)pools.push(authState.pool);
   return runtimeResources(pools);
-},process.env.IDMS_SERVICE_TOKEN,()=>({contract:'IDMS_EXISTING_MAIN_V1',telemetryConnected:telemetry.connected,telemetrySubscribed:telemetry.subscribed,telemetryClosing:telemetry.closing}));
+},process.env.IDMS_SERVICE_TOKEN,()=>({contract:'IDMS_EXISTING_MAIN_V1',telemetryConnected:telemetry.connected,telemetrySubscribed:telemetry.subscribed,telemetryClosing:telemetry.closing,telemetryIntake:telemetry.intake.snapshot()}));
 readiness.start();
 const PORT = Number(process.env.PORT || 4010);
 const MAX_BODY_BYTES = 1024 * 1024;

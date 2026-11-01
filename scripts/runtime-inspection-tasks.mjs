@@ -33,9 +33,12 @@ export function inspectionTasks(root,p,{verifyBackups=false,version}={}){
     const capacity=r.capacity??(rows.length===1?c.edge?.capacity:null)??null;
     need(capacity===null||Number.isSafeInteger(capacity)&&capacity>0,'TELEMETRY_CONFIG_INVALID');
     need(Number.isSafeInteger(r.pending+r.rejected),'TELEMETRY_CONTRACT_MISMATCH');
-    return {pending:r.pending,rejected:r.rejected,acknowledged:r.acknowledged,capacity};
+    if(r.spoolVersion===2){for(const k of ['records','logicalBytes','databaseBytes','walBytes'])need(Number.isSafeInteger(r[k])&&r[k]>=0,'TELEMETRY_CONTRACT_MISMATCH');need(typeof r.storageBlocked==='boolean','TELEMETRY_CONTRACT_MISMATCH');}
+    return {pending:r.pending,rejected:r.rejected,acknowledged:r.acknowledged,capacity,...(r.spoolVersion===2?{quarantined:r.records,quarantineBytes:r.logicalBytes,databaseBytes:r.databaseBytes,walBytes:r.walBytes,storageBlocked:r.storageBlocked}:{})};
    });
    const data={sourceCount:rows.length,queues,freshnessPolicyVerified:false,fieldCommissioningVerified:false};
+   if(queues.some(q=>q.storageBlocked))return {status:'FAIL',code:'TELEMETRY_STORAGE_LIMIT',evidence:'SIMULATOR_REPORTED_SPOOL',data};
+   if(queues.some(q=>q.quarantined>0))return {status:'FAIL',code:'TELEMETRY_QUARANTINE_PENDING',evidence:'SIGNED_REJECTIONS_RETAINED',data};
    if(rows.some((r,i)=>r.lastError==='SPOOL_CAPACITY_REACHED'||r.capacityBlocked===true||queues[i].capacity!==null&&queues[i].pending+queues[i].rejected>=queues[i].capacity))return {status:'FAIL',code:'TELEMETRY_BUFFER_FULL',evidence:'SIMULATOR_REPORTED_SPOOL',data};
    need(rows.every(r=>r.mqttConnected===true&&r.opcConnected===true),'TELEMETRY_CONNECTION_FAILED');
    if(rows.some(r=>!r.lastSample||!Number.isFinite(Date.parse(r.lastSample))||r.lastError))return {status:'UNKNOWN',code:'TELEMETRY_SAMPLE_UNCONFIRMED',evidence:'SIMULATOR_STATUS',data};

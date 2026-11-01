@@ -10,7 +10,8 @@ export function telemetryView(data,points,updatedAt,canAnalyze=false){
   ${sources.map(source=>{
     const edge=source.edge,age=source.freshness==='FRESH'?'数据新鲜':source.freshness==='STALE'?'数据已过期':'尚无数据';
     return `<section class="panel telemetry-source"><div class="panel-head"><div><h2>${esc(source.deviceCode)} <span class="badge">${source.origin==='SIMULATOR'?'明确标识：模拟设备':'现场设备'}</span></h2><p>${esc(source.edgeId)} · 映射 ${esc(source.mapVersion)} · ${age}</p></div><span class="badge">${edge?.opcConnected?'OPC UA 已连接':'OPC UA 未确认'}</span></div><div class="upload-metrics">
-    ${[['已存测点',source.total,'GOOD '+source.good+' / 低质量 '+source.low_quality],['待确认缓存',edge?.pending??'未知','平台已确认 '+(edge?.acknowledged??'未知')],['隔离记录',source.rejections,'边缘保留拒收 '+(edge?.rejected??'未知')],['采样缺口',edge?.gaps??'未知','容量耗尽或采集失败时明确报告']].map(([label,value,note])=>`<article><span>${esc(label)}</span><strong>${esc(value)}</strong><small>${esc(note)}</small></article>`).join('')}</div>
+    ${[['已存测点',source.total,'GOOD '+source.good+' / 低质量 '+source.low_quality],['待确认缓存',edge?.pending??'未知','平台已确认 '+(edge?.acknowledged??'未知')],['拒绝回执',source.rejections,'边缘待处置 '+(edge?.spoolVersion===2?(edge.records??'未知'):(edge?.rejected??'未知'))],['采样缺口',edge?.gaps??'未知','容量耗尽或采集失败时明确报告']].map(([label,value,note])=>`<article><span>${esc(label)}</span><strong>${esc(value)}</strong><small>${esc(note)}</small></article>`).join('')}</div>
+    ${edge?.spoolVersion===2&&edge.records>0?'<p class="boundary-note">拒绝消息及原始确认凭证已保全，仍需按维护流程处置；隔离不代表恢复正常。</p>':''}
     <p class="boundary-note">最新采样：${time(source.last_event_time)}　最新接收：${time(source.last_received_at)}。连接正常不代表数据新鲜，缓存补传可能是历史数据。</p>
     ${canAnalyze?`<button class="primary" data-action="telemetry-analyze" data-edge-id="${esc(source.edgeId)}">分析已入库采集窗口</button><p class="boundary-note">需三个测点各≥6条GOOD样本、覆盖≥5分钟且最新数据有效。仅工程规则，不提供故障概率或RUL。</p>`:''}
     ${edge?.lastError?`<div class="error-banner">边缘状态：${esc(edge.lastError)}</div>`:''}

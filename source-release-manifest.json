@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-10-31T05:11:00.743Z",
+  "createdAt": "2026-11-01T12:51:45.869Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 12031,
-      "sha256": "eefc7be314a6065c7237c6990f676faf29335333b0dd1174c0319909c0943e5a",
+      "bytes": 12394,
+      "sha256": "899cf305f0ab438dd519de1f98e432ff02b9e40284acd300505c82869446112a",
       "mode": 438
     },
     {
@@ -3285,6 +3285,12 @@
       "mode": 438
     },
     {
+      "name": "docs/superpowers/plans/2026-10-31--telemetry-budget-and-spool-recovery.md",
+      "bytes": 1671,
+      "sha256": "f60992f06e56fca2d2de71fb2e151dca6cea37fcdb3ba917bc62ba7572d60c95",
+      "mode": 438
+    },
+    {
       "name": "docs/superpowers/specs/2026-08-31--idms-sales-demo-design.md",
       "bytes": 2639,
       "sha256": "9ba3fd96436ef87d15cafb7a4bd05a0c22a9cf283640e86c3ec260488a423c89",
@@ -4426,8 +4432,8 @@
     },
     {
       "name": "docs/superpowers/specs/2026-10-31--telemetry-budget-and-spool-recovery.md",
-      "bytes": 10922,
-      "sha256": "3b809bf16fa6ff963bdcdcee016619b97d7184d435b4781c6fc708459683eace",
+      "bytes": 10918,
+      "sha256": "1d4fa8f1b53081c2a729592188fb81d817e5cebe87bd091affec8a4513901d37",
       "mode": 438
     },
     {
@@ -4488,6 +4494,12 @@
       "name": "docs/telemetry-quality-guide.md",
       "bytes": 7406,
       "sha256": "654c44c644aad3ec166292fe06956f316e09ecab5565538abe23f0070d57eaee",
+      "mode": 438
+    },
+    {
+      "name": "docs/telemetry-recovery-progress.md",
+      "bytes": 4270,
+      "sha256": "7bc721be7da6207cc7016b782440ba0a5fc276a5ec3acaa1b941855482ae8951",
       "mode": 438
     },
     {
@@ -6436,8 +6448,8 @@
     },
     {
       "name": "public/telemetry-ui.js",
-      "bytes": 5041,
-      "sha256": "c72338567631baf29a8bf980aaa9c6f62aadfd1cacfab097be8fffb3cdbf70b3",
+      "bytes": 5274,
+      "sha256": "16b7dcc1e8f0696c40724476a1e147de7d5deb3f03ea0fd1682a767ddd95819a",
       "mode": 438
     },
     {
@@ -13930,14 +13942,14 @@
     },
     {
       "name": "scripts/runtime-inspection-report.mjs",
-      "bytes": 10919,
-      "sha256": "70dea08d36a07ab1ab2fe15cd0a7d3c4b598925de3a533bb14ed409b7827014e",
+      "bytes": 11182,
+      "sha256": "3fd97592642e347ed2976b2aa5b52eb873a21f961ee74d3ed6260006bccee39c",
       "mode": 438
     },
     {
       "name": "scripts/runtime-inspection-tasks.mjs",
-      "bytes": 11483,
-      "sha256": "4a4329fbc203eb034ac71d6aab0f6d0868ae885f548aebf1c61691ada7562eb1",
+      "bytes": 12168,
+      "sha256": "c0d0b88cb47f648062213926f8bb6498421ba967a0e062dd8b66914af8155695",
       "mode": 438
     },
     {
@@ -14290,8 +14302,8 @@
     },
     {
       "name": "scripts/verify-build.mjs",
-      "bytes": 12874,
-      "sha256": "2c561d305322b0d29c633a10363393b264b652d441f7fb78a532698680b83f0c",
+      "bytes": 13049,
+      "sha256": "5a0280e6a2cc6acaa46d2ff606b39db6d21da6f3af3497d29765385beba4e22e",
       "mode": 438
     },
     {
@@ -17475,6 +17487,12 @@
       "mode": 438
     },
     {
+      "name": "scripts/verify-telemetry-recovery-memory.mjs",
+      "bytes": 6113,
+      "sha256": "b2f55f25faff7e8d21078e30606be81ca4f8102766b85a2bffa15e04989647a0",
+      "mode": 438
+    },
+    {
       "name": "scripts/verify-telemetry.mjs",
       "bytes": 19826,
       "sha256": "a76ea3050da0e159b8908404b58a01890b95c28c9013aa45322714c386f38c08",
@@ -18328,14 +18346,14 @@
     },
     {
       "name": "server/capacity.test.ts",
-      "bytes": 5540,
-      "sha256": "fed6401d1a4fc3d0a5e95d362569a0f4f1df5f8842daa5de29641bd209e1928d",
+      "bytes": 6302,
+      "sha256": "ea6906780b4080413b480f5ec992be08b9e6e373f393e65d270d6ed586dcb04b",
       "mode": 438
     },
     {
       "name": "server/capacity.ts",
-      "bytes": 12551,
-      "sha256": "79b070c682f6a7f86661f493db8120d5b5fcb3b6c0498d62aad13edbe44c615c",
+      "bytes": 13297,
+      "sha256": "0cae4dececaf7f9570e948e17526588e6208bfba89397d11e0d26b3d794e7e82",
       "mode": 438
     },
     {
@@ -18567,15 +18585,21 @@
       "mode": 438
     },
     {
+      "name": "server/edge-recovery.test.ts",
+      "bytes": 12682,
+      "sha256": "66ffbec58cde6031088bec7f9fc1f56bfe0736b3e318f18e9fb43f666534a860",
+      "mode": 438
+    },
+    {
       "name": "server/entity-reader.test.ts",
-      "bytes": 3707,
-      "sha256": "4d2092948cb670de9984db8ab55d9e87e14faeca0f3a1f48e6b1e4b9cfc7ae2d",
+      "bytes": 6690,
+      "sha256": "c92df7847b4305d014242802d749760c529a96ac5b7ed89d9108e9ab0408a08b",
       "mode": 438
     },
     {
       "name": "server/entity-reader.ts",
-      "bytes": 6715,
-      "sha256": "ae3534100866f2d01c752ae18d04c8281b96d64b38b11c95d7c710f57641692c",
+      "bytes": 7869,
+      "sha256": "b31b20c72f16dc542191735175afd4e19d8df67e433d4bb89dad8a6daf40620a",
       "mode": 438
     },
     {
@@ -19390,8 +19414,8 @@
     },
     {
       "name": "server/index.ts",
-      "bytes": 33697,
-      "sha256": "1cbebe7fbd015ba25681541bc54a6c7823a8d35ba64a4c80a4ead36cbb792916",
+      "bytes": 33741,
+      "sha256": "35527a4473960272481f1dcb245557a1bcf77b2d37f69bca6667e73e3d605b59",
       "mode": 438
     },
     {
@@ -19678,8 +19702,8 @@
     },
     {
       "name": "server/postgres-repository.ts",
-      "bytes": 8904,
-      "sha256": "d959bf03b724ee98a1cf09264307711fcd46edd9e1432f5d4d944cd57a005497",
+      "bytes": 8951,
+      "sha256": "d54abdedbc7ff08574048510c2190b88f7f4f86f9ab972d9ee068d0b048e3601",
       "mode": 438
     },
     {
@@ -20188,8 +20212,8 @@
     },
     {
       "name": "server/runtime-adapters.ts",
-      "bytes": 9142,
-      "sha256": "f312d7de56034eea2ed88fd62967f4c0d075bd8f45df66c61549453a3b04483a",
+      "bytes": 9479,
+      "sha256": "eaeeb79d2ea16a3ae500930edcccccbfc8a8e823c2c91b05e682871ee2d3acf9",
       "mode": 438
     },
     {
@@ -20230,8 +20254,8 @@
     },
     {
       "name": "server/runtime-readiness.ts",
-      "bytes": 9684,
-      "sha256": "318cf57f7209fbed4d347a8a5fa6a94678cf018dfdd20fc487972ed3062dfca9",
+      "bytes": 9998,
+      "sha256": "2115c57cea8fd84e8c1e6e331c99a497f1878f75785afb0ea0535d2017b7d8af",
       "mode": 438
     },
     {
@@ -20248,8 +20272,8 @@
     },
     {
       "name": "server/runtime-status-route.ts",
-      "bytes": 3886,
-      "sha256": "95678d4238bc9f0a21744c19cca7d570ff88bdfe0d6880df4f43e5c62a7d2b54",
+      "bytes": 3998,
+      "sha256": "3372ca300e93e9eee94e1316640da1c9943a56527caf16c370460a34a06f3490",
       "mode": 438
     },
     {
@@ -20619,6 +20643,12 @@
       "mode": 438
     },
     {
+      "name": "server/sql-commit.ts",
+      "bytes": 562,
+      "sha256": "1f4bf29a4cd51da2a57094390648f961a78691ef542cf378d2a5f79eebcf7f0a",
+      "mode": 438
+    },
+    {
       "name": "server/state-map-branch-inspection-v1.ts",
       "bytes": 4219,
       "sha256": "706b2e8424e91831d1438fdea1b20815e3415dbcb02e2544f286c5b1bec8be91",
@@ -20664,6 +20694,18 @@
       "name": "server/store.ts",
       "bytes": 6674,
       "sha256": "af0e54e6b7fe1e8b397503a94aec098004ffe363ac8fb7c2bfa7dbd792c56b97",
+      "mode": 438
+    },
+    {
+      "name": "server/telemetry-intake-diagnostics.test.ts",
+      "bytes": 2033,
+      "sha256": "18c392768986da0479f3b6fa5e0b6f4eca630b87ef1711939f8aacaf8a483522",
+      "mode": 438
+    },
+    {
+      "name": "server/telemetry-intake-diagnostics.ts",
+      "bytes": 2392,
+      "sha256": "5df4c282ca71bd1e43ea3caa7f42cf81a10b9d236e2efaf58f2811ab4b4b2f71",
       "mode": 438
     },
     {
@@ -20722,8 +20764,8 @@
     },
     {
       "name": "server/telemetry.ts",
-      "bytes": 15966,
-      "sha256": "3f7fd5d19900d271f624b1d8b6fccb77efe57a9063b5234a5120225b6dd8d510",
+      "bytes": 16636,
+      "sha256": "53808265f9d1092f5276a636de47009ec6dd4498be3e2e7544634a3b62467ff8",
       "mode": 438
     },
     {
@@ -20836,8 +20878,8 @@
     },
     {
       "name": "server/write-postimage.ts",
-      "bytes": 10054,
-      "sha256": "548961ad5b494f2863f8c00da6a5ee2a99d2ba10e9ba7d48233d6c5e58294462",
+      "bytes": 10103,
+      "sha256": "c3a68f69f8e9fd9c21b165f6f7b3de5ae9b68068a9d12f6ca63cf1bbbe197e6a",
       "mode": 438
     },
     {
@@ -20860,8 +20902,8 @@
     },
     {
       "name": "services/edge/index.ts",
-      "bytes": 5777,
-      "sha256": "b8d847609f6a0800cb1d7f7762a52fd2bb9d30e22ccb0230737a60cb7fcb0514",
+      "bytes": 5842,
+      "sha256": "07e36c5ad48db0cf6e80ba99012caa3806427e81db8875cd6f3bf012d8a39fd1",
       "mode": 438
     },
     {
@@ -20871,15 +20913,33 @@
       "mode": 438
     },
     {
+      "name": "services/edge/spool-export.ts",
+      "bytes": 6579,
+      "sha256": "bbc709c9ca7a4adfe92225749d651df91ff81956f6b6e8d1cfee9ac36612bf96",
+      "mode": 438
+    },
+    {
+      "name": "services/edge/spool-maintenance.ts",
+      "bytes": 9933,
+      "sha256": "cde53fb878c4acd2b74582e312cc43f6a5253fac7a03e5c29d1887026f1eba19",
+      "mode": 438
+    },
+    {
+      "name": "services/edge/spool-v2.ts",
+      "bytes": 7377,
+      "sha256": "394db5eaa648f2e05f5b8fd020ceedbb8f11294daa38fb54572b2680c44f7800",
+      "mode": 438
+    },
+    {
       "name": "services/edge/spool.ts",
-      "bytes": 4657,
-      "sha256": "e1caed7a9b4dd06ad40999967ba41d27502711ae1a0aecf9af3fd4e4c469808a",
+      "bytes": 5278,
+      "sha256": "e944bc9ed0ee6f2058bba2b631f6887db7eb8dc3d89ffeae4789a1ed039de22c",
       "mode": 438
     },
     {
       "name": "services/existing-sqlite.ts",
-      "bytes": 2500,
-      "sha256": "6335a6248fece76dffb0a7f8ed66658918e9da025018ace8fc34a5fabaf1779d",
+      "bytes": 2996,
+      "sha256": "3fe6caa1b526d5e7a9c04878fc8a050c2b01a4dcb904de809a67b549674cfa7a",
       "mode": 438
     },
     {
@@ -22930,8 +22990,8 @@
     },
     {
       "name": "tests/runtime-adapters.test.mjs",
-      "bytes": 8024,
-      "sha256": "c76dd9f52faabeb9f33df15ba0978248f82a177c03ab1149db4c3696f1d455bd",
+      "bytes": 8626,
+      "sha256": "4121819892138f02b1a06a0d60c3da14267395fd17e7d94cebbbc308e0783f22",
       "mode": 438
     },
     {
@@ -22966,8 +23026,8 @@
     },
     {
       "name": "tests/runtime-inspection.test.mjs",
-      "bytes": 13532,
-      "sha256": "9c46c5ff8dba4c4ebca2905c14fe8c9405d7e5f67a15fa410f73c7bdea0dc33b",
+      "bytes": 13934,
+      "sha256": "770223234d74356b11278f7fba018722558624eaedfd681fc6b98233170427ff",
       "mode": 438
     },
     {

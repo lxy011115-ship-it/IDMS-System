@@ -2,6 +2,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {AsyncLocalStorage} from 'node:async_hooks';
 import {capacityPolicy,MemoryLedger,FairScheduler,WeightedCache,estimatedBytes,memoryTask,accountValue,resident} from './capacity.ts';
+
+test('aggregate memory leases transfer atomically and cannot release another owner',()=>{
+ const ledger=new MemoryLedger(100,{task:100}),account=ledger.account('task',100);
+ account.grow(10);const a=account.lease(),b=account.lease();a.grow(30);b.grow(20);
+ assert.throws(()=>a.transfer(90),(error:any)=>error.code==='MEMORY_BUDGET');assert.equal(account.bytes,60);
+ a.transfer(15);assert.equal(account.bytes,45);a.release();assert.equal(account.bytes,45);
+ b.release();b.release();assert.equal(account.bytes,25);assert.throws(()=>a.grow(1),/closed/);
+ const c=account.lease();c.grow(5);c.transfer(10);assert.equal(account.bytes,35);
+ const retired=account.lease();retired.grow(2);account.release();retired.release();assert.equal(ledger.snapshot().total,0);
+});
 const deferred=()=>{let resolve!:()=>void;return {promise:new Promise<void>(ok=>resolve=ok),resolve:()=>resolve()};};
 const delay=(ms:number)=>new Promise(ok=>setTimeout(ok,ms));
 test('capacity policy rejects unknown, unbounded and inconsistent settings',()=>{

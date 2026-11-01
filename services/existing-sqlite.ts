@@ -2,6 +2,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {lstatSync,realpathSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {sha,type EdgeSource} from '../integrations/telemetry.ts';
+import {spoolV2Definitions,spoolVersion,readSpoolReceipt} from './edge/spool-v2.ts';
 
 export const existingSqliteDefinitions={
  edge:{
@@ -14,12 +15,15 @@ export const existingSqliteDefinitions={
 const normal=(s:string)=>s.replace(/\bIF NOT EXISTS\s+/ig,'').replace(/\s+/g,' ').trim();
 export function validateExistingSqlite(db:DatabaseSync,kind:'edge'|'ai',source?:EdgeSource){
  const tables=db.prepare("SELECT name,sql FROM sqlite_schema WHERE name NOT LIKE 'sqlite_%' ORDER BY name").all() as {name:string;sql:string}[];
- const expected=existingSqliteDefinitions[kind];
+ const version=kind==='edge'?spoolVersion(db):0;
+ if(kind==='edge'&&![0,2].includes(version))throw Error('EXISTING_SPOOL_VERSION_MISMATCH');
+ const expected:Record<string,string>=kind==='edge'&&version===2?{...existingSqliteDefinitions.edge,...spoolV2Definitions}:existingSqliteDefinitions[kind];
  if(tables.length!==Object.keys(expected).length||tables.some(t=>!Object.hasOwn(expected,t.name)||normal(t.sql)!==normal(expected[t.name as keyof typeof expected])))throw Error('EXISTING_SQLITE_SCHEMA_MISMATCH');
  if(kind==='edge'){
   if(!source)throw Error('EXISTING_SPOOL_SOURCE_REQUIRED');
   const rows=db.prepare("SELECT name,value FROM metadata ORDER BY name").all() as {name:string;value:string}[];
   if(rows.length!==2||rows[0].name!=='sequence'||!/^\d+$/.test(rows[0].value)||!Number.isSafeInteger(Number(rows[0].value))||rows[1].name!=='source'||rows[1].value!==sha({tenantId:source.tenantId,edgeId:source.edgeId,deviceCode:source.deviceCode,mapVersion:source.mapVersion}))throw Error('EXISTING_SPOOL_BINDING_MISMATCH');
+  if(version===2){const receipt=readSpoolReceipt(db,source);if(Number(rows[0].value)<receipt.afterSequence)throw Error('EXISTING_SPOOL_CURSOR_BEHIND_MIGRATION');}
  }
 }
 export function openExistingSqlite(path:string,kind:'edge'|'ai',source?:EdgeSource,{readOnly=false}={}){

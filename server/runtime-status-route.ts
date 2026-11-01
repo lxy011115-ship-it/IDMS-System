@@ -5,7 +5,7 @@ import {resident} from './capacity.ts';
 import {validateRuntimeResources,type RuntimeResources} from './runtime-resource-contract.ts';
 
 /** Cached/memory-only route. No downstream I/O or refresh method is reachable here. */
-export function runtimeStatusRoutes(monitor:RuntimeReadiness,resources:()=>RuntimeResources,token?:string,startup?:()=>{contract:string;telemetryConnected:boolean;telemetrySubscribed:boolean;telemetryClosing:boolean}) {
+export function runtimeStatusRoutes(monitor:RuntimeReadiness,resources:()=>RuntimeResources,token?:string,startup?:()=>{contract:string;telemetryConnected:boolean;telemetrySubscribed:boolean;telemetryClosing:boolean;telemetryIntake?:ReturnType<import('./telemetry-intake-diagnostics.ts').TelemetryIntakeDiagnostics['snapshot']>}) {
   const validToken=typeof token==='string' && Buffer.byteLength(token)>=32 && token.length<=4096 && !/[\r\n]/.test(token);
   const expected=validToken?createHash('sha256').update(token!).digest():Buffer.alloc(32);
   let active=0;

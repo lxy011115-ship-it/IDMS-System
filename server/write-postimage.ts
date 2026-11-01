@@ -12,7 +12,7 @@ import {DomainError} from './service.ts';
 // Only the query marker changes; no body or relation is omitted.
 export const postImageRowsSql=entityRowsSql.replace('/* IDMS_ENTITY_ROWS */','/* IDMS_POST_IMAGE_ROWS */');
 export interface PostImageRow {kind:string;tenant_id:string;identity:string;ordinal:string;detail:any;content:string|null}
-const invalid=()=>new DomainError(503,'企业写入后的一致性校验失败，本次变更未提交');
+const invalid=()=>Object.assign(new DomainError(503,'企业写入后的一致性校验失败，本次变更未提交'),{code:'WRITE_POSTIMAGE_MISMATCH'});
 const fields=(value:unknown,names:string[])=>!!value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).length===names.length&&names.every(name=>Object.hasOwn(value,name));
 const ordinal=(value:unknown,zero=false):bigint=>{
  if(typeof value!=='string'||!(zero&&value==='0'||/^[1-9][0-9]{0,18}$/.test(value)))throw invalid();const n=BigInt(value);if(n>9223372036854775807n)throw invalid();return n;

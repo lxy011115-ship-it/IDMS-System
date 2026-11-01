@@ -12,6 +12,7 @@ import {verifyDataProjection,projectApprovedData} from './data-projection.ts';
 import {validateRuntimeConfig,verifyDatabaseSecurity,connectionFor} from './postgres-security.ts';
 import {readEntities,writeEntities,type TenantPayload} from './entity-repository.ts';
 import {verifyPostImage} from './write-postimage.ts';
+import {confirmCommit} from './sql-commit.ts';
 export interface PlatformSnapshot {version:number;imports:ImportData;audits:Store['audits'];business:Omit<Store,'audits'|'idempotency'>;idempotency:[string,unknown][]}
 interface TenantDatabase {pool:pg.Pool;workerPool?:pg.Pool;connection:pg.PoolConfig}
 export interface TenantTransaction {tenantId:string;client:pg.PoolClient;payload:TenantPayload;revision:number}
@@ -66,7 +67,7 @@ async function stateTransaction<T>(tenantId:string,write:boolean,task:(tx:Tenant
   // READ COMMITTED takes the lock before loading, so a waiter sees the winner's commit.
   await client.query('BEGIN');await client.query(`SELECT revision FROM business_state WHERE tenant_id=$1 FOR ${write?'UPDATE':'SHARE'}`,[tenantId]);
   const loaded=await readEntities(client,tenantId);const tx:TenantTransaction={tenantId,client,...loaded};
-  const result=await task(tx);await client.query('COMMIT');return result;
+  const result=await task(tx);await confirmCommit(client);return result;
  }catch(e){await client.query('ROLLBACK').catch(()=>{});throw e;}finally{client.release();}
 }
 export function tenantTransaction<T>(tenantId:string,task:(tx:TenantTransaction)=>Promise<T>){return stateTransaction(tenantId,true,task);}

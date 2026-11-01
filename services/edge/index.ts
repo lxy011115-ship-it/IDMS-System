@@ -28,7 +28,7 @@ await new Promise<void>((resolve,reject)=>{status.once('error',reject);status.li
 const mqttClient=mqtt.connect(config.mqtt.url,{username:edge.username,password:edge.password,clientId:edge.username,protocolVersion:5,clean:true,reconnectPeriod:1000,connectTimeout:3000,queueQoSZero:false,properties:{maximumPacketSize:16384,receiveMaximum:20}});
 mqttClient.on('connect',()=>{mqttConnected=true;mqttClient.subscribe(topicFor(source,'ack'),{qos:1},err=>{if(err)lastError='MQTT_ACK_SUBSCRIBE_FAILED';});});
 mqttClient.on('close',()=>{mqttConnected=false;});mqttClient.on('error',()=>{lastError='MQTT_CONNECTION_ERROR';});
-mqttClient.on('message',(topic,bytes)=>{if(topic!==topicFor(source,'ack')||bytes.length>8192)return;try{spool.acknowledge(JSON.parse(bytes.toString()));}catch{lastError='ACK_INVALID';}});
+mqttClient.on('message',(topic,bytes)=>{if(topic!==topicFor(source,'ack')||bytes.length>8192)return;try{spool.acknowledge(JSON.parse(bytes.toString()),bytes);}catch(e){lastError=e instanceof Error&&/^SPOOL_[A-Z_]{1,64}$/.test(e.message)?e.message:'ACK_INVALID';}});
 const opc=OPCUAClient.create({endpointMustExist:false,securityMode:MessageSecurityMode.None,securityPolicy:SecurityPolicy.None,connectionStrategy:{initialDelay:500,maxDelay:2000,maxRetry:0},keepSessionAlive:true,clientName:'IDMS read-only simulator edge'});
 opc.on('connection_lost',()=>{opcConnected=false;});
 async function capture(){
@@ -45,7 +45,7 @@ async function capture(){
     }
     if(!lastError?.startsWith('SPOOL'))lastError=null;
   }catch(e){
-    if(e instanceof Error&&e.message==='SPOOL_CAPACITY_REACHED'){lastError='SPOOL_CAPACITY_REACHED';gaps++;}
+    if(e instanceof Error&&/^SPOOL_[A-Z_]{1,64}$/.test(e.message)){lastError=e.message;gaps++;}
     else {lastError='OPC_READ_FAILED';opcConnected=false;gaps++;try{await session?.close();}catch{}session=undefined;try{await opc.disconnect();}catch{}}
   }finally{capturing=false;}
 }
