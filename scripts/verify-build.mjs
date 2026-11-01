@@ -66,6 +66,7 @@ files.push('public/spares-insights-controller.js','public/spares-insights-ui.js'
 files.push('server/spares.ts','server/spares-db.ts','public/spares-ui.js','public/workspace-navigation.js','public/workspace.css','scripts/setup-spares.mjs');
 files.push('server/runtime-probe-error.ts','server/runtime-file.ts','server/runtime-http.ts','server/runtime-db-probe.ts','server/runtime-readiness.ts','server/runtime-adapters.ts','server/runtime-resource-contract.ts','server/runtime-resources.ts','server/runtime-status-route.ts');
 files.push('server/sql-commit.ts','server/telemetry-intake-diagnostics.ts','services/edge/spool-v2.ts','services/edge/spool-maintenance.ts','services/edge/spool-export.ts');
+files.push('services/edge/spool-backup-artifact.ts');
 for(const file of files){await access(file);const text=await readFile(file,"utf8");if(!text.trim())throw new Error(`${file} is empty`);if(/\.(ts|js)$/.test(file))execFileSync(process.execPath,['--check',file],{stdio:'inherit',windowsHide:true});}
 for(const file of await readdir('scripts'))if(file.endsWith('.mjs'))execFileSync(process.execPath,['--check','scripts/'+file],{stdio:'inherit',windowsHide:true});
 for(const file of await readdir('scripts/fixtures'))if(/\.(mjs|ts)$/.test(file))execFileSync(process.execPath,['--check','scripts/fixtures/'+file],{stdio:'inherit',windowsHide:true});

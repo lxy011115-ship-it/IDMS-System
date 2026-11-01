@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtempSync,rmSync,readFileSync,writeFileSync,truncateSync} from 'node:fs';
+import {mkdtempSync,rmSync,readFileSync,writeFileSync,truncateSync,readdirSync,statSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
@@ -96,4 +96,26 @@ test('10000 original events survive signed rejection transfer; full quarantine l
   const actual=createHash('sha256');for(const row of spool.db.prepare('SELECT event_id,payload,digest,prior_state AS state,attempts,last_attempt,prior_reason AS reason FROM quarantine ORDER BY event_id').iterate())actual.update(JSON.stringify(row)+'\n');assert.equal(actual.digest('hex'),h.digest('hex'));assert.equal(spool.stats().pending,0);assert.equal(spool.stats().records,10000);assert.equal(spool.stats().quarantineBlocked,true);
   const next=spool.append(sample());assert.equal(next.sequenceNo,75119);const a=signAck({version:1,eventId:next.eventId,tenantId:source.tenantId,edgeId:source.edgeId,digest:sha(next),status:'REJECTED',reason:'TEST'},source.acknowledgementKey);assert.throws(()=>spool.acknowledge(a,Buffer.from(JSON.stringify(a))),/QUARANTINE_LIMIT/);assert.equal(spool.stats().pending,1);assert.equal(spool.stats().records,10000);
  }finally{spool.close();}
+}));
+test('interrupted reserved backup is retained and resumes into a new bounded owned generation',async()=>fixture(async f=>{
+ let partial='';await assert.rejects(recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{},onCheckpoint:e=>{if(e.stage==='BACKUP_RESERVED'){partial=e.path;throw Error('QA_INTERRUPTED_AFTER_RESERVATION');}}}),/QA_INTERRUPTED/);
+ assert.equal(statSync(partial).size,0);const result=await recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{}});assert.notEqual(result.backupPath,partial);assert.match(result.backupPath!,/attempt-2/);assert.equal(statSync(partial).size,0);assert.equal(result.receipt.originalCount,2);
+}));
+test('verified backup is reused after interruption and a changed completed artifact never falls back',async()=>fixture(async f=>{
+ let backup='';await assert.rejects(recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{},onCheckpoint:e=>{if(e.stage==='BACKUP_VERIFIED'){backup=e.path;throw Error('QA_INTERRUPTED_AFTER_BACKUP');}}}),/QA_INTERRUPTED/);
+ const original=statSync(backup);const db=new DatabaseSync(backup);db.prepare("UPDATE metadata SET value='999' WHERE name='sequence'").run();db.close();
+ await assert.rejects(recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{}}),/COMPLETED_ARTIFACT_INVALID/);assert.equal(statSync(backup).ino,original.ino);assert.equal(readdirSync(f.dir).filter(n=>n.endsWith('.backup.sqlite')).length,1);assert.equal(readdirSync(f.dir).filter(n=>n.endsWith('.restore-check.sqlite')).length,0);
+ const current=new EdgeSpool(f.path,source,10000,{existingOnly:true});try{assert.equal(current.version,0);assert.deepEqual(current.db.prepare('SELECT * FROM pending ORDER BY event_id').all(),f.original);}finally{current.close();}
+}));
+test('completed SQLite commit with lost caller result resolves from the same receipt without repeating migration',async()=>fixture(async f=>{
+ let backup='',digest='';await assert.rejects(recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{},onCheckpoint:e=>{if(e.stage==='BACKUP_VERIFIED'){backup=e.path;digest=e.digest!;}if(e.stage==='SQLITE_COMMITTED')throw Error('QA_CALLER_RESULT_LOST');}}),/QA_CALLER_RESULT_LOST/);
+ const original=readFileSync(backup),result=await recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{}});assert.equal(result.replayed,true);assert.equal(result.receipt.backupDigest,digest);assert.deepEqual(readFileSync(backup),original);assert.equal(readdirSync(f.dir).filter(n=>n.endsWith('.backup.sqlite')).length,1);
+}));
+test('verified backup and restore are reused byte-for-byte after a pre-migration interruption',async()=>fixture(async f=>{
+ let backup='',restore='';await assert.rejects(recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{},onCheckpoint:e=>{if(e.stage==='BACKUP_VERIFIED')backup=e.path;if(e.stage==='RESTORE_VERIFIED'){restore=e.path;throw Error('QA_INTERRUPTED_BEFORE_MIGRATION');}}}),/QA_INTERRUPTED/);
+ const b=readFileSync(backup),r=readFileSync(restore),bi=statSync(backup).ino,ri=statSync(restore).ino;const result=await recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{}});assert.equal(result.backupPath,backup);assert.equal(result.restorePath,restore);assert.equal(statSync(backup).ino,bi);assert.equal(statSync(restore).ino,ri);assert.deepEqual(readFileSync(backup),b);assert.deepEqual(readFileSync(restore),r);
+}));
+test('three incomplete artifacts remain visible and cannot cause unbounded retry copies',async()=>fixture(async f=>{
+ for(let i=0;i<3;i++)await assert.rejects(recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{},onCheckpoint:e=>{if(e.stage==='BACKUP_RESERVED')throw Error('QA_INTERRUPTED');}}),/QA_INTERRUPTED/);
+ await assert.rejects(recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{}}),/PARTIAL_ARTIFACT_REVIEW_REQUIRED/);assert.equal(readdirSync(f.dir).filter(n=>n.endsWith('.backup.sqlite')).length,3);
 }));

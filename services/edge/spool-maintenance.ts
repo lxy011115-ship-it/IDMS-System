@@ -1,10 +1,11 @@
-import {DatabaseSync,backup} from 'node:sqlite';
+import {DatabaseSync} from 'node:sqlite';
 import {createHash,randomUUID} from 'node:crypto';
-import {lstatSync,realpathSync,statfsSync,openSync,closeSync,createReadStream} from 'node:fs';
+import {lstatSync,realpathSync,statfsSync} from 'node:fs';
 import {resolve,join} from 'node:path';
 import {authenticEvent,sha,stable,type EdgeSource} from '../../integrations/telemetry.ts';
 import {openExistingSqlite,validateExistingSqlite} from '../existing-sqlite.ts';
 import {spoolVersion,spoolV2Definitions,readSpoolReceipt,spoolSourceDigest,spoolKeyDigest,spoolStorage,spoolRecoveryLimits,type PendingSpoolRow,type SpoolMigrationReceipt} from './spool-v2.ts';
+import {ensureSpoolIntent,verifiedSpoolCopy,spoolCheckpoint,type SpoolCheckpointObserver} from './spool-backup-artifact.ts';
 
 export interface SpoolProposal {
  format:'IDMS_EDGE_RECOVERY_PROPOSAL_V2';operationId:string;path:string;device:number;inode:number;
@@ -39,25 +40,19 @@ export function proposeSpoolRecovery(path:string,source:EdgeSource,durableSequen
   return {format:'IDMS_EDGE_RECOVERY_PROPOSAL_V2',operationId,...identity,sourceDigest:spoolSourceDigest(source),keyDigest:spoolKeyDigest(source),postgresDigest,durableSequence,beforeSequence:state.sequence,afterSequence,originalCount:state.count,originalDigest:state.digest,databaseBytes:storage.databaseBytes,walBytes:storage.walBytes};
  }finally{if(db.isTransaction)db.exec('ROLLBACK');db.close();}
 }
-const sameProposal=(a:SpoolProposal,b:SpoolProposal)=>stable(a)===stable(b);
-function newBackupTarget(path:string){
- const parent=resolve(path,'..');if(parent!==realpathSync(parent)||lstatSync(parent).isSymbolicLink())throw Error('SPOOL_BACKUP_DIRECTORY_INVALID');
- const fd=openSync(path,'wx',0o600);closeSync(fd);return requirePath(path);
-}
+// Physical sizes are observations, not logical identity: SQLite recovery or a
+// checkpoint may change them after an interrupted transaction without changing
+// a single original record. The physical pause limits are rechecked separately.
+const sameProposal=(a:SpoolProposal,b:SpoolProposal)=>{const {databaseBytes:ad,walBytes:aw,...left}=a,{databaseBytes:bd,walBytes:bw,...right}=b;return stable(left)===stable(right);};
 function checkBackup(db:DatabaseSync,source:EdgeSource,proposal:SpoolProposal){
  validateExistingSqlite(db,'edge',source);
  if(db.prepare('PRAGMA integrity_check').get()?.integrity_check!=='ok')throw Error('SPOOL_BACKUP_INTEGRITY_FAILED');
  const s=snapshot(db,source);if(s.digest!==proposal.originalDigest||s.count!==proposal.originalCount||s.sequence!==proposal.beforeSequence)throw Error('SPOOL_BACKUP_STATE_MISMATCH');
 }
-async function fileDigest(path:string){
- const before=lstatSync(path);if(!before.isFile()||before.nlink!==1||before.size>spoolRecoveryLimits.databaseBytes)throw Error('SPOOL_BACKUP_FILE_INVALID');
- const hash=createHash('sha256');for await(const bytes of createReadStream(path,{highWaterMark:65536}))hash.update(bytes);
- const after=lstatSync(path);if(before.ino!==after.ino||before.dev!==after.dev||before.size!==after.size||before.mtimeMs!==after.mtimeMs)throw Error('SPOOL_BACKUP_FILE_CHANGED');return hash.digest('hex');
-}
 /** Explicit maintenance primitive. Caller MUST hold the deployment start/stop
  * coordinator and prove all original writers terminal in assertStopped. No
  * ordinary startup path imports or invokes this function. */
-export async function recoverStoppedSpool(path:string,source:EdgeSource,proposal:SpoolProposal,options:{directory:string;assertStopped:()=>Promise<void>}):Promise<{receipt:SpoolMigrationReceipt;replayed:boolean;backupPath?:string;restorePath?:string}>{
+export async function recoverStoppedSpool(path:string,source:EdgeSource,proposal:SpoolProposal,options:{directory:string;assertStopped:()=>Promise<void>;onCheckpoint?:SpoolCheckpointObserver}):Promise<{receipt:SpoolMigrationReceipt;replayed:boolean;backupPath?:string;restorePath?:string}>{
  if(typeof options.assertStopped!=='function'||proposal.format!=='IDMS_EDGE_RECOVERY_PROPOSAL_V2'||proposal.path!==resolve(path)||spoolSourceDigest(source)!==proposal.sourceDigest||spoolKeyDigest(source)!==proposal.keyDigest)throw Error('SPOOL_RECOVERY_PROPOSAL_INVALID');
  const identity=requirePath(path);if(identity.device!==proposal.device||identity.inode!==proposal.inode)throw Error('SPOOL_RECOVERY_FILE_CHANGED');
  await options.assertStopped();
@@ -67,13 +62,12 @@ export async function recoverStoppedSpool(path:string,source:EdgeSource,proposal
  }finally{existing.close();}
  requireSpace(path);if(!sameProposal(proposal,proposeSpoolRecovery(path,source,proposal.durableSequence,proposal.postgresDigest,proposal.operationId)))throw Error('SPOOL_RECOVERY_PROPOSAL_STALE');
  const directory=resolve(options.directory);if(directory!==realpathSync(directory)||!lstatSync(directory).isDirectory()||lstatSync(directory).isSymbolicLink())throw Error('SPOOL_BACKUP_DIRECTORY_INVALID');requireSpace(directory);
- const backupPath=join(directory,'edge-'+proposal.operationId+'.backup.sqlite'),restorePath=join(directory,'edge-'+proposal.operationId+'.restore-check.sqlite');
- newBackupTarget(backupPath);
- existing=openExistingSqlite(path,'edge',source,{readOnly:true});try{await backup(existing,backupPath,{rate:64});}finally{existing.close();}
- let saved=new DatabaseSync(backupPath,{readOnly:true});
- try{checkBackup(saved,source,proposal);newBackupTarget(restorePath);await backup(saved,restorePath,{rate:64});}finally{saved.close();}
- saved=new DatabaseSync(restorePath,{readOnly:true});try{checkBackup(saved,source,proposal);}finally{saved.close();}
- const backupDigest=await fileDigest(backupPath);
+ ensureSpoolIntent(directory,proposal.operationId,proposal);
+ const copyOptions={directory,operationId:proposal.operationId,check:(db:DatabaseSync)=>checkBackup(db,source,proposal),onCheckpoint:options.onCheckpoint};
+ let backupResult;existing=openExistingSqlite(path,'edge',source,{readOnly:true});try{backupResult=await verifiedSpoolCopy(existing,'backup',copyOptions);}finally{existing.close();}
+ requireSpace(directory);const saved=new DatabaseSync(backupResult.path,{readOnly:true});let restoreResult;
+ try{restoreResult=await verifiedSpoolCopy(saved,'restore-check',copyOptions);}finally{saved.close();}
+ const backupPath=backupResult.path,restorePath=restoreResult.path,backupDigest=backupResult.digest;
  await options.assertStopped();requireSpace(path);
  if(!sameProposal(proposal,proposeSpoolRecovery(path,source,proposal.durableSequence,proposal.postgresDigest,proposal.operationId)))throw Error('SPOOL_RECOVERY_PROPOSAL_STALE');
  const receipt:SpoolMigrationReceipt={format:'IDMS_EDGE_RECOVERY_V2',operationId:proposal.operationId,sourceDigest:proposal.sourceDigest,keyDigest:proposal.keyDigest,postgresDigest:proposal.postgresDigest,backupDigest,beforeSequence:proposal.beforeSequence,afterSequence:proposal.afterSequence,durableSequence:proposal.durableSequence,originalCount:proposal.originalCount,originalDigest:proposal.originalDigest};
@@ -85,7 +79,7 @@ export async function recoverStoppedSpool(path:string,source:EdgeSource,proposal
   db.prepare('INSERT INTO spool_migrations VALUES(1,2,?)').run(JSON.stringify(receipt));
   db.prepare("UPDATE metadata SET value=? WHERE name='sequence'").run(String(receipt.afterSequence));db.exec('PRAGMA user_version=2');
   const after=snapshot(db,source);if(after.digest!==proposal.originalDigest||after.count!==proposal.originalCount||after.sequence!==receipt.afterSequence)throw Error('SPOOL_RECOVERY_CONSERVATION_FAILED');
-  validateExistingSqlite(db,'edge',source);db.exec('COMMIT');
+  validateExistingSqlite(db,'edge',source);db.exec('COMMIT');spoolCheckpoint(options.onCheckpoint,{stage:'SQLITE_COMMITTED',path});
   return {receipt,replayed:false,backupPath,restorePath};
  }catch(e){if(db.isTransaction)db.exec('ROLLBACK');throw e;}finally{db.close();}
 }

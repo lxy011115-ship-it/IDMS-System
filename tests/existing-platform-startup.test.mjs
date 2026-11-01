@@ -6,7 +6,7 @@ import {join,resolve,relative,isAbsolute} from 'node:path';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {DatabaseSync} from 'node:sqlite';
-import {randomBytes} from 'node:crypto';
+import {randomBytes,randomUUID} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {filePin,verifyPin,selectRuntime} from '../scripts/existing-platform-binding.mjs';
 import {acquireCoordinator,sameProcess,observeStage} from '../scripts/existing-platform-process.mjs';
@@ -15,6 +15,8 @@ import {serviceCommand} from '../scripts/existing-platform-services.mjs';
 import {openExistingSqlite,existingSqliteDefinitions} from '../services/existing-sqlite.ts';
 import {EdgeSpool} from '../services/edge/spool.ts';
 import {sha} from '../integrations/telemetry.ts';
+import {recoveryArguments} from '../scripts/recover-edge-spool.mjs';
+import {assertRecoveryWritersStopped} from '../scripts/edge-recovery-platform.mjs';
 const exec=promisify(execFile),project=resolve('.');
 async function fixture(t){const parent=await realpath(tmpdir()),path=await mkdtemp(join(parent,'idms-existing-'));t.after(async()=>{const rel=relative(parent,resolve(path));assert(!isAbsolute(rel)&&!rel.startsWith('..')&&rel.startsWith('idms-existing-'));await rm(path,{recursive:true});});return path;}
 test('all ordinary entries refuse absent binding before child execution or configuration creation',async t=>{
@@ -80,4 +82,16 @@ test('actual AI existing-only entry rejects absent store without creating direct
  const dir=await fixture(t),config=join(dir,'ai.json'),data=join(dir,'data');await writeFile(config,JSON.stringify({modelUrl:'http://127.0.0.1:11435',model:{name:'qwen3:4b',digest:'sha256:'+'a'.repeat(64)},dataDirectory:data,tenants:{qa:{serviceToken:'x'.repeat(40)}}}));
  try{await exec(process.execPath,[join(project,'services/ai-gateway/index.ts')],{cwd:dir,env:{...process.env,IDMS_AI_GATEWAY_CONFIG:config,IDMS_EXISTING_ONLY:'1'},windowsHide:true});assert.fail();}catch(e){assert.equal(e.code,1);}
  await assert.rejects(access(data),{code:'ENOENT'});
+});
+test('recovery CLI rejects arbitrary paths, extra actions and missing/invalid operation identity',()=>{
+ for(const args of [[],['--apply'],['--plan','--apply'],['--status','../outside'],['--export','C:/private'],['--plan','--password','secret']])assert.throws(()=>recoveryArguments(args));
+ assert.deepEqual(recoveryArguments(['--inspect']),{action:'--inspect'});assert.deepEqual(recoveryArguments(['--prepare-database']),{action:'--prepare-database'});const id=randomUUID();assert.deepEqual(recoveryArguments(['--status',id]),{action:'--status',operationId:id});
+});
+test('recovery writer gate requires all identities terminal and all actual endpoints absent',async()=>{
+ const platform={latest:{services:Object.fromEntries(['main','edge','simulator'].map((name,i)=>[name,{process:{pid:100+i,born:'2026-11-01T00:00:00Z',executable:'node.exe'}}]))}},seen=[];
+ const result=await assertRecoveryWritersStopped(platform,{facts:async id=>{seen.push(id);return null;},portOccupied:async()=>false});assert.equal(result.length,3);assert.deepEqual(seen,[100,101,102]);assert(result.every(r=>r.terminalObserved));
+ await assert.rejects(assertRecoveryWritersStopped(platform,{facts:async id=>({pid:id,born:'2026-11-01T00:00:00Z',executable:'node.exe'}),portOccupied:async()=>false}),{code:'RECOVERY_WRITER_STILL_LIVE'});
+ await assert.rejects(assertRecoveryWritersStopped(platform,{facts:async id=>({pid:id,born:'different',executable:'node.exe'}),portOccupied:async()=>false}),{code:'RECOVERY_WRITER_PID_REUSED'});
+ await assert.rejects(assertRecoveryWritersStopped(platform,{facts:async()=>null,portOccupied:async port=>port===4014}),{code:'RECOVERY_WRITER_ENDPOINT_OCCUPIED'});
+ await assert.rejects(assertRecoveryWritersStopped({latest:{}},{facts:async()=>null,portOccupied:async()=>false}),{code:'RECOVERY_WRITER_PROVENANCE_REQUIRED'});
 });

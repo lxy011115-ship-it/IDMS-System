@@ -8,8 +8,9 @@ import {appendAudit,verifyAuditChain} from '../../server/audit.ts';
 import {emptyImports} from '../../server/imports.ts';
 import {roleLayout,migrateTenant,businessRuntime} from '../database-migrations.mjs';
 import {writePrivate} from '../keycloak-local.mjs';
-export async function createCpuReceiverQa(history){
- const main=JSON.parse((await readFile('.local/postgres-runtime.json','utf8')).replace(/^\uFEFF/,'')),nonce=randomUUID().replaceAll('-','').slice(0,12),base=resolve('.local'),directory=join(base,'canonical-receiver-qa-'+nonce);assert.ok(directory.startsWith(base+sep));await mkdir(directory,{recursive:false});
+export async function createCpuReceiverQa(history,{authority}={}){
+ const main=authority||JSON.parse((await readFile('.local/postgres-runtime.json','utf8')).replace(/^\uFEFF/,''));assert(Number.isSafeInteger(history)&&history>=0&&history<=100000);assert(main.host==='127.0.0.1'&&Number.isInteger(main.port)&&typeof main.bootstrapPassword==='string');
+ const nonce=randomUUID().replaceAll('-','').slice(0,12),base=resolve('.local'),directory=join(base,'canonical-receiver-qa-'+nonce);assert.ok(directory.startsWith(base+sep));await mkdir(directory,{recursive:false});
  const admin=new pg.Client({host:main.host,port:main.port,user:'idms_bootstrap',password:main.bootstrapPassword,database:'postgres'}),config={host:main.host,port:main.port,tenants:{},businessRoles:{}},dbPins=new Map(),rolePins=new Map(),files=[];await admin.connect();
  const save=async(name,value)=>{const file=join(directory,name);await writePrivate(file,JSON.stringify(value));files.push(file);return file;};
  const capture=async()=>{for(const [tenant,a]of Object.entries(config.tenants)){const r=config.businessRoles[tenant];for(const name of [a.user,r.owner,r.migrator.user,r.backup.user]){const row=(await admin.query('SELECT oid::text FROM pg_roles WHERE rolname=$1',[name])).rows[0];if(row){if(rolePins.has(name))assert.equal(row.oid,rolePins.get(name));else rolePins.set(name,row.oid);}}}};

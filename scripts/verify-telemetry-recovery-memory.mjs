@@ -15,9 +15,11 @@ import {tenantWorkspace,workspacePayload} from '../server/tenant-workspace.ts';
 import {canonicalDigest} from '../server/canonical-state.ts';
 import {verifyPostImage} from '../server/write-postimage.ts';
 import {memoryTask,resident,limits} from '../server/capacity.ts';
+import {runtimeSourceEvidence} from './existing-platform-binding.mjs';
 
 const bin=process.env.IDMS_QA_PG_BIN||join(process.env.LOCALAPPDATA||'','IDMS/runtime/pgsql/bin');
 const cluster=await createOwnedPlatformPgQaV1(bin),report={format:1,passed:false,syntheticOnly:true,enterpriseDml:0,taskBytes:limits.taskBytes,cases:[],cluster:cluster.nonce};let c;
+report.sourceBefore=await runtimeSourceEvidence();
 const path=join(cluster.work,'telemetry-memory-verification.json');
 function event(holder,n){return appendAudit(holder,{tenantId:'sandbox',objectType:'TELEMETRY_EVENT',objectId:randomUUID(),action:n>=75171?'TELEMETRY_REJECTED':'TELEMETRY_STORED',actorType:'INTERFACE',actorId:'qa-synthetic-edge',correlationId:randomUUID(),metadata:{inputDigest:canonicalDigest({synthetic:n}),origin:'SIMULATOR',deviceCode:'SIM-CNC-01',mapVersion:'cnc-simulator-1',pointId:n>=75171?null:randomUUID(),...(n>=75171?{reason:'SEQUENCE_CONFLICT'}:{})}});}
 async function seed(total){
@@ -61,6 +63,6 @@ try{
  await c.query(businessSchema);await c.query(projectionSchema);await c.query(entitySchema);
  await seed(85171);await transaction(85171,true);await transaction(85171);
  const after=await memoryTask(()=>readEntities(c,'sandbox'),true);assert.equal(after.payload.audits.length,85172);assert.equal(canonicalDigest(after.payload),(await c.query('SELECT payload_digest FROM business_state')).rows[0].payload_digest);
- report.fullDigestAndAuditChainVerified=true;report.watermarks=resident.watermarks();report.finalAccountedBytes=resident.snapshot().total;report.passed=true;
+ report.fullDigestAndAuditChainVerified=true;report.watermarks=resident.watermarks();report.finalAccountedBytes=resident.snapshot().total;report.sourceAfter=await runtimeSourceEvidence();assert.equal(report.sourceAfter.digest,report.sourceBefore.digest);report.passed=true;
 }catch(error){report.failure={code:error.code||null,message:String(error.message),stack:String(error.stack)};process.exitCode=1;}
 finally{await c?.end();await cluster.stop();report.ownedPostgresNormalStop=true;report.observedAt=new Date().toISOString();await writeFile(path,JSON.stringify(report,null,2)+'\n',{mode:0o600});console.log(JSON.stringify({passed:report.passed,evidence:resolve(path),failure:report.failure?{code:report.failure.code,message:report.failure.message}:undefined}));}
