@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T07:37:45.751Z",
+  "createdAt": "2026-11-05T08:24:12.570Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 17644,
-      "sha256": "b31e00a78afed7d5869b227fff700b50a02cc9bd335f536fc2318de65335dc50",
+      "bytes": 18134,
+      "sha256": "a8af1405acb679486d662cde12073ea1737b3db6e52ab7ca6f681ccb2fe64aa9",
       "mode": 438
     },
     {
@@ -1737,6 +1737,12 @@
       "mode": 438
     },
     {
+      "name": "docs/java-identity-compatibility-2026-11-05.md",
+      "bytes": 5434,
+      "sha256": "e793c3112937cb6544245b9d6b503fea24cff5e1a74cc655d7af7ffcad2a5925",
+      "mode": 438
+    },
+    {
       "name": "docs/java-workflow-compatibility-2026-11-05.md",
       "bytes": 4636,
       "sha256": "6d2a261fa899898b72e366a893277f69619cd07b3a2f4dc5bbdc372de75dbbcf",
@@ -2134,8 +2140,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 8810,
-      "sha256": "30ed79f1e97f4424080ad153823684cef6736cbb36b774a45d122e700030d0d6",
+      "bytes": 9233,
+      "sha256": "cf6b6a9ed52f8b4e0e6a8c31d6d14462692315e7068a5dc3915a694ccad2ce70",
       "mode": 438
     },
     {
