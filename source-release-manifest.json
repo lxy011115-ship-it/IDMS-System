@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T03:34:23.682Z",
+  "createdAt": "2026-11-05T04:05:37.561Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 14232,
-      "sha256": "366d4a38e24c57255865eb33d324a8b09b280a2030d6cbf342b055a88dd62d9b",
+      "bytes": 14594,
+      "sha256": "b90d00ab7411cb120f1f20bdc7157c1c8d18762eb7ec3c541772e5f39e2e286a",
       "mode": 438
     },
     {
@@ -1959,6 +1959,12 @@
       "mode": 438
     },
     {
+      "name": "docs/postgres-patch-candidate-validation-2026-11-05.md",
+      "bytes": 4720,
+      "sha256": "7e5f8a8f66bf020ec6dc17ba980b03be46ae86c3821489719e628a75ba649136",
+      "mode": 438
+    },
+    {
       "name": "docs/predictive-adoption-ui-v4-r2-guide.md",
       "bytes": 2518,
       "sha256": "85662b383eb6afe6e4bf6637ffdf3aebb64e2016d5973e60a0f4374048be657c",
@@ -2092,8 +2098,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 6384,
-      "sha256": "3a464ceae4d0035119400360fa325e18b6521ac0b1dccb57c43c33a6442b0efe",
+      "bytes": 6751,
+      "sha256": "f7724dff49cd679b0617dd4642b6c5fb34b000c0d8dc5507a7cbf6c3e78af51f",
       "mode": 438
     },
     {
