@@ -15,11 +15,14 @@ import {baseRuntimeBinding} from './edge-recovery-binding.mjs';
 import {canonicalEqual} from '../server/canonical-state.ts';
 import {acquireRecoveryCoordinator} from './edge-recovery-coordinator.mjs';
 import {preflightRecoveryStop,stopRecoveryWriters} from './edge-recovery-stop.mjs';
+import {recoveryOperation} from './edge-recovery-operation.mjs';
+import {qualifyRecovery} from './edge-recovery-qualification.mjs';
+import {executeRecovery} from './edge-recovery-execute.mjs';
 const validOperation=id=>typeof id==='string'&&/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/.test(id);
 export function recoveryArguments(args){
  need(Array.isArray(args)&&args.every(a=>typeof a==='string'),'RECOVERY_ARGUMENTS_INVALID');const action=args[0];
  if(['--inspect','--prepare-database','--plan'].includes(action)){need(args.length===1,'RECOVERY_ARGUMENTS_INVALID');return {action};}
- if(['--status','--export','--verify-export','--stop-writers'].includes(action)){need(args.length===2&&validOperation(args[1]),'RECOVERY_OPERATION_REQUIRED');return {action,operationId:args[1]};}
+ if(['--status','--export','--verify-export','--stop-writers','--qualify','--apply','--resume'].includes(action)){need(args.length===2&&validOperation(args[1]),'RECOVERY_OPERATION_REQUIRED');return {action,operationId:args[1]};}
  throw new StartupError('RECOVERY_ACTION_INVALID');
 }
 async function operationDirectory(id){need(validOperation(id),'RECOVERY_OPERATION_REQUIRED');const directory=join(recoveryRoot,id),s=await lstat(directory);need(s.isDirectory()&&!s.isSymbolicLink()&&await realpath(directory)===directory,'RECOVERY_OPERATION_DIRECTORY_INVALID');return directory;}
@@ -48,6 +51,11 @@ export async function edgeRecoveryMain(args){
  const p=await recoveryPlatform({requireCurrentSource:parsed.action!=='--stop-writers'});
  if(parsed.action==='--inspect')return {status:'RECOVERY_INSPECTION',...inspectRecoverySpool(p),readOnly:true};
  const directory=await operationDirectory(parsed.operationId),plan=await jsonFile(join(directory,'plan.private.json'),262144);need(plan.format==='IDMS_EDGE_RECOVERY_PLAN_V2'&&plan.operationId===parsed.operationId&&plan.sourceDigest===spoolSourceDigest(p.source)&&plan.keyDigest===spoolKeyDigest(p.source),'RECOVERY_OPERATION_BINDING_MISMATCH');
+ if(['--qualify','--apply','--resume'].includes(parsed.action)){
+  const context=await recoveryOperation(p,directory),assertStopped=async()=>{const current=await recoveryPlatform();need(canonicalEqual(baseRuntimeBinding(current.binding),context.before),'RECOVERY_EXECUTION_BINDING_CHANGED');await assertRecoveryWritersStopped(current);};
+  const release=await acquireRecoveryCoordinator(coordinatorFile,{operationId:parsed.operationId,purpose:parsed.action==='--qualify'?'QUALIFY':'APPLY',directory,resume:parsed.action!=='--apply',assertSafe:assertStopped});
+  try{return parsed.action==='--qualify'?await qualifyRecovery(context,p,{assertStopped}):await executeRecovery(context,p,{assertStopped});}finally{await release();}
+ }
  if(parsed.action==='--stop-writers'){
   const before=await jsonFile(join(directory,'binding-before.json'),262144);need(canonicalEqual(before,baseRuntimeBinding(p.binding)),'RECOVERY_STOP_INPUT_BINDINGS_CHANGED');
   const reload=async()=>{const current=await recoveryPlatform({requireCurrentSource:false});need(canonicalEqual(current.binding,p.binding)&&canonicalEqual(current.latest,p.latest),'RECOVERY_STOP_DEPLOYMENT_CHANGED');return current;};
@@ -57,7 +65,7 @@ export async function edgeRecoveryMain(args){
    const result=await stopRecoveryWriters(await reload());await privateNewFile(join(directory,'writer-stop-'+randomUUID()+'.private.json'),JSON.stringify({...result,operationId:parsed.operationId,observedAt:new Date().toISOString()},null,2)+'\n');return {...result,operationId:parsed.operationId,sqliteMigrated:false,servicesSwitched:false};
   }finally{await release();}
  }
- if(parsed.action==='--status')return {status:'PLANNED_NOT_APPLIED',operationId:parsed.operationId,current:inspectRecoverySpool(p),servicesSwitched:false};
+ if(parsed.action==='--status'){const current=inspectRecoverySpool(p),applied=p.binding.format===2?p.binding.recovery.operationId:null;return {status:current.spoolVersion!==2?'PLANNED_NOT_APPLIED':applied===parsed.operationId?'RECOVERY_APPLIED':applied?'DIFFERENT_OPERATION_APPLIED':'MIGRATION_PRESENT_VERIFY_COMPLETION',operationId:parsed.operationId,appliedOperationId:applied,bindingVersion:p.binding.format,current,servicesSwitched:false};}
  const target=join(directory,'quarantine.private.ndjson');
  if(parsed.action==='--export')return {status:'PRIVATE_QUARANTINE_EXPORTED',operationId:parsed.operationId,...exportQuarantine(p.spool,p.source,target),snapshotOnly:true};
  return {status:'PRIVATE_QUARANTINE_VERIFIED',operationId:parsed.operationId,...verifyQuarantineExport(target,p.source),snapshotOnly:true};

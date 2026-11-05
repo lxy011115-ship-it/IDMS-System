@@ -88,3 +88,12 @@ export async function recoverStoppedSpool(path:string,source:EdgeSource,proposal
 function proposeFromOpen(db:DatabaseSync,source:EdgeSource,p:SpoolProposal):SpoolProposal{
  const s=snapshot(db,source);return {...p,beforeSequence:s.sequence,afterSequence:Math.max(s.sequence,s.maximum,p.durableSequence),originalCount:s.count,originalDigest:s.digest};
 }
+/** Before activation only: verify the entire unchanged original set after a
+ * committed/unknown maintenance result. Ordinary running spools are not inputs. */
+export function verifyStoppedSpoolRecovery(path:string,source:EdgeSource,proposal:SpoolProposal){
+ const identity=requirePath(path);if(identity.path!==proposal.path||identity.device!==proposal.device||identity.inode!==proposal.inode)throw Error('SPOOL_RECOVERY_FILE_CHANGED');
+ const db=openExistingSqlite(path,'edge',source,{readOnly:true});try{
+  db.exec('BEGIN');if(spoolVersion(db)!==2)throw Error('SPOOL_RECOVERY_RECEIPT_REQUIRED');const receipt=readSpoolReceipt(db,source),s=snapshot(db,source);
+  if(receipt.operationId!==proposal.operationId||receipt.postgresDigest!==proposal.postgresDigest||receipt.originalDigest!==proposal.originalDigest||receipt.originalCount!==proposal.originalCount||receipt.beforeSequence!==proposal.beforeSequence||receipt.durableSequence!==proposal.durableSequence||receipt.sourceDigest!==proposal.sourceDigest||receipt.keyDigest!==proposal.keyDigest||receipt.afterSequence!==proposal.afterSequence||s.digest!==proposal.originalDigest||s.count!==proposal.originalCount||s.sequence!==proposal.afterSequence||Number(db.prepare('SELECT count(*) AS n FROM quarantine').get()?.n)!==0)throw Error('SPOOL_RECOVERY_CONSERVATION_FAILED');return receipt;
+ }finally{if(db.isTransaction)db.exec('ROLLBACK');db.close();}
+}
