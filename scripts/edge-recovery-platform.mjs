@@ -17,8 +17,8 @@ import {assertRegistryCurrent} from '../server/registry-history-sql.ts';
 import {publicRegistry} from '../server/registry-history.ts';
 
 export const recoveryRoot=resolve('.local/edge-recovery'),coordinatorFile=resolve('.local/platform-startup/coordinator.lock');
-export async function recoveryPlatform(){
- const binding=await loadExistingBinding(),telemetry=await jsonFile(binding.files.telemetry.path),business=await jsonFile(binding.files.business.path),database=await jsonFile(binding.files.database.path),latest=await jsonFile('.local/platform-startup/latest.json',262144);
+export async function recoveryPlatform({requireCurrentSource=true}={}){
+ const binding=await loadExistingBinding(undefined,{requireCurrentSource}),telemetry=await jsonFile(binding.files.telemetry.path),business=await jsonFile(binding.files.business.path),database=await jsonFile(binding.files.database.path),latest=await jsonFile('.local/platform-startup/latest.json',262144);
  need(telemetry.version===1&&telemetry.sources?.length===1&&telemetry.sources[0].origin==='SIMULATOR'&&typeof telemetry.edge?.spool==='string','RECOVERY_SINGLE_SIMULATOR_REQUIRED');
  const source=telemetry.sources[0];need(business.host==='127.0.0.1'&&business.host===database.host&&business.port===database.port&&business.tenants[source.tenantId],'RECOVERY_DATABASE_BINDING_INVALID');
  return {binding,telemetry,business,database,latest,source,spool:resolve(telemetry.edge.spool)};

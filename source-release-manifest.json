@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T01:02:33.876Z",
+  "createdAt": "2026-11-05T01:36:57.245Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -3286,8 +3286,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-10-31--telemetry-budget-and-spool-recovery.md",
-      "bytes": 2576,
-      "sha256": "9ce5762648b4547210d47c3b1e3133c7c02080df78f4573436c0bbc9f68d5707",
+      "bytes": 3222,
+      "sha256": "eceb472b7d5332f288f2a2b5aba3bea0723d13612f4a7e68dcf56c18e754c916",
       "mode": 438
     },
     {
@@ -4498,8 +4498,8 @@
     },
     {
       "name": "docs/telemetry-recovery-progress.md",
-      "bytes": 10837,
-      "sha256": "796a11482d96e17e60a8e30c1b187c68e99f87ce467602dccd0d80d51f858921",
+      "bytes": 14091,
+      "sha256": "11f8f3311e28324053d1191bb401ad9060314cc261408c7adb7d6c813ae65d3b",
       "mode": 438
     },
     {
@@ -7887,9 +7887,27 @@
       "mode": 438
     },
     {
+      "name": "scripts/edge-recovery-coordinator.mjs",
+      "bytes": 4815,
+      "sha256": "76247f0ae96c4a9325ab2e4a6ec0f07ce41d4a76cebd06c8b553d5056d2f5954",
+      "mode": 438
+    },
+    {
       "name": "scripts/edge-recovery-platform.mjs",
-      "bytes": 8666,
-      "sha256": "e5179690887fec8fd81fd184a19e2ad4da0d0d82dbde50c164215640bedae166",
+      "bytes": 8728,
+      "sha256": "e3362e9eb73bbe2d9e7f989480d29079acbd8343fff4fbd91e07d2be6548d09f",
+      "mode": 438
+    },
+    {
+      "name": "scripts/edge-recovery-release.mjs",
+      "bytes": 3178,
+      "sha256": "ae1eda2fe18e9402e3c535202d03156fd30db172a443218c34d1389bfe5fc674",
+      "mode": 438
+    },
+    {
+      "name": "scripts/edge-recovery-stop.mjs",
+      "bytes": 2764,
+      "sha256": "18141522ea96fe6fe5c47e16b51b6a0f941574af172842f0cee8e768ef4682a3",
       "mode": 438
     },
     {
@@ -12267,6 +12285,18 @@
       "mode": 438
     },
     {
+      "name": "scripts/fixtures/telemetry-edge-wrapper-qa.mjs",
+      "bytes": 2563,
+      "sha256": "1510d211b5e30b9464feed15be921c11d2ba6aad48bac8e33822a678717c5d2b",
+      "mode": 438
+    },
+    {
+      "name": "scripts/fixtures/telemetry-main-wrapper-qa.mjs",
+      "bytes": 2547,
+      "sha256": "9d9819fe553cd238f13adcaba5a20697eea0ae8039f87158e39f0352397aa688",
+      "mode": 438
+    },
+    {
       "name": "scripts/fixtures/telemetry-map-qa-v2.mjs",
       "bytes": 7796,
       "sha256": "79495623798b6782c45acaf34c4f9c1dd6e3f1bcd6c956ec94da085e0a7c8a22",
@@ -12856,8 +12886,8 @@
     },
     {
       "name": "scripts/owned-node-control.mjs",
-      "bytes": 7386,
-      "sha256": "5cf677d77b48b6dbe48390e59720dc3cca7f85ceffdadd488f5da30f52db87c3",
+      "bytes": 7838,
+      "sha256": "154623709abe2804441d0f13e834a5b37e701ec89e4e826a95790cc725576ec4",
       "mode": 438
     },
     {
@@ -13330,8 +13360,8 @@
     },
     {
       "name": "scripts/recover-edge-spool.mjs",
-      "bytes": 6457,
-      "sha256": "bb466e53e3cfbf2f07ffec93e9cd165578445e1a6913b444174749d78597d6eb",
+      "bytes": 7995,
+      "sha256": "0a6d09766fa58aa66cde75909977eb992505f8921c59538a09989e5f671bf819",
       "mode": 438
     },
     {
@@ -17508,6 +17538,18 @@
       "name": "scripts/verify-telemetry-cpu-profile.mjs",
       "bytes": 9085,
       "sha256": "b40b5c2527e891cbd9d2b162507a82652a3c960dac415d18004358ff2fcad0f6",
+      "mode": 438
+    },
+    {
+      "name": "scripts/verify-telemetry-edge-control.mjs",
+      "bytes": 13398,
+      "sha256": "bb150178e22f5bc2975ea0660ffd3d59df18b3586425dd4080ea3d8a8e30dfd3",
+      "mode": 438
+    },
+    {
+      "name": "scripts/verify-telemetry-main-control.mjs",
+      "bytes": 9320,
+      "sha256": "5b0e267ee33255fc499e55bc130faaa91d5ac84cd83d178a45256088be6025f6",
       "mode": 438
     },
     {
@@ -22401,9 +22443,27 @@
       "mode": 438
     },
     {
+      "name": "tests/edge-recovery-coordinator.test.mjs",
+      "bytes": 5151,
+      "sha256": "7c4666fa1a6c30efdbff817d021c7cdce374b93d88fa5741c1f9dd88daf4a5c7",
+      "mode": 438
+    },
+    {
+      "name": "tests/edge-recovery-release.test.mjs",
+      "bytes": 938,
+      "sha256": "825384b445c66c47768854730a038994ab8c6cdffa88f20c16e2431b445de77a",
+      "mode": 438
+    },
+    {
+      "name": "tests/edge-recovery-stop.test.mjs",
+      "bytes": 4372,
+      "sha256": "0c4cbb3a0a39a30dded45dc17c5117c1b2f03e1a57e6e64f20410e3489eeb4e7",
+      "mode": 438
+    },
+    {
       "name": "tests/existing-platform-startup.test.mjs",
-      "bytes": 12026,
-      "sha256": "5c4bb1812b4cc01a8085fd47d856b5f40a34d2e8b0655b9d389a6ee78b3d442a",
+      "bytes": 12156,
+      "sha256": "27282dd3c18f9a0a58001ce1127969f56c40cf1609401550d5676444170facef",
       "mode": 438
     },
     {

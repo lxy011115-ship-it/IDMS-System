@@ -11,11 +11,15 @@ import {openExistingSqlite} from '../services/existing-sqlite.ts';
 import {proposeSpoolRecovery} from '../services/edge/spool-maintenance.ts';
 import {spoolVersion,spoolStorage,quarantineSummary,spoolSourceDigest,spoolKeyDigest} from '../services/edge/spool-v2.ts';
 import {exportQuarantine,verifyQuarantineExport} from '../services/edge/spool-export.ts';
+import {baseRuntimeBinding} from './edge-recovery-binding.mjs';
+import {canonicalEqual} from '../server/canonical-state.ts';
+import {acquireRecoveryCoordinator} from './edge-recovery-coordinator.mjs';
+import {preflightRecoveryStop,stopRecoveryWriters} from './edge-recovery-stop.mjs';
 const validOperation=id=>typeof id==='string'&&/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/.test(id);
 export function recoveryArguments(args){
  need(Array.isArray(args)&&args.every(a=>typeof a==='string'),'RECOVERY_ARGUMENTS_INVALID');const action=args[0];
  if(['--inspect','--prepare-database','--plan'].includes(action)){need(args.length===1,'RECOVERY_ARGUMENTS_INVALID');return {action};}
- if(['--status','--export','--verify-export'].includes(action)){need(args.length===2&&validOperation(args[1]),'RECOVERY_OPERATION_REQUIRED');return {action,operationId:args[1]};}
+ if(['--status','--export','--verify-export','--stop-writers'].includes(action)){need(args.length===2&&validOperation(args[1]),'RECOVERY_OPERATION_REQUIRED');return {action,operationId:args[1]};}
  throw new StartupError('RECOVERY_ACTION_INVALID');
 }
 async function operationDirectory(id){need(validOperation(id),'RECOVERY_OPERATION_REQUIRED');const directory=join(recoveryRoot,id),s=await lstat(directory);need(s.isDirectory()&&!s.isSymbolicLink()&&await realpath(directory)===directory,'RECOVERY_OPERATION_DIRECTORY_INVALID');return directory;}
@@ -41,9 +45,18 @@ export async function edgeRecoveryMain(args){
  const parsed=recoveryArguments(args);
  if(parsed.action==='--prepare-database')return prepareRecoveryDatabase();
  if(parsed.action==='--plan')return planEdgeRecovery();
- const p=await recoveryPlatform();
+ const p=await recoveryPlatform({requireCurrentSource:parsed.action!=='--stop-writers'});
  if(parsed.action==='--inspect')return {status:'RECOVERY_INSPECTION',...inspectRecoverySpool(p),readOnly:true};
  const directory=await operationDirectory(parsed.operationId),plan=await jsonFile(join(directory,'plan.private.json'),262144);need(plan.format==='IDMS_EDGE_RECOVERY_PLAN_V2'&&plan.operationId===parsed.operationId&&plan.sourceDigest===spoolSourceDigest(p.source)&&plan.keyDigest===spoolKeyDigest(p.source),'RECOVERY_OPERATION_BINDING_MISMATCH');
+ if(parsed.action==='--stop-writers'){
+  const before=await jsonFile(join(directory,'binding-before.json'),262144);need(canonicalEqual(before,baseRuntimeBinding(p.binding)),'RECOVERY_STOP_INPUT_BINDINGS_CHANGED');
+  const reload=async()=>{const current=await recoveryPlatform({requireCurrentSource:false});need(canonicalEqual(current.binding,p.binding)&&canonicalEqual(current.latest,p.latest),'RECOVERY_STOP_DEPLOYMENT_CHANGED');return current;};
+  const release=await acquireRecoveryCoordinator(coordinatorFile,{operationId:parsed.operationId,purpose:'STOP',directory,resume:true,assertSafe:async()=>preflightRecoveryStop(await reload())});
+  try{
+   need((await readdir(directory)).filter(name=>/^writer-stop-[a-f0-9-]{36}\.private\.json$/.test(name)).length<16,'RECOVERY_STOP_HISTORY_REVIEW_REQUIRED');
+   const result=await stopRecoveryWriters(await reload());await privateNewFile(join(directory,'writer-stop-'+randomUUID()+'.private.json'),JSON.stringify({...result,operationId:parsed.operationId,observedAt:new Date().toISOString()},null,2)+'\n');return {...result,operationId:parsed.operationId,sqliteMigrated:false,servicesSwitched:false};
+  }finally{await release();}
+ }
  if(parsed.action==='--status')return {status:'PLANNED_NOT_APPLIED',operationId:parsed.operationId,current:inspectRecoverySpool(p),servicesSwitched:false};
  const target=join(directory,'quarantine.private.ndjson');
  if(parsed.action==='--export')return {status:'PRIVATE_QUARANTINE_EXPORTED',operationId:parsed.operationId,...exportQuarantine(p.spool,p.source,target),snapshotOnly:true};

@@ -1,0 +1,46 @@
+// Real main entry, HTTP, MQTT and locked PostgreSQL in a fresh owned cluster.
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import {spawn} from 'node:child_process';
+import {randomBytes,createHash} from 'node:crypto';
+import {createServer} from 'node:net';
+import pg from 'pg';
+import mqtt from 'mqtt';
+import {createOwnedPlatformPgQaV1} from './fixtures/owned-platform-pg-v1-qa.mjs';
+import {createCpuReceiverQa} from './fixtures/telemetry-cpu-qa-runtime.mjs';
+import {createTelemetryRecoveryBrokerQa} from './fixtures/telemetry-recovery-broker-qa.mjs';
+import {privateDirectory} from './backup-support.mjs';
+import {processFacts,sameProcess,occupied} from './existing-platform-process.mjs';
+import {stopControlledNode} from './owned-node-control.mjs';
+import {runtimeSourceEvidence} from './existing-platform-binding.mjs';
+import {EdgeSpool} from '../services/edge/spool.ts';
+import {topicFor} from '../integrations/telemetry.ts';
+import {readEntities} from '../server/entity-repository.ts';
+import {canonicalDigest} from '../server/canonical-state.ts';
+assert.equal(process.platform,'win32');const nonce=randomBytes(6).toString('hex'),directory=resolve('work/telemetry-main-control-20261105',nonce);await privateDirectory(directory);
+const report={format:'IDMS_ACTUAL_MAIN_CONTROL_QA_V1',passed:false,syntheticOnly:true,originalDatabaseContacted:false,checks:[],cleanup:{}},caseFiles=['scripts/verify-telemetry-main-control.mjs','scripts/fixtures/telemetry-main-wrapper-qa.mjs','scripts/owned-node-control.mjs','scripts/existing-platform-child.mjs','scripts/existing-platform-process.mjs','scripts/fixtures/owned-platform-pg-v1-qa.mjs','scripts/fixtures/telemetry-cpu-qa-runtime.mjs','scripts/fixtures/telemetry-recovery-broker-qa.mjs'];
+const evidence=async()=>({runtime:await runtimeSourceEvidence(),caseSourcePins:await Promise.all(caseFiles.map(async path=>({path,sha256:createHash('sha256').update(await readFile(path)).digest('hex')})))});report.sourceBefore=await evidence();
+const wait=ms=>new Promise(ok=>setTimeout(ok,ms));async function until(task,label,budget=30000){const start=performance.now();for(;;){const result=await task();if(result)return result;if(performance.now()-start>=budget)throw Error('QA_OBSERVATION_UNCONFIRMED_'+label);await wait(100);}}
+let cluster,qa,broker,publisher,oracle,locker,spool,wrapper,terminal,control,stopped=false,httpRequest,httpSettled=false;
+async function closeMain(){if(stopped||!control)return;const end=await stopControlledNode(control,{budgetMs:30000});assert.equal(end.status,'NORMAL_EXIT');assert.deepEqual(await terminal,{exitCode:0,signal:null});const proof=JSON.parse(await readFile(join(directory,'terminal.private.json'),'utf8'));assert(proof.end.stdoutClosed&&proof.end.stderrClosed&&proof.final.drainCompleted);stopped=true;report.main={end,proof};}
+try{
+ cluster=await createOwnedPlatformPgQaV1(process.env.IDMS_QA_PG_BIN);qa=await createCpuReceiverQa(1000,{authority:cluster.authority});const source=JSON.parse(await readFile(qa.telemetryFile,'utf8')).sources[0];broker=await createTelemetryRecoveryBrokerQa(directory,process.env.IDMS_QA_MQTT_BIN,source);await broker.ready();
+ const telemetry=join(directory,'telemetry.private.json');await writeFile(telemetry,JSON.stringify({version:1,mqtt:{url:broker.url,...broker.core},sources:[source]}),{flag:'wx',mode:0o600});const listener=createServer();await new Promise(ok=>listener.listen(0,'127.0.0.1',ok));const port=listener.address().port;await new Promise(ok=>listener.close(ok));assert(![4010,8081,4014,4015,4841].includes(port));const base='http://127.0.0.1:'+port,token=randomBytes(32).toString('base64url');
+ await writeFile(join(directory,'input.private.json'),JSON.stringify({format:'IDMS_OWNED_MAIN_CONTROL_QA_V1',business:qa.businessFile,telemetry,nonce,token,port}),{flag:'wx',mode:0o600});wrapper=spawn(process.execPath,[resolve('scripts/fixtures/telemetry-main-wrapper-qa.mjs'),directory],{cwd:resolve('.'),env:{...process.env,NODE_OPTIONS:''},windowsHide:true,detached:true,stdio:'ignore'});let ended;terminal=new Promise(ok=>{wrapper.once('error',error=>ok({error:error.code}));wrapper.once('close',(exitCode,signal)=>{ended={exitCode,signal};ok(ended);});});
+ control=await until(async()=>{try{return JSON.parse(await readFile(join(directory,'capability.private.json'),'utf8')).control;}catch(e){if(e.code!=='ENOENT')throw e;assert(!ended);return false;}},'CAPABILITY');
+ const status=async()=>{try{const r=await fetch(base+'/api/v1/runtime/status',{headers:{Authorization:'Bearer '+token},signal:AbortSignal.timeout(2000)});assert(r.ok);return await r.json();}catch(e){assert(!ended,'MAIN_EXITED_BEFORE_READY');return false;}};await until(async()=>{const s=await status();return s?.startup?.telemetryConnected&&s.startup.telemetrySubscribed;},'MAIN_MQTT_READY');report.checks.push('ACTUAL_MAIN_LOADS_OWNED_APP_ROLES_AND_SUBSCRIBES_MQTT');
+ oracle=new pg.Client(qa.account);await oracle.connect();locker=new pg.Client(qa.account);await locker.connect();await locker.query('BEGIN');await locker.query('LOCK TABLE business_state IN ACCESS EXCLUSIVE MODE');
+ httpRequest=fetch(base+'/api/v1/overview',{headers:{'X-Tenant-Id':'sandbox','X-Actor-Id':'demo.auditor','X-Actor-Type':'USER'},signal:AbortSignal.timeout(15000)}).then(async r=>({status:r.status,body:await r.json()})).finally(()=>{httpSettled=true;});void httpRequest.catch(()=>{});
+ await until(async()=>(await oracle.query("SELECT count(*)::int AS n FROM pg_stat_activity WHERE datname=$1 AND application_name='idms-business' AND wait_event_type='Lock'",[qa.account.database])).rows[0].n>0,'REAL_HTTP_WAITING_FOR_SQL_LOCK');
+ spool=new EdgeSpool(join(directory,'pending.sqlite'),source);const event=spool.append({tagCode:'vibration_rms',nodeId:'ns=1;s=vibration_rms',unit:'mm/s',eventTime:new Date().toISOString(),value:2,quality:'GOOD'}),wire=spool.db.prepare('SELECT payload FROM pending WHERE event_id=?').get(event.eventId).payload;
+ publisher=mqtt.connect(broker.url,{...broker.edge,clientId:'owned-main-edge-'+nonce,protocolVersion:5,reconnectPeriod:0,connectTimeout:3000});publisher.on('error',()=>{});await new Promise((ok,no)=>{publisher.once('connect',ok);publisher.once('error',no);});await new Promise((ok,no)=>publisher.publish(topicFor(source,'telemetry'),wire,{qos:1},error=>error?no(error):ok()));await until(async()=>{const s=await status();return s?.startup?.telemetryIntake?.counters.received===1&&s.startup.telemetryIntake.stage==='TRANSACTION';},'REAL_MQTT_JOB_ADMITTED');
+ const request=await stopControlledNode(control,{budgetMs:0});assert.equal(request.status,'UNCONFIRMED');await until(async()=>JSON.parse(await readFile(control.statusFile,'utf8')).phase==='ACCEPTED','STOP_ACCEPTED');assert(sameProcess(control.process,await processFacts(control.process.pid)));assert.equal(httpSettled,false);assert.equal((await oracle.query('SELECT count(*)::int AS n FROM telemetry_receipts')).rows[0].n,0);report.checks.push('ACTUAL_STOP_WAITS_FOR_ORIGINAL_HTTP_AND_ADMITTED_TELEMETRY_WITHOUT_EARLY_COMMIT');
+ await locker.query('ROLLBACK');await locker.end();locker=undefined;const response=await httpRequest;assert.equal(response.status,200);await closeMain();assert.equal(await occupied(port),false);assert.equal(spool.stats().pending,1);assert.equal(spool.db.prepare('SELECT payload FROM pending WHERE event_id=?').get(event.eventId).payload,wire);
+ const receipt=(await oracle.query('SELECT status FROM telemetry_receipts WHERE event_id=$1',[event.eventId])).rows;assert.equal(receipt.length,1);assert.equal(receipt[0].status,'STORED');const payload=await readEntities(oracle,'sandbox');assert.equal(canonicalDigest(payload.payload),(await oracle.query('SELECT payload_digest FROM business_state WHERE tenant_id=$1',['sandbox'])).rows[0].payload_digest);assert.equal((await oracle.query("SELECT count(*)::int AS n FROM pg_stat_activity WHERE application_name='idms-business' AND datname=$1",[qa.account.database])).rows[0].n,0);report.checks.push('ACTUAL_MAIN_NORMAL_EXIT_DRAINS_HTTP_AND_SQL_COMMIT_CLOSES_POOLS_AND_RETAINS_UNACKNOWLEDGED_EDGE_ORIGINAL');report.passed=true;
+}catch(error){report.failure={message:error.message,stack:String(error.stack)};process.exitCode=1;}
+finally{
+ if(locker){await locker.query('ROLLBACK');await locker.end();}if(httpRequest)await httpRequest.catch(()=>{});try{await closeMain();}catch(error){report.cleanup.mainUnconfirmed=error.message;report.passed=false;process.exitCode=1;}
+ if(publisher)await new Promise(ok=>publisher.end(false,{},ok));spool?.close();await oracle?.end();if(broker)report.cleanup.broker=await broker.close();if(qa)await qa.close();if(cluster){await cluster.stop();report.ownedPg={nonce:cluster.nonce,work:cluster.work,source:cluster.source,systemIdentifier:cluster.systemIdentifier,sourceControl:cluster.sourceControl};report.cleanup.ownedPostgresNormalStop=true;}
+ report.sourceAfter=await evidence();assert.deepEqual(report.sourceBefore,report.sourceAfter);report.observedAt=new Date().toISOString();await writeFile(join(directory,'verification.json'),JSON.stringify(report,null,2),{flag:'wx',mode:0o600});console.log(JSON.stringify({passed:report.passed,checks:report.checks,evidence:join(directory,'verification.json'),failure:report.failure?.message}));
+}

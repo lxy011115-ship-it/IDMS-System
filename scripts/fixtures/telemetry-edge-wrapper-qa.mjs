@@ -1,0 +1,20 @@
+// Actual edge/simulator entry points, with the ordinary detached creator/control path.
+import assert from 'node:assert/strict';
+import {readFile,writeFile,open} from 'node:fs/promises';
+import {writeFileSync} from 'node:fs';
+import {join,resolve,relative,isAbsolute} from 'node:path';
+import {spawnControlledNode,attachNodeControl} from '../owned-node-control.mjs';
+import {processFacts} from '../existing-platform-process.mjs';
+const [directory]=process.argv.slice(2),input=JSON.parse(await readFile(join(directory,'input.private.json'),'utf8'));
+assert(['edge','simulator'].includes(input.service));assert.equal(input.format,'IDMS_OWNED_EDGE_CONTROL_QA_V1');
+const telemetry=JSON.parse(await readFile(input.config,'utf8')),rel=relative(resolve('work/telemetry-edge-control-20261105'),input.config);
+assert(!isAbsolute(rel)&&!rel.startsWith('..')&&telemetry.sources.length===1&&telemetry.sources[0].origin==='SIMULATOR');
+process.on('uncaughtExceptionMonitor',error=>writeFileSync(join(directory,'failure.private.json'),JSON.stringify({code:error.code||null,message:error.message})));
+const command={executable:process.execPath,args:[resolve(input.service==='edge'?'services/edge/index.ts':'services/edge/simulator.ts')],cwd:resolve('.'),env:{...process.env,NODE_OPTIONS:'',IDMS_TELEMETRY_CONFIG:input.config,IDMS_EDGE_ID:telemetry.sources[0].edgeId,IDMS_EXISTING_ONLY:'1',APPDATA:join(directory,'appdata'),LOCALAPPDATA:join(directory,'localappdata'),XDG_CONFIG_HOME:join(directory,'config')}};
+const log=await open(join(directory,'service.private.log'),'wx',0o600),{child,nonce}=spawnControlledNode(command);let retained=0,writes=Promise.resolve();
+for(const stream of [child.stdout,child.stderr])stream.on('data',bytes=>{const part=Buffer.from(bytes.subarray(0,Math.max(0,8192-retained)));retained+=part.length;if(part.length)writes=writes.then(()=>log.write(part));});
+const terminal=new Promise(resolve=>{child.once('error',error=>resolve({error:error.code}));child.once('close',(exitCode,signal)=>resolve({exitCode,signal,stdoutClosed:child.stdout.closed,stderrClosed:child.stderr.closed}));});
+const identity=await processFacts(child.pid),controller=await attachNodeControl(child,nonce,directory,input.service,identity);
+await writeFile(join(directory,'capability.private.json'),JSON.stringify({control:controller.control}),{flag:'wx',mode:0o600});
+const end=await terminal;await writes;await log.close();const final=await controller.close(end);
+await writeFile(join(directory,'terminal.private.json'),JSON.stringify({end,final}),{flag:'wx',mode:0o600});

@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,open} from 'node:fs/promises';
+import {writeFileSync} from 'node:fs';
+import {join,resolve,relative,isAbsolute} from 'node:path';
+import {spawnControlledNode,attachNodeControl} from '../owned-node-control.mjs';
+import {processFacts} from '../existing-platform-process.mjs';
+const [directory]=process.argv.slice(2),input=JSON.parse(await readFile(join(directory,'input.private.json'),'utf8')),rel=relative(resolve('work/telemetry-main-control-20261105'),directory);
+assert(!isAbsolute(rel)&&!rel.startsWith('..'));assert.equal(input.format,'IDMS_OWNED_MAIN_CONTROL_QA_V1');const business=JSON.parse(await readFile(input.business,'utf8'));assert.equal(business.host,'127.0.0.1');assert(Object.values(business.tenants).every(a=>/^idms_cpucmpqa_(acme|sandbox)_[a-f0-9]{12}$/.test(a.database)));
+process.on('uncaughtExceptionMonitor',error=>writeFileSync(join(directory,'failure.private.json'),JSON.stringify({code:error.code||null,message:error.message})));
+const env=Object.fromEntries(Object.entries(process.env).filter(([key])=>!/^IDMS_|^NODE_ENV$|^NODE_OPTIONS$|^PORT$/.test(key))),command={executable:process.execPath,args:[resolve('server/index.ts')],cwd:resolve('.'),env:{...env,NODE_OPTIONS:'',NODE_ENV:'development',PORT:String(input.port),IDMS_AUTH_MODE:'demo',IDMS_STORAGE:'postgres',IDMS_POSTGRES_CONFIG:input.business,IDMS_TELEMETRY_CONFIG:input.telemetry,IDMS_DEMO_NAMESPACE:'owned-main-'+input.nonce,IDMS_SERVICE_TOKEN:input.token}};
+const log=await open(join(directory,'service.private.log'),'wx',0o600),{child,nonce}=spawnControlledNode(command);let retained=0,writes=Promise.resolve();for(const stream of [child.stdout,child.stderr])stream.on('data',bytes=>{const part=Buffer.from(bytes.subarray(0,Math.max(0,8192-retained)));retained+=part.length;if(part.length)writes=writes.then(()=>log.write(part));});
+const terminal=new Promise(ok=>{child.once('error',error=>ok({error:error.code}));child.once('close',(exitCode,signal)=>ok({exitCode,signal,stdoutClosed:child.stdout.closed,stderrClosed:child.stderr.closed}));}),identity=await processFacts(child.pid),controller=await attachNodeControl(child,nonce,directory,'main',identity);
+await writeFile(join(directory,'capability.private.json'),JSON.stringify({control:controller.control}),{flag:'wx',mode:0o600});const end=await terminal;await writes;await log.close();const final=await controller.close(end);await writeFile(join(directory,'terminal.private.json'),JSON.stringify({end,final}),{flag:'wx',mode:0o600});
