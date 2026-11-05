@@ -10,7 +10,6 @@ import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.task.Comment;
-import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.task.api.Task;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,18 +49,19 @@ public class WorkflowController {
             try {
             boolean initialize=startupMode.equals("initialize");
             if(initialize){
+                WorkflowStartup.requireEmptyInitializationTarget(sql);
                 sql.execute("CREATE TABLE IF NOT EXISTS idms_workflow_cases (entity_id text PRIMARY KEY,process_id text UNIQUE,version integer NOT NULL,state text NOT NULL,assignee text NOT NULL,evidence_digest text,submitted_by text)");
                 sql.execute("CREATE TABLE IF NOT EXISTS idms_workflow_commands (command_id uuid PRIMARY KEY,request_digest text NOT NULL,response jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT now())");
             }
             WorkflowStartup.validateTables(sql);
-            var c=new SpringProcessEngineConfiguration();c.setDataSource(source);c.setTransactionManager(tm);c.setDatabaseSchemaUpdate(initialize?"true":"false");c.setAsyncExecutorActivate(false);c.setHistory("full");c.setEngineName("idms-"+tenantId);c.setDisableIdmEngine(true);
+            var c=new WorkflowEngineConfiguration();c.setDataSource(source);c.setTransactionManager(tm);c.setDatabaseSchemaUpdate(initialize?"true":"false");c.setAsyncExecutorActivate(false);c.setHistory("full");c.setEngineName("idms-"+tenantId);c.setDisableIdmEngine(true);
             engine=c.buildProcessEngine();
             if(initialize)engine.getRepositoryService().createDeployment().tenantId(tenantId).name("idms-maintenance-1.0.0").enableDuplicateFiltering().addClasspathResource("maintenance-v1.bpmn20.xml").deploy();
             ProcessDefinition definition=WorkflowStartup.definition(engine,tenantId);
             tenants.put(tenantId,new Tenant(engine,sql,new TransactionTemplate(tm),source,("Bearer "+a.serviceToken()).getBytes(StandardCharsets.UTF_8),definition.getId(),a.recoveryReadToken()==null?null:("Bearer "+a.recoveryReadToken()).getBytes(StandardCharsets.UTF_8),a.recoveryAuthorityId()));
             } catch(Exception failure) {
                 if(engine!=null)engine.close();source.close();close();
-                throw new IllegalStateException("WORKFLOW_EXISTING_DEPLOYMENT_REJECTED");
+                throw new IllegalStateException("WORKFLOW_EXISTING_DEPLOYMENT_REJECTED:"+WorkflowStartup.rejectionCategory(failure));
             }
         }
     }

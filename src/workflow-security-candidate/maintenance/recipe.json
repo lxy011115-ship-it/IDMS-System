@@ -1,0 +1,46 @@
+{
+  "format": 1,
+  "id": "IDMS_FLOWABLE_POSTGRES_7202_8000_V1",
+  "from": "7.2.0.2",
+  "to": "8.0.0.0",
+  "bpmnSha256": "847ed336a71628dd4b1ff67ad0a670935ee0bc86d0343b9f69dad3beeb93ccc3",
+  "ordinaryStartupMayMigrate": false,
+  "steps": [
+    {
+      "component": "history",
+      "file": "sql/history-7202-to-8000.sql",
+      "bytes": 126,
+      "sha256": "13692ebec9d8bc6525a1e16e648170cd416ecc52fbcb60c17b29b619e6ccc348",
+      "upstreamLibrary": "BOOT-INF/lib/flowable-engine-8.0.0.jar",
+      "upstreamLibrarySha256": "e81615c4c2f7332c184f31d362e34a807c6c745e6b9da745e73b2d3adb4f5850",
+      "upstreamResource": "org/flowable/db/upgrade/flowable.postgres.upgradestep.7202.to.8000.history.sql"
+    },
+    {
+      "component": "common",
+      "file": "sql/common-7202-to-8000.sql",
+      "bytes": 85,
+      "sha256": "076b231e71146a5760b77a04dd4979a093302c16423f88b6e10bfb10ebadfe7e",
+      "upstreamLibrary": "BOOT-INF/lib/flowable-engine-common-8.0.0.jar",
+      "upstreamLibrarySha256": "05fc5f40f78d1abb4e584b3f0c7a93d16141d678644185f5ace58bcae0841b5b",
+      "upstreamResource": "org/flowable/common/db/upgrade/flowable.all.upgradestep.7202.to.8000.common.sql"
+    },
+    {
+      "component": "eventregistry",
+      "file": "sql/eventregistry-7202-to-8000.sql",
+      "bytes": 92,
+      "sha256": "0ffaa97d9a7c1d9b6aa5b083a22184872f448372edd3e8aa2b48df06292a9731",
+      "upstreamLibrary": "BOOT-INF/lib/flowable-event-registry-8.0.0.jar",
+      "upstreamLibrarySha256": "d2776d7caeb9940cafeb2218e68558f13029c25233eebc63cb22c5f7db8c65bb",
+      "upstreamResource": "org/flowable/eventregistry/db/upgrade/flowable.all.upgradestep.7202.to.8000.eventregistry.sql"
+    },
+    {
+      "component": "engine",
+      "file": "sql/engine-7202-to-8000.sql",
+      "bytes": 78,
+      "sha256": "9c498f84e9c9e82d82d32e791c7235e507edb74ab2dded86448aabff56f0e2d6",
+      "upstreamLibrary": "BOOT-INF/lib/flowable-engine-8.0.0.jar",
+      "upstreamLibrarySha256": "e81615c4c2f7332c184f31d362e34a807c6c745e6b9da745e73b2d3adb4f5850",
+      "upstreamResource": "org/flowable/db/upgrade/flowable.postgres.upgradestep.7202.to.8000.engine.sql"
+    }
+  ]
+}

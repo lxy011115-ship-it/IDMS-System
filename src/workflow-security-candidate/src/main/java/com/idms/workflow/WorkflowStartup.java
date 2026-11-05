@@ -14,6 +14,17 @@ final class WorkflowStartup {
     static final String KEY = "idmsMaintenanceV1";
     static final int VERSION = 1;
     static String engineVersion() { return ProcessEngine.VERSION; }
+    static String rejectionCategory(Throwable failure) {
+        var seen = Collections.newSetFromMap(new IdentityHashMap<Throwable,Boolean>());
+        for (Throwable cause=failure; cause!=null && seen.size()<16 && seen.add(cause); cause=cause.getCause()) {
+            if (cause instanceof org.flowable.common.engine.api.FlowableWrongDbException)
+                return "WORKFLOW_SCHEMA_VERSION_MISMATCH";
+            if (cause instanceof IllegalStateException && "WORKFLOW_INITIALIZATION_REQUIRES_EMPTY_SCHEMA".equals(cause.getMessage()))
+                return "WORKFLOW_INITIALIZATION_REQUIRES_EMPTY_SCHEMA";
+        }
+        // Do not copy exception messages, SQL, account names, or configuration into startup diagnostics.
+        return "WORKFLOW_ENGINE_STARTUP_FAILED";
+    }
     static String mode(String value) {
         if (value == null || value.equals("runtime")) return "runtime";
         if (value.equals("initialize")) return value;
@@ -29,6 +40,11 @@ final class WorkflowStartup {
             if (bytes.length > 65536) throw new IllegalStateException("WORKFLOW_RESOURCE_SIZE");
             return bytes;
         }
+    }
+    static void requireEmptyInitializationTarget(JdbcTemplate sql) {
+        Boolean occupied = sql.queryForObject("SELECT EXISTS(SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname NOT LIKE 'pg_%' AND n.nspname<>'information_schema')", Boolean.class);
+        if (!Boolean.FALSE.equals(occupied))
+            throw new IllegalStateException("WORKFLOW_INITIALIZATION_REQUIRES_EMPTY_SCHEMA");
     }
     static void validateTables(JdbcTemplate sql) {
         Map<String,List<String>> expected = Map.of(

@@ -4,7 +4,7 @@
 
 新增[真实AI网关非空回执与加密恢复](ai-nonempty-recovery-2026-11-05.md)：原网关及原令牌、还原的真实模型和D盘程序副本，完成并发幂等/企业隔离/签名校验、两企业非空SQLite检查点实际加密还原、原回执重放及恢复后新请求；两个网关和模型均正常退出。尚未覆盖主站AI outbox投影及全平台一致恢复。
 
-用户已批准[工作流安全维护路线A](superpowers/specs/2026-11-05--workflow-security-maintenance.md)，按[实施计划](superpowers/plans/2026-11-05--workflow-security-maintenance.md)在[独立候选源码](../src/workflow-security-candidate/README.md)推进Boot 4/Flowable 8/Jackson 3。[首批构建报告](workflow-security-candidate-2026-11-05.md)记录本机6项测试及打包通过，GitHub候选构建也已成功；原运行目录、JAR和服务保持。数据库显式迁移、九路由及回退仍须实际验证，不能以代码迁移或构建替代。
+用户已批准[工作流安全维护路线A](superpowers/specs/2026-11-05--workflow-security-maintenance.md)，按[实施计划](superpowers/plans/2026-11-05--workflow-security-maintenance.md)在[独立候选源码](../src/workflow-security-candidate/README.md)推进Boot 4/Flowable 8/Jackson 3。[最新报告](workflow-security-upgrade-and-recovery-2026-11-05.md)记录实际引擎兼容修复、11项测试、双企业显式迁移、九类路由业务、升级后恢复及原JAR档案回退；已有库的初始化误升级入口也已封住。98个实际依赖及内嵌内容的105组坐标筛查未命中，但完整安全适用性和平台准入仍未关闭。原运行目录、JAR和10个服务保持。[首批构建报告](workflow-security-candidate-2026-11-05.md)保留历史结果。本轮D盘临时副本已校验回收约1.05GB，C盘活跃运行迁移仍待完成。
 
 新增[主站与Flowable待确认命令联合恢复](workflow-main-recovery-2026-11-05.md)：实际引擎提交但主站未获回执时，全349表检查点真正加密还原后，原命令/摘要/回执/流程实例完成对账；继续完成五步维修终审，5条HTTP及5条引擎原回执重放一致，无重复流程。关单后的新检查点也已另建目录实际还原并核对全349表。原平台未换版，AI/边缘/撤销控制、企业签收及完整生产恢复仍未验收。
 
