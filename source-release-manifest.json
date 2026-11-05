@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T08:58:55.849Z",
+  "createdAt": "2026-11-05T09:36:58.829Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 18691,
-      "sha256": "8b1d1422ac78839f5a0458bb8bfe3796968f01881448253d1cc21361c510bfa1",
+      "bytes": 19189,
+      "sha256": "7bbc1879c9d4e78b31198cfafc78a9b1f34771402922022af0554b0d3f0af6de",
       "mode": 438
     },
     {
@@ -2146,8 +2146,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 9723,
-      "sha256": "708f9029f174958a7dba7a7dcda819e917e689e55bb0b1aade642990d2ce1089",
+      "bytes": 10174,
+      "sha256": "9f7331a12e5f49f10df1e74c7682ee85ba7e91ae1d34f62c86bf6b4c77b9df44",
       "mode": 438
     },
     {
@@ -5868,6 +5868,12 @@
       "name": "docs/workflow-guide.md",
       "bytes": 6618,
       "sha256": "3123076b5936516a089ab2040a8d2191d271908c5d516b402dae6872b7cb6708",
+      "mode": 438
+    },
+    {
+      "name": "docs/workflow-main-recovery-2026-11-05.md",
+      "bytes": 6849,
+      "sha256": "73c83c584009900c6ddd05c03057ec6ebc75b3922edf66db1901312eb09dc599",
       "mode": 438
     },
     {
