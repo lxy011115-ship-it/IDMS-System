@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T15:16:29.512Z",
+  "createdAt": "2026-11-05T15:31:55.863Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -796,8 +796,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 23073,
-      "sha256": "3746ec43e35ab71058a1ad00deccfe62b7720362f383a4c22d1dfbf9730ca21a",
+      "bytes": 23562,
+      "sha256": "c078c4ae88640436d8413ac3ccd76673933fbd77efa7abb585c320873d10cb01",
       "mode": 438
     },
     {
@@ -1236,6 +1236,12 @@
       "name": "docs/demo-upload-guide.md",
       "bytes": 6490,
       "sha256": "446874703f8c57838a93a751b4b7eb877b2494bdf5b0790947c139e1bebf2fc4",
+      "mode": 438
+    },
+    {
+      "name": "docs/deployment-materials-gap-review-2026-11-05.md",
+      "bytes": 7469,
+      "sha256": "5b41f4bfba718774697fb4949355f327d3e1f730f7a9f968fb34c1bc07b637e8",
       "mode": 438
     },
     {
@@ -2170,8 +2176,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 13466,
-      "sha256": "6eb73da7df8938efa5b702a1dd3b6fae7c4ecc80e6228317620b1449e7ea5417",
+      "bytes": 13983,
+      "sha256": "c37a3de0db9ae0bd3d3450939df737d0fb3bc56055d4df90acced4407c85404a",
       "mode": 438
     },
     {
@@ -2182,8 +2188,8 @@
     },
     {
       "name": "docs/production-readiness.md",
-      "bytes": 11201,
-      "sha256": "80c8611e0be24e1e5b4c57198bf9e00cca9882a7972a70c1fba26bb7c2026d08",
+      "bytes": 11843,
+      "sha256": "d19a4d93d1add94a93499d9e4bcccb665de15a26722d86e24902179072804ef4",
       "mode": 438
     },
     {
@@ -4530,6 +4536,12 @@
       "name": "docs/superpowers/specs/2026-11-05--incremental-runtime-and-spares-integration.md",
       "bytes": 8696,
       "sha256": "5ffc7c77b1709d5cc8f901d4d734f1f0f3725175bc3a4996843d5b1666d72549",
+      "mode": 438
+    },
+    {
+      "name": "docs/superpowers/specs/2026-11-05--release-contract-and-readonly-preflight.md",
+      "bytes": 10188,
+      "sha256": "8a8a83ac36b147610f73b813c9a7ec50ccd1e50d7ad554cefa1203c84a22f17c",
       "mode": 438
     },
     {
