@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T12:46:00.735Z",
+  "createdAt": "2026-11-05T13:06:26.171Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -796,8 +796,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 21167,
-      "sha256": "deb9f1828cc3049c2c03a025183fae07aab3ab6d283643a01f8f2b6427e5fb94",
+      "bytes": 21592,
+      "sha256": "632f1017f02619e68f0e4a02486c093b2172f77cc6f43bc85c18f073ea7ec17c",
       "mode": 438
     },
     {
@@ -1827,6 +1827,12 @@
       "mode": 438
     },
     {
+      "name": "docs/main-flowable8-adapter-validation-2026-11-05.md",
+      "bytes": 4659,
+      "sha256": "2548f93a3dc74b1165db53bedc3e77ccfd73dffcd28aeb9ed6969d38d60d35a5",
+      "mode": 438
+    },
+    {
       "name": "docs/main-session-recovery-2026-11-05.md",
       "bytes": 5968,
       "sha256": "1c6d1fb5d27c29ae4fdc48b3a9d2fbe48480c681d434e1045d49a9e83efcf642",
@@ -2158,8 +2164,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 11489,
-      "sha256": "9ccc8d1e0e38173d2e811b613474af2a040b585f2a4b14b2ac45702f209cea75",
+      "bytes": 11856,
+      "sha256": "a07d6163f9c16170aa6a00e78cb57972e30672d85c936f0893ff125ee3dc187e",
       "mode": 438
     },
     {
@@ -3364,8 +3370,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-11-05--workflow-security-maintenance.md",
-      "bytes": 3909,
-      "sha256": "085ee3671175798099c5c9490e0be4338ae975ce0d47e07a2c75cbc62503281e",
+      "bytes": 4299,
+      "sha256": "941de09ab5bd2b3899e47d68765b9155d90f2748cf0bb79df309c9b6d165ff91",
       "mode": 438
     },
     {
@@ -21736,8 +21742,8 @@
     },
     {
       "name": "src/workflow-security-candidate/README.md",
-      "bytes": 1707,
-      "sha256": "b9a8c0124b766a56a5fbde03a169f4e83a0e010014e28ed857625675bcd3e44f",
+      "bytes": 2039,
+      "sha256": "5edf794e825776c96f13f1dd5017f02ffa945c4fe43c8bd8d0a5e104822d91dd",
       "mode": 438
     },
     {

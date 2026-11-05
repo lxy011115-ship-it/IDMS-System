@@ -8,4 +8,6 @@
 
 普通启动继续使用校验模式和`databaseSchemaUpdate=false`。显式initialize只接受空结构，已有库必须使用[独立维护工具](maintenance/README.md)。当前系统换版仍受完整平台准入约束。
 
+[主站客户端兼容补验](../../docs/main-flowable8-adapter-validation-2026-11-05.md)已通过实际双企业状态、原工单详情、两套Node客户端的历史命令重放和十二项负例；357张表事实不变。后台仅为空队列轮询，新版完整主站HTTP/OIDC、新命令投递及联合恢复尚待完成。
+
 具体范围见[设计](../../docs/superpowers/specs/2026-11-05--workflow-security-maintenance.md)与[实施计划](../../docs/superpowers/plans/2026-11-05--workflow-security-maintenance.md)。已完成实际引擎兼容修复、双企业显式迁移、九类路由、升级后恢复及原JAR档案回退，见[迁移验证记录](../../docs/workflow-security-upgrade-and-recovery-2026-11-05.md)。随后完成[维护者公告与连接防护](../../docs/workflow-maintainer-review-2026-11-05.md)：19项测试在Windows通过18项、1项Linux专项由Linux CI执行，最终包另完成双企业九路由重放及357表对照。一项上游无补丁的pgJDBC问题、完整平台恢复与生产配置继续保留门禁。[首批构建报告](../../docs/workflow-security-candidate-2026-11-05.md)保留历史结果。
