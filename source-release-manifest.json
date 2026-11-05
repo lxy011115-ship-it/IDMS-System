@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T02:28:12.779Z",
+  "createdAt": "2026-11-05T02:51:19.133Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 13476,
-      "sha256": "09d47b8cb275594f5b7888a655d29f60e9bdf4230320ccb2c26b7461bf266913",
+      "bytes": 13922,
+      "sha256": "5c70139f2867467fbba08f16568cd2c60934ad1a18400a8260e62b4829ecb38b",
       "mode": 438
     },
     {
@@ -2091,6 +2091,12 @@
       "mode": 438
     },
     {
+      "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
+      "bytes": 6005,
+      "sha256": "b5c3a341a7dbd367d72894ab069e357249cfd8773f1fcd406876db8aa4924eb5",
+      "mode": 438
+    },
+    {
       "name": "docs/prelaunch-enterprise-roadshow-review-2026-10-29.md",
       "bytes": 19054,
       "sha256": "2dd85866f2bce5e4d2540510dcc6538382435a2a0837af44d252189256ef25bf",
@@ -2098,8 +2104,8 @@
     },
     {
       "name": "docs/production-readiness.md",
-      "bytes": 10319,
-      "sha256": "21e7fbb234fdb314c2446c3accb1c670e44ead9434ec492709db2110eeced40f",
+      "bytes": 10919,
+      "sha256": "aab47f8b0d5569393d794c53be705a9c8592fc01b84e8654d337550fa6bf2b0d",
       "mode": 438
     },
     {
