@@ -13,7 +13,7 @@ export function ensureSpoolIntent(directory:string,operationId:string,proposal:u
  const path=join(directory,'edge-'+operationId+'.intent.private.json'),value={format:'IDMS_EDGE_RECOVERY_INTENT_V2',proposal},prior=json(path);
  if(prior===undefined)exclusiveJson(path,value);else if(stable(prior)!==stable(value))throw Error('SPOOL_RECOVERY_INTENT_CHANGED');
 }
-function identity(path:string){const s=lstatSync(path);if(!s.isFile()||s.isSymbolicLink()||s.nlink!==1||realpathSync(path)!==path||s.size>spoolRecoveryLimits.databaseBytes)throw Error('SPOOL_ARTIFACT_FILE_INVALID');return {path,device:s.dev,inode:s.ino};}
+function identity(path:string){const s=lstatSync(path,{bigint:true});if(!s.isFile()||s.isSymbolicLink()||s.nlink!==1n||realpathSync(path)!==path||s.size>BigInt(spoolRecoveryLimits.databaseBytes))throw Error('SPOOL_ARTIFACT_FILE_INVALID');return {path,device:s.dev.toString(),inode:s.ino.toString()};}
 async function digest(path:string){
  const pin=identity(path),before=lstatSync(path),h=createHash('sha256');for await(const chunk of createReadStream(path,{highWaterMark:65536}))h.update(chunk);
  const after=lstatSync(path);if(stable(identity(path))!==stable(pin)||before.size!==after.size||before.mtimeMs!==after.mtimeMs)throw Error('SPOOL_ARTIFACT_FILE_CHANGED');return {digest:h.digest('hex'),bytes:after.size};

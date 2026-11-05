@@ -2,12 +2,12 @@ import { DatabaseSync } from 'node:sqlite';
 import { randomUUID } from 'node:crypto';
 import {openExistingSqlite} from '../existing-sqlite.ts';
 import { sha, signEvent, type EdgeSource, type TelemetryEvent } from '../../integrations/telemetry.ts';
-import {spoolVersion,spoolStorage,quarantineSummary,quarantineRejected,validSpoolAck,validPendingOriginal,type PendingSpoolRow} from './spool-v2.ts';
+import {spoolVersion,spoolStorage,quarantineSummary,quarantineRejected,validSpoolAck,validPendingOriginal,readSpoolReceipt,recoveryPending,type PendingSpoolRow} from './spool-v2.ts';
 export class EdgeSpool {
-  db:DatabaseSync; source:EdgeSource; capacity:number;path:string;version=0;
+  db:DatabaseSync; source:EdgeSource; capacity:number;path:string;version=0;private recoveryCeiling=0;
   constructor(path:string,source:EdgeSource,capacity=10000,{existingOnly=false}={}){
     this.source=source;this.capacity=capacity;this.path=path;
-    if(existingOnly){this.db=openExistingSqlite(path,'edge',source);this.version=spoolVersion(this.db);this.db.exec('PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000');return;}
+    if(existingOnly){this.db=openExistingSqlite(path,'edge',source);this.version=spoolVersion(this.db);if(this.version===2)this.recoveryCeiling=readSpoolReceipt(this.db,source).afterSequence;this.db.exec('PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000');return;}
     this.db=new DatabaseSync(path);
     this.db.exec(`PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000;
       CREATE TABLE IF NOT EXISTS metadata (name TEXT PRIMARY KEY,value TEXT NOT NULL);
@@ -20,6 +20,7 @@ export class EdgeSpool {
     if(binding&&binding.value!==expected){this.db.close();throw Error('Spool belongs to another source or mapping; do not relabel buffered data');}
     this.db.prepare('INSERT OR IGNORE INTO metadata VALUES(?,?)').run('source',expected);
     this.version=spoolVersion(this.db);
+    if(this.version===2)this.recoveryCeiling=readSpoolReceipt(this.db,source).afterSequence;
   }
   append(input:Pick<TelemetryEvent,'tagCode'|'nodeId'|'eventTime'|'value'|'unit'|'quality'>){
     this.db.exec('BEGIN IMMEDIATE');
@@ -49,6 +50,11 @@ export class EdgeSpool {
       this.db.exec('COMMIT');return true;
     }catch(e){this.db.exec('ROLLBACK');throw e;}
   }
-  stats(){return {pending:Number((this.db.prepare("SELECT count(*) AS n FROM pending WHERE state='PENDING'").get() as {n:number}).n),rejected:Number((this.db.prepare("SELECT count(*) AS n FROM pending WHERE state='REJECTED'").get() as {n:number}).n),acknowledged:Number((this.db.prepare('SELECT count(*) AS n FROM acknowledged').get() as {n:number}).n),sequence:Number((this.db.prepare("SELECT value FROM metadata WHERE name='sequence'").get() as {value:string}).value),...(this.version===2?{spoolVersion:2,...quarantineSummary(this.db),...spoolStorage(this.path)}:{})};}
+  recoveryPending(){return this.version===2?recoveryPending(this.db,this.recoveryCeiling):0;}
+  storageBlocked(){return this.version===2&&spoolStorage(this.path).storageBlocked;}
+  stats(){
+    const base={pending:Number((this.db.prepare("SELECT count(*) AS n FROM pending WHERE state='PENDING'").get() as {n:number}).n),rejected:Number((this.db.prepare("SELECT count(*) AS n FROM pending WHERE state='REJECTED'").get() as {n:number}).n),acknowledged:Number((this.db.prepare('SELECT count(*) AS n FROM acknowledged').get() as {n:number}).n),sequence:Number((this.db.prepare("SELECT value FROM metadata WHERE name='sequence'").get() as {value:string}).value)};
+    if(this.version!==2)return base;const remaining=this.recoveryPending(),storage=spoolStorage(this.path);return {...base,spoolVersion:2,...quarantineSummary(this.db),...storage,recoveryPending:remaining,capturePaused:remaining>0||storage.storageBlocked};
+  }
   close(){this.db.close();}
 }

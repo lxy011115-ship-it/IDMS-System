@@ -41,7 +41,7 @@ export async function serviceProbe(binding,name){
  case 'predictor': {const s=await http('http://127.0.0.1:4012/health');return s.status==='UP'&&s.algorithm==='engineering-rule'&&s.rulAvailable===false;}
  case 'main': {const token=(await readFile(binding.files.serviceToken.path,'utf8')).trim(),s=await http('http://127.0.0.1:4010/api/v1/runtime/status',{Authorization:'Bearer '+token});return s.startup?.contract==='IDMS_EXISTING_MAIN_V1'&&s.startup.telemetryConnected&&s.startup.telemetrySubscribed&&!s.startup.telemetryClosing&&s.resourceCode==='CHECK_PASSED';}
  case 'simulator': {const c=await load('telemetry');return (await http('http://127.0.0.1:4015/status',{Authorization:'Bearer '+c.simulator.statusKey})).origin==='SIMULATOR';}
- case 'edge': {const c=await load('telemetry'),s=c.sources[0],r=await http(s.statusUrl,{Authorization:'Bearer '+s.statusKey});return r.edgeId===s.edgeId&&r.tenantId===s.tenantId&&r.origin==='SIMULATOR'&&r.mode==='READ_ONLY_POLL'&&r.mqttConnected&&r.opcConnected;}
+ case 'edge': {const c=await load('telemetry'),s=c.sources[0],r=await http(s.statusUrl,{Authorization:'Bearer '+s.statusKey});return r.edgeId===s.edgeId&&r.tenantId===s.tenantId&&r.origin==='SIMULATOR'&&r.mode==='READ_ONLY_POLL'&&r.mqttConnected&&(r.spoolVersion!==2||r.ackSubscribed===true)&&(r.opcConnected||r.spoolVersion===2&&r.capturePaused===true&&Number.isSafeInteger(r.recoveryPending)&&r.recoveryPending>0);}
  default:return false;
  }}catch{return false;}
 }

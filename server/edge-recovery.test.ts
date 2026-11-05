@@ -22,6 +22,7 @@ test('explicit recovery backs up/restores original records and advances only the
  for(const p of [result.backupPath!,result.restorePath!]){const db=new DatabaseSync(p,{readOnly:true});try{assert.deepEqual(db.prepare('SELECT * FROM pending ORDER BY event_id').all(),f.original);assert.equal(db.prepare("SELECT value FROM metadata WHERE name='sequence'").get()?.value,'2');}finally{db.close();}}
  const spool=new EdgeSpool(f.path,source,10000,{existingOnly:true});try{
   assert.deepEqual(spool.db.prepare('SELECT * FROM pending ORDER BY event_id').all(),f.original);assert.equal(spool.append(sample()).sequenceNo,75119);
+  assert.equal(spool.recoveryPending(),2);assert.equal(spool.stats().capturePaused,true);
  }finally{spool.close();}
  const again=await recoverStoppedSpool(f.path,source,f.proposal,{directory:f.dir,assertStopped:async()=>{}});assert.equal(again.replayed,true);assert.deepEqual(again.receipt,result.receipt);
  assert.throws(()=>new EdgeSpool(f.path,{...source,signingKey:'x'.repeat(64)},10000,{existingOnly:true}),/RECEIPT_INVALID/);
@@ -47,6 +48,7 @@ test('only exact signed rejection with original ACK wire atomically quarantines 
   assert.equal(spool.stats().pending,1);assert.equal(spool.db.prepare('SELECT count(*) AS n FROM quarantine').get()?.n,1);
   spool.db.exec('DROP TRIGGER qa_reject_delete');
   const stored=signAck({...ackData,eventId:second.event_id,digest:second.digest,status:'STORED'},source.acknowledgementKey);assert.equal(spool.acknowledge(stored),true);assert.equal(spool.stats().acknowledged,1);
+  assert.equal(spool.recoveryPending(),0);assert.equal(spool.stats().capturePaused,false);assert.equal(spool.stats().records,1);
  }finally{spool.close();}
 }));
 test('recovery refuses active writers, stale proposal, exhausted sequence and wrong source before mutation',async()=>fixture(async f=>{

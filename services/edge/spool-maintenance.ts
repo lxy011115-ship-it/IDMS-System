@@ -8,12 +8,14 @@ import {spoolVersion,spoolV2Definitions,readSpoolReceipt,spoolSourceDigest,spool
 import {ensureSpoolIntent,verifiedSpoolCopy,spoolCheckpoint,type SpoolCheckpointObserver} from './spool-backup-artifact.ts';
 
 export interface SpoolProposal {
- format:'IDMS_EDGE_RECOVERY_PROPOSAL_V2';operationId:string;path:string;device:number;inode:number;
+ format:'IDMS_EDGE_RECOVERY_PROPOSAL_V2';operationId:string;path:string;device:string;inode:string;
  sourceDigest:string;keyDigest:string;postgresDigest:string;durableSequence:number;
  beforeSequence:number;afterSequence:number;originalCount:number;originalDigest:string;
  databaseBytes:number;walBytes:number;
 }
-function requirePath(path:string){const p=resolve(path),s=lstatSync(p);if(p!==realpathSync(p)||!s.isFile()||s.isSymbolicLink()||s.nlink!==1)throw Error('SPOOL_EXACT_REGULAR_FILE_REQUIRED');return {path:p,device:s.dev,inode:s.ino};}
+// Windows file IDs can exceed Number.MAX_SAFE_INTEGER. Preserve every bit as
+// decimal text; an older rounded proposal cannot authorize maintenance.
+function requirePath(path:string){const p=resolve(path),s=lstatSync(p,{bigint:true});if(p!==realpathSync(p)||!s.isFile()||s.isSymbolicLink()||s.nlink!==1n)throw Error('SPOOL_EXACT_REGULAR_FILE_REQUIRED');return {path:p,device:s.dev.toString(),inode:s.ino.toString()};}
 function requireSpace(path:string){const s=statfsSync(path);if(s.bavail*s.bsize<spoolRecoveryLimits.freeBytes)throw Error('SPOOL_RECOVERY_FREE_SPACE_REQUIRED');}
 function snapshot(db:DatabaseSync,source:EdgeSource){
  const hash=createHash('sha256');let count=0,maximum=0;

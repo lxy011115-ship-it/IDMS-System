@@ -38,10 +38,11 @@ test('local MQTT subscription, edge buffer and sample states are independent evi
   await assert.rejects(tasks.telemetry(ctx()),e=>e.code==='TELEMETRY_CONNECTION_FAILED');assert.equal(requests,0);telemetry.subscribed=true;assert.equal((await tasks.telemetry(ctx())).status,'PASS');
   state={...state,pending:10};await assert.rejects(tasks.telemetry(ctx()),e=>e.code==='TELEMETRY_BUFFER_FULL');state={...state,pending:0,lastSample:null};await assert.rejects(tasks.telemetry(ctx()),e=>e.code==='TELEMETRY_SAMPLE_UNCONFIRMED');
   state={...state,lastSample:new Date().toISOString()};telemetry.connected=false;await assert.rejects(tasks.telemetry(ctx()),e=>e.code==='TELEMETRY_CONNECTION_FAILED');
-  telemetry.connected=true;state={...state,spoolVersion:2,records:1,logicalBytes:1000,databaseBytes:10000,walBytes:0,storageBlocked:false};await assert.rejects(tasks.telemetry(ctx()),e=>e.code==='TELEMETRY_QUARANTINE_PENDING');
+  telemetry.connected=true;state={...state,spoolVersion:2,records:1,logicalBytes:1000,databaseBytes:10000,walBytes:0,storageBlocked:false,recoveryPending:0,capturePaused:false,ackSubscribed:true};await assert.rejects(tasks.telemetry(ctx()),e=>e.code==='TELEMETRY_QUARANTINE_PENDING');
   state={...state,records:0,storageBlocked:true};await assert.rejects(tasks.telemetry(ctx()),e=>e.code==='TELEMETRY_STORAGE_LIMIT');
   state={...state,storageBlocked:false,records:'untrusted'};await assert.rejects(tasks.telemetry(ctx()),e=>e.code==='TELEMETRY_CONTRACT_MISMATCH');
   state={...state,records:0};assert.equal((await tasks.telemetry(ctx())).status,'PASS');
+  state={...state,recoveryPending:2,capturePaused:true};await assert.rejects(tasks.telemetry(ctx()),e=>e.code==='TELEMETRY_RECOVERY_PENDING');state={...state,recoveryPending:0,capturePaused:false,ackSubscribed:false};await assert.rejects(tasks.telemetry(ctx()),e=>e.code==='TELEMETRY_CONNECTION_FAILED');
  });
 });
 

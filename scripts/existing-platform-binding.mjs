@@ -11,6 +11,8 @@ import {validateKeyRing} from '../server/auth-state.ts';
 import {readinessPolicy} from '../server/runtime-readiness.ts';
 import {validateIdentityConfig} from './keycloak-runtime.mjs';
 import {openExistingSqlite} from '../services/existing-sqlite.ts';
+import {baseRuntimeBinding,validateRecoveryBinding,runtimeBindingDigest} from './edge-recovery-binding.mjs';
+export {runtimeBindingDigest};
 
 const exec=promisify(execFile);
 export const bindingFile=resolve('.local/existing-platform.json');
@@ -94,10 +96,11 @@ export async function collectExistingInputs({runtimeRoot,readinessFile}){
  const files={};for(const [name,path]of Object.entries(names))files[name]=await filePin(path);
  return {format:1,purpose:'EXISTING_PLATFORM_RUNTIME',project:await realpath(resolve('.')),runtime,identity,files};
 }
-export async function loadExistingBinding(file=bindingFile){
- const binding=await jsonFile(file,262144);need(binding.format===1&&binding.purpose==='EXISTING_PLATFORM_RUNTIME'&&binding.project===await realpath(resolve('.'))&&binding.files&&Object.keys(binding.files).length===24,'BINDING_INVALID');
+export async function loadExistingBinding(file=bindingFile,{requireCurrentSource=true}={}){
+ const binding=await jsonFile(file,262144);need([1,2].includes(binding.format)&&binding.purpose==='EXISTING_PLATFORM_RUNTIME'&&binding.project===await realpath(resolve('.'))&&binding.files&&Object.keys(binding.files).length===24,'BINDING_INVALID');
  for(const pin of Object.values(binding.files))await verifyPin(pin);
  const pg=await pgIdentity(binding.runtime);need(JSON.stringify(pg)===JSON.stringify(binding.identity),'PG_DEPLOYMENT_CHANGED');
  const fresh=await collectExistingInputs({runtimeRoot:binding.runtime,readinessFile:binding.files.readiness.path});
- need(JSON.stringify(fresh)===JSON.stringify(binding),'BINDING_DRIFT');return binding;
+ need(JSON.stringify(fresh)===JSON.stringify(baseRuntimeBinding(binding)),'BINDING_DRIFT');
+ if(binding.format===2)await validateRecoveryBinding(binding,{verifyPin,sourceEvidence:runtimeSourceEvidence,requireCurrentSource});return binding;
 }

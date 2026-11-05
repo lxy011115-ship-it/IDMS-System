@@ -7,6 +7,7 @@ import {serviceCommand} from './existing-platform-services.mjs';
 import {processFacts,sameProcess} from './existing-platform-process.mjs';
 import {assertExistingIdentityStore} from './keycloak-runtime.mjs';
 import {spawnExistingPostgres} from './existing-postgres-launch.mjs';
+import {spawnControlledNode,attachNodeControl} from './owned-node-control.mjs';
 
 const [bindingPath,directory,name]=process.argv.slice(2),parent=resolve('.local/platform-startup/runs'),rel=relative(parent,resolve(directory));
 need(!isAbsolute(rel)&&!rel.startsWith('..')&&/^[a-f0-9-]{36}$/.test(rel)&&/^(database|identity|broker|workflow|model|ai|predictor|main|simulator|edge)$/.test(name),'CHILD_REQUEST_INVALID');
@@ -21,7 +22,8 @@ try {
  const databaseLog=join(directory,'database-server.private.log');
  if(name==='database')command.args.push('-l',databaseLog);
  log=await open(join(directory,name+'.private.log'),'wx',0o600);
- child=name==='database'?spawnExistingPostgres(command,log.fd):spawn(command.executable,command.args,{cwd:command.cwd,env:command.env,windowsHide:true,stdio:['ignore','pipe','pipe']});
+ const controlled=['main','simulator','edge'].includes(name)?spawnControlledNode(command):null;
+ child=controlled?controlled.child:name==='database'?spawnExistingPostgres(command,log.fd):spawn(command.executable,command.args,{cwd:command.cwd,env:command.env,windowsHide:true,stdio:['ignore','pipe','pipe']});
  const terminal=new Promise(ok=>{child.once('error',()=>ok({status:'REFUSED',code:'SPAWN_FAILED'}));child.once('close',(exitCode,signal)=>ok({status:'EXITED',exitCode,signal}));});
  // Discard excess logs after a fixed limit; draining continues so services never block on a full pipe.
  const append=bytes=>{total+=bytes.length;const part=Buffer.from(bytes.subarray(0,Math.max(0,2*1024**2-retained)));retained+=part.length;if(part.length)chain=chain.then(()=>log.write(part)).catch(()=>{});};
@@ -43,8 +45,10 @@ try {
   await log.close();log=null;state={...state,status:'PROCESS_TERMINAL',endedAt:new Date().toISOString(),exitCode:null,discardedServerLogBytes:dropped};await save();
  }else{
  const identity=await processFacts(child.pid);
- state={format:1,name,status:identity&&!finished?'STARTED':(finished?.status||'REFUSED'),process:identity,observedAt:new Date().toISOString(),autoRestart:false,forceTermination:false};await save();
+ const controller=controlled&&identity&&!finished?await attachNodeControl(child,controlled.nonce,directory,name,identity):null;
+ state={format:1,name,status:identity&&!finished?'STARTED':(finished?.status||'REFUSED'),process:identity,...(controller?{control:controller.control}:{}),observedAt:new Date().toISOString(),autoRestart:false,forceTermination:false};await save();
  const end=await terminal;await chain;await log.close();log=null;
+ if(controller)await controller.close(end);
  state={...state,...end,endedAt:new Date().toISOString(),logBytes:retained,discardedLogBytes:total-retained};await save();
  }
 }catch{

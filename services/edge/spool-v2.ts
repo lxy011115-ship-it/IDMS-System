@@ -48,6 +48,9 @@ export function quarantineSummary(db:DatabaseSync){
  const row=db.prepare('SELECT count(*) AS records,coalesce(sum(logical_bytes),0) AS logicalBytes FROM quarantine').get() as {records:number;logicalBytes:number};
  return {...row,quarantineBlocked:row.records>=spoolRecoveryLimits.records||row.logicalBytes>=spoolRecoveryLimits.logicalBytes};
 }
+export function recoveryPending(db:DatabaseSync,ceiling:number){
+ return Number((db.prepare("SELECT count(*) AS n FROM pending WHERE CASE WHEN json_valid(payload) THEN CASE WHEN json_type(payload,'$.sequenceNo')='integer' AND json_extract(payload,'$.sequenceNo') BETWEEN 1 AND 9007199254740991 THEN json_extract(payload,'$.sequenceNo')<=? ELSE 1 END ELSE 1 END").get(ceiling) as {n:number}).n);
+}
 export function requireQuarantineSpace(records:number,logicalBytes:number,nextBytes:number){
  if(![records,logicalBytes,nextBytes].every(n=>Number.isSafeInteger(n)&&n>=0)||records+1>spoolRecoveryLimits.records||logicalBytes+nextBytes>spoolRecoveryLimits.logicalBytes)throw Error('SPOOL_QUARANTINE_LIMIT');
 }

@@ -17,6 +17,8 @@ import {EdgeSpool} from '../services/edge/spool.ts';
 import {sha} from '../integrations/telemetry.ts';
 import {recoveryArguments} from '../scripts/recover-edge-spool.mjs';
 import {assertRecoveryWritersStopped} from '../scripts/edge-recovery-platform.mjs';
+import './edge-recovery-binding.test.mjs';
+import './owned-node-control.test.mjs';
 const exec=promisify(execFile),project=resolve('.');
 async function fixture(t){const parent=await realpath(tmpdir()),path=await mkdtemp(join(parent,'idms-existing-'));t.after(async()=>{const rel=relative(parent,resolve(path));assert(!isAbsolute(rel)&&!rel.startsWith('..')&&rel.startsWith('idms-existing-'));await rm(path,{recursive:true});});return path;}
 test('all ordinary entries refuse absent binding before child execution or configuration creation',async t=>{

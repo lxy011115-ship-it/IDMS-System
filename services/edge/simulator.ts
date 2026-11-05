@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { OPCUAServer,DataType,Variant,DataValue,MessageSecurityMode,SecurityPolicy,StatusCodes } from 'node-opcua';
+import {installRuntimeStop} from '../runtime-stop.ts';
 const config=JSON.parse(await readFile(process.env.IDMS_TELEMETRY_CONFIG||'.local/mqtt/telemetry-runtime.json','utf8'));
 const options=config.simulator;let writeRequests=0,readRequests=0,historyStep=0;
 const start=Date.now();
@@ -26,4 +27,7 @@ const status=createServer((req,res)=>{
 });
 status.listen(options.statusPort,'127.0.0.1');
 console.log(`Read-only SIMULATOR OPC UA endpoint on port ${options.port}; not a customer device.`);
-for(const sig of ['SIGTERM','SIGINT'] as const)process.once(sig,()=>{status.close();server.shutdown(0).finally(()=>process.exit(0));});
+installRuntimeStop(async()=>{
+  await new Promise<void>((resolve,reject)=>status.close(error=>error?reject(error):resolve()));
+  await server.shutdown(0);
+},'simulator');

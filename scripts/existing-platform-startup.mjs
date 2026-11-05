@@ -2,7 +2,7 @@ import {readFile,writeFile,lstat,access,readdir} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {randomUUID} from 'node:crypto';
-import {loadExistingBinding,bindingFile,StartupError,need,jsonFile,sha,runtimeSourceEvidence} from './existing-platform-binding.mjs';
+import {loadExistingBinding,bindingFile,StartupError,need,jsonFile,runtimeBindingDigest,runtimeSourceEvidence} from './existing-platform-binding.mjs';
 import {privateDirectory} from './backup-support.mjs';
 import {acquireCoordinator,occupied,processFacts,sameProcess,observeStage,launchGuardedService} from './existing-platform-process.mjs';
 import {serviceProbe,verifyExistingStores} from './existing-platform-probes.mjs';
@@ -34,19 +34,19 @@ export async function startExistingPlatform(args=[],dependencies={}){
   try{previous=await jsonFile(latest,65536);}catch(e){try{await lstat(latest);throw e;}catch(missing){if(missing.code!=='ENOENT')throw e;}}
   await save();const db=await jsonFile(binding.files.database.path),ports={database:db.port,identity:8081,broker:1884,workflow:4016,model:11435,ai:4018,predictor:4012,main:4010,simulator:4015,edge:4014};
   for(const name of stages){
-   report.phase=name;await save();let processIdentity,reused=false;
+   report.phase=name;await save();let processIdentity,control,reused=false;
    const port=ports[name];
    if(await occupied(port)){
     processIdentity=previous?.services?.[name]?.process;
     if(['ai','predictor','main','simulator','edge'].includes(name))need(previous?.sourceDigest===source.digest,'OCCUPIED_SOURCE_CHANGED');
-    if(name!=='database')need(previous?.services?.[name]?.bindingDigest===sha(JSON.stringify(binding)),'OCCUPIED_DEPLOYMENT_UNVERIFIED');
+    if(name!=='database')need(previous?.services?.[name]?.bindingDigest===runtimeBindingDigest(binding),'OCCUPIED_DEPLOYMENT_UNVERIFIED');
     if(name==='database'){
      const lines=(await readFile(join(binding.identity.data,'postmaster.pid'),'utf8')).split(/\r?\n/);
      need(resolve(lines[1])===binding.identity.data&&Number(lines[3])===port,'DATABASE_PROCESS_BINDING_MISMATCH');
      processIdentity=await processFacts(Number(lines[0]));need(processIdentity?.executable.toLowerCase()===binding.files.postgres.path.toLowerCase(),'DATABASE_PROCESS_BINDING_MISMATCH');
     }
     need(processIdentity&&sameProcess(processIdentity,await processFacts(processIdentity.pid)),'OCCUPIED_SERVICE_UNVERIFIED');
-    need(await serviceProbe(binding,name),'OCCUPIED_SERVICE_CONTRACT_FAILED');reused=true;
+    need(await serviceProbe(binding,name),'OCCUPIED_SERVICE_CONTRACT_FAILED');reused=true;control=previous?.services?.[name]?.control;
    }else{
     // Do not start a replacement for a still-live service whose endpoint has disappeared.
     const prior=previous?.services?.[name]?.process;
@@ -59,8 +59,9 @@ export async function startExistingPlatform(args=[],dependencies={}){
     let receipt;
     try{receipt=await launchGuardedService(bindingFile,directory,name);}catch(e){if(e.mayHaveStarted)report.services[name]={status:'LAUNCH_UNCONFIRMED',process:null,wrapperPid:e.wrapperPid,reused:false};throw e;}
     processIdentity=receipt.process;
+    control=receipt.control;
    }
-   report.services[name]={reused,process:processIdentity,status:'OBSERVING',bindingDigest:sha(JSON.stringify(binding))};await save();
+   report.services[name]={reused,process:processIdentity,...(control?{control}:{}),status:'OBSERVING',bindingDigest:runtimeBindingDigest(binding)};await save();
    const observation=await observeStage({probe:()=>serviceProbe(binding,name),alive:async()=>sameProcess(processIdentity,await processFacts(processIdentity.pid)),budgetMs:name==='identity'?180000:name==='workflow'?90000:30000});
    report.services[name]={...report.services[name],...observation};await save();
    need(observation.status==='READY'||observation.status==='LATE_READY',observation.status==='EXITED'?'SERVICE_EXITED':'SERVICE_START_UNCONFIRMED');

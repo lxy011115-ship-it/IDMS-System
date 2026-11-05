@@ -99,8 +99,11 @@ export function runtimeDependencyTasks(d:RuntimeDependencies):Record<ReadinessCo
         for(const k of ['pending','rejected','acknowledged']) probeNeed(Number.isSafeInteger(s[k]) && s[k]>=0,'TELEMETRY_CONTRACT_MISMATCH');
         if(s.spoolVersion===2){
           for(const k of ['records','logicalBytes','databaseBytes','walBytes'])probeNeed(Number.isSafeInteger(s[k])&&s[k]>=0,'TELEMETRY_CONTRACT_MISMATCH');
+          probeNeed(Number.isSafeInteger(s.recoveryPending)&&s.recoveryPending>=0&&typeof s.capturePaused==='boolean'&&typeof s.storageBlocked==='boolean'&&typeof s.ackSubscribed==='boolean','TELEMETRY_CONTRACT_MISMATCH');
           probeNeed(!s.storageBlocked,'TELEMETRY_STORAGE_LIMIT');
           probeNeed(s.records===0,'TELEMETRY_QUARANTINE_PENDING');
+          probeNeed(s.recoveryPending===0,'TELEMETRY_RECOVERY_PENDING');
+          probeNeed(s.ackSubscribed,'TELEMETRY_CONNECTION_FAILED');
         }
         const capacity=s.capacity ?? (sources.length===1 ? telemetryConfig.edge?.capacity : null) ?? null;
         probeNeed(capacity===null || Number.isSafeInteger(capacity) && capacity>0,'TELEMETRY_CONTRACT_MISMATCH');

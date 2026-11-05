@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-01T13:32:08.093Z",
+  "createdAt": "2026-11-05T01:02:33.876Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -3286,8 +3286,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-10-31--telemetry-budget-and-spool-recovery.md",
-      "bytes": 2078,
-      "sha256": "d326fb0f54cf5534b90588d833836f1fa040941315de401c148c8e49cb2df0a7",
+      "bytes": 2576,
+      "sha256": "9ce5762648b4547210d47c3b1e3133c7c02080df78f4573436c0bbc9f68d5707",
       "mode": 438
     },
     {
@@ -4498,8 +4498,8 @@
     },
     {
       "name": "docs/telemetry-recovery-progress.md",
-      "bytes": 7111,
-      "sha256": "d47c005beb1c2be12172bc72122a1198d563a7b4b453f9cb765ce5ed498608e9",
+      "bytes": 10837,
+      "sha256": "796a11482d96e17e60a8e30c1b187c68e99f87ce467602dccd0d80d51f858921",
       "mode": 438
     },
     {
@@ -6448,8 +6448,8 @@
     },
     {
       "name": "public/telemetry-ui.js",
-      "bytes": 5274,
-      "sha256": "16b7dcc1e8f0696c40724476a1e147de7d5deb3f03ea0fd1682a767ddd95819a",
+      "bytes": 5351,
+      "sha256": "829de2dfef7b29bc0bc3f8803748f519dd2dbb45df2a4e91792d16f7eb3b26e2",
       "mode": 438
     },
     {
@@ -7881,6 +7881,12 @@
       "mode": 438
     },
     {
+      "name": "scripts/edge-recovery-binding.mjs",
+      "bytes": 6427,
+      "sha256": "b3b314773a361882669b74d0d802cc1e38f5e267d8e8b3ac93e132837d45944f",
+      "mode": 438
+    },
+    {
       "name": "scripts/edge-recovery-platform.mjs",
       "bytes": 8666,
       "sha256": "e5179690887fec8fd81fd184a19e2ad4da0d0d82dbde50c164215640bedae166",
@@ -7894,14 +7900,14 @@
     },
     {
       "name": "scripts/existing-platform-binding.mjs",
-      "bytes": 11485,
-      "sha256": "2cb5702b5106e32dddb7b4a88a20c47fe9abdc7cca9000b95caf2ff2e8323146",
+      "bytes": 11821,
+      "sha256": "5135045844641b316147ea13a78f6b9aff11893ba106fdf86df2fdfba6e2544b",
       "mode": 438
     },
     {
       "name": "scripts/existing-platform-child.mjs",
-      "bytes": 4393,
-      "sha256": "c1ef5a3bc972411f1003833fbc47c0954d67e709c198a6f8ca0899e5e35ae87b",
+      "bytes": 4817,
+      "sha256": "bf1f55db4a22d745df1739ba9f0439b41853339a71405da13bf0260bd81e6c44",
       "mode": 438
     },
     {
@@ -7912,8 +7918,8 @@
     },
     {
       "name": "scripts/existing-platform-probes.mjs",
-      "bytes": 5509,
-      "sha256": "66e2562e891518f4a3513884d3155a214dfe863a0c229dd57e639e65822f0b06",
+      "bytes": 5663,
+      "sha256": "09c8d394bd5e3428313a1a5926afb07b4aa281fc013e0fa0847bfbd46df6dc84",
       "mode": 438
     },
     {
@@ -7930,8 +7936,8 @@
     },
     {
       "name": "scripts/existing-platform-startup.mjs",
-      "bytes": 7443,
-      "sha256": "3d8c8b482dfa00aea63961720ba35c3bc41143271be7814976d7df8539efb980",
+      "bytes": 7569,
+      "sha256": "e27cd31fe4eb3b13729a8236f6a4eba4ac209131631a0555b66d7c71731ef5a1",
       "mode": 438
     },
     {
@@ -9882,6 +9888,24 @@
       "name": "scripts/fixtures/controlled-cold-stage-diagnostic-v6-qa.mjs",
       "bytes": 4609,
       "sha256": "e741d7b897924669347c67660eee67c360d701dee9f16071ca84478929d816b0",
+      "mode": 438
+    },
+    {
+      "name": "scripts/fixtures/controlled-node-service-env-qa.ts",
+      "bytes": 280,
+      "sha256": "18bbe32323b7e15ddb49bee46ea4df51b83ac9dbf48bbbcfa3ede3c0299594e1",
+      "mode": 438
+    },
+    {
+      "name": "scripts/fixtures/controlled-node-service-qa.ts",
+      "bytes": 749,
+      "sha256": "fd8b3a9afe4a5f9bcdeefef93a052790710a37bf346a3c9ad1a89e06f3cd9d4d",
+      "mode": 438
+    },
+    {
+      "name": "scripts/fixtures/controlled-node-wrapper-qa.mjs",
+      "bytes": 2218,
+      "sha256": "7a078b6c7c4d48d0c990dab0edea2454777721fb67dc2c6343b42556165613a3",
       "mode": 438
     },
     {
@@ -12831,6 +12855,12 @@
       "mode": 438
     },
     {
+      "name": "scripts/owned-node-control.mjs",
+      "bytes": 7386,
+      "sha256": "5cf677d77b48b6dbe48390e59720dc3cca7f85ceffdadd488f5da30f52db87c3",
+      "mode": 438
+    },
+    {
       "name": "scripts/owned-verification-job-v1.mjs",
       "bytes": 10487,
       "sha256": "ed3132788d90ce37300ce84716daff723b65351ef791d32f9bd2587383ec79f6",
@@ -13966,14 +13996,14 @@
     },
     {
       "name": "scripts/runtime-inspection-report.mjs",
-      "bytes": 11182,
-      "sha256": "3fd97592642e347ed2976b2aa5b52eb873a21f961ee74d3ed6260006bccee39c",
+      "bytes": 11308,
+      "sha256": "e2c1a848031cbc635770901d5c7bb8278f7fd496c828e0b4c05b1b6abe85f1a2",
       "mode": 438
     },
     {
       "name": "scripts/runtime-inspection-tasks.mjs",
-      "bytes": 12168,
-      "sha256": "c0d0b88cb47f648062213926f8bb6498421ba967a0e062dd8b66914af8155695",
+      "bytes": 12647,
+      "sha256": "86bb25dde44630bc5d47484235f82de2376860959dcd7e6393db81c9ded8cdcf",
       "mode": 438
     },
     {
@@ -14326,8 +14356,8 @@
     },
     {
       "name": "scripts/verify-build.mjs",
-      "bytes": 13104,
-      "sha256": "fdba5b0fdd826aa80b0e3d1a30c450283746b238fdfec691396b96b5a6270516",
+      "bytes": 13179,
+      "sha256": "a863a6c8b314d6e99d43054205bfb3dab33d5e4462edaa9dfccfc20b3b77877c",
       "mode": 438
     },
     {
@@ -18615,9 +18645,15 @@
       "mode": 438
     },
     {
+      "name": "server/edge-publish-window.test.ts",
+      "bytes": 873,
+      "sha256": "46736566117da1acab40fb8322ded7f957a44431fa4cba3c49fd4d2a17fa21c1",
+      "mode": 438
+    },
+    {
       "name": "server/edge-recovery.test.ts",
-      "bytes": 16845,
-      "sha256": "fca4a6965416d137469272da962aa531e2ce1129ab0342d94ae6b86a03e142ab",
+      "bytes": 17064,
+      "sha256": "3ade45d0ce3dbbabeae999b64d0e59a798200d14c35cd1c5f295787f8c5f5cf7",
       "mode": 438
     },
     {
@@ -19444,8 +19480,8 @@
     },
     {
       "name": "server/index.ts",
-      "bytes": 33741,
-      "sha256": "35527a4473960272481f1dcb245557a1bcf77b2d37f69bca6667e73e3d605b59",
+      "bytes": 33831,
+      "sha256": "a0d964db2439d48016d3af0a04a3bf9fd227da14799b4318f7dafa4485a24a3f",
       "mode": 438
     },
     {
@@ -20242,8 +20278,8 @@
     },
     {
       "name": "server/runtime-adapters.ts",
-      "bytes": 9479,
-      "sha256": "eaeeb79d2ea16a3ae500930edcccccbfc8a8e823c2c91b05e682871ee2d3acf9",
+      "bytes": 9846,
+      "sha256": "e2877ee7b98ada55c89f95b86398349e258e1535aaf13f2f1630c8171663b18c",
       "mode": 438
     },
     {
@@ -20284,8 +20320,8 @@
     },
     {
       "name": "server/runtime-readiness.ts",
-      "bytes": 9998,
-      "sha256": "2115c57cea8fd84e8c1e6e331c99a497f1878f75785afb0ea0535d2017b7d8af",
+      "bytes": 10171,
+      "sha256": "ed23fd43c88ec6bbe666347d2b949f9ee04626d55d62e4c6fb864bef65f9d8fe",
       "mode": 438
     },
     {
@@ -20304,6 +20340,12 @@
       "name": "server/runtime-status-route.ts",
       "bytes": 3998,
       "sha256": "3372ca300e93e9eee94e1316640da1c9943a56527caf16c370460a34a06f3490",
+      "mode": 438
+    },
+    {
+      "name": "server/runtime-stop.test.ts",
+      "bytes": 2538,
+      "sha256": "a61ae7f222d025112beb1f76be7f9155b344a282e4663ff9b7bc6a763dac6c41",
       "mode": 438
     },
     {
@@ -20932,20 +20974,26 @@
     },
     {
       "name": "services/edge/index.ts",
-      "bytes": 5842,
-      "sha256": "07e36c5ad48db0cf6e80ba99012caa3806427e81db8875cd6f3bf012d8a39fd1",
+      "bytes": 7007,
+      "sha256": "cfbd74ca80f0b04d1254eb4678937b71c320ead9d38dda88194c4e108a9bb5d0",
+      "mode": 438
+    },
+    {
+      "name": "services/edge/publish-window.ts",
+      "bytes": 662,
+      "sha256": "b5c117ef5e48b69fa04f7f5ae08aa9a7a353fa897afe67fb21adc4873b10a49a",
       "mode": 438
     },
     {
       "name": "services/edge/simulator.ts",
-      "bytes": 2860,
-      "sha256": "9a7ffd3cc19b78a12a99727146cd57eb51f948961a0b05ed840cd7448c40c4d3",
+      "bytes": 2950,
+      "sha256": "6be1e43ba2a6a3745c4bf57b1eb92ecc86da66e7e28ad8710ceaec26e0ccad2c",
       "mode": 438
     },
     {
       "name": "services/edge/spool-backup-artifact.ts",
-      "bytes": 4806,
-      "sha256": "0a5c687bdd5c1c6e263a85615f4b920957600dc3db2b2be4643c11a3d276ec25",
+      "bytes": 4851,
+      "sha256": "4a65f255e114751c15af782ab2ea31b2f3a519ef4d9a2e08189ab5163e561c2e",
       "mode": 438
     },
     {
@@ -20956,26 +21004,26 @@
     },
     {
       "name": "services/edge/spool-maintenance.ts",
-      "bytes": 9694,
-      "sha256": "aeaef15977da6acb6e84de0fcbc514067b70c3829a321480bc69286034eb24b6",
+      "bytes": 9882,
+      "sha256": "fa65b8e17affc55466ebe21d6a8eb49d115bfcc4969a705a80898327d41cb670",
       "mode": 438
     },
     {
       "name": "services/edge/spool-v2.ts",
-      "bytes": 7377,
-      "sha256": "394db5eaa648f2e05f5b8fd020ceedbb8f11294daa38fb54572b2680c44f7800",
+      "bytes": 7774,
+      "sha256": "fdad4f6a1cc256c507d044f94a093043559273a3681511187b1dece7f2e0caed",
       "mode": 438
     },
     {
       "name": "services/edge/spool.ts",
-      "bytes": 5278,
-      "sha256": "e944bc9ed0ee6f2058bba2b631f6887db7eb8dc3d89ffeae4789a1ed039de22c",
+      "bytes": 5867,
+      "sha256": "9f3d48535ead91b55830823757dcd203d186069721399f567a49b7daa2ceee1a",
       "mode": 438
     },
     {
       "name": "services/existing-sqlite.ts",
-      "bytes": 2996,
-      "sha256": "3fe6caa1b526d5e7a9c04878fc8a050c2b01a4dcb904de809a67b549674cfa7a",
+      "bytes": 3026,
+      "sha256": "74a6d62e943ccc18e7e723632fd207ab794bca743eba8a67300391631b09e229",
       "mode": 438
     },
     {
@@ -21126,6 +21174,12 @@
       "name": "services/predictor/service-v4.ts",
       "bytes": 1881,
       "sha256": "59e7768c80bddf577df63afacd7810811522d267c6bb87bc5f2e2f0229f32c7a",
+      "mode": 438
+    },
+    {
+      "name": "services/runtime-stop.ts",
+      "bytes": 1868,
+      "sha256": "1324bd1ed2d65552a90a6431601f4dfba460983cb73e2acf77df7f9600260a6c",
       "mode": 438
     },
     {
@@ -22341,9 +22395,15 @@
       "mode": 438
     },
     {
+      "name": "tests/edge-recovery-binding.test.mjs",
+      "bytes": 6639,
+      "sha256": "6a40fbb91be3f8c744089ecc11cad76d52905ca80585cb3ef1a9e3d97c6ca13e",
+      "mode": 438
+    },
+    {
       "name": "tests/existing-platform-startup.test.mjs",
-      "bytes": 11943,
-      "sha256": "4b5af8660bbd4ada0d6df3da1a0fb38766970de3cf023235584de9c380e31315",
+      "bytes": 12026,
+      "sha256": "5c4bb1812b4cc01a8085fd47d856b5f40a34d2e8b0655b9d389a6ee78b3d442a",
       "mode": 438
     },
     {
@@ -22851,6 +22911,12 @@
       "mode": 438
     },
     {
+      "name": "tests/owned-node-control.test.mjs",
+      "bytes": 5082,
+      "sha256": "5b33dcf395d79dd2a189ac14afb0a13bbde0d8a87bd7f9a67c84f1d42f581e45",
+      "mode": 438
+    },
+    {
       "name": "tests/owned-reader-jvm-failure-v1.test.mjs",
       "bytes": 5255,
       "sha256": "7a21ee37f89a9553ffc75c4c1dfc859fe26f9a98913ca43d1ac494ecbb3104a3",
@@ -23026,8 +23092,8 @@
     },
     {
       "name": "tests/runtime-adapters.test.mjs",
-      "bytes": 8626,
-      "sha256": "4121819892138f02b1a06a0d60c3da14267395fd17e7d94cebbbc308e0783f22",
+      "bytes": 8989,
+      "sha256": "109ed2464a78abc48ec4b67d27376d48e38825d3891811442b33227a4b53594b",
       "mode": 438
     },
     {
@@ -23062,8 +23128,8 @@
     },
     {
       "name": "tests/runtime-inspection.test.mjs",
-      "bytes": 13934,
-      "sha256": "770223234d74356b11278f7fba018722558624eaedfd681fc6b98233170427ff",
+      "bytes": 14136,
+      "sha256": "52cb1226f06498c2de96e12e637dbf59efc14b04dee8c49afd8e62d503d244e3",
       "mode": 438
     },
     {

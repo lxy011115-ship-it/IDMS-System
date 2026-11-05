@@ -27,8 +27,8 @@ export function validateExistingSqlite(db:DatabaseSync,kind:'edge'|'ai',source?:
  }
 }
 export function openExistingSqlite(path:string,kind:'edge'|'ai',source?:EdgeSource,{readOnly=false}={}){
- const canonical=realpathSync(path),before=lstatSync(canonical);
- if(!before.isFile()||before.nlink!==1||before.size<512)throw Error('EXISTING_SQLITE_FILE_REQUIRED');
+ const canonical=realpathSync(path),before=lstatSync(canonical,{bigint:true});
+ if(!before.isFile()||before.nlink!==1n||before.size<512n)throw Error('EXISTING_SQLITE_FILE_REQUIRED');
  const db=new DatabaseSync(canonical,{readOnly});
- try{const after=lstatSync(canonical);if(before.ino!==after.ino||before.dev!==after.dev)throw Error('EXISTING_SQLITE_FILE_CHANGED');validateExistingSqlite(db,kind,source);return db;}catch(e){db.close();throw e;}
+ try{const after=lstatSync(canonical,{bigint:true});if(before.ino!==after.ino||before.dev!==after.dev)throw Error('EXISTING_SQLITE_FILE_CHANGED');validateExistingSqlite(db,kind,source);return db;}catch(e){db.close();throw e;}
 }

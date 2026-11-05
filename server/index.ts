@@ -296,7 +296,12 @@ if (process.env.NODE_ENV !== "test") {
     process.exitCode = 1;
   });
   server.listen(PORT, "127.0.0.1", () => console.log(`IDMS API http://127.0.0.1:${PORT}`));
-  for (const signal of ["SIGINT", "SIGTERM"] as const) process.once(signal, () => {readiness.beginClose();stopHttpAdmission();server.close(async () => {await closeRuntime(); process.exit(0);});});
+  installRuntimeStop(async()=>{
+    readiness.beginClose();stopHttpAdmission();
+    await new Promise<void>((resolve,reject)=>server.close(error=>error?reject(error):resolve()));
+    await closeRuntime();
+  },'main');
 }
+import {installRuntimeStop} from '../services/runtime-stop.ts';
 import {qualityPolicySqlRead} from './quality-policy-sql.ts';
 
