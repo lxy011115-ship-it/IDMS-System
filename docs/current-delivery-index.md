@@ -4,7 +4,7 @@
 
 新增[真实AI网关非空回执与加密恢复](ai-nonempty-recovery-2026-11-05.md)：原网关及原令牌、还原的真实模型和D盘程序副本，完成并发幂等/企业隔离/签名校验、两企业非空SQLite检查点实际加密还原、原回执重放及恢复后新请求；两个网关和模型均正常退出。尚未覆盖主站AI outbox投影及全平台一致恢复。
 
-用户已批准[工作流安全维护路线A](superpowers/specs/2026-11-05--workflow-security-maintenance.md)，按[实施计划](superpowers/plans/2026-11-05--workflow-security-maintenance.md)在[独立候选源码](../src/workflow-security-candidate/README.md)推进Boot 4/Flowable 8/Jackson 3；原运行目录、JAR和服务保持。数据库显式迁移、九路由及回退仍须实际验证，不能以代码迁移或构建替代。
+用户已批准[工作流安全维护路线A](superpowers/specs/2026-11-05--workflow-security-maintenance.md)，按[实施计划](superpowers/plans/2026-11-05--workflow-security-maintenance.md)在[独立候选源码](../src/workflow-security-candidate/README.md)推进Boot 4/Flowable 8/Jackson 3。[首批构建报告](workflow-security-candidate-2026-11-05.md)记录本机6项测试及打包通过，GitHub候选构建也已成功；原运行目录、JAR和服务保持。数据库显式迁移、九路由及回退仍须实际验证，不能以代码迁移或构建替代。
 
 新增[主站与Flowable待确认命令联合恢复](workflow-main-recovery-2026-11-05.md)：实际引擎提交但主站未获回执时，全349表检查点真正加密还原后，原命令/摘要/回执/流程实例完成对账；继续完成五步维修终审，5条HTTP及5条引擎原回执重放一致，无重复流程。关单后的新检查点也已另建目录实际还原并核对全349表。原平台未换版，AI/边缘/撤销控制、企业签收及完整生产恢复仍未验收。
 
@@ -16,7 +16,7 @@
 
 新增[现有工作流包的非空恢复验证](existing-workflow-nonempty-recovery-2026-11-05.md)：双企业4张合成工单完成加密整库还原、18条原命令回执重放及在途任务继续终审；两个工作流库各38张表的全部事实一致，原键重放未改变表内容。两次隔离Java及两次PG均正常停止，约937MB明文测试副本已回收。范围是现有服务包的5类HTTP路由，尚未覆盖撤销控制、主站投影、OIDC、AI或完整平台恢复，原运行版本未切换。
 
-新增[工作流安全维护设计与隔离探测](superpowers/specs/2026-11-05--workflow-security-maintenance.md)：实际90个依赖完成全部坐标筛查，记录63个索引公告匹配及索引缺项；21组合成JSON摘要向量在原版和Jackson 2修复版间一致。Boot/Flowable新发布线还涉及Jackson和数据库显式迁移，设计待评审，运行服务未替换，安全验收未关闭。
+此前[工作流安全维护设计与隔离探测](superpowers/specs/2026-11-05--workflow-security-maintenance.md)：原包90个依赖完成全部坐标筛查，记录63个索引公告匹配及索引缺项；21组合成JSON摘要向量在原版和Jackson 2修复版间一致。路线A现已获批准并推进顶部所列的Jackson 3独立候选；运行服务未替换，安全验收未关闭。
 
 新增[恢复点配对核对](joint-recovery-reconciliation-2026-11-05.md)：实际还原两类档案后发现，边缘3,706条隔离ACK中521条未包含在所选PG恢复点；当前原库只读复核确认这521条回执均存在且结果一致。当前组合未准入，需新的合格配对恢复集。实际恢复的会话密钥已通过PG校验记录解密，但会话、AI与工作流业务均为空，完整登录/外部效果验收仍未完成。
 

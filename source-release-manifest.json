@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T10:29:11.172Z",
+  "createdAt": "2026-11-05T10:33:12.874Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -796,8 +796,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 20023,
-      "sha256": "e2ceca11e2c6bab5dd909dfbe2cfe9d6b0d4ec07d9a52a7a16cd37f51358f181",
+      "bytes": 20143,
+      "sha256": "26912921bb7d32d71c53a77bd5248b2e35c0e59c6000cf402d8d62ca3b345af4",
       "mode": 438
     },
     {
@@ -2158,8 +2158,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 10666,
-      "sha256": "4327c69387adeec640f022c7595e959109f2ceb59dbfc112ca6407479eeb60b4",
+      "bytes": 10805,
+      "sha256": "3a5700f14eca806d53ab3c394c689fadb7473c451ddbc8c69b67126c0949740e",
       "mode": 438
     },
     {
