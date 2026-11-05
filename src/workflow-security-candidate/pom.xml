@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-parent</artifactId><version>4.1.2</version><relativePath/></parent>
   <groupId>com.idms</groupId><artifactId>idms-workflow</artifactId><version>0.1.0</version>
-  <properties><java.version>21</java.version><jackson-bom.version>3.1.8</jackson-bom.version><mybatis.version>3.6.0</mybatis.version><flowable.version>8.0.0</flowable.version><idms.build.directory>${project.basedir}/target</idms.build.directory></properties>
+  <properties><java.version>21</java.version><jackson-bom.version>3.1.8</jackson-bom.version><mybatis.version>3.6.0</mybatis.version><flowable.version>8.0.0</flowable.version><logback.version>1.6.6</logback.version><idms.build.directory>${project.basedir}/target</idms.build.directory></properties>
   <dependencyManagement><dependencies><dependency><groupId>org.mybatis</groupId><artifactId>mybatis</artifactId><version>${mybatis.version}</version></dependency></dependencies></dependencyManagement>
   <dependencies>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-webmvc</artifactId></dependency>
@@ -11,5 +11,13 @@
     <dependency><groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><scope>runtime</scope></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-test</artifactId><scope>test</scope></dependency>
   </dependencies>
-  <build><directory>${idms.build.directory}</directory><plugins><plugin><groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId></plugin></plugins></build>
+  <build>
+    <directory>${idms.build.directory}</directory>
+    <resources>
+      <resource><directory>src/main/resources</directory><filtering>false</filtering></resource>
+      <resource><directory>third-party-licenses</directory><targetPath>META-INF/licenses/idms-workflow-adaptations</targetPath><filtering>false</filtering></resource>
+      <resource><directory>${project.basedir}</directory><includes><include>NOTICE.md</include></includes><targetPath>META-INF</targetPath><filtering>false</filtering></resource>
+    </resources>
+    <plugins><plugin><groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId></plugin></plugins>
+  </build>
 </project>

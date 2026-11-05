@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T12:08:36.348Z",
+  "createdAt": "2026-11-05T12:46:00.735Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -796,8 +796,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 20449,
-      "sha256": "2653cefa65661f12e9cb3b6f3af24ad64005bd50209b868501fc12db51c97491",
+      "bytes": 21167,
+      "sha256": "deb9f1828cc3049c2c03a025183fae07aab3ab6d283643a01f8f2b6427e5fb94",
       "mode": 438
     },
     {
@@ -2158,8 +2158,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 11005,
-      "sha256": "2769456c79ff414cbb3c32b49c12a8022bf759cb36110a93e6cdd487cda27413",
+      "bytes": 11489,
+      "sha256": "9ccc8d1e0e38173d2e811b613474af2a040b585f2a4b14b2ac45702f209cea75",
       "mode": 438
     },
     {
@@ -3364,8 +3364,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-11-05--workflow-security-maintenance.md",
-      "bytes": 3392,
-      "sha256": "a8c72937d553f2b65b1ed8cb2c8381b81850bd892a5648da05bbd105e4f664f0",
+      "bytes": 3909,
+      "sha256": "085ee3671175798099c5c9490e0be4338ae975ce0d47e07a2c75cbc62503281e",
       "mode": 438
     },
     {
@@ -5895,6 +5895,18 @@
       "mode": 438
     },
     {
+      "name": "docs/workflow-maintainer-review-2026-11-05.json",
+      "bytes": 747063,
+      "sha256": "2d9b3a9081aa570637ae7c75d7c7230e965e737c8f854223d1feb56078d93b2e",
+      "mode": 438
+    },
+    {
+      "name": "docs/workflow-maintainer-review-2026-11-05.md",
+      "bytes": 5013,
+      "sha256": "dc971dcfdd5b37ae3e1157a7c6e2dfdf00b56f012301fbc9d02ebae5b64e66fd",
+      "mode": 438
+    },
+    {
       "name": "docs/workflow-normal-stop-v1-guide.md",
       "bytes": 3337,
       "sha256": "25755ef6f341ec917b9681d93480faac91d3998212f1c993883f89e275bfcf87",
@@ -5968,8 +5980,8 @@
     },
     {
       "name": "docs/workflow-security-upgrade-and-recovery-2026-11-05.md",
-      "bytes": 6207,
-      "sha256": "ff51f17d76c25f16ea4a6bc5d84f12abcbfd8d1d17ee860d6d7a333d73273c8f",
+      "bytes": 6510,
+      "sha256": "24be60c549eb31bac1239c337c6a60b98d429a4411ea5627c3190cef8cbbcfce",
       "mode": 438
     },
     {
@@ -21718,14 +21730,14 @@
     },
     {
       "name": "src/workflow-security-candidate/pom.xml",
-      "bytes": 1832,
-      "sha256": "94f9c088f3e3c466597c3bc5876cf7265144ec87149811fade158b57410bb8c3",
+      "bytes": 2361,
+      "sha256": "e3f309cfd21383099d1439a59d527c6c263be3721de299fc500070048480a489",
       "mode": 438
     },
     {
       "name": "src/workflow-security-candidate/README.md",
-      "bytes": 1410,
-      "sha256": "7c4f197ed3695d6d416d7cce47cb2a72f1e84f977d2bae173b023a26b71b4980",
+      "bytes": 1707,
+      "sha256": "b9a8c0124b766a56a5fbde03a169f4e83a0e010014e28ed857625675bcd3e44f",
       "mode": 438
     },
     {
@@ -21736,14 +21748,14 @@
     },
     {
       "name": "src/workflow-security-candidate/src/main/java/com/idms/workflow/CancelReconciliationControllerV1.java",
-      "bytes": 11901,
-      "sha256": "826c24ea990c46959d446e1047090d02f80197d121e347b026dc22d4ccd4f73b",
+      "bytes": 11800,
+      "sha256": "ae31fcdfaa5710d36d2c4a673b84f470006609eb13ef519ab51b60205f7ebdb8",
       "mode": 438
     },
     {
       "name": "src/workflow-security-candidate/src/main/java/com/idms/workflow/CancelReservationControllerV1.java",
-      "bytes": 11478,
-      "sha256": "9e050b991c29a4495700ce2cf356e43721573e3c18d7fec2526d468fab5d6139",
+      "bytes": 11397,
+      "sha256": "d3b931e591f230c7f3934c30d53447c697a11cf9d82445cdf4807fdc815f3210",
       "mode": 438
     },
     {
@@ -21754,8 +21766,14 @@
     },
     {
       "name": "src/workflow-security-candidate/src/main/java/com/idms/workflow/WorkflowController.java",
-      "bytes": 17090,
-      "sha256": "5628d6e9d7182c3638e2c92ca05f38e6b3ac14d1ae4c858d1db01832ec4f22e0",
+      "bytes": 16932,
+      "sha256": "0a15f13c639f560494f01e5c478f54a763bc8478cc43764dd04f36c2057c88d1",
+      "mode": 438
+    },
+    {
+      "name": "src/workflow-security-candidate/src/main/java/com/idms/workflow/WorkflowDataSources.java",
+      "bytes": 3967,
+      "sha256": "1f2625609619628e9e4ad62ce7484e76d4ac8e5da7d290a83cc7833c9867f36d",
       "mode": 438
     },
     {
@@ -21825,6 +21843,12 @@
       "mode": 438
     },
     {
+      "name": "src/workflow-security-candidate/src/test/java/com/idms/workflow/WorkflowDataSourcesTest.java",
+      "bytes": 4704,
+      "sha256": "7b9e48e2efcd26771a2b858c68f6e841b031099838564f5bf86cefe84725a7c3",
+      "mode": 438
+    },
+    {
       "name": "src/workflow-security-candidate/src/test/java/com/idms/workflow/WorkflowHttpJsonTest.java",
       "bytes": 4828,
       "sha256": "24e35fdba724352d4d444cbb4740070279aa618f6b3096b5a046bf6b2b8c6e4c",
@@ -21834,6 +21858,12 @@
       "name": "src/workflow-security-candidate/src/test/java/com/idms/workflow/WorkflowJsonTest.java",
       "bytes": 2230,
       "sha256": "979801e7b69712635ebb41297d17e464979cbf4bdeb5a51855ab88888ac78e23",
+      "mode": 438
+    },
+    {
+      "name": "src/workflow-security-candidate/src/test/java/com/idms/workflow/WorkflowLoggingPolicyTest.java",
+      "bytes": 1268,
+      "sha256": "723a143bec3682ed49c1c6c66aa2d646c68a045343e162236211f721b3864750",
       "mode": 438
     },
     {

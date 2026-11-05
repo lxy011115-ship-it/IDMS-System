@@ -52,7 +52,7 @@ public class CancelReconciliationControllerV1 {
                     ||a.roleOid()==null||!a.roleOid().matches("[1-9][0-9]*")||a.catalogHash()==null||!a.catalogHash().matches("[a-f0-9]{64}"))throw new IllegalArgumentException();
                 JsonNode original=workflow.path("tenants").path(tenant);
                 if(!a.jdbcUrl().equals(original.path("jdbcUrl").asText())||a.token().equals(original.path("serviceToken").asText())||a.user().equals(original.path("user").asText()))throw new IllegalArgumentException();
-                HikariDataSource source=new HikariDataSource();source.setJdbcUrl(a.jdbcUrl());source.setUsername(a.user());source.setPassword(a.password());source.setMaximumPoolSize(2);source.setPoolName("cancel-reconcile-"+tenant);
+                HikariDataSource source=WorkflowDataSources.create(a.jdbcUrl(),a.user(),a.password(),"cancel-reconcile-"+tenant,2);
                 var sql=new JdbcTemplate(source);sql.setQueryTimeout(15);var tx=new TransactionTemplate(new DataSourceTransactionManager(source));tx.setTimeout(15);
                 Tenant t=new Tenant(a,source,sql,tx,("Bearer "+a.token()).getBytes(StandardCharsets.UTF_8));tenants.put(tenant,t);check(t);
                 t.sql().queryForObject("SELECT idms_workflow_cancel_v1.read_v1(?,?::uuid,?::uuid)::text",String.class,tenant,a.authorityId(),java.util.UUID.randomUUID().toString());

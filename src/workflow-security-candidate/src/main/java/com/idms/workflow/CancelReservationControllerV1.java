@@ -41,7 +41,7 @@ public class CancelReservationControllerV1 {
                 keys(source,Set.of("jdbcUrl","user","password","token","authorityId","databaseOid","roleOid","catalogHash","baseCatalogHash"));
                 if(!id.matches("[a-z][a-z0-9_-]{0,63}")||a==null||a.catalogHash()==null||!a.catalogHash().matches("[a-f0-9]{64}")||a.baseCatalogHash()==null||!a.baseCatalogHash().equals(prior.path("catalogHash").asText()))throw new IllegalArgumentException();
                 for(String key:List.of("jdbcUrl","user","password","token","authorityId","databaseOid","roleOid"))if(!source.path(key).isTextual()||!source.path(key).equals(prior.path(key)))throw new IllegalArgumentException();
-                HikariDataSource ds=new HikariDataSource();ds.setJdbcUrl(a.jdbcUrl());ds.setUsername(a.user());ds.setPassword(a.password());ds.setMaximumPoolSize(2);ds.setPoolName("cancel-reservation-"+id);
+                HikariDataSource ds=WorkflowDataSources.create(a.jdbcUrl(),a.user(),a.password(),"cancel-reservation-"+id,2);
                 JdbcTemplate sql=new JdbcTemplate(ds);sql.setQueryTimeout(15);TransactionTemplate tx=new TransactionTemplate(new DataSourceTransactionManager(ds));tx.setTimeout(15);Tenant t=new Tenant(a,ds,sql,tx,("Bearer "+a.token()).getBytes(StandardCharsets.UTF_8));tenants.put(id,t);check(t);
                 sql.queryForObject("SELECT idms_workflow_reservation_v1.read_v1(?,?::uuid,?::uuid)::text",String.class,id,a.authorityId(),java.util.UUID.randomUUID().toString());
             }

@@ -2,6 +2,8 @@
 
 更新：2026-11-05。当前范围为本地开发版及受控企业试点准备；正式生产门禁仍开启。
 
+新增[工作流维护者公告与连接防护](workflow-maintainer-review-2026-11-05.md)：29个上游仓库公告列表及官方登记合并形成850条范围判断，逐项关联98个实际库和105组坐标；识别索引未返回的上游无补丁pgJDBC问题，统一六个连接池的URL、证书文件及有限登录策略，Logback更新1.6.6并核对许可证实际打包。19项测试在Windows通过18项，1项Linux专项由Linux CI执行；实际负例及双企业九路由/357表对照通过。原系统健康200、就绪503的当前失败项仍是采集隔离待处置，本轮没有修改隔离数据或切换原服务。无补丁项的生产接受、完整平台安全与恢复门禁继续保留。
+
 新增[真实AI网关非空回执与加密恢复](ai-nonempty-recovery-2026-11-05.md)：原网关及原令牌、还原的真实模型和D盘程序副本，完成并发幂等/企业隔离/签名校验、两企业非空SQLite检查点实际加密还原、原回执重放及恢复后新请求；两个网关和模型均正常退出。尚未覆盖主站AI outbox投影及全平台一致恢复。
 
 用户已批准[工作流安全维护路线A](superpowers/specs/2026-11-05--workflow-security-maintenance.md)，按[实施计划](superpowers/plans/2026-11-05--workflow-security-maintenance.md)在[独立候选源码](../src/workflow-security-candidate/README.md)推进Boot 4/Flowable 8/Jackson 3。[最新报告](workflow-security-upgrade-and-recovery-2026-11-05.md)记录实际引擎兼容修复、11项测试、双企业显式迁移、九类路由业务、升级后恢复及原JAR档案回退；已有库的初始化误升级入口也已封住。98个实际依赖及内嵌内容的105组坐标筛查未命中，但完整安全适用性和平台准入仍未关闭。原运行目录、JAR和10个服务保持。[首批构建报告](workflow-security-candidate-2026-11-05.md)保留历史结果。本轮D盘临时副本已校验回收约1.05GB，C盘活跃运行迁移仍待完成。

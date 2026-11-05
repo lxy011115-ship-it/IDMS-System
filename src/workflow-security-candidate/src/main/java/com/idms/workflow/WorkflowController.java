@@ -41,9 +41,9 @@ public class WorkflowController {
         Config config=json.readValue(Files.readString(Path.of(configPath)),Config.class);
         for(var entry:config.tenants().entrySet()){
             String tenantId=entry.getKey();Account a=entry.getValue();
-            if(!tenantId.matches("[A-Za-z0-9_-]{1,80}")||a.serviceToken().length()<32||!a.jdbcUrl().startsWith("jdbc:postgresql://127.0.0.1:"))throw new IllegalStateException("Invalid local workflow account binding");
+            if(!tenantId.matches("[A-Za-z0-9_-]{1,80}")||a.serviceToken().length()<32)throw new IllegalStateException("Invalid local workflow account binding");
             if((a.recoveryReadToken()==null)!=(a.recoveryAuthorityId()==null)||a.recoveryReadToken()!=null&&(a.recoveryReadToken().length()<32||a.recoveryReadToken().length()>256||a.recoveryReadToken().equals(a.serviceToken())||!a.recoveryAuthorityId().matches("[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}")))throw new IllegalStateException("Invalid recovery reader binding");
-            HikariDataSource source=new HikariDataSource();source.setJdbcUrl(a.jdbcUrl());source.setUsername(a.user());source.setPassword(a.password());source.setMaximumPoolSize(3);source.setPoolName("workflow-"+tenantId);
+            HikariDataSource source=WorkflowDataSources.create(a.jdbcUrl(),a.user(),a.password(),"workflow-"+tenantId,3);
             var tm=new DataSourceTransactionManager(source);var sql=new JdbcTemplate(source);
             ProcessEngine engine=null;
             try {
