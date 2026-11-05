@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T02:51:19.133Z",
+  "createdAt": "2026-11-05T03:34:23.682Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 13922,
-      "sha256": "5c70139f2867467fbba08f16568cd2c60934ad1a18400a8260e62b4829ecb38b",
+      "bytes": 14232,
+      "sha256": "366d4a38e24c57255865eb33d324a8b09b280a2030d6cbf342b055a88dd62d9b",
       "mode": 438
     },
     {
@@ -2092,8 +2092,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 6005,
-      "sha256": "b5c3a341a7dbd367d72894ab069e357249cfd8773f1fcd406876db8aa4924eb5",
+      "bytes": 6384,
+      "sha256": "3a464ceae4d0035119400360fa325e18b6521ac0b1dccb57c43c33a6442b0efe",
       "mode": 438
     },
     {
@@ -2104,8 +2104,8 @@
     },
     {
       "name": "docs/production-readiness.md",
-      "bytes": 10919,
-      "sha256": "aab47f8b0d5569393d794c53be705a9c8592fc01b84e8654d337550fa6bf2b0d",
+      "bytes": 11201,
+      "sha256": "80c8611e0be24e1e5b4c57198bf9e00cca9882a7972a70c1fba26bb7c2026d08",
       "mode": 438
     },
     {
@@ -5784,6 +5784,12 @@
       "name": "docs/workflow-controlled-upgrade-progress.md",
       "bytes": 2419,
       "sha256": "689b49ec03cd24b74b598e6e50839c1a13e9b8ab7ee405593d12d2f0458ae906",
+      "mode": 438
+    },
+    {
+      "name": "docs/workflow-dependency-security-review-2026-11-05.md",
+      "bytes": 5322,
+      "sha256": "59fc6901f45d5df675adc0c43c37697b965db03a45a84a35a3ab49dd2aed4e1d",
       "mode": 438
     },
     {
