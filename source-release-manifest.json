@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T14:40:48.329Z",
+  "createdAt": "2026-11-05T15:16:29.512Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -796,8 +796,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 22601,
-      "sha256": "e0c7af50bc836696361d4453514947622d1455842072d752e8ba55bd8692f968",
+      "bytes": 23073,
+      "sha256": "3746ec43e35ab71058a1ad00deccfe62b7720362f383a4c22d1dfbf9730ca21a",
       "mode": 438
     },
     {
@@ -2170,8 +2170,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 12900,
-      "sha256": "539f203c29aef184fbeb5b380c043318c2c6d3d5a9e4945f52af561f338a78bc",
+      "bytes": 13466,
+      "sha256": "6eb73da7df8938efa5b702a1dd3b6fae7c4ecc80e6228317620b1449e7ea5417",
       "mode": 438
     },
     {
@@ -4572,6 +4572,12 @@
       "name": "docs/telemetry-guide.md",
       "bytes": 6214,
       "sha256": "e6d9c22d6b32af006ba925f79e7e85b825a14182c6a5e715d2640b16269fb2aa",
+      "mode": 438
+    },
+    {
+      "name": "docs/telemetry-live-capacity-and-runtime-closure-2026-11-05.md",
+      "bytes": 12204,
+      "sha256": "0fc98e32d6099493afcc5826ab5b2fb60b896f12ceb2735d13b67fe5d077bcd4",
       "mode": 438
     },
     {
