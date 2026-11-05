@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T16:15:49.995Z",
+  "createdAt": "2026-11-05T16:31:54.531Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -21778,8 +21778,8 @@
     },
     {
       "name": "src/workflow-security-candidate/README.md",
-      "bytes": 2416,
-      "sha256": "31a6ab2bbfe293cacb9c29bed7d1b27f52d68d063a2a5eb247176b9c5ebce6a0",
+      "bytes": 2745,
+      "sha256": "25e2d320ae6fe1a45d88a4cd682e322ee8f5de7abed711da1354c91e2ab7b694",
       "mode": 438
     },
     {
@@ -21808,8 +21808,8 @@
     },
     {
       "name": "src/workflow-security-candidate/src/main/java/com/idms/workflow/WorkflowController.java",
-      "bytes": 16932,
-      "sha256": "0a15f13c639f560494f01e5c478f54a763bc8478cc43764dd04f36c2057c88d1",
+      "bytes": 19533,
+      "sha256": "0f4e428102d04a76ba0a58bde067a3fcdd740f47741504bb06942ec8a1c87b3c",
       "mode": 438
     },
     {
@@ -21892,8 +21892,8 @@
     },
     {
       "name": "src/workflow-security-candidate/src/test/java/com/idms/workflow/WorkflowHttpJsonTest.java",
-      "bytes": 4828,
-      "sha256": "24e35fdba724352d4d444cbb4740070279aa618f6b3096b5a046bf6b2b8c6e4c",
+      "bytes": 6765,
+      "sha256": "1babc73def753ac6bc256801e064f2f66105618eecfe4277b9d7dc6cfa991776",
       "mode": 438
     },
     {

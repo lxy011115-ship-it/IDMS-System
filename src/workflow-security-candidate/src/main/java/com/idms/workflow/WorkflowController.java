@@ -2,6 +2,7 @@ package com.idms.workflow;
 
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ObjectNode;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.annotation.PreDestroy;
@@ -11,12 +12,21 @@ import org.flowable.engine.TaskService;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.task.Comment;
 import org.flowable.task.api.Task;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +36,7 @@ import java.util.*;
 
 @RestController
 public class WorkflowController {
+    private static final int MAX_COMMAND_BODY_BYTES = 1024 * 1024;
     record Account(String jdbcUrl,String user,String password,String serviceToken,String recoveryReadToken,String recoveryAuthorityId) {}
     record Config(Map<String,Account> tenants) {}
     record Actor(String id,String type,List<String> permissions) {}
@@ -33,9 +44,11 @@ public class WorkflowController {
     record Tenant(ProcessEngine engine,JdbcTemplate sql,TransactionTemplate tx,HikariDataSource source,byte[] token,String definitionId,byte[] recoveryToken,String recoveryAuthorityId) {}
     private final Map<String,Tenant> tenants=new HashMap<>();
     private final ObjectMapper json;
+    private final JacksonJsonHttpMessageConverter commandConverter;
     private final String startupMode=WorkflowStartup.mode(System.getenv("IDMS_WORKFLOW_STARTUP_MODE"));
-    WorkflowController(ObjectMapper json) throws Exception {
+    WorkflowController(JsonMapper json) throws Exception {
         this.json=json;
+        this.commandConverter = new JacksonJsonHttpMessageConverter(json);
         String configPath=System.getenv("IDMS_WORKFLOW_CONFIG");
         if(configPath==null)throw new IllegalStateException("Private workflow configuration is required");
         Config config=json.readValue(Files.readString(Path.of(configPath)),Config.class);
@@ -80,8 +93,10 @@ public class WorkflowController {
     @GetMapping("/health") Map<String,Object> health(){return Map.of("status","UP","engine","Flowable","version",WorkflowStartup.engineVersion(),"process","idmsMaintenanceV1","tenantCount",tenants.size());}
     @GetMapping("/v1/status") Map<String,Object> status(HttpServletRequest request) throws Exception {Tenant t=authenticate(request);return Map.of("status","UP","engine","Flowable","version",WorkflowStartup.engineVersion(),"definitionId",t.definitionId(),"activeProcesses",t.engine().getRuntimeService().createProcessInstanceQuery().count(),"startupContract",WorkflowStartup.CONTRACT,"startupMode",startupMode,"definitionVersion",WorkflowStartup.VERSION,"definitionDigest",WorkflowStartup.digest(WorkflowStartup.reviewedResource()));}
     @GetMapping("/v1/cases/{entityId}") Map<String,Object> details(HttpServletRequest request,@PathVariable String entityId){Tenant t=authenticate(request);return t.tx().execute(s->view(t,entityId));}
-    @PostMapping("/v1/commands") Map<String,Object> command(HttpServletRequest request,@RequestBody JsonNode payload){
-        Tenant t=authenticate(request);Command command=decode(payload);validate(command);
+    @PostMapping("/v1/commands") Map<String,Object> command(HttpServletRequest request){
+        Tenant t = authenticate(request);
+        Command command = decode(readCommandBody(request, commandConverter));
+        validate(command);
         return t.tx().execute(tx->{
             // Serialize every command of this business object, including first creation; receipt and engine share this transaction.
             t.sql().queryForObject("SELECT pg_advisory_xact_lock(hashtext(?)) IS NULL",Boolean.class,command.entityId());
@@ -97,6 +112,40 @@ public class WorkflowController {
             return result;
         });
     }
+
+    static JsonNode readCommandBody(HttpServletRequest request, JacksonJsonHttpMessageConverter converter) {
+        if (request.getContentLengthLong() > MAX_COMMAND_BODY_BYTES) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(413), "Command body exceeds 1 MiB");
+        }
+        try {
+            byte[] body = request.getInputStream().readNBytes(MAX_COMMAND_BODY_BYTES + 1);
+            if (body.length > MAX_COMMAND_BODY_BYTES) {
+                throw new ResponseStatusException(HttpStatusCode.valueOf(413), "Command body exceeds 1 MiB");
+            }
+            if (body.length == 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Command body is required");
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            String contentType = request.getContentType();
+            try {
+                if (contentType != null) headers.setContentType(MediaType.parseMediaType(contentType));
+            } catch (IllegalArgumentException invalidMediaType) {
+                throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported command media type");
+            }
+            if (headers.getContentType() == null || !converter.canRead(JsonNode.class, headers.getContentType())) {
+                throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported command media type");
+            }
+
+            return (JsonNode) converter.read(JsonNode.class, new HttpInputMessage() {
+                @Override public HttpHeaders getHeaders() { return headers; }
+                @Override public InputStream getBody() { return new ByteArrayInputStream(body); }
+            });
+        } catch (IOException | HttpMessageNotReadableException failure) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid command JSON");
+        }
+    }
+
     private Command decode(JsonNode payload){
         try{
             WorkflowJson.requireCommand(payload);

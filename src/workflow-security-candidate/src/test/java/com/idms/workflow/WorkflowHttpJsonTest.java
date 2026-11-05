@@ -2,7 +2,9 @@ package com.idms.workflow;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Properties;
+import jakarta.servlet.ServletInputStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
@@ -10,6 +12,8 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.mock.http.MockHttpInputMessage;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ObjectNode;
@@ -35,6 +39,40 @@ class WorkflowHttpJsonTest {
         var input = new MockHttpInputMessage(body.getBytes(StandardCharsets.UTF_8));
         input.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         return (JsonNode) converter.read(JsonNode.class, input);
+    }
+
+    @Test
+    void commandBodyRejectsAnOversizedDeclarationBeforeReading() throws Exception {
+        context().run(ctx -> {
+            var converter = new JacksonJsonHttpMessageConverter(ctx.getBean(JsonMapper.class));
+            var request = new MockHttpServletRequest() {
+                @Override public long getContentLengthLong() { return 1024L * 1024 + 1; }
+                @Override public ServletInputStream getInputStream() { throw new AssertionError("Body was read"); }
+            };
+            var failure = assertThrows(ResponseStatusException.class, () -> WorkflowController.readCommandBody(request, converter));
+            assertEquals(413, failure.getStatusCode().value());
+        });
+    }
+
+    @Test
+    void commandBodyEnforcesTheByteLimitWithNoDeclaredLength() throws Exception {
+        context().run(ctx -> {
+            var converter = new JacksonJsonHttpMessageConverter(ctx.getBean(JsonMapper.class));
+            var request = new MockHttpServletRequest() {
+                @Override public long getContentLengthLong() { return -1; }
+            };
+            request.setContentType("application/vnd.idms+json");
+            byte[] limit = new byte[1024 * 1024];
+            Arrays.fill(limit, (byte) ' ');
+            limit[limit.length - 2] = '{';
+            limit[limit.length - 1] = '}';
+            request.setContent(limit);
+            assertTrue(WorkflowController.readCommandBody(request, converter).isObject());
+
+            request.setContent(Arrays.copyOf(limit, limit.length + 1));
+            var failure = assertThrows(ResponseStatusException.class, () -> WorkflowController.readCommandBody(request, converter));
+            assertEquals(413, failure.getStatusCode().value());
+        });
     }
 
     @Test
