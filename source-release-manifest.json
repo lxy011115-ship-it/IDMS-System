@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T13:06:26.171Z",
+  "createdAt": "2026-11-05T13:33:15.158Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -796,8 +796,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 21592,
-      "sha256": "632f1017f02619e68f0e4a02486c093b2172f77cc6f43bc85c18f073ea7ec17c",
+      "bytes": 22034,
+      "sha256": "7990abe46aa0a9ba95aabeea1f2ba433525db254f5d6e4e7b6adb4ec0a090123",
       "mode": 438
     },
     {
@@ -2164,8 +2164,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 11856,
-      "sha256": "a07d6163f9c16170aa6a00e78cb57972e30672d85c936f0893ff125ee3dc187e",
+      "bytes": 12387,
+      "sha256": "01fc2410c5863d7ecbadedd130bc3e233e1b6d8b8d5c4dd4fe3dab2502ce4335",
       "mode": 438
     },
     {
@@ -3370,8 +3370,8 @@
     },
     {
       "name": "docs/superpowers/plans/2026-11-05--workflow-security-maintenance.md",
-      "bytes": 4299,
-      "sha256": "941de09ab5bd2b3899e47d68765b9155d90f2748cf0bb79df309c9b6d165ff91",
+      "bytes": 4835,
+      "sha256": "d0d7d7aaf5ced0c95d1372e3bb17fb1f13fba21fc7d3c50dde7b242764675542",
       "mode": 438
     },
     {
@@ -5994,6 +5994,12 @@
       "name": "docs/workflow-source-reader-v1-guide.md",
       "bytes": 3196,
       "sha256": "04c7a982e3d70adf674ca4fd5c302bdce0776001959fd26dff67fb76739ecde0",
+      "mode": 438
+    },
+    {
+      "name": "docs/workflow8-main-joint-recovery-2026-11-05.md",
+      "bytes": 7122,
+      "sha256": "4b64d522cf64563537d94416c034f67951599f08bbcb2f79eaec57eebac7c022",
       "mode": 438
     },
     {
@@ -21742,8 +21748,8 @@
     },
     {
       "name": "src/workflow-security-candidate/README.md",
-      "bytes": 2039,
-      "sha256": "5edf794e825776c96f13f1dd5017f02ffa945c4fe43c8bd8d0a5e104822d91dd",
+      "bytes": 2416,
+      "sha256": "31a6ab2bbfe293cacb9c29bed7d1b27f52d68d063a2a5eb247176b9c5ebce6a0",
       "mode": 438
     },
     {
