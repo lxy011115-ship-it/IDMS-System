@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T06:41:55.464Z",
+  "createdAt": "2026-11-05T07:10:37.333Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 16657,
-      "sha256": "b23c0e9d5b46c4e6054ace236297e6de49c7fc1a76bc52c922c59a8ea63767d6",
+      "bytes": 17183,
+      "sha256": "ce6ff8e0c31fae037f62dae4899f3cb525ade4118547efc206b0fab7e96383ef",
       "mode": 438
     },
     {
@@ -1254,6 +1254,12 @@
       "name": "docs/existing-platform-startup-guide.md",
       "bytes": 7582,
       "sha256": "6f69f0c5a8bef197ad03cd02a384b45206bb0fed3be49426d8851fdc607a2438",
+      "mode": 438
+    },
+    {
+      "name": "docs/existing-workflow-nonempty-recovery-2026-11-05.md",
+      "bytes": 4108,
+      "sha256": "d98c7870f107ceb38142023e4703f6cab3a044706778ecaf8b72142a8afbe4d6",
       "mode": 438
     },
     {
@@ -2122,8 +2128,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 8544,
-      "sha256": "59da036152d8a4ee40a964758a0f7f09e884ca118cb80937cb5af7827f1433cd",
+      "bytes": 8677,
+      "sha256": "a94a829ba6468e6dabe73cd307cd1a0ab2f25cd310754ec93357ec8273d1b42b",
       "mode": 438
     },
     {
