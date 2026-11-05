@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T05:30:04.163Z",
+  "createdAt": "2026-11-05T05:56:29.226Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 15787,
-      "sha256": "c23df1e45cea37b5296572bb3f7db63e42dc3f0360674f20bb487245d21f6d07",
+      "bytes": 16244,
+      "sha256": "ae160dd68d849583ed1bccb2e558e883a998f236d891ede9ad2ee8e6211779e9",
       "mode": 438
     },
     {
@@ -1731,6 +1731,12 @@
       "mode": 438
     },
     {
+      "name": "docs/joint-recovery-reconciliation-2026-11-05.md",
+      "bytes": 4670,
+      "sha256": "adda20d470006e98870468e238847609a4b09274ac7acb5cdcd4202f6b5bed94",
+      "mode": 438
+    },
+    {
       "name": "docs/legacy-edge-flow-guide.md",
       "bytes": 3756,
       "sha256": "b5951da0df80b74e10cccdccf00a0524cf1a34120a7a5aaac9c38ebc3a6c0ec2",
@@ -2116,8 +2122,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 8094,
-      "sha256": "45827df068ecfd916cadad62f687e7409c4a54a0fcd9ee435106784bb3e39a50",
+      "bytes": 8544,
+      "sha256": "59da036152d8a4ee40a964758a0f7f09e884ca118cb80937cb5af7827f1433cd",
       "mode": 438
     },
     {
