@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T04:35:32.862Z",
+  "createdAt": "2026-11-05T04:55:44.229Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 14937,
-      "sha256": "be154fc4c770933fa9696b80618249a804bb4a2b7574eed8811c2e052d84a406",
+      "bytes": 15347,
+      "sha256": "0f335740fa739836b41568c12ee6602030c965ebbb694953f33a4844fb9def78",
       "mode": 438
     },
     {
@@ -1839,6 +1839,12 @@
       "mode": 438
     },
     {
+      "name": "docs/original-cluster-physical-recovery-2026-11-05.md",
+      "bytes": 6842,
+      "sha256": "857b7802418c290367d9dd1cdfdf405a9d1be0b78609886d50efaf3109ddf0b2",
+      "mode": 438
+    },
+    {
       "name": "docs/outbox-worker-ha-guide.md",
       "bytes": 6410,
       "sha256": "f2735a8a372949fb2d9203562a3531506d479c4922d0d9486af4e6c06c9b74bc",
@@ -2104,8 +2110,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 7030,
-      "sha256": "38476535d64fc77eaa03a728cbe922106fc7dc6b720b77acc27a6c1f7144fd00",
+      "bytes": 7640,
+      "sha256": "d665ae4545254058835f6d2818f2991491620e4d3dcc7d2453625db5a724e0db",
       "mode": 438
     },
     {
