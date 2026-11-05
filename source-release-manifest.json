@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T15:31:55.863Z",
+  "createdAt": "2026-11-05T16:04:19.852Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -796,8 +796,14 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 23562,
-      "sha256": "c078c4ae88640436d8413ac3ccd76673933fbd77efa7abb585c320873d10cb01",
+      "bytes": 24066,
+      "sha256": "ab683a6daf8eb3e0e6ca47d42650ed2600d70e0f78008a1224bcc62c61649c2b",
+      "mode": 438
+    },
+    {
+      "name": "docs/current-edge-pg-recovery-2026-11-06.md",
+      "bytes": 7995,
+      "sha256": "f8dce6996f6fbb1a172c26c7c47b7786d9aef52c623f59da69a6e7877fde92c1",
       "mode": 438
     },
     {
@@ -2176,8 +2182,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 13983,
-      "sha256": "c37a3de0db9ae0bd3d3450939df737d0fb3bc56055d4df90acced4407c85404a",
+      "bytes": 14573,
+      "sha256": "30c10ac5d0da4898678e34eef661c43607cc993f061aeda6ab6fabc7db1260fd",
       "mode": 438
     },
     {
