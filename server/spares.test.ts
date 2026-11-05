@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {spareCommand,sparesView,stock,quantity,money,type SparesState,type SpareReferences} from './spares.ts';
+import {spareCommand,sparesView,stock,quantity,money,businessDay,type SparesState,type SpareReferences} from './spares.ts';
 import type {AccessContext} from './access.ts';
 const ctx=(actor:string,roles:string[]):AccessContext=>({tenantId:'qa',actorId:actor,actorType:'USER',authMode:'oidc',roles,correlationId:'spares-unit',scope:{provided:true,sites:['F1'],lines:['*'],devices:['*']}});
 const admin=ctx('clerk',['spare-parts-clerk']),approver=ctx('reviewer',['final-approver']),refs:SpareReferences={devices:[{code:'P-1',name:'泵',siteCode:'F1'}],orders:[]};
@@ -21,14 +21,18 @@ test('self approval, stale versions and unauthorized site cannot mutate the work
  assert.throws(()=>f.run('purchase.approve',{id:f.purchase.id,expectedVersion:1,decision:'APPROVED',comment:'旧版'},approver),/版本已变化/);
  assert.equal(f.purchase.status,'SUBMITTED');assert.throws(()=>f.act('purchase.order'),/状态|已批准/);
 });
-test('stocktake/opening approval checks fresh ledger baseline and keeps installation separate',()=>{
+for(const [instant,date,previousDate]of [['2026-11-05T15:59:59.999Z','2026-11-05','2026-11-04'],['2026-11-05T16:00:00.000Z','2026-11-06','2026-11-05']])test(`stocktake/opening approval keeps installation separate at ${instant}`,(t)=>{
+ t.mock.timers.enable({apis:['Date'],now:new Date(instant)});
  const f=fixture(),opening=f.run('adjustment.create',{partId:f.part.id,warehouseId:f.warehouse.id,type:'OPENING',quantity:'5',reason:'期初清点'});
  assert.throws(()=>f.run('adjustment.approve',{id:opening.id,expectedVersion:1,decision:'APPROVED',comment:'自审'},ctx('clerk',['spare-parts-clerk','final-approver'])),/不能自审/);
  f.run('adjustment.approve',{id:opening.id,expectedVersion:1,decision:'APPROVED',comment:'核对实物'},approver);
  const count=f.run('adjustment.create',{partId:f.part.id,warehouseId:f.warehouse.id,type:'COUNT',quantity:'4',reason:'盘点差异'}),issue=f.run('stock.issue',{partId:f.part.id,warehouseId:f.warehouse.id,deviceCode:'P-1',quantity:'2',reason:'更换用料'});
  assert.throws(()=>f.run('adjustment.approve',{id:count.id,expectedVersion:1,decision:'APPROVED',comment:'复核'},approver),/库存已变化/);
  const link=f.run('link.create',{partId:f.part.id,deviceCode:'P-1',position:'前轴承',quantity:'1',cycleDays:90});assert.equal(link.lastDate,'');
- f.run('replacement.create',{id:issue.id,linkId:link.id,quantity:'1',date:new Date().toISOString().slice(0,10),reason:'实际更换完成'});assert.equal(stock(f.state,f.part.id,f.warehouse.id).quantityMilli,3000);
+ assert.equal(businessDay(),date);
+ const replacement={id:issue.id,linkId:link.id,quantity:'1',date:businessDay(),reason:'实际更换完成'};
+ assert.throws(()=>f.run('replacement.create',{...replacement,date:previousDate}),/更换日期/);
+ f.run('replacement.create',replacement);assert.equal(stock(f.state,f.part.id,f.warehouse.id).quantityMilli,3000);assert.equal(link.lastDate,date);
  assert.throws(()=>f.run('stock.return',{id:issue.id,quantity:'2',reason:'已安装不能退'}),/超过/);
  assert.ok(sparesView(f.state,admin,refs).reminders[0].dueDate);
 });

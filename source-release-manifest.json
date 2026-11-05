@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T16:04:19.852Z",
+  "createdAt": "2026-11-05T16:15:49.995Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -796,14 +796,14 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 24066,
-      "sha256": "ab683a6daf8eb3e0e6ca47d42650ed2600d70e0f78008a1224bcc62c61649c2b",
+      "bytes": 24372,
+      "sha256": "e739f969568d20c269f0f7e28f6956a750784c87dd65a6366b14556887926da0",
       "mode": 438
     },
     {
       "name": "docs/current-edge-pg-recovery-2026-11-06.md",
-      "bytes": 7995,
-      "sha256": "f8dce6996f6fbb1a172c26c7c47b7786d9aef52c623f59da69a6e7877fde92c1",
+      "bytes": 8788,
+      "sha256": "a5f6180d3a7913094e7a084f1e49751ae1a67141bd17fa9a204b9142e99106e4",
       "mode": 438
     },
     {
@@ -20950,8 +20950,8 @@
     },
     {
       "name": "server/spares.test.ts",
-      "bytes": 6129,
-      "sha256": "6c7c898f2a457c829075a7b36b3ebf16ebbab744e7af275deaa10ddc9a72e236",
+      "bytes": 6517,
+      "sha256": "561d8004b73e1ca5448ace21ebf41dffc93ae7c420d0c564af2ae8d1ba7401da",
       "mode": 438
     },
     {

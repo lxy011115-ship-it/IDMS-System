@@ -61,3 +61,9 @@ SQLite和PG按先后顺序取得，没有停止或持久围栏全部生产者/�
 按精确路径、目录身份、逐文件摘要、正常停止及档案实际恢复门槛，回收三个PG明文中间目录和两个临时tar，共21070文件、1466596243逻辑字节。最终第三个只读恢复目录仍保留并已停库；两份加密档案、密钥、26文件解密集、原始快照、原在线manifest/label、SQL摘要和所有日志/收据保留。没有删除C盘文件或原企业/历史数据库。
 
 本机权威记录位于`.local/recovery-drills/current-edge-pair-20261105`：`capture-ready.private.json`、`isolated-recovery/complete.private.json`、`inputs-ready.private.json`、`comparison.private.json`、`pg-normal-stop.private.json`、`reconciliation-qualified.private.json`及`isolated-recovery/raw-retirement-complete.private.json`。企业配置、密钥、SQLite和数据库资料不上传GitHub。
+
+## 发布检查中的跨日测试修正
+
+报告首次提交`96fdbbe`的Linux检查有673项服务端测试，其中672通过、1失败。日志定位到旧备件测试以UTC日期登记更换，而领用日期按北京时间校验，UTC16点后会把测试输入当作领用前一天；页面与业务实现已经使用北京时间，本轮不修改它们。
+
+测试现固定在UTC15:59:59.999和16:00:00两个时点，使用既有businessDay，并明确断言早于领用日期仍拒绝。旧UTC输入在固定跨日用例真实复现失败；修正后UTC与Asia/Shanghai两个进程环境各6项通过，原485项运行源码绑定保持。这是测试夹具修正，没有放宽更换日期规则；失败CI和日志继续保留，不通过重复跑旧提交碰运气获取绿色结果。
