@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T01:57:00.796Z",
+  "createdAt": "2026-11-05T02:28:12.779Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 12425,
-      "sha256": "227a113ec7baec92106abb61ea20ea52aa09d50788d7bae77c4cd242a24525ec",
+      "bytes": 13476,
+      "sha256": "09d47b8cb275594f5b7888a655d29f60e9bdf4230320ccb2c26b7461bf266913",
       "mode": 438
     },
     {
@@ -2098,8 +2098,8 @@
     },
     {
       "name": "docs/production-readiness.md",
-      "bytes": 9325,
-      "sha256": "577b383f855f3f7805e6d459ab84c90941ab07c73d192cc5cc57d3e1344c96f8",
+      "bytes": 10319,
+      "sha256": "21e7fbb234fdb314c2446c3accb1c670e44ead9434ec492709db2110eeced40f",
       "mode": 438
     },
     {
@@ -2254,8 +2254,8 @@
     },
     {
       "name": "docs/runtime-inspection-guide.md",
-      "bytes": 9782,
-      "sha256": "32c9e51354f8fc677498adf768724eebb1d4c59cad975dfcead85d450ac5f79a",
+      "bytes": 10988,
+      "sha256": "19dd74e4fd63bfe6308d06b3c64772f44ef5a727a8563f897f496e91c50e9e2f",
       "mode": 438
     },
     {
@@ -4437,6 +4437,12 @@
       "mode": 438
     },
     {
+      "name": "docs/superpowers/specs/2026-11-05--incremental-runtime-and-spares-integration.md",
+      "bytes": 8696,
+      "sha256": "5ffc7c77b1709d5cc8f901d4d734f1f0f3725175bc3a4996843d5b1666d72549",
+      "mode": 438
+    },
+    {
       "name": "docs/system-flow.md",
       "bytes": 9776,
       "sha256": "b6c8a7ac71adcfe883aaf4ddd9f41a8e0bc9037b058797f0448f0247ebcef764",
@@ -4498,8 +4504,8 @@
     },
     {
       "name": "docs/telemetry-recovery-progress.md",
-      "bytes": 17061,
-      "sha256": "aa305613fe9a7ad1a7e6e61b03f81f4951d78a3736eac58dd5ba875ebf75dbce",
+      "bytes": 19069,
+      "sha256": "df00737fbee7605b8c222ddd40de3de39b56e2e8bba6f080317d6504b3ae7c2f",
       "mode": 438
     },
     {
@@ -4522,8 +4528,8 @@
     },
     {
       "name": "docs/training-delivery-guide.md",
-      "bytes": 3038,
-      "sha256": "6abd93a650fd62cf0af4090c3dc7222cbc3f3362e2fb9c6a3bcc85bfcee9da2f",
+      "bytes": 3183,
+      "sha256": "e89c81ef05361f9f8359bc34c3118d7e431ec20438de40b3ad0b10095679c2ce",
       "mode": 438
     },
     {

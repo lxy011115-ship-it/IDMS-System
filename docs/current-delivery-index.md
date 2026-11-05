@@ -1,8 +1,12 @@
 # IDMS 当前交付索引
 
-更新：2026-11-01。当前范围为本地开发版及受控企业试点准备；正式生产门禁仍开启。
+更新：2026-11-05。当前范围为本地开发版及受控企业试点准备；正式生产门禁仍开启。
 
-按批准的采集恢复方案B继续开发：[内存、缓存保全、组合验证及维护准备](telemetry-recovery-progress.md)。75k/85k合成PG、10000条消息守恒及真实PG/MQTT/SQLite组合通过；原数据库已单独启动并生成只读提案，旧消息未变。迁移执行、运行绑定及网站/登录恢复尚未完成，不能以历史READY记录代表当前在线。
+按批准的采集恢复方案B，已完成四类真实资格验证、实际缓存备份与独立恢复核对、SQLite及运行描述v2升级，并通过普通入口恢复10个本机服务。用户已登录企业账号并核对工作台。运行版本为[8b47825](https://github.com/lxy011115-ship-it/IDMS-System/commit/8b478252c5688e9f97687c634007f06f70691f2c)，[同提交CI成功](https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/41952056623)。详见[实际恢复与剩余问题](telemetry-recovery-progress.md)。
+
+2026-11-05 10:22（北京时间）只读快照：原10000条消息全部保全，289条收到有效拒绝ACK后隔离，9711条待处理；原载荷、摘要及签名核对通过。隔离原因均为序号冲突，不能将隔离计作成功入库。10:19巡检的主站及依赖检查通过，采集仍为`TELEMETRY_QUARANTINE_PENDING`；新采样暂停，整体未就绪。磁盘阈值未配置、备份目录扫描超预算，也仍需处理。以上是有时间点的本机证据，不代表生产放行。
+
+10:24另用一次性profile核对明确的备件升级前备份批次：两企业两份档案全部认证通过，未执行恢复；时效策略仍未配置，因此备份项仍为UNKNOWN。默认巡检配置未修改，详见[巡检证据边界](runtime-inspection-guide.md)。下一阶段[增量运行与当前备件整合设计](superpowers/specs/2026-11-05--incremental-runtime-and-spares-integration.md)已形成，等待评审；不表示已实施或本机换版。
 
 手动运行巡检方案A已实现，功能提交[a260198](https://github.com/lxy011115-ship-it/IDMS-System/commit/a2601986c4e48d0539f8706f85bc40a25cb572e0)的[Linux CI41161099239](https://github.com/lxy011115-ship-it/IDMS-System/actions/runs/41161099239)成功：[入口、配置与报告说明](runtime-inspection-guide.md)。2026-10-31早期复测主站/数据库等依赖未监听，报告FAIL；巡检自身没有自动启动或重启。后续普通启动恢复见下一段；磁盘阈值、备份扫描范围及生产容量仍需处理，不能将CLI交付当作整个平台健康或生产放行。
 
