@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T05:56:29.226Z",
+  "createdAt": "2026-11-05T06:41:55.464Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -784,8 +784,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 16244,
-      "sha256": "ae160dd68d849583ed1bccb2e558e883a998f236d891ede9ad2ee8e6211779e9",
+      "bytes": 16657,
+      "sha256": "b23c0e9d5b46c4e6054ace236297e6de49c7fc1a76bc52c922c59a8ea63767d6",
       "mode": 438
     },
     {
@@ -4479,6 +4479,12 @@
       "mode": 438
     },
     {
+      "name": "docs/superpowers/specs/2026-11-05--workflow-security-maintenance.md",
+      "bytes": 10384,
+      "sha256": "6e19893a5c2e66a9dad302d72a13a1d89d967a8aa283d8f44160acafcb46c8c4",
+      "mode": 438
+    },
+    {
       "name": "docs/system-flow.md",
       "bytes": 9776,
       "sha256": "b6c8a7ac71adcfe883aaf4ddd9f41a8e0bc9037b058797f0448f0247ebcef764",
@@ -5818,8 +5824,8 @@
     },
     {
       "name": "docs/workflow-dependency-security-review-2026-11-05.md",
-      "bytes": 5322,
-      "sha256": "59fc6901f45d5df675adc0c43c37697b965db03a45a84a35a3ab49dd2aed4e1d",
+      "bytes": 7549,
+      "sha256": "c933ce3b9e239f74783f77a887f81f0f7425dc6bd47bdd5d34d467cc2ef3504e",
       "mode": 438
     },
     {

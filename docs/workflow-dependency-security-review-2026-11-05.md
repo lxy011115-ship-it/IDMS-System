@@ -43,3 +43,15 @@ JAR内`application.properties`与源码逐字相符，配置监听`127.0.0.1`；
 5. 候选通过后再形成具体运行绑定及切换影响；本轮没有构建新包、换版、重启或变更数据库。既有增量架构设计仍等待原评审，不把本报告当作批准。
 
 逐依赖摘要、配置检查和实际进程身份收据保留在本机私密`work/existing-platform-20261031`目录，不提交企业配置、凭据或运行档案。
+
+## 后续补充：全坐标索引筛查与迁移探测
+
+已将实际90个嵌套库全部纳入OSV坐标筛查：69个含Maven元数据，其余21个通过Maven Central HTTPS发布摘要与实际JAR字节匹配确认坐标。多个内嵌坐标均保留，共97项查询、14个匹配坐标、63个去重公告ID。原始查询、响应及逐坐标摘要证据保留本机；这些是索引版本匹配，逐公告实际触发条件和企业环境可利用性仍需复核，不等于63个已验证漏洞。
+
+本次索引没有返回此前已由维护者公告核实的`GHSA-m8xf-2cr7-77ph`，即使Jackson坐标已经参与查询。因此不以索引零命中关闭维护者公告。新增索引结果还涉及Logback、Log4j API和OGNL，须与原Spring/Tomcat/Jackson/pgJDBC/Commons Lang问题一并处理。[OSV接口及分页约定](https://google.github.io/osv.dev/post-v1-querybatch/)
+
+独立副本仅替换Boot/Flowable版本后，有效POM解析出Boot 4.1.2、Spring 7.0.10、Tomcat 11.0.27及pgJDBC 42.7.14。实际依赖树使用Jackson 3.1.7；POM还管理Jackson 2.21.7，但该树不包含Jackson 2 Databind。两条默认版本线均需注意相应公告，不能把POM管理项当作实际打包项。6份原Java源码编译实际失败，错误涉及Boot自动配置包及旧Jackson类型；本次未得到通过的修复JAR。先前TLS失败与后续实际编译失败分别保留，不混为一项。另行对21组合成摘要向量进行原Jackson 2.19.2与2.21.8的真实Java比较，均与Node一致；该探测不执行Controller或引擎，不证明Jackson 3和完整HTTP契约已经兼容。
+
+Flowable 8涉及Boot模块、Jackson及历史表结构变化，需显式迁移和回退。完整可评审范围、替代路线及验收要求见[工作流安全维护设计](superpowers/specs/2026-11-05--workflow-security-maintenance.md)。当前运行JAR、企业数据库及账号未变更，整体安全验收继续保持未完成。
+
+另已实证嵌套依赖遗漏风险：新树没有独立OGNL节点，实际MyBatis 3.5.19却与原包字节相同，内含OGNL 3.4.4元数据。因此修复范围包含承载包内部的重定位代码；单独升级`ognl:ognl`不能据此宣称MyBatis内部已修复。
