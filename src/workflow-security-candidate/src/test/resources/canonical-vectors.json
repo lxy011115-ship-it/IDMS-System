@@ -1,0 +1,373 @@
+[
+  {
+    "kind": "command",
+    "payload": {
+      "commandId": "b8a9aaf5-9b28-4e72-881c-2e544c4d03a2",
+      "entityId": "7205baa4-a93f-4414-81e8-e4a91e4272d0",
+      "action": "submit",
+      "expectedVersion": 1,
+      "actor": {
+        "id": "engineer-0",
+        "type": "USER",
+        "permissions": [
+          "maintenance:execute"
+        ]
+      },
+      "comment": "普通维修",
+      "assignee": null,
+      "evidenceDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "correlationId": "contract-0"
+    },
+    "input": "{\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"action\":\"submit\",\"expectedVersion\":1,\"actor\":{\"id\":\"engineer-0\",\"type\":\"USER\",\"permissions\":[\"maintenance:execute\"]},\"comment\":\"普通维修\",\"assignee\":null,\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"correlationId\":\"contract-0\"}",
+    "canonical": "{\"action\":\"submit\",\"actor\":{\"id\":\"engineer-0\",\"permissions\":[\"maintenance:execute\"],\"type\":\"USER\"},\"assignee\":null,\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"comment\":\"普通维修\",\"correlationId\":\"contract-0\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"expectedVersion\":1}",
+    "sha256": "a998ae40340cec669f99820ee967e4012f7541ab11878d2ca6f7ec4ac78a69ad"
+  },
+  {
+    "kind": "receipt",
+    "payload": {
+      "status": "APPLIED",
+      "version": 1,
+      "state": "AWAITING_APPROVAL",
+      "history": [
+        {
+          "comment": "普通维修",
+          "at": "2026-11-05T00:00:00Z",
+          "actor": "engineer-0"
+        }
+      ],
+      "optional": null,
+      "emptyObject": {},
+      "emptyArray": []
+    },
+    "input": "{\"status\":\"APPLIED\",\"version\":1,\"state\":\"AWAITING_APPROVAL\",\"history\":[{\"comment\":\"普通维修\",\"at\":\"2026-11-05T00:00:00Z\",\"actor\":\"engineer-0\"}],\"optional\":null,\"emptyObject\":{},\"emptyArray\":[]}",
+    "canonical": "{\"emptyArray\":[],\"emptyObject\":{},\"history\":[{\"actor\":\"engineer-0\",\"at\":\"2026-11-05T00:00:00Z\",\"comment\":\"普通维修\"}],\"optional\":null,\"state\":\"AWAITING_APPROVAL\",\"status\":\"APPLIED\",\"version\":1}",
+    "sha256": "69a81d29ae776b02b8de8607b7a63675c21645edc239abe3696ac826d4e81a39"
+  },
+  {
+    "kind": "command",
+    "payload": {
+      "commandId": "b8a9aaf5-9b28-4e72-881c-2e544c4d03a2",
+      "entityId": "7205baa4-a93f-4414-81e8-e4a91e4272d0",
+      "action": "submit",
+      "expectedVersion": 2,
+      "actor": {
+        "id": "engineer-1",
+        "type": "USER",
+        "permissions": [
+          "maintenance:execute"
+        ]
+      },
+      "comment": "备件“轴承”\\规格\n新行",
+      "assignee": null,
+      "evidenceDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "correlationId": "contract-1"
+    },
+    "input": "{\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"action\":\"submit\",\"expectedVersion\":2,\"actor\":{\"id\":\"engineer-1\",\"type\":\"USER\",\"permissions\":[\"maintenance:execute\"]},\"comment\":\"备件“轴承”\\\\规格\\n新行\",\"assignee\":null,\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"correlationId\":\"contract-1\"}",
+    "canonical": "{\"action\":\"submit\",\"actor\":{\"id\":\"engineer-1\",\"permissions\":[\"maintenance:execute\"],\"type\":\"USER\"},\"assignee\":null,\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"comment\":\"备件“轴承”\\\\规格\\n新行\",\"correlationId\":\"contract-1\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"expectedVersion\":2}",
+    "sha256": "ad39ca18df85954b25aa4304092f86b1787d3e2a87d7cc3178dbcdf45e8a5183"
+  },
+  {
+    "kind": "receipt",
+    "payload": {
+      "status": "APPLIED",
+      "version": 2,
+      "state": "AWAITING_APPROVAL",
+      "history": [
+        {
+          "comment": "备件“轴承”\\规格\n新行",
+          "at": "2026-11-05T00:00:00Z",
+          "actor": "engineer-1"
+        }
+      ],
+      "optional": null,
+      "emptyObject": {},
+      "emptyArray": []
+    },
+    "input": "{\"status\":\"APPLIED\",\"version\":2,\"state\":\"AWAITING_APPROVAL\",\"history\":[{\"comment\":\"备件“轴承”\\\\规格\\n新行\",\"at\":\"2026-11-05T00:00:00Z\",\"actor\":\"engineer-1\"}],\"optional\":null,\"emptyObject\":{},\"emptyArray\":[]}",
+    "canonical": "{\"emptyArray\":[],\"emptyObject\":{},\"history\":[{\"actor\":\"engineer-1\",\"at\":\"2026-11-05T00:00:00Z\",\"comment\":\"备件“轴承”\\\\规格\\n新行\"}],\"optional\":null,\"state\":\"AWAITING_APPROVAL\",\"status\":\"APPLIED\",\"version\":2}",
+    "sha256": "8c682c94add5015bc2770ef61ad87d9cf41fd6cdf1eee27148c642e21975ca64"
+  },
+  {
+    "kind": "command",
+    "payload": {
+      "commandId": "b8a9aaf5-9b28-4e72-881c-2e544c4d03a2",
+      "entityId": "7205baa4-a93f-4414-81e8-e4a91e4272d0",
+      "action": "submit",
+      "expectedVersion": 3,
+      "actor": {
+        "id": "engineer-2",
+        "type": "USER",
+        "permissions": [
+          "maintenance:execute"
+        ]
+      },
+      "comment": "\"\\\b\f\n\r\t",
+      "assignee": null,
+      "evidenceDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "correlationId": "contract-2"
+    },
+    "input": "{\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"action\":\"submit\",\"expectedVersion\":3,\"actor\":{\"id\":\"engineer-2\",\"type\":\"USER\",\"permissions\":[\"maintenance:execute\"]},\"comment\":\"\\\"\\\\\\b\\f\\n\\r\\t\",\"assignee\":null,\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"correlationId\":\"contract-2\"}",
+    "canonical": "{\"action\":\"submit\",\"actor\":{\"id\":\"engineer-2\",\"permissions\":[\"maintenance:execute\"],\"type\":\"USER\"},\"assignee\":null,\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"comment\":\"\\\"\\\\\\b\\f\\n\\r\\t\",\"correlationId\":\"contract-2\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"expectedVersion\":3}",
+    "sha256": "3ffde15a775af2cc9cbbfbf07faa296e61d1940658812c926394c54b5c870814"
+  },
+  {
+    "kind": "receipt",
+    "payload": {
+      "status": "APPLIED",
+      "version": 3,
+      "state": "AWAITING_APPROVAL",
+      "history": [
+        {
+          "comment": "\"\\\b\f\n\r\t",
+          "at": "2026-11-05T00:00:00Z",
+          "actor": "engineer-2"
+        }
+      ],
+      "optional": null,
+      "emptyObject": {},
+      "emptyArray": []
+    },
+    "input": "{\"status\":\"APPLIED\",\"version\":3,\"state\":\"AWAITING_APPROVAL\",\"history\":[{\"comment\":\"\\\"\\\\\\b\\f\\n\\r\\t\",\"at\":\"2026-11-05T00:00:00Z\",\"actor\":\"engineer-2\"}],\"optional\":null,\"emptyObject\":{},\"emptyArray\":[]}",
+    "canonical": "{\"emptyArray\":[],\"emptyObject\":{},\"history\":[{\"actor\":\"engineer-2\",\"at\":\"2026-11-05T00:00:00Z\",\"comment\":\"\\\"\\\\\\b\\f\\n\\r\\t\"}],\"optional\":null,\"state\":\"AWAITING_APPROVAL\",\"status\":\"APPLIED\",\"version\":3}",
+    "sha256": "28d0fd6af570cad8739466e192d0bf246c8e7dd939784819e4260c740489f906"
+  },
+  {
+    "kind": "command",
+    "payload": {
+      "commandId": "b8a9aaf5-9b28-4e72-881c-2e544c4d03a2",
+      "entityId": "7205baa4-a93f-4414-81e8-e4a91e4272d0",
+      "action": "submit",
+      "expectedVersion": 4,
+      "actor": {
+        "id": "engineer-3",
+        "type": "USER",
+        "permissions": [
+          "maintenance:execute"
+        ]
+      },
+      "comment": "  ",
+      "assignee": null,
+      "evidenceDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "correlationId": "contract-3"
+    },
+    "input": "{\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"action\":\"submit\",\"expectedVersion\":4,\"actor\":{\"id\":\"engineer-3\",\"type\":\"USER\",\"permissions\":[\"maintenance:execute\"]},\"comment\":\"  \",\"assignee\":null,\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"correlationId\":\"contract-3\"}",
+    "canonical": "{\"action\":\"submit\",\"actor\":{\"id\":\"engineer-3\",\"permissions\":[\"maintenance:execute\"],\"type\":\"USER\"},\"assignee\":null,\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"comment\":\"  \",\"correlationId\":\"contract-3\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"expectedVersion\":4}",
+    "sha256": "41cee2e6320609ddf21e2c667df1a6216838930242ce305eeed09aa1ffe15c2c"
+  },
+  {
+    "kind": "receipt",
+    "payload": {
+      "status": "APPLIED",
+      "version": 4,
+      "state": "AWAITING_APPROVAL",
+      "history": [
+        {
+          "comment": "  ",
+          "at": "2026-11-05T00:00:00Z",
+          "actor": "engineer-3"
+        }
+      ],
+      "optional": null,
+      "emptyObject": {},
+      "emptyArray": []
+    },
+    "input": "{\"status\":\"APPLIED\",\"version\":4,\"state\":\"AWAITING_APPROVAL\",\"history\":[{\"comment\":\"  \",\"at\":\"2026-11-05T00:00:00Z\",\"actor\":\"engineer-3\"}],\"optional\":null,\"emptyObject\":{},\"emptyArray\":[]}",
+    "canonical": "{\"emptyArray\":[],\"emptyObject\":{},\"history\":[{\"actor\":\"engineer-3\",\"at\":\"2026-11-05T00:00:00Z\",\"comment\":\"  \"}],\"optional\":null,\"state\":\"AWAITING_APPROVAL\",\"status\":\"APPLIED\",\"version\":4}",
+    "sha256": "6b531b234cb2102538b3425ee7303f41d4d9b70aa4227248df195600e6f1b3cb"
+  },
+  {
+    "kind": "command",
+    "payload": {
+      "commandId": "b8a9aaf5-9b28-4e72-881c-2e544c4d03a2",
+      "entityId": "7205baa4-a93f-4414-81e8-e4a91e4272d0",
+      "action": "submit",
+      "expectedVersion": 5,
+      "actor": {
+        "id": "engineer-4",
+        "type": "USER",
+        "permissions": [
+          "maintenance:execute"
+        ]
+      },
+      "comment": "设备😀𠀀",
+      "assignee": null,
+      "evidenceDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "correlationId": "contract-4"
+    },
+    "input": "{\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"action\":\"submit\",\"expectedVersion\":5,\"actor\":{\"id\":\"engineer-4\",\"type\":\"USER\",\"permissions\":[\"maintenance:execute\"]},\"comment\":\"设备😀𠀀\",\"assignee\":null,\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"correlationId\":\"contract-4\"}",
+    "canonical": "{\"action\":\"submit\",\"actor\":{\"id\":\"engineer-4\",\"permissions\":[\"maintenance:execute\"],\"type\":\"USER\"},\"assignee\":null,\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"comment\":\"设备😀𠀀\",\"correlationId\":\"contract-4\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"expectedVersion\":5}",
+    "sha256": "dea23322176666abe0714060d3037e6ff482e21541d5d7f6371232ae2d9f0bc8"
+  },
+  {
+    "kind": "receipt",
+    "payload": {
+      "status": "APPLIED",
+      "version": 5,
+      "state": "AWAITING_APPROVAL",
+      "history": [
+        {
+          "comment": "设备😀𠀀",
+          "at": "2026-11-05T00:00:00Z",
+          "actor": "engineer-4"
+        }
+      ],
+      "optional": null,
+      "emptyObject": {},
+      "emptyArray": []
+    },
+    "input": "{\"status\":\"APPLIED\",\"version\":5,\"state\":\"AWAITING_APPROVAL\",\"history\":[{\"comment\":\"设备😀𠀀\",\"at\":\"2026-11-05T00:00:00Z\",\"actor\":\"engineer-4\"}],\"optional\":null,\"emptyObject\":{},\"emptyArray\":[]}",
+    "canonical": "{\"emptyArray\":[],\"emptyObject\":{},\"history\":[{\"actor\":\"engineer-4\",\"at\":\"2026-11-05T00:00:00Z\",\"comment\":\"设备😀𠀀\"}],\"optional\":null,\"state\":\"AWAITING_APPROVAL\",\"status\":\"APPLIED\",\"version\":5}",
+    "sha256": "2e7024374aa3be4e241c9d6d64a7f217db5f69edd958cbff9bedd51dae309443"
+  },
+  {
+    "kind": "command",
+    "payload": {
+      "commandId": "b8a9aaf5-9b28-4e72-881c-2e544c4d03a2",
+      "entityId": "7205baa4-a93f-4414-81e8-e4a91e4272d0",
+      "action": "submit",
+      "expectedVersion": 6,
+      "actor": {
+        "id": "engineer-5",
+        "type": "USER",
+        "permissions": [
+          "maintenance:execute"
+        ]
+      },
+      "comment": "é é",
+      "assignee": null,
+      "evidenceDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "correlationId": "contract-5"
+    },
+    "input": "{\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"action\":\"submit\",\"expectedVersion\":6,\"actor\":{\"id\":\"engineer-5\",\"type\":\"USER\",\"permissions\":[\"maintenance:execute\"]},\"comment\":\"é é\",\"assignee\":null,\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"correlationId\":\"contract-5\"}",
+    "canonical": "{\"action\":\"submit\",\"actor\":{\"id\":\"engineer-5\",\"permissions\":[\"maintenance:execute\"],\"type\":\"USER\"},\"assignee\":null,\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"comment\":\"é é\",\"correlationId\":\"contract-5\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"expectedVersion\":6}",
+    "sha256": "5466eafe10138b23373c7d9ee93437ad5fd0e5e7ea8d0e679a54509eb13da569"
+  },
+  {
+    "kind": "receipt",
+    "payload": {
+      "status": "APPLIED",
+      "version": 6,
+      "state": "AWAITING_APPROVAL",
+      "history": [
+        {
+          "comment": "é é",
+          "at": "2026-11-05T00:00:00Z",
+          "actor": "engineer-5"
+        }
+      ],
+      "optional": null,
+      "emptyObject": {},
+      "emptyArray": []
+    },
+    "input": "{\"status\":\"APPLIED\",\"version\":6,\"state\":\"AWAITING_APPROVAL\",\"history\":[{\"comment\":\"é é\",\"at\":\"2026-11-05T00:00:00Z\",\"actor\":\"engineer-5\"}],\"optional\":null,\"emptyObject\":{},\"emptyArray\":[]}",
+    "canonical": "{\"emptyArray\":[],\"emptyObject\":{},\"history\":[{\"actor\":\"engineer-5\",\"at\":\"2026-11-05T00:00:00Z\",\"comment\":\"é é\"}],\"optional\":null,\"state\":\"AWAITING_APPROVAL\",\"status\":\"APPLIED\",\"version\":6}",
+    "sha256": "5a32debae48e7150037f16cb67b3d2fa0e8dc4b768b386f17b4bed8cd8c4dfeb"
+  },
+  {
+    "kind": "command",
+    "payload": {
+      "commandId": "b8a9aaf5-9b28-4e72-881c-2e544c4d03a2",
+      "entityId": "7205baa4-a93f-4414-81e8-e4a91e4272d0",
+      "action": "submit",
+      "expectedVersion": 7,
+      "actor": {
+        "id": "engineer-6",
+        "type": "USER",
+        "permissions": [
+          "maintenance:execute"
+        ]
+      },
+      "comment": "汉字/设备<>&",
+      "assignee": null,
+      "evidenceDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "correlationId": "contract-6"
+    },
+    "input": "{\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"action\":\"submit\",\"expectedVersion\":7,\"actor\":{\"id\":\"engineer-6\",\"type\":\"USER\",\"permissions\":[\"maintenance:execute\"]},\"comment\":\"汉字/设备<>&\",\"assignee\":null,\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"correlationId\":\"contract-6\"}",
+    "canonical": "{\"action\":\"submit\",\"actor\":{\"id\":\"engineer-6\",\"permissions\":[\"maintenance:execute\"],\"type\":\"USER\"},\"assignee\":null,\"commandId\":\"b8a9aaf5-9b28-4e72-881c-2e544c4d03a2\",\"comment\":\"汉字/设备<>&\",\"correlationId\":\"contract-6\",\"entityId\":\"7205baa4-a93f-4414-81e8-e4a91e4272d0\",\"evidenceDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"expectedVersion\":7}",
+    "sha256": "4b057e388a43c9bdd11a2e15957b35c68fa088a17b66393663990df9b7eac8a6"
+  },
+  {
+    "kind": "receipt",
+    "payload": {
+      "status": "APPLIED",
+      "version": 7,
+      "state": "AWAITING_APPROVAL",
+      "history": [
+        {
+          "comment": "汉字/设备<>&",
+          "at": "2026-11-05T00:00:00Z",
+          "actor": "engineer-6"
+        }
+      ],
+      "optional": null,
+      "emptyObject": {},
+      "emptyArray": []
+    },
+    "input": "{\"status\":\"APPLIED\",\"version\":7,\"state\":\"AWAITING_APPROVAL\",\"history\":[{\"comment\":\"汉字/设备<>&\",\"at\":\"2026-11-05T00:00:00Z\",\"actor\":\"engineer-6\"}],\"optional\":null,\"emptyObject\":{},\"emptyArray\":[]}",
+    "canonical": "{\"emptyArray\":[],\"emptyObject\":{},\"history\":[{\"actor\":\"engineer-6\",\"at\":\"2026-11-05T00:00:00Z\",\"comment\":\"汉字/设备<>&\"}],\"optional\":null,\"state\":\"AWAITING_APPROVAL\",\"status\":\"APPLIED\",\"version\":7}",
+    "sha256": "1fb98845c0da313026c7bcb9c8273b75e37351fb167534d12b6700cc3626bc02"
+  },
+  {
+    "kind": "numeric-control",
+    "payload": {
+      "value": 0
+    },
+    "input": "{\"value\":0}",
+    "canonical": "{\"value\":0}",
+    "sha256": "23d7b286bd429460b92a2a1c21b6afc34110446c5034c17363fda363aa0a7c5d"
+  },
+  {
+    "kind": "numeric-control",
+    "payload": {
+      "value": 1
+    },
+    "input": "{\"value\":1}",
+    "canonical": "{\"value\":1}",
+    "sha256": "48208f9428d64634bd8e28ff345bf0eab60d53c18fa2fbdb0b9bc1e84df2b5f6"
+  },
+  {
+    "kind": "numeric-control",
+    "payload": {
+      "value": -1
+    },
+    "input": "{\"value\":-1}",
+    "canonical": "{\"value\":-1}",
+    "sha256": "f32d4354160a457984a54414824b84c196a5ddf65d6ee6c992317a5fb7a53b0c"
+  },
+  {
+    "kind": "numeric-control",
+    "payload": {
+      "value": 2147483647
+    },
+    "input": "{\"value\":2147483647}",
+    "canonical": "{\"value\":2147483647}",
+    "sha256": "b35cdb9da7ea6cd9c03133e354b965db6e56307cab1b151fd93d3046c80da57f"
+  },
+  {
+    "kind": "numeric-control",
+    "payload": {
+      "value": 9007199254740991
+    },
+    "input": "{\"value\":9007199254740991}",
+    "canonical": "{\"value\":9007199254740991}",
+    "sha256": "16c63bddb910905c4ee8abf36273baa20dba53020dbaf265da5936013ded185d"
+  },
+  {
+    "kind": "numeric-control",
+    "payload": {
+      "value": 0.5
+    },
+    "input": "{\"value\":0.5}",
+    "canonical": "{\"value\":0.5}",
+    "sha256": "68da71bdd6fb631e3752113b5e21644440fdbb640467f34eca0d1e239b103907"
+  },
+  {
+    "kind": "numeric-control",
+    "payload": {
+      "value": 1.25
+    },
+    "input": "{\"value\":1.25}",
+    "canonical": "{\"value\":1.25}",
+    "sha256": "77ae6e7716d3c051fbb21bd7557d8ba449709cf17c197f0ace15b2b33c56dae0"
+  }
+]

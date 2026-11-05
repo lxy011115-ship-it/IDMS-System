@@ -1,0 +1,60 @@
+name: Workflow security candidate build
+
+on:
+  push:
+    branches: [main, release/prelaunch-20261030]
+    paths:
+      - 'src/workflow-security-candidate/**'
+      - '.github/workflows/workflow-security-candidate.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/workflow-security-candidate/**'
+      - '.github/workflows/workflow-security-candidate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workflow-security-candidate-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  compile-and-contract-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out the candidate source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Use the reviewed JDK maintenance release
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '21.0.13+9'
+          cache: maven
+          cache-dependency-path: src/workflow-security-candidate/pom.xml
+          overwrite-settings: false
+
+      - name: Compile, test and package the isolated candidate
+        run: mvn --batch-mode --strict-checksums -f src/workflow-security-candidate/pom.xml verify
+
+      - name: Confirm tracked sources were not changed
+        run: git diff --exit-code --no-ext-diff
+
+      - name: Record the scope of this verification
+        if: always()
+        env:
+          CHECKED_COMMIT: ${{ github.sha }}
+          CHECK_STATUS: ${{ job.status }}
+        run: |
+          python3 - <<'PY'
+          import os
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as out:
+              out.write(f"Commit: {os.environ['CHECKED_COMMIT']}\n\nJob: {os.environ['CHECK_STATUS']}\n\n")
+              out.write('Scope: isolated Boot 4 / Flowable 8 / Jackson 3 source, Maven tests and package.\n\n')
+              out.write('This job does not connect to enterprise databases, migrate schemas, exercise all workflow routes, deploy, or approve production activation.\n')
+          PY

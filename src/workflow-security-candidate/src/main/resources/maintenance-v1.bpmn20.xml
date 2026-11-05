@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" targetNamespace="urn:idms:workflow">
+  <process id="idmsMaintenanceV1" name="IDMS 独立人工维修闭环 v1" isExecutable="true">
+    <startEvent id="begin"/>
+    <sequenceFlow id="f1" sourceRef="begin" targetRef="assignedGate"/>
+    <exclusiveGateway id="assignedGate" default="needClaim"/>
+    <sequenceFlow id="hasAssignee" sourceRef="assignedGate" targetRef="startRepair"><conditionExpression xsi:type="tFormalExpression"><![CDATA[${assigned == true}]]></conditionExpression></sequenceFlow>
+    <sequenceFlow id="needClaim" sourceRef="assignedGate" targetRef="claim"/>
+    <userTask id="claim" name="维修人员领取"/>
+    <sequenceFlow id="f2" sourceRef="claim" targetRef="startRepair"/>
+    <userTask id="startRepair" name="开始维修" flowable:assignee="${assignee}"/>
+    <sequenceFlow id="f3" sourceRef="startRepair" targetRef="repair"/>
+    <userTask id="repair" name="维修并提交复测证据" flowable:assignee="${assignee}"/>
+    <sequenceFlow id="f4" sourceRef="repair" targetRef="finalApproval"/>
+    <userTask id="finalApproval" name="独立人工最终审核"/>
+    <sequenceFlow id="f5" sourceRef="finalApproval" targetRef="decision"/>
+    <exclusiveGateway id="decision" default="returned"/>
+    <sequenceFlow id="approved" sourceRef="decision" targetRef="end"><conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved == true}]]></conditionExpression></sequenceFlow>
+    <sequenceFlow id="returned" sourceRef="decision" targetRef="repair"/>
+    <endEvent id="end"/>
+  </process>
+</definitions>
