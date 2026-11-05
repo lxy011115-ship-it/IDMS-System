@@ -2,7 +2,7 @@
   "format": 1,
   "purpose": "SOURCE_RELEASE_CANDIDATE",
   "version": "0.1.0",
-  "createdAt": "2026-11-05T13:33:15.158Z",
+  "createdAt": "2026-11-05T14:40:48.329Z",
   "dependenciesBundled": false,
   "productionApproved": false,
   "reviewedSourceAdditions": [
@@ -796,8 +796,8 @@
     },
     {
       "name": "docs/current-delivery-index.md",
-      "bytes": 22034,
-      "sha256": "7990abe46aa0a9ba95aabeea1f2ba433525db254f5d6e4e7b6adb4ec0a090123",
+      "bytes": 22601,
+      "sha256": "e0c7af50bc836696361d4453514947622d1455842072d752e8ba55bd8692f968",
       "mode": 438
     },
     {
@@ -1827,6 +1827,12 @@
       "mode": 438
     },
     {
+      "name": "docs/main-ai-joint-recovery-2026-11-05.md",
+      "bytes": 8319,
+      "sha256": "3358f14b0eec00c8d20ac80f6feb888948dc049523dd4e2ee5d05d7de219689d",
+      "mode": 438
+    },
+    {
       "name": "docs/main-flowable8-adapter-validation-2026-11-05.md",
       "bytes": 4659,
       "sha256": "2548f93a3dc74b1165db53bedc3e77ccfd73dffcd28aeb9ed6969d38d60d35a5",
@@ -2164,8 +2170,8 @@
     },
     {
       "name": "docs/prelaunch-acceptance-status-2026-11-05.md",
-      "bytes": 12387,
-      "sha256": "01fc2410c5863d7ecbadedd130bc3e233e1b6d8b8d5c4dd4fe3dab2502ce4335",
+      "bytes": 12900,
+      "sha256": "539f203c29aef184fbeb5b380c043318c2c6d3d5a9e4945f52af561f338a78bc",
       "mode": 438
     },
     {
